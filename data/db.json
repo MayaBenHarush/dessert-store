@@ -17,7 +17,8 @@
     {
       "username": "Maya",
       "items": [
-        "caramel-cookie"
+        "bagle-cookie",
+        "nutella-cookie"
       ]
     }
   ],
@@ -86,6 +87,31 @@
       "datetime": "2025-08-13T16:40:19.774Z",
       "username": "Maya",
       "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-13T17:07:04.695Z",
+      "username": "Maya",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-08-13T17:07:06.663Z",
+      "username": "Maya",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-13T17:32:36.839Z",
+      "username": "Maya",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-13T18:42:17.148Z",
+      "username": "Maya",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-08-13T18:56:36.960Z",
+      "username": "Maya",
+      "type": "login"
     }
   ],
   "products": [
