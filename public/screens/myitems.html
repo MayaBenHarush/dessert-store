@@ -5,19 +5,18 @@
   <title>הרכישות שלי</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/styles.css">
-
 </head>
-<body>
-    <nav>
+<body class="myitems-page">
+  <nav>
     <a href="store.html">חנות</a>
     <a href="cart.html">סל הקניות</a>
     <a href="checkout.html">תשלום</a>
     <a href="myitems.html">הרכישות שלי</a>
     <button id="logout">התנתקות</button>
-    </nav>
-
+  </nav>
 
   <h1>הרכישות שלי</h1>
+
   <div id="list"></div>
 
   <script>
@@ -38,7 +37,7 @@
         }
         const items = await res.json();
 
-        if (!items.length) {
+        if (!Array.isArray(items) || items.length === 0) {
           list.innerHTML = '<p class="empty">אין רכישות עדיין.</p>';
           return;
         }
@@ -51,7 +50,7 @@
           const dateStr = dt ? dt.toLocaleString('he-IL') : '';
 
           card.innerHTML = `
-            <img src="/images/${it.image}" alt="${it.title}">
+            <img loading="lazy" src="/images/${it.image}" alt="${it.title}">
             <div>
               <div><strong>${it.title}</strong></div>
               <div class="meta">${dateStr}</div>
