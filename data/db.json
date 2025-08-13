@@ -7,10 +7,30 @@
     "Maya": {
       "username": "Maya",
       "password": "123"
+    },
+    "מאיה": {
+      "username": "מאיה",
+      "password": "123"
     }
   },
-  "carts": {},
-  "purchases": {},
+  "carts": [
+    {
+      "username": "Maya",
+      "items": [
+        "caramel-cookie"
+      ]
+    }
+  ],
+  "purchases": {
+    "Maya": [
+      {
+        "items": [
+          "caramel-cookie"
+        ],
+        "date": "2025-08-13T16:40:34.152Z"
+      }
+    ]
+  },
   "activity": [
     {
       "datetime": 1755085037924,
@@ -31,6 +51,41 @@
       "datetime": "2025-08-13T15:21:05.460Z",
       "username": "Maya",
       "type": "login"
+    },
+    {
+      "datetime": "2025-08-13T15:23:14.775Z",
+      "username": "Maya",
+      "type": "logout"
+    },
+    {
+      "datetime": "2025-08-13T15:39:36.109Z",
+      "username": "מאיה",
+      "type": "register"
+    },
+    {
+      "datetime": "2025-08-13T15:39:46.448Z",
+      "username": "Maya",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-08-13T15:39:48.528Z",
+      "username": "Maya",
+      "type": "logout"
+    },
+    {
+      "datetime": "2025-08-13T15:45:07.586Z",
+      "username": "Maya",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-08-13T16:35:55.298Z",
+      "username": "Maya",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-08-13T16:40:19.774Z",
+      "username": "Maya",
+      "type": "add-to-cart"
     }
   ],
   "products": [

@@ -1,81 +1,81 @@
 // modules/cart-server.js
-// ניהול סל: קריאה, הוספה והסרה
-
 const persist = require('../persist_module');
 
 module.exports = (app) => {
-  // עוזר קטן לרישום פעילות ליומן
-  async function logActivity(username, type) {
-    const activity = await persist.loadData('activity');
-    activity.push({ datetime: new Date().toISOString(), username, type });
-    await persist.saveData('activity', activity);
+  // פונקציה עזר: מבטיחה להחזיר תמיד מערך
+  function asArray(x) {
+    return Array.isArray(x) ? x : [];
   }
 
-  // GET /api/cart – מחזיר את מזהי הפריטים בסל של המשתמש
+  // GET /api/cart – החזרת מזהי המוצרים בסל
   app.get('/api/cart', async (req, res, next) => {
     try {
-      const username = req.cookies?.session;
+      const username = req.cookies.session;
       if (!username) return res.status(401).json({ error: 'Not logged in' });
 
-      const carts = await persist.loadData('carts'); // [{username, items:[]}]
+      let carts = asArray(await persist.loadData('carts')); // תמיד מערך
       const cart = carts.find(c => c.username === username);
-      return res.json(cart ? (cart.items || []) : []);
+      res.json(cart && Array.isArray(cart.items) ? cart.items : []);
     } catch (err) {
       next(err);
     }
   });
 
-  // POST /api/cart – מוסיף מוצר לסל (body: { productId })
+  // POST /api/cart – הוספה לסל
+  // body: { productId }
   app.post('/api/cart', async (req, res, next) => {
     try {
-      const username = req.cookies?.session;
+      const username = req.cookies.session;
       if (!username) return res.status(401).json({ error: 'Not logged in' });
 
       const { productId } = req.body || {};
       if (!productId) return res.status(400).json({ error: 'productId required' });
 
-      // ודא שהמוצר קיים
-      const products = await persist.loadData('products');
-      if (!products.find(p => p.id === productId)) {
+      // ודאו שהמוצר קיים
+      const products = asArray(await persist.loadData('products'));
+      if (!products.some(p => p.id === productId)) {
         return res.status(404).json({ error: 'Product not found' });
       }
 
-      const carts = await persist.loadData('carts');
+      let carts = asArray(await persist.loadData('carts'));
       let cart = carts.find(c => c.username === username);
       if (!cart) {
         cart = { username, items: [] };
         carts.push(cart);
       }
+      if (!Array.isArray(cart.items)) cart.items = [];
+
       cart.items.push(productId);
       await persist.saveData('carts', carts);
 
-      await logActivity(username, 'add-to-cart');
+      // לוג פעילות
+      let activity = asArray(await persist.loadData('activity'));
+      activity.push({ datetime: new Date().toISOString(), username, type: 'add-to-cart' });
+      await persist.saveData('activity', activity);
 
-      return res.json({ ok: true, items: cart.items });
+      res.json({ ok: true });
     } catch (err) {
       next(err);
     }
   });
 
-  // DELETE /api/cart/:id – מסיר מופע אחד של מוצר מהסל
+  // DELETE /api/cart/:id – הסרה מהסל
   app.delete('/api/cart/:id', async (req, res, next) => {
     try {
-      const username = req.cookies?.session;
+      const username = req.cookies.session;
       if (!username) return res.status(401).json({ error: 'Not logged in' });
 
-      const { id } = req.params;
-      const carts = await persist.loadData('carts');
+      const id = req.params.id;
+      let carts = asArray(await persist.loadData('carts'));
       const cart = carts.find(c => c.username === username);
-
       if (!cart || !Array.isArray(cart.items)) {
-        return res.json({ ok: true, items: [] });
+        return res.status(404).json({ error: 'Cart not found' });
       }
 
-      const idx = cart.items.indexOf(id);
-      if (idx !== -1) cart.items.splice(idx, 1);
+      cart.items = cart.items.filter(pid => pid !== id);
       await persist.saveData('carts', carts);
 
-      return res.json({ ok: true, items: cart.items });
+      res.json({ ok: true });
     } catch (err) {
       next(err);
     }

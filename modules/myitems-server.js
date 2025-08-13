@@ -1,5 +1,5 @@
 // modules/myitems-server.js
-// מחזיר לרשימת "הרכישות שלי" את המוצרים שנקנו, מועשרים בשם/תמונה/תיאור + תאריך קנייה
+// "הרכישות שלי": מאחד רכישות עם פרטי מוצרים ומחזיר רשימה מפורטת
 
 const persist = require('../persist_module');
 
@@ -10,30 +10,33 @@ module.exports = (app) => {
       const username = req.cookies?.session;
       if (!username) return res.status(401).json({ error: 'Not logged in' });
 
-      const [purchases, products] = await Promise.all([
-        persist.loadData('purchases'), // [{username, items:[ids], date}]
-        persist.loadData('products')   // [{id,title,description,image}]
-      ]);
+      // כעת persist מחזיר רכישות למשתמש בלבד כמערך
+      // כל רכישה היא: { items:[ids], date: ISO }
+      const purchases = await persist.getPurchases(username);
+      const products = await persist.getProducts();
 
-      const map = new Map(products.map(p => [p.id, p]));
-      const mine = [];
+      const byId = new Map(products.map(p => [p.id, p]));
+      const result = [];
 
       for (const pur of purchases) {
-        if (pur.username !== username) continue;
-        for (const id of pur.items || []) {
-          const prod = map.get(id);
+        const date = pur.date;
+        for (const id of (pur.items || [])) {
+          const prod = byId.get(id);
           if (!prod) continue;
-          mine.push({
+          result.push({
             id: prod.id,
             title: prod.title,
             description: prod.description,
             image: prod.image,
-            date: pur.date
+            date
           });
         }
       }
 
-      return res.json(mine);
+      // אפשר למיין לפי תאריך ירד (אחרון ראשון)
+      result.sort((a, b) => String(b.date).localeCompare(String(a.date)));
+
+      return res.json(result);
     } catch (err) {
       next(err);
     }

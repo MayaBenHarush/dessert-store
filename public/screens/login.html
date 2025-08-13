@@ -1,49 +1,68 @@
 <!DOCTYPE html>
-<html lang="he">
+<html lang="he" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>Login – התחברות</title>
-  <link rel="stylesheet" href="/assets/styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>התחברות</title>
+  <link rel="stylesheet" href="../styles.css" />
 </head>
 <body>
-  <nav>
-    <a href="/screens/store.html">חנות</a>
-    <a href="/screens/register.html">הרשמה</a>
+  <nav class="top-nav">
+    <a href="store.html">החנות</a>
+    <a href="cart.html">סל הקניות</a>
+    <a href="checkout.html">תשלום</a>
+    <a href="myitems.html">הרכישות שלי</a>
+    <a href="register.html">הרשמה</a>
   </nav>
 
   <h1>התחברות</h1>
-  <form id="login-form">
-    <label>שם משתמש:
-      <input type="text" name="username" required>
+
+  <form id="login-form" class="auth-form">
+    <label class="field-username">
+      שם משתמש
+      <input type="text" name="username" autocomplete="username" required />
     </label>
-    <label>סיסמה:
-      <input type="password" name="password" required>
+
+    <label class="field-password">
+      סיסמה
+      <input type="password" name="password" autocomplete="current-password" required />
     </label>
-    <label>
-      <input type="checkbox" name="rememberMe"> זכור אותי
+
+    <label class="extras">
+      <input type="checkbox" name="rememberMe" />
+      זכור אותי
     </label>
-    <button type="submit">Login</button>
+
+    <div class="actions">
+      <button type="submit">כניסה</button>
+    </div>
   </form>
 
   <script>
     document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const form = e.target;
-      const data = {
-        username: form.username.value,
-        password: form.password.value,
-        rememberMe: form.rememberMe.checked
+      const f = e.target;
+      const payload = {
+        username: f.username.value.trim(),
+        password: f.password.value,
+        rememberMe: f.rememberMe.checked
       };
-      const res = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-      const json = await res.json();
-      if (res.ok) {
-        location.href = '/screens/store.html';
-      } else {
-        alert(json.error || 'Login failed');
+
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json().catch(() => ({}));
+
+        if (res.ok) {
+          location.href = 'store.html';
+        } else {
+          alert(json.error || 'שגיאת התחברות');
+        }
+      } catch {
+        alert('שגיאת רשת');
       }
     });
   </script>
