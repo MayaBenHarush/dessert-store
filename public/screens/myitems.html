@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>הרכישות שלי</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/styles.css">
+
+</head>
+<body>
+    <nav>
+    <a href="store.html">חנות</a>
+    <a href="cart.html">סל הקניות</a>
+    <a href="checkout.html">תשלום</a>
+    <a href="myitems.html">הרכישות שלי</a>
+    <button id="logout">התנתקות</button>
+    </nav>
+
+
+  <h1>הרכישות שלי</h1>
+  <div id="list"></div>
+
+  <script>
+    // Logout
+    document.getElementById('logout').onclick = async () => {
+      try { await fetch('/api/logout', { method: 'POST' }); }
+      finally { location.href = 'login.html'; }
+    };
+
+    const list = document.getElementById('list');
+
+    (async function loadMyItems() {
+      try {
+        const res = await fetch('/api/my-items');
+        if (res.status === 401) {
+          location.href = 'login.html';
+          return;
+        }
+        const items = await res.json();
+
+        if (!items.length) {
+          list.innerHTML = '<p class="empty">אין רכישות עדיין.</p>';
+          return;
+        }
+
+        list.innerHTML = '';
+        for (const it of items) {
+          const card = document.createElement('div');
+          card.className = 'card';
+          const dt = it.date ? new Date(it.date) : null;
+          const dateStr = dt ? dt.toLocaleString('he-IL') : '';
+
+          card.innerHTML = `
+            <img src="/images/${it.image}" alt="${it.title}">
+            <div>
+              <div><strong>${it.title}</strong></div>
+              <div class="meta">${dateStr}</div>
+              <div style="font-size:13px; margin-top:6px;">${it.description || ''}</div>
+            </div>
+          `;
+          list.appendChild(card);
+        }
+      } catch (e) {
+        list.innerHTML = '<p class="empty">שגיאה בטעינת הרכישות.</p>';
+      }
+    })();
+  </script>
+</body>
+</html>

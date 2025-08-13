@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>Cart – סל הקניות</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+
+</head>
+<body>
+
+  <nav>
+    <a href="store.html">חנות</a>
+    <a href="cart.html">סל הקניות</a>
+    <a href="checkout.html">תשלום</a>
+    <a href="myitems.html">הרכישות שלי</a>
+    <button id="logout">התנתקות</button>
+  </nav>
+
+
+  <h1>סל הקניות שלי</h1>
+  <div id="items">
+    <!-- כאן נמלא את הפריטים בסל -->
+  </div>
+
+  <script>
+    // Logout
+    document.getElementById('logout').onclick = async () => {
+      await fetch('/api/logout', { method: 'POST' });
+      location.href = 'login.html';
+    };
+
+    let products = [];
+
+    // טוען את כל המוצרים מראש כדי למצוא פרטים מתוך ה־cart
+    async function loadProducts() {
+      const res = await fetch('/api/products');
+      products = await res.json();
+    }
+
+    // טוען את הסל ומציג אותו
+    async function loadCart() {
+      const res = await fetch('/api/cart');
+      if (res.status === 401) return location.href = 'login.html';
+      const itemIds = await res.json();
+
+      const container = document.getElementById('items');
+      container.innerHTML = '';
+
+      if (itemIds.length === 0) {
+        container.innerHTML = '<p>הסל ריק.</p>';
+        return;
+      }
+
+      for (const id of itemIds) {
+        const p = products.find(x => x.id === id);
+        if (!p) continue;
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `
+          <img src="/images/${p.image}" alt="${p.title}">
+          <div>
+            <h3>${p.title}</h3>
+            <p>${p.description}</p>
+          </div>
+          <button data-id="${p.id}">Remove</button>
+        `;
+        container.appendChild(div);
+      }
+    }
+
+    // מאזין ללחיצות Remove
+    document.getElementById('items').addEventListener('click', async e => {
+      if (!e.target.matches('button[data-id]')) return;
+      const id = e.target.dataset.id;
+      const res = await fetch(`/api/cart/${id}`, { method: 'DELETE' });
+      if (res.status === 401) {
+        return location.href = 'login.html';
+      }
+      await res.json();
+      loadCart();  // רענון התצוגה
+    });
+
+    // הפעלה ראשונית
+    (async () => {
+      await loadProducts();
+      await loadCart();
+    })();
+  </script>
+
+</body>
+</html>

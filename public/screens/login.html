@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>Login – התחברות</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+  <nav>
+    <a href="/screens/store.html">חנות</a>
+    <a href="/screens/register.html">הרשמה</a>
+  </nav>
+
+  <h1>התחברות</h1>
+  <form id="login-form">
+    <label>שם משתמש:
+      <input type="text" name="username" required>
+    </label>
+    <label>סיסמה:
+      <input type="password" name="password" required>
+    </label>
+    <label>
+      <input type="checkbox" name="rememberMe"> זכור אותי
+    </label>
+    <button type="submit">Login</button>
+  </form>
+
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const data = {
+        username: form.username.value,
+        password: form.password.value,
+        rememberMe: form.rememberMe.checked
+      };
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const json = await res.json();
+      if (res.ok) {
+        location.href = '/screens/store.html';
+      } else {
+        alert(json.error || 'Login failed');
+      }
+    });
+  </script>
+</body>
+</html>

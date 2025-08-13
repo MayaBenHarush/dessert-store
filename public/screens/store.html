@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>חנות הקינוחים שלנו</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+  <nav>
+    <a href="/screens/store.html">חנות</a>
+    <a href="/screens/cart.html">סל הקניות</a>
+    <a href="/screens/checkout.html">תשלום</a>
+    <a href="/screens/myitems.html">הרכישות שלי</a>
+    <button id="logout" type="button">התנתקות</button>
+  </nav>
+
+  <h1>חנות קינוחים 🍰</h1>
+
+  <input type="text" id="search" placeholder="חפש קינוח..." />
+  <div id="products"></div>
+
+  <script>
+    // Logout
+    document.getElementById('logout').onclick = async () => {
+      try { await fetch('/api/logout', { method: 'POST' }); }
+      finally { location.href = '/screens/login.html'; }
+    };
+
+    // חיפוש — נטען את כל המוצרים כשאין חיפוש
+    document.getElementById('search').addEventListener('input', fetchAndRender);
+
+    async function fetchAndRender() {
+      const prefix = document.getElementById('search').value.trim();
+      const url = prefix ? `/api/products?search=${encodeURIComponent(prefix)}` : `/api/products`;
+
+      const res = await fetch(url);
+      if (!res.ok) return console.error('products status', res.status);
+      const products = await res.json();
+
+      const container = document.getElementById('products');
+      container.innerHTML = '';
+
+      for (const p of products) {
+        const card = document.createElement('div');
+        card.className = 'product';
+        card.innerHTML = `
+          <img src="/images/${p.image}" alt="${p.title}">
+          <h3>${p.title}</h3>
+          <p>${p.description}</p>
+          <button class="add-to-cart" data-id="${p.id}">Add to cart</button>
+        `;
+        container.appendChild(card);
+      }
+    }
+
+    // מאזין ל־Add to cart
+    document.getElementById('products').addEventListener('click', async e => {
+      if (!e.target.matches('.add-to-cart')) return;
+      const id = e.target.dataset.id;
+      const res = await fetch('/api/cart', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id })
+      });
+      if (res.status === 401) return location.href = '/screens/login.html';
+      const json = await res.json();
+      if (!res.ok) return alert(json.error);
+      alert('✅ המוצר התווסף לסל!');
+    });
+
+    // טעינה ראשונית – בלי פרמטר search כדי להביא הכל
+    fetchAndRender();
+  </script>
+</body>
+</html>

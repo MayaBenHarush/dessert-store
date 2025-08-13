@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>Register – הרשמה</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+  <nav>
+    <a href="/screens/store.html">חנות</a>
+    <a href="/screens/login.html">התחברות</a>
+    <!-- אנחנו כבר בדף הרשמה, אז אין צורך בקישור נוסף אליו -->
+  </nav>
+
+  <h1>הרשמה</h1>
+  <form id="register-form">
+    <label>שם משתמש:
+      <input type="text" name="username" required>
+    </label>
+    <label>סיסמה:
+      <input type="password" name="password" required>
+    </label>
+    <button type="submit">Register</button>
+  </form>
+
+  <script>
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const data = { username: form.username.value, password: form.password.value };
+      const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const json = await res.json();
+      if (res.ok) {
+        alert('נרשמת בהצלחה! עכשיו אפשר להתחבר.');
+        location.href = '/screens/login.html';
+      } else {
+        alert(json.error || 'Registration failed');
+      }
+    });
+  </script>
+</body>
+</html>

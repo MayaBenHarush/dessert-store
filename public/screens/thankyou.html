@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>תודה על התשלום</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/styles.css">
+
+</head>
+<body>
+    <nav>
+    <a href="store.html">חנות</a>
+    <a href="cart.html">סל הקניות</a>
+    <a href="checkout.html">תשלום</a>
+    <a href="myitems.html">הרכישות שלי</a>
+    <button id="logout">התנתקות</button>
+    </nav>
+
+
+  <h1>תודה! התשלום התקבל ✅</h1>
+  <p>זהו תשלום דמו לצורכי תרגול בלבד.</p>
+
+  <div class="actions">
+    <a href="myitems.html">צפייה ברכישות שלי</a>
+    <a href="store.html">להמשיך לקנות</a>
+  </div>
+
+  <script>
+    document.getElementById('logout').onclick = async () => {
+      try { await fetch('/api/logout', { method: 'POST' }); }
+      finally { location.href = 'login.html'; }
+    };
+  </script>
+</body>
+</html>

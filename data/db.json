@@ -1,0 +1,117 @@
+{
+  "users": {
+    "admin": {
+      "username": "admin",
+      "password": "admin"
+    },
+    "Maya": {
+      "username": "Maya",
+      "password": "123"
+    }
+  },
+  "carts": {},
+  "purchases": {},
+  "activity": [
+    {
+      "datetime": 1755085037924,
+      "username": "admin",
+      "type": "seed-admin"
+    },
+    {
+      "datetime": 1755091611587,
+      "username": "Maya",
+      "type": "register"
+    },
+    {
+      "datetime": 1755091615499,
+      "username": "Maya",
+      "type": "login"
+    }
+  ],
+  "products": [
+    {
+      "id": "bagle-cookie",
+      "title": "bagle cookie",
+      "description": "",
+      "image": "bagle-cookie.jpeg"
+    },
+    {
+      "id": "caramel-cookie",
+      "title": "caramel cookie",
+      "description": "",
+      "image": "caramel-cookie.jpeg"
+    },
+    {
+      "id": "chocolate-cake",
+      "title": "chocolate cake",
+      "description": "",
+      "image": "chocolate-cake.jpeg"
+    },
+    {
+      "id": "cookies-box",
+      "title": "cookies box",
+      "description": "",
+      "image": "cookies-box.jpeg"
+    },
+    {
+      "id": "cupcakes",
+      "title": "cupcakes",
+      "description": "",
+      "image": "cupcakes.jpeg"
+    },
+    {
+      "id": "kinder-cookie",
+      "title": "kinder cookie",
+      "description": "",
+      "image": "kinder-cookie.jpeg"
+    },
+    {
+      "id": "lotus-cookie",
+      "title": "lotus cookie",
+      "description": "",
+      "image": "lotus-cookie.jpeg"
+    },
+    {
+      "id": "minnie-mous-cake",
+      "title": "minnie mous cake",
+      "description": "",
+      "image": "minnie-mous-cake.jpeg"
+    },
+    {
+      "id": "nutella-box",
+      "title": "nutella box",
+      "description": "",
+      "image": "nutella-box.jpeg"
+    },
+    {
+      "id": "nutella-cookie",
+      "title": "nutella cookie",
+      "description": "",
+      "image": "nutella-cookie.jpeg"
+    },
+    {
+      "id": "orange-cake",
+      "title": "orange cake",
+      "description": "",
+      "image": "orange-cake.jpeg"
+    },
+    {
+      "id": "pizza-cookie",
+      "title": "pizza cookie",
+      "description": "",
+      "image": "pizza-cookie.jpeg"
+    },
+    {
+      "id": "white-chocolate-cookie",
+      "title": "white chocolate cookie",
+      "description": "",
+      "image": "white-chocolate-cookie.jpeg"
+    },
+    {
+      "id": "white-design-cake",
+      "title": "white design cake",
+      "description": "",
+      "image": "white-design-cake.jpeg"
+    }
+  ]
+}

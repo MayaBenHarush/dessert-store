@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>Checkout – התשלום</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+
+</head>
+<body>
+  <nav>
+    <a href="store.html">חנות</a>
+    <a href="cart.html">סל הקניות</a>
+    <a href="checkout.html">תשלום</a>
+    <a href="myitems.html">הרכישות שלי</a>
+    <button id="logout">התנתקות</button>
+  </nav>
+
+
+  <h1>Checkout – בחירת פריטים לתשלום</h1>
+  <form id="checkout-form">
+    <!-- פריטי סל עם תיבות סימון -->
+  </form>
+  <button id="to-pay">Proceed to Pay</button>
+
+  <script>
+    document.getElementById('logout').onclick = async () => {
+      await fetch('/api/logout', { method: 'POST' });
+      location.href = 'login.html';
+    };
+
+    let products = [];
+    async function loadCart() {
+      const cartRes = await fetch('/api/cart');
+      if (cartRes.status === 401) return location.href='login.html';
+      const itemIds = await cartRes.json();
+
+      const prodRes = await fetch('/api/products');
+      products = await prodRes.json();
+
+      const form = document.getElementById('checkout-form');
+      form.innerHTML = '';
+      for (const id of itemIds) {
+        const p = products.find(x => x.id===id);
+        if (!p) continue;
+        const label = document.createElement('label');
+        label.innerHTML = `
+          <input type="checkbox" name="item" value="${p.id}" checked>
+          ${p.title}
+        `;
+        form.appendChild(label);
+      }
+    }
+
+    document.getElementById('to-pay').addEventListener('click', async () => {
+      const checked = Array.from(document.querySelectorAll('input[name="item"]:checked'))
+                           .map(el => el.value);
+      if (checked.length === 0) {
+        return alert('בחר לפחות פריט אחד');
+      }
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type':'application/json' },
+        body: JSON.stringify({ items: checked })
+      });
+      const json = await res.json();
+      if (res.ok) {
+        // אחרי Checkout נעבור לעמוד תשלום
+        window.location.href = 'pay.html';
+      } else {
+        alert(json.error);
+      }
+    });
+
+    loadCart();
+  </script>
+</body>
+</html>
