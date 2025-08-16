@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="he">
+<html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <title>סל הקניות</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/styles.css" />
 </head>
 <body>
@@ -12,9 +13,8 @@
     <a href="store.html">החנות</a>
     <a href="checkout.html">לתשלום</a>
     <a href="myitems.html">הרכישות שלי</a>
-    <button id="logout">התנתקות</button>
     <a href="admin.html">ניהול</a>
-
+    <button id="logout">התנתקות</button>
   </nav>
 
   <h1>סל הקניות</h1>
@@ -36,8 +36,8 @@
     }
 
     async function loadCart() {
-      const res = await fetch('/api/cart');         // [{id1,id2,...}] או []
-      if (res.status === 401) return location.href = 'login.html';
+      const res = await fetch('/api/cart');
+      if (res.status === 401) return (location.href = 'login.html');
       const itemIds = await res.json();
 
       const container = document.getElementById('items');
@@ -63,25 +63,26 @@
         `;
         container.appendChild(row);
       }
-
-      // האזנה להסרה
-      container.querySelectorAll('.remove').forEach(btn => {
-        btn.addEventListener('click', async () => {
-          const id = btn.getAttribute('data-id');
-          const del = await fetch('/api/cart', {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ productId: id })
-          });
-          if (del.ok) loadCart();
-          else {
-            let j = {};
-            try { j = await del.json(); } catch {}
-            alert(j.error || 'שגיאה בהסרה');
-          }
-        });
-      });
     }
+
+    // האזנת הסרה עם delegation (פעם אחת לכל הרשימה)
+    document.getElementById('items').addEventListener('click', async (e) => {
+      const btn = e.target.closest('.remove');
+      if (!btn) return;
+
+      const id = btn.getAttribute('data-id');
+      const del = await fetch(`/api/cart/${encodeURIComponent(id)}`, {
+        method: 'DELETE'
+      });
+
+      if (del.ok) {
+        loadCart();
+      } else {
+        let j = {};
+        try { j = await del.json(); } catch {}
+        alert(j.error || 'שגיאה בהסרה');
+      }
+    });
 
     (async () => {
       await loadProducts();

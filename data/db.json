@@ -18,6 +18,10 @@
         "bagle-cookie",
         "nutella-cookie"
       ]
+    },
+    {
+      "username": "מאיה",
+      "items": []
     }
   ],
   "purchases": {
@@ -159,6 +163,11 @@
       "datetime": "2025-08-16T15:26:13.030Z",
       "username": "מאיה",
       "type": "login"
+    },
+    {
+      "datetime": "2025-08-16T15:29:41.857Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
     }
   ],
   "products": [
