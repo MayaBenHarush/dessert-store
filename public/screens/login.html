@@ -5,6 +5,224 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>התחברות</title>
   <link rel="stylesheet" href="../styles.css" />
+  <style>
+    /* ===== התאמות עיצוב בהתאמה ל־store.html (בלי שינוי תוכן/לוגיקה) ===== */
+
+    :root{
+      /* אם כבר מוגדרים ב-styles.css זה יתמזג יפה */
+      --primary-color: #ff6b9d;
+      --primary-light: #ffd1e1;
+      --accent-color: #4ecdc4;
+      --text-primary: #1f2937;
+      --text-secondary: #6b7280;
+      --text-muted: #9ca3af;
+      --surface: #ffffff;
+      --bg: #f7fafc;
+      --radius-xl: 24px;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --shadow-sm: 0 4px 10px rgba(0,0,0,.06);
+      --shadow-md: 0 12px 24px rgba(0,0,0,.08);
+      --shadow-lg: 0 20px 40px rgba(0,0,0,.12);
+      --transition-fast: .18s ease;
+      --transition-normal: .35s cubic-bezier(.2,.8,.2,1);
+      --gradient-secondary: linear-gradient(135deg, #ff6b9d 0%, #4ecdc4 100%);
+      --gradient-accent: linear-gradient(135deg, rgba(255,107,157,.18) 0%, rgba(78,205,196,.18) 100%);
+      --gradient-soft: linear-gradient(135deg, rgba(255,107,157,.08) 0%, rgba(78,205,196,.08) 100%);
+    }
+
+    body{
+      background:
+        radial-gradient(1200px 600px at 90% -10%, rgba(255,107,157,.08), transparent 60%),
+        radial-gradient(900px 600px at -10% 110%, rgba(78,205,196,.08), transparent 60%),
+        var(--bg);
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    /* ===== ניווט תואם סגנון החנות ===== */
+    .top-nav{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:center;
+      padding:14px 18px;
+      margin:18px auto 6px;
+      background: var(--gradient-soft);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      width:min(1000px, 92%);
+      backdrop-filter: blur(6px);
+    }
+    .top-nav a{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      text-decoration:none;
+      font-weight:700;
+      font-size:.95rem;
+      padding:10px 16px;
+      border-radius: 999px;
+      border:2px solid transparent;
+      color:var(--text-primary);
+      transition: var(--transition-fast);
+      background:#fff;
+      box-shadow: var(--shadow-sm);
+    }
+    .top-nav a:hover{
+      transform: translateY(-2px);
+      border-color: var(--primary-color);
+    }
+
+    /* ===== כותרת עמוד מעוצבת בסגנון store-header ===== */
+    h1{
+      width:min(1000px, 92%);
+      margin:20px auto 0;
+      padding:32px 20px;
+      text-align:center;
+      background: var(--gradient-accent);
+      border-radius: var(--radius-xl);
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    h1::before{
+      content:'';
+      position:absolute;
+      top:-50%;
+      right:-40%;
+      width:120%;
+      height:220%;
+      background: radial-gradient(circle, rgba(255,107,157,.06) 0%, transparent 65%);
+      animation: float 6s ease-in-out infinite;
+      pointer-events:none;
+    }
+    @keyframes float{
+      0%,100%{ transform: translate(0,0) rotate(0deg);}
+      33%{ transform: translate(-24px, 18px) rotate(120deg);}
+      66%{ transform: translate(18px, -20px) rotate(240deg);}
+    }
+
+    /* ===== כרטיס טופס התחברות ===== */
+    .auth-form{
+      width:min(560px, 92%);
+      margin:24px auto 60px;
+      background: var(--surface);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-md);
+      padding: 28px 24px;
+      position: relative;
+      overflow:hidden;
+    }
+    .auth-form::after{
+      content:'';
+      position:absolute;
+      inset:0;
+      background: radial-gradient(400px 160px at 20% 0%, rgba(255,107,157,.06), transparent 60%),
+                  radial-gradient(420px 180px at 80% 100%, rgba(78,205,196,.06), transparent 60%);
+      pointer-events:none;
+    }
+
+    .auth-form label{
+      display:block;
+      font-weight:700;
+      color: var(--text-secondary);
+      margin: 10px 0 6px;
+    }
+    .auth-form label.field-username,
+    .auth-form label.field-password{
+      margin-top: 14px;
+    }
+
+    .auth-form input[type="text"],
+    .auth-form input[type="password"]{
+      width:100%;
+      appearance:none;
+      border:2px solid transparent;
+      background: #f9fafb;
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-size: 1rem;
+      color: var(--text-primary);
+      outline: none;
+      transition: var(--transition-fast);
+      box-shadow: inset 0 0 0 1px #e5e7eb;
+    }
+    .auth-form input[type="text"]::placeholder,
+    .auth-form input[type="password"]::placeholder{
+      color: #c0c4cc;
+    }
+    .auth-form input[type="text"]:focus,
+    .auth-form input[type="password"]:focus{
+      background:#fff;
+      box-shadow:
+        inset 0 0 0 2px var(--primary-light),
+        0 6px 16px rgba(255,107,157,.14);
+      transform: translateY(-1px);
+    }
+
+    .auth-form label.extras{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-top: 14px;
+      padding: 10px 4px 0;
+      color: var(--text-secondary);
+      user-select:none;
+    }
+    .auth-form input[type="checkbox"]{
+      width:18px;
+      height:18px;
+      border-radius:6px;
+      border:2px solid #e5e7eb;
+      accent-color: #ff6b9d;
+      cursor:pointer;
+      transform: translateY(1px);
+    }
+
+    .auth-form .actions{
+      margin-top: 18px;
+      display:flex;
+      justify-content: center;
+    }
+    .auth-form button[type="submit"]{
+      border:0;
+      cursor:pointer;
+      font-weight:800;
+      font-size: 1rem;
+      padding: 12px 22px;
+      border-radius: 14px;
+      background: var(--gradient-secondary);
+      color:#fff;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition-normal);
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    .auth-form button[type="submit"]::before{
+      content:'🔐';
+      font-size:1rem;
+      transform: translateY(-1px);
+      transition: var(--transition-normal);
+    }
+    .auth-form button[type="submit"]:hover{
+      transform: translateY(-2px) scale(1.01);
+      box-shadow: var(--shadow-lg);
+    }
+    .auth-form button[type="submit"]:active{
+      transform: translateY(0) scale(.99);
+    }
+
+    /* רספונסיביות קלה */
+    @media (max-width: 480px){
+      .top-nav{ gap:8px; padding:10px 12px;}
+      .top-nav a{ padding:8px 12px; font-size:.9rem;}
+      .auth-form{ padding:22px 16px;}
+    }
+  </style>
 </head>
 <body>
   <nav class="top-nav">
@@ -14,7 +232,6 @@
     <a href="myitems.html">הרכישות שלי</a>
     <a href="register.html">הרשמה</a>
     <a href="admin.html">ניהול</a>
-
   </nav>
 
   <h1>התחברות</h1>
