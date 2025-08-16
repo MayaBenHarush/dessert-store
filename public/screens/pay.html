@@ -1,36 +1,49 @@
 <!DOCTYPE html>
-<html lang="he">
+<html lang="he" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>Pay – תשלום</title>
-  <link rel="stylesheet" href="/assets/styles.css">
+  <meta charset="UTF-8" />
+  <title>תשלום</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/styles.css" />
+  <style>
+    .pay-items{ display:flex; flex-direction:column; gap:12px; margin:12px 0 18px; }
+    .pay-item{
+      display:flex; align-items:center; gap:12px;
+      background:#fff; border:1px solid #eee; border-radius:8px; padding:10px;
+    }
+    .pay-item img{ width:90px; height:90px; object-fit:cover; border-radius:8px; }
+    .pay-empty{ color:#666; }
 
+    #pay-form{ display:grid; gap:12px; max-width:560px; }
+    #pay-form label{ display:flex; flex-direction:column; gap:6px; }
+    #pay-form input{ padding:10px; border:1px solid #ccc; border-radius:8px; font-size:16px; }
+    .row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .error{ color:#b00020; display:none; }
+  </style>
 </head>
 <body>
-
-    <nav>
+  <nav>
     <a href="store.html">חנות</a>
     <a href="cart.html">סל הקניות</a>
     <a href="checkout.html">תשלום</a>
     <a href="myitems.html">הרכישות שלי</a>
     <button id="logout">התנתקות</button>
-    <a href="admin.html">ניהול</a>
+  </nav>
 
-    </nav>
-
-
-  <h1> תשלום ההזמנה שלי</h1>
+  <h1>תשלום (דמו)</h1>
   <p class="hint">זהו תשלום מדומה לצרכי תרגול בלבד — אין שמירה של פרטי כרטיס.</p>
-  
+
+  <div id="pay-items" class="pay-items"></div>
+
   <form id="pay-form" novalidate>
     <label>
-        שם בעל/ת הכרטיס
-        <input type="text" name="cardName" autocomplete="cc-name" required />
+      מספר הכרטיס
+      <input type="text" name="cardNumber" inputmode="numeric"
+             autocomplete="cc-number" placeholder="1234 5678 9012 3456" required />
     </label>
-
     <label>
-        מספר הכרטיס
-        <input type="text" name="cardNumber" inputmode="numeric" autocomplete="cc-number" placeholder="1234 5678 9012 3456" required />
+      שם בעל/ת הכרטיס
+      <input type="text" name="cardName" autocomplete="cc-name" required />
     </label>
 
     <div class="row">
@@ -38,7 +51,6 @@
         תוקף (MM/YY)
         <input type="text" name="expiry" inputmode="numeric" autocomplete="cc-exp" placeholder="12/27" required />
       </label>
-
       <label>
         CVV
         <input type="text" name="cvv" inputmode="numeric" autocomplete="cc-csc" placeholder="123" required />
@@ -46,23 +58,43 @@
     </div>
 
     <div class="error" id="err"></div>
-
     <button id="pay-btn" type="submit">Pay</button>
-    
-
   </form>
 
-    <script>
-    console.log('PAY page loaded');
-
-    // Logout
+  <script>
     document.getElementById('logout').onclick = async () => {
-      try {
-        await fetch('/api/logout', { method: 'POST' });
-      } finally {
-        location.href = 'login.html';
-      }
+      try { await fetch('/api/logout', { method: 'POST' }); }
+      finally { location.href = 'login.html'; }
     };
+
+    // מציג את ה-PENDING (לא מהסל!)
+    async function renderPayItems(){
+      const box = document.getElementById('pay-items');
+      box.innerHTML = 'טוען...';
+
+      const res = await fetch('/api/checkout/pending');
+      if (res.status === 401) { location.href = 'login.html'; return; }
+      const items = await res.json();
+
+      if (!Array.isArray(items) || items.length === 0){
+        box.innerHTML = '<p class="pay-empty">אין פריטים ממתינים לתשלום.</p>';
+        return;
+      }
+
+      box.innerHTML = '';
+      for (const p of items){
+        const row = document.createElement('div');
+        row.className = 'pay-item';
+        row.innerHTML = `
+          <img src="/images/${p.image}" alt="${p.title}">
+          <div>
+            <div><strong>${p.title}</strong></div>
+            <div class="meta">${p.description || ''}</div>
+          </div>
+        `;
+        box.appendChild(row);
+      }
+    }
 
     const form = document.getElementById('pay-form');
     const errBox = document.getElementById('err');
@@ -73,22 +105,18 @@
       errBox.style.display = 'none';
       errBox.textContent = '';
 
-      const cardName = form.cardName.value.trim();
-      const rawNumber = form.cardNumber.value.trim();
-      const cardNumber = rawNumber.replace(/[\s-]/g, ''); // הסרת רווחים/מקפים
-      const expiry = form.expiry.value.trim();
-      const cvv = form.cvv.value.trim();
+      const cardNumber = form.cardNumber.value.trim().replace(/[\s-]/g, '');
+      const cardName   = form.cardName.value.trim();
+      const expiry     = form.expiry.value.trim();
+      const cvv        = form.cvv.value.trim();
 
-      // ולידציה בסיסית בצד לקוח
-      if (!cardName) return showErr('נא למלא שם בעל/ת הכרטיס');
       if (!/^\d{12,19}$/.test(cardNumber)) return showErr('מספר כרטיס לא תקין (לפחות 12 ספרות)');
+      if (!cardName) return showErr('נא למלא שם בעל/ת הכרטיס');
       if (!/^\d{2}\/\d{2}$/.test(expiry)) return showErr('פורמט תוקף לא תקין (MM/YY)');
-      const parts = expiry.split('/');
-      const mm = parseInt(parts[0], 10), yy = parseInt(parts[1], 10);
+      const [mm, yy] = expiry.split('/').map(n => parseInt(n, 10));
       if (mm < 1 || mm > 12) return showErr('חודש תוקף לא תקין');
       if (!/^\d{3,4}$/.test(cvv)) return showErr('CVV לא תקין');
 
-      // שליחה לשרת
       payBtn.disabled = true;
       payBtn.textContent = 'מעבד תשלום...';
       try {
@@ -97,22 +125,15 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ cardName, cardNumber, expiry, cvv })
         });
+        if (res.status === 401) { location.href = 'login.html'; return; }
+        const j = await res.json().catch(()=>({}));
 
-        if (res.status === 401) {
-          // לא מחובר/ת
-          location.href = 'login.html';
-          return;
-        }
-
-        let payload = {};
-        try { payload = await res.json(); } catch {}
-
-        if (res.ok && payload && payload.ok) {
+        if (res.ok && j.ok) {
           location.href = 'thankyou.html';
         } else {
-          showErr(payload && payload.error ? payload.error : 'Payment failed');
+          showErr(j.error || 'Payment failed');
         }
-      } catch (err) {
+      } catch {
         showErr('שגיאת רשת — נסו שוב');
       } finally {
         payBtn.disabled = false;
@@ -120,10 +141,9 @@
       }
     });
 
-    function showErr(msg) {
-      errBox.textContent = msg;
-      errBox.style.display = 'block';
-    }
+    function showErr(msg){ errBox.textContent = msg; errBox.style.display = 'block'; }
+
+    renderPayItems();
   </script>
 </body>
 </html>

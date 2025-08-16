@@ -1,8 +1,10 @@
 // modules/pay-server.js
-// תשלום דמו: מבצע ולידציה בסיסית ומחזיר ok. אין חיוב אמיתי ואין שמירת פרטי כרטיס.
+// תשלום דמו: ולידציה בסיסית ומחזירים ok.
+// חשוב: לא נוגעים בסל/רכישות כאן – זה כבר בוצע ב-Checkout.
+
+const persist = require('../persist_module');
 
 module.exports = (app) => {
-  // POST /api/pay – body: { cardName, cardNumber, expiry, cvv }
   app.post('/api/pay', async (req, res, next) => {
     try {
       const username = req.cookies?.session;
@@ -10,7 +12,7 @@ module.exports = (app) => {
 
       const { cardName, cardNumber, expiry, cvv } = req.body || {};
 
-      // ולידציה קלה (בדיקת פורמטים בלבד)
+      // ולידציה בסיסית של פרטי הכרטיס (דמו בלבד)
       if (!cardName || typeof cardName !== 'string') {
         return res.status(400).json({ error: 'Invalid cardName' });
       }
@@ -25,7 +27,7 @@ module.exports = (app) => {
         return res.status(400).json({ error: 'Invalid cvv' });
       }
 
-      // אין שמירת נתונים ואין חיוב אמיתי – רק תשובת הצלחה
+      // לא מחפשים ולא דורשים pending — אם הוולידציה עברה, מחזירים הצלחה.
       return res.json({ ok: true });
     } catch (err) {
       next(err);
