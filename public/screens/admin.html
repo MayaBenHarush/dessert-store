@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>מסך ניהול</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/styles.css">
+  <style>
+    /* עיצוב קטן למסך ניהול */
+    .admin-grid{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 900px){ .admin-grid{ grid-template-columns: 1fr; } }
+
+    .panel{
+      border: 1px solid #eee;
+      border-radius: 10px;
+      padding: 14px;
+      background: #fff;
+    }
+    .panel h2{ margin-top: 0; }
+
+    .admin-list{
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .admin-row{
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 8px;
+      background: #fafafa;
+    }
+    .admin-row img{
+      width: 64px; height: 64px; object-fit: cover; border-radius: 6px;
+    }
+    .admin-row button{
+      border: 1px solid #ccc; background: #fff; border-radius: 8px; padding: 6px 10px; cursor: pointer;
+    }
+    .admin-row button:hover{ background:#f2f2f2; }
+
+    .admin-form label{ display:block; margin-bottom:10px; }
+    .admin-form input, .admin-form textarea{
+      width: 100%; box-sizing: border-box; padding: 8px; border:1px solid #ccc; border-radius: 8px;
+    }
+    .admin-form button{ margin-top: 8px; }
+    .muted{ color:#666; font-size:12px; }
+
+    .error-box { color:#b00020; display:none; margin: 8px 0; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="store.html">חנות</a>
+    <a href="cart.html">סל הקניות</a>
+    <a href="checkout.html">תשלום</a>
+    <a href="myitems.html">הרכישות שלי</a>
+    <a href="admin.html">ניהול</a>
+    <button id="logout">התנתקות</button>
+  </nav>
+
+  <h1>מסך ניהול</h1>
+
+  <div id="err" class="error-box"></div>
+
+  <div class="admin-grid">
+    <!-- הוספת מוצר -->
+    <section class="panel">
+      <h2>הוספת מוצר חדש</h2>
+      <form id="add-form" class="admin-form">
+        <label>
+          כותרת המוצר
+          <input type="text" name="title" required>
+        </label>
+        <label>
+          תיאור (אופציונלי)
+          <textarea name="description" rows="3"></textarea>
+        </label>
+        <label>
+          תמונה (שם קובץ מתוך /public/images או URL מלא)
+          <input type="text" name="image" placeholder="cookie.jpg או https://… " required>
+        </label>
+        <button type="submit">הוסף מוצר</button>
+        <div class="muted">טיפ: אם תעלי קובץ לתיקיית <code>public/images</code>, כתבי רק את שמו (למשל <code>cookie.jpg</code>).</div>
+      </form>
+    </section>
+
+    <!-- רשימת מוצרים -->
+    <section class="panel">
+      <h2>מוצרים קיימים</h2>
+      <div id="products" class="admin-list"></div>
+    </section>
+
+    <!-- לוג פעילות (נחמד/אופציונלי) -->
+    <section class="panel">
+      <h2>פעילות אחרונה</h2>
+      <div class="muted">מוצג חדש ← ישן.</div>
+      <div id="activity" class="admin-list"></div>
+    </section>
+  </div>
+
+  <script>
+    const errBox = document.getElementById('err');
+    function showErr(msg){ errBox.textContent = msg; errBox.style.display = 'block'; }
+    function clearErr(){ errBox.textContent = ''; errBox.style.display = 'none'; }
+
+    // Logout
+    document.getElementById('logout').onclick = async () => {
+      try { await fetch('/api/logout', { method: 'POST' }); }
+      finally { location.href = 'login.html'; }
+    };
+
+    // בדיקת הרשאת אדמין בתחילת הדף
+    async function ensureAdmin(){
+      try{
+        const res = await fetch('/api/admin/products', { method:'GET' });
+        if (res.status === 401){ location.href = 'login.html'; return false; }
+        if (res.status === 403){ alert('גישה למנהלים בלבד'); location.href = 'store.html'; return false; }
+        return true;
+      }catch(e){
+        showErr('שגיאת רשת'); return false;
+      }
+    }
+
+    // --- טעינת מוצרים ---
+    const productsBox = document.getElementById('products');
+    async function loadProducts(){
+      clearErr();
+      productsBox.innerHTML = 'טוען...';
+      try{
+        const res = await fetch('/api/admin/products');
+        if (res.status === 401){ location.href = 'login.html'; return; }
+        if (res.status === 403){ alert('גישה למנהלים בלבד'); location.href = 'store.html'; return; }
+        if (!res.ok){ showErr('שגיאה בטעינת מוצרים'); return; }
+        const items = await res.json();
+        if (!Array.isArray(items) || !items.length){
+          productsBox.innerHTML = '<div class="muted">אין מוצרים עדיין.</div>';
+          return;
+        }
+        productsBox.innerHTML = '';
+        for (const p of items){
+          const row = document.createElement('div');
+          row.className = 'admin-row';
+          const imgSrc = (/^https?:\/\//i.test(p.image) ? p.image : '/images/' + p.image);
+          row.innerHTML = `
+            <img src="${imgSrc}" alt="${p.title}">
+            <div>
+              <div><strong>${p.title}</strong></div>
+              <div class="muted">${p.id}</div>
+            </div>
+            <button data-id="${p.id}">מחק</button>
+          `;
+          row.querySelector('button').onclick = async () => {
+            if (!confirm('למחוק את "'+p.title+'"?')) return;
+            const del = await fetch('/api/admin/products/' + encodeURIComponent(p.id), { method:'DELETE' });
+            const j = await del.json().catch(()=>({}));
+            if (!del.ok){
+              alert(j.error || 'מחיקה נכשלה');
+              return;
+            }
+            await loadProducts();
+            await loadActivity();
+          };
+          productsBox.appendChild(row);
+        }
+      }catch(e){
+        showErr('שגיאת רשת בטעינת מוצרים');
+      }
+    }
+
+    // --- הוספת מוצר ---
+    const addForm = document.getElementById('add-form');
+    addForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearErr();
+      const fd = new FormData(addForm);
+      const payload = {
+        title: (fd.get('title')||'').trim(),
+        description: (fd.get('description')||'').trim(),
+        image: (fd.get('image')||'').trim()
+      };
+      if (!payload.title || !payload.image) {
+        return showErr('יש למלא כותרת ותמונה');
+      }
+      try{
+        const res = await fetch('/api/admin/products', {
+          method:'POST',
+          headers: { 'Content-Type':'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const j = await res.json().catch(() => ({}));
+        if (res.status === 401){ location.href = 'login.html'; return; }
+        if (res.status === 403){ alert('גישה למנהלים בלבד'); location.href = 'store.html'; return; }
+        if (!res.ok || !j.ok){
+          return showErr(j.error || 'הוספה נכשלה');
+        }
+        addForm.reset();
+        await loadProducts();
+        await loadActivity();
+        alert('המוצר נוסף בהצלחה!');
+      }catch(e){
+        showErr('שגיאת רשת בשמירת מוצר');
+      }
+    });
+
+    // --- פעילות ---
+    const actBox = document.getElementById('activity');
+    async function loadActivity(){
+      actBox.innerHTML = 'טוען...';
+      try{
+        const res = await fetch('/api/admin/activity');
+        if (res.status === 401){ return; } // יטופל ע"י ensureAdmin בהפעלה
+        if (res.status === 403){ actBox.textContent = 'אין הרשאת מנהל'; return; }
+        if (!res.ok){ actBox.textContent = 'שגיאה בטעינת פעילות'; return; }
+        const rows = await res.json();
+        if (!Array.isArray(rows) || !rows.length){
+          actBox.innerHTML = '<div class="muted">אין פעילות להצגה.</div>';
+          return;
+        }
+        actBox.innerHTML = '';
+        for (const r of rows){
+          const when = r.datetime ? new Date(r.datetime).toLocaleString('he-IL') : '';
+          const div = document.createElement('div');
+          div.className = 'admin-row';
+          div.innerHTML = `
+            <div style="grid-column: 1 / span 3;">
+              <strong>${r.type}</strong>
+              <span class="muted">— ${when} — ${r.username || ''}</span>
+            </div>
+          `;
+          actBox.appendChild(div);
+        }
+      }catch(e){
+        actBox.textContent = 'שגיאת רשת בטעינת פעילות';
+      }
+    }
+
+    // הפעלה ראשונית
+    (async function init(){
+      const ok = await ensureAdmin();
+      if (!ok) return;
+      await loadProducts();
+      await loadActivity();
+    })();
+  </script>
+</body>
+</html>

@@ -1,50 +1,67 @@
 // modules/admin-server.js
-// ⚙️ Admin API: פעילות משתמשים + ניהול מוצרים (הוספה/מחיקה).
-// גישה רק למשתמש 'admin' לפי העוגייה session.
-
+// דרישת מטלה: יש משתמש קיים admin/admin. גישה לראוטים האלה רק אם session === 'admin'.
 const persist = require('../persist_module');
 
-// בדיקת הרשאת מנהל
-function requireAdmin(req, res) {
-  const username = req.cookies?.session;
-  if (!username) return { error: res.status(401).json({ error: 'Not logged in' }) };
-  if (username !== 'admin') return { error: res.status(403).json({ error: 'Admin only' }) };
-  return { username };
-}
-
 module.exports = (app) => {
+  // פונקציית בדיקה פשוטה: רק 'admin' מורשה
+  function requireAdmin(req, res) {
+    const username = req.cookies?.session;
+    if (!username) {
+      res.status(401).json({ error: 'Not logged in' });
+      return { error: true };
+    }
+    if (username !== 'admin') {
+      res.status(403).json({ error: 'Admin only' });
+      return { error: true };
+    }
+    return { ok: true };
+  }
+
+  // לוג פעילות — לא חובה במטלה לשמור הכל, אבל כן נדרש להציג login/logout/add-to-cart
+  async function logAdminActivity(type) {
+    const activity = await persist.loadData('activity'); // [{datetime,username,type}]
+    activity.push({ datetime: new Date().toISOString(), username: 'admin', type });
+    await persist.saveData('activity', activity);
+  }
+
+  // עזר ל־id מוצרים
+  function slugify(str) {
+    const base = String(str || 'product')
+      .trim().toLowerCase()
+      .replace(/[\s_]+/g, '-')
+      .replace(/[^a-z0-9\-]/g, '')
+      .replace(/\-+/g, '-')
+      .replace(/^\-+|\-+$/g, '') || 'product';
+    return base;
+  }
+
+  // === Activity ===
   // GET /api/admin/activity?prefix=abc
-  // מחזיר לוג פעילות; סינון לפי תחילת שם משתמש (prefix)
   app.get('/api/admin/activity', async (req, res, next) => {
     try {
       if (requireAdmin(req, res).error) return;
-
       const prefix = (req.query.prefix || '').toLowerCase();
-      const activity = await persist.loadData('activity'); // Array of {datetime, username, type}
-
+      const activity = await persist.loadData('activity');
       let rows = activity;
       if (prefix) {
         rows = rows.filter(r => (r.username || '').toLowerCase().startsWith(prefix));
       }
-      rows.sort((a, b) => String(b.datetime).localeCompare(String(a.datetime))); // חדש->ישן
-
+      rows.sort((a, b) => String(b.datetime).localeCompare(String(a.datetime)));
       res.json(rows);
     } catch (err) { next(err); }
   });
 
-  // GET /api/admin/products – רשימת מוצרים מלאה
+  // === Products ===
+  // GET /api/admin/products
   app.get('/api/admin/products', async (req, res, next) => {
     try {
       if (requireAdmin(req, res).error) return;
-
-      const products = await persist.getProducts();
+      const products = await persist.loadData('products');
       res.json(products);
     } catch (err) { next(err); }
   });
 
-  // POST /api/admin/products – הוספת מוצר חדש
-  // body: { id?(אופציונלי), title, description?, image }
-  // image יכול להיות שם קובץ מתיקיית public/images או URL מלא.
+  // POST /api/admin/products  body: { title, description?, image, id? }
   app.post('/api/admin/products', async (req, res, next) => {
     try {
       if (requireAdmin(req, res).error) return;
@@ -54,51 +71,54 @@ module.exports = (app) => {
         return res.status(400).json({ error: 'title and image are required' });
       }
 
-      // יצירה דרך שכבת persist (מטפלת ב-id ייחודי וכו׳)
-      const product = await persist.addProduct({ id, title, description, image });
+      const products = await persist.loadData('products');
+      const ids = new Set(products.map(p => p.id));
+      let newId = (id && String(id).trim()) || slugify(title);
+      if (ids.has(newId)) {
+        const base = newId; let i = 2;
+        while (ids.has(newId)) newId = `${base}-${i++}`;
+      }
 
-      // לוג פעילות
-      await persist.logActivity({
-        datetime: new Date().toISOString(),
-        username: 'admin',
-        type: 'admin-add-product'
-      });
+      const product = {
+        id: newId,
+        title: String(title),
+        description: String(description || ''),
+        image: String(image)
+      };
 
+      products.push(product);
+      await persist.saveData('products', products);
+      await logAdminActivity('admin-add-product');
       res.status(201).json({ ok: true, product });
     } catch (err) { next(err); }
   });
 
-  // DELETE /api/admin/products/:id – מחיקת מוצר, וגם ניקוי מכל הסלים
+  // DELETE /api/admin/products/:id
   app.delete('/api/admin/products/:id', async (req, res, next) => {
     try {
       if (requireAdmin(req, res).error) return;
 
       const id = req.params.id;
+      const products = await persist.loadData('products');
+      const idx = products.findIndex(p => p.id === id);
+      if (idx === -1) return res.status(404).json({ error: 'Product not found' });
 
-      // הסר את המוצר ממאגר המוצרים
-      const removed = await persist.removeProduct(id);
-      if (!removed) return res.status(404).json({ error: 'Product not found' });
+      products.splice(idx, 1);
+      await persist.saveData('products', products);
 
-      // ניקוי המוצר מכל הסלים (carts הוא אובייקט: { username: [ids] })
-      const cartsObj = await persist.loadData('carts');
+      // הסרת המוצר מכל הסלים
+      const carts = await persist.loadData('carts'); // [{username, items:[]}]
       let changed = false;
-      for (const user of Object.keys(cartsObj || {})) {
-        const before = Array.isArray(cartsObj[user]) ? cartsObj[user] : [];
-        const after = before.filter(pid => pid !== id);
-        if (after.length !== before.length) {
-          cartsObj[user] = after;
-          changed = true;
+      for (const c of carts) {
+        if (Array.isArray(c.items)) {
+          const before = c.items.length;
+          c.items = c.items.filter(pid => pid !== id);
+          if (c.items.length !== before) changed = true;
         }
       }
-      if (changed) await persist.saveData('carts', cartsObj);
+      if (changed) await persist.saveData('carts', carts);
 
-      // לוג פעילות
-      await persist.logActivity({
-        datetime: new Date().toISOString(),
-        username: 'admin',
-        type: 'admin-remove-product'
-      });
-
+      await logAdminActivity('admin-remove-product');
       res.json({ ok: true });
     } catch (err) { next(err); }
   });

@@ -5,29 +5,26 @@ module.exports = (app) => {
   // POST /api/register
   app.post('/api/register', async (req, res, next) => {
     try {
-      const { username, password } = req.body;
+      const { username, password } = req.body || {};
       if (!username || !password) {
         return res.status(400).json({ error: 'Username and password required' });
       }
 
-      // האם קיים כבר?
-      const exists = await persist.getUser(username);
-      if (exists) {
+      // חסימת שם המשתמש 'admin' כדי לשמור אותו למנהל המובנה (דרישת מטלה)
+      if (String(username).toLowerCase() === 'admin') {
+        return res.status(403).json({ error: 'Username reserved' });
+      }
+
+      const users = await persist.loadData('users');
+      if (users.find(u => u.username === username)) {
         return res.status(409).json({ error: 'Username already exists' });
       }
 
-      // צור משתמש חדש בעזרת ה-API החדש של persist
-      await persist.createUser({ username, password });
-
-      await persist.logActivity({
-        datetime: new Date().toISOString(),
-        username,
-        type: 'register'
-      });
+      users.push({ username, password });
+      await persist.saveData('users', users);
 
       return res.status(201).json({ message: 'User registered' });
     } catch (err) {
-      console.error('register error', err);
       next(err);
     }
   });

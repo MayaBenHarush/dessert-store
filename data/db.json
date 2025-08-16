@@ -1,18 +1,11 @@
 {
-  "users": {
-    "admin": {
+  "users": [
+    {
       "username": "admin",
-      "password": "admin"
-    },
-    "Maya": {
-      "username": "Maya",
-      "password": "123"
-    },
-    "מאיה": {
-      "username": "מאיה",
-      "password": "123"
+      "password": "admin",
+      "role": "admin"
     }
-  },
+  ],
   "carts": [
     {
       "username": "Maya",
@@ -135,6 +128,16 @@
     {
       "datetime": "2025-08-13T20:13:22.361Z",
       "username": "Maya",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-08-13T21:02:32.964Z",
+      "username": "Maya",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-08-14T15:49:16.991Z",
+      "username": "admin",
       "type": "login"
     }
   ],

@@ -1,8 +1,8 @@
 [
   {
-    "username": "Maya Ben Harush",
-    "password": "עקע",
-    "role": "user"
+    "username": "admin",
+    "password": "admin", 
+    "role": "admin" 
   },
   {
     "username": "Maya",
