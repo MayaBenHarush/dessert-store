@@ -2,99 +2,525 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>החנות</title>
+  <title>🍰 חנות קינוחים מתוקים</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- אם יש לך styles.css כפי שבנית קודם -->
   <link rel="stylesheet" href="/assets/styles.css" />
   <style>
-    /* מינימום כדי לעבוד גם בלי styles.css */
-    body { font-family: Arial, sans-serif; padding: 20px; max-width: 900px; margin: auto; }
-    nav { display:flex; gap:12px; margin-bottom:16px; }
-    nav a, nav button { border:1px solid #ccc; padding:6px 10px; border-radius:6px; background:#f5f5f5; text-decoration:none; color:inherit; cursor:pointer; }
-    #search { margin: 12px 0 20px; width: 260px; }
-    #products { display:grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap:16px; }
-    .product { border:1px solid #ccc; border-radius:6px; padding:10px; background:#fafafa; }
-    .product img { width:100%; height:auto; display:block; }
-    .product h3 { margin:8px 0 6px; font-size:18px; }
-    .product p { margin:0 0 10px; color:#555; font-size:14px; }
+    /* הוספות ספציפיות לעמוד החנות */
+    .store-header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 40px 20px;
+      background: linear-gradient(135deg, rgba(255, 107, 157, 0.1) 0%, rgba(78, 205, 196, 0.1) 100%);
+      border-radius: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .store-header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 107, 157, 0.05) 0%, transparent 70%);
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      33% { transform: translate(30px, -30px) rotate(120deg); }
+      66% { transform: translate(-20px, 20px) rotate(240deg); }
+    }
+    
+    .store-subtitle {
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+      margin-top: 8px;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .search-container {
+      position: relative;
+      max-width: 500px;
+      margin: 0 auto 40px;
+    }
+    
+    .search-container::before {
+      content: '🔍';
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    
+    #search {
+      padding-right: 50px;
+    }
+    
+    .products-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    
+    .products-count {
+      background: var(--gradient-secondary);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .filter-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    
+    .filter-btn {
+      padding: 8px 16px;
+      border: 2px solid var(--primary-color);
+      background: transparent;
+      color: var(--primary-color);
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: var(--transition-normal);
+    }
+    
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--primary-color);
+      color: white;
+      transform: translateY(-2px);
+    }
+    
+    /* אנימציית הוספה לסל */
+    @keyframes addToCart {
+      0% { transform: scale(1); }
+      50% { 
+        transform: scale(1.1); 
+        background: var(--gradient-accent);
+      }
+      100% { transform: scale(1); }
+    }
+    
+    .adding-to-cart {
+      animation: addToCart 0.4s ease;
+      pointer-events: none;
+    }
+    
+    /* הודעת הצלחה */
+    .success-toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--gradient-secondary);
+      color: white;
+      padding: 16px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      box-shadow: var(--shadow-lg);
+      transform: translateX(400px);
+      transition: var(--transition-normal);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .success-toast.show {
+      transform: translateX(0);
+    }
+    
+    /* מצב טעינה */
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 60px;
+      font-size: 1.2rem;
+      color: var(--text-muted);
+    }
+    
+    .loading::after {
+      content: '';
+      width: 24px;
+      height: 24px;
+      border: 3px solid var(--primary-light);
+      border-top: 3px solid var(--primary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 16px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* אפקט hover משופר למוצרים */
+    .product {
+      cursor: pointer;
+    }
+    
+    .product .product-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: var(--gradient-accent);
+      color: var(--text-primary);
+      padding: 4px 12px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: var(--shadow-sm);
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: var(--transition-normal);
+    }
+    
+    .product:hover .product-badge {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .no-results {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--text-muted);
+    }
+    
+    .no-results-icon {
+      font-size: 4rem;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+    
+    @media (max-width: 768px) {
+      .products-header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .filter-buttons {
+        justify-content: center;
+      }
+      
+      .success-toast {
+        right: 16px;
+        left: 16px;
+        transform: translateY(-100px);
+      }
+      
+      .success-toast.show {
+        transform: translateY(0);
+      }
+    }
   </style>
 </head>
 <body>
-  <nav>
-    <a href="store.html">החנות</a>
-    <a href="cart.html">סל הקניות</a>
-    <a href="checkout.html">תשלום</a>
-    <a href="myitems.html">הרכישות שלי</a>
-    <a href="login.html">התחברות</a>
-    <a href="admin.html">ניהול</a>
+  <!-- Toast הודעה -->
+  <div id="successToast" class="success-toast">
+    <span>✅</span>
+    <span id="toastMessage">המוצר התווסף לסל!</span>
+  </div>
 
+  <!-- ניווט מעוצב -->
+  <nav>
+    <a href="store.html">🏪 החנות</a>
+    <a href="cart.html">🛒 סל הקניות</a>
+    <a href="checkout.html">💳 תשלום</a>
+    <a href="myitems.html">📦 הרכישות שלי</a>
+    <a href="login.html">🔐 התחברות</a>
+    <a href="admin.html">⚙️ ניהול</a>
   </nav>
 
-  <h1>חנות קינוחים 🍰</h1>
+  <!-- כותרת ראשית מעוצבת -->
+  <div class="store-header">
+    <h1>🍰 חנות הקינוחים המתוקים</h1>
+    <p class="store-subtitle">גלו מבחר קינוחים טעימים ומושכים במיוחד עבורכם</p>
+  </div>
 
-  <input id="search" type="text" placeholder="חפש קינוח..." />
+  <!-- חיפוש מעוצב -->
+  <div class="search-container">
+    <input id="search" type="text" placeholder="חפשו את הקינוח המושלם שלכם..." />
+  </div>
 
-  <div id="products"></div>
+  <!-- כותרת מוצרים עם מונה ופילטרים -->
+  <div class="products-header">
+    <div class="products-count" id="productsCount">
+      <span id="productCountNumber">0</span> קינוחים מתוקים
+    </div>
+    <div class="filter-buttons">
+      <button class="filter-btn active" data-filter="all">הכל</button>
+      <button class="filter-btn" data-filter="cake">עוגות</button>
+      <button class="filter-btn" data-filter="cookie">עוגיות</button>
+      <button class="filter-btn" data-filter="dessert">קינוחים</button>
+    </div>
+  </div>
+
+  <!-- רשת מוצרים -->
+  <div id="products" class="grid"></div>
 
   <script>
-    // טעינת מוצרים + חיפוש
-    document.getElementById('search').addEventListener('input', fetchAndRender);
+    // משתנים גלובליים
+    let allProducts = [];
+    let filteredProducts = [];
+    let currentFilter = 'all';
+    
+    // אלמנטים
+    const searchInput = document.getElementById('search');
+    const productsContainer = document.getElementById('products');
+    const productCountElement = document.getElementById('productCountNumber');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const successToast = document.getElementById('successToast');
 
-    async function fetchAndRender() {
-      const prefix = document.getElementById('search').value || '';
-      const res = await fetch(`/api/products?search=${encodeURIComponent(prefix)}`);
-      const products = await res.json();
+    // הצגת הודעת הצלחה מעוצבת
+    function showSuccessToast(message = 'המוצר התווסף לסל!') {
+      const toastMessage = document.getElementById('toastMessage');
+      toastMessage.textContent = message;
+      successToast.classList.add('show');
+      
+      setTimeout(() => {
+        successToast.classList.remove('show');
+      }, 3000);
+    }
 
-      const container = document.getElementById('products');
-      container.innerHTML = '';
+    // הצגת מצב טעינה
+    function showLoading() {
+      productsContainer.innerHTML = '<div class="loading">טוען מוצרים...</div>';
+    }
 
-      for (const p of products) {
-        const card = document.createElement('div');
-        card.className = 'product';
-        card.innerHTML = `
-          <img src="/images/${p.image}" alt="${p.title}">
-          <h3>${p.title}</h3>
-          <p>${p.description || ''}</p>
-          <button class="add-to-cart" data-id="${p.id}">Add to cart</button>
+    // עדכון מונה מוצרים
+    function updateProductCount() {
+      const count = filteredProducts.length;
+      productCountElement.textContent = count;
+      
+      if (count === 0) {
+        productsContainer.innerHTML = `
+          <div class="no-results">
+            <div class="no-results-icon">🍰</div>
+            <h3>לא נמצאו קינוחים</h3>
+            <p>נסו לחפש במילות חיפוש אחרות או בחרו קטגוריה אחרת</p>
+          </div>
         `;
-        container.appendChild(card);
       }
     }
 
-    // האזנה ללחיצה על "Add to cart" (האצלת אירועים על הקונטיינר)
-    document.getElementById('products').addEventListener('click', async (e) => {
-      const btn = e.target.closest('button.add-to-cart');
-      if (!btn) return;
+    // סינון מוצרים לפי קטגוריה
+    function filterByCategory(category) {
+      currentFilter = category;
+      
+      if (category === 'all') {
+        filteredProducts = [...allProducts];
+      } else {
+        filteredProducts = allProducts.filter(product => 
+          product.title.toLowerCase().includes(category) || 
+          (product.description && product.description.toLowerCase().includes(category))
+        );
+      }
+      
+      applySearchFilter();
+    }
 
-      const id = btn.dataset.id;
-      if (!id) {
-        alert('Missing product id');
+    // סינון לפי חיפוש
+    function applySearchFilter() {
+      const searchTerm = searchInput.value.toLowerCase().trim();
+      
+      if (searchTerm) {
+        filteredProducts = filteredProducts.filter(product =>
+          product.title.toLowerCase().includes(searchTerm) ||
+          (product.description && product.description.toLowerCase().includes(searchTerm))
+        );
+      }
+      
+      renderProducts();
+    }
+
+    // רינדור מוצרים
+    function renderProducts() {
+      updateProductCount();
+      
+      if (filteredProducts.length === 0) {
         return;
       }
 
-      const res = await fetch('/api/cart', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productId: id })
+      productsContainer.innerHTML = '';
+
+      filteredProducts.forEach((product, index) => {
+        const card = document.createElement('div');
+        card.className = 'product';
+        card.style.animationDelay = `${index * 0.1}s`;
+        
+        // זיהוי סוג המוצר לתג
+        let badge = '';
+        const title = product.title.toLowerCase();
+        if (title.includes('עוגה') || title.includes('cake')) {
+          badge = '🎂 עוגה';
+        } else if (title.includes('עוגיה') || title.includes('cookie')) {
+          badge = '🍪 עוגיה';
+        } else {
+          badge = '🍮 קינוח';
+        }
+
+        card.innerHTML = `
+          <div class="product-badge">${badge}</div>
+          <img src="/images/${product.image}" alt="${product.title}" loading="lazy">
+          <h3>${product.title}</h3>
+          <p>${product.description || 'קינוח טעים ומיוחד במינו'}</p>
+          <button class="add-to-cart" data-id="${product.id}">
+            <span class="btn-text">🛒 הוסף לסל</span>
+          </button>
+        `;
+        
+        productsContainer.appendChild(card);
       });
+    }
 
-      if (res.status === 401) {
-        // לא מחובר/ת – עוברים להתחברות
-        location.href = 'login.html';
-        return;
+    // טעינת מוצרים מהשרת
+    async function fetchProducts() {
+      try {
+        showLoading();
+        const response = await fetch('/api/products');
+        allProducts = await response.json();
+        filteredProducts = [...allProducts];
+        renderProducts();
+      } catch (error) {
+        console.error('שגיאה בטעינת מוצרים:', error);
+        productsContainer.innerHTML = `
+          <div class="no-results">
+            <div class="no-results-icon">⚠️</div>
+            <h3>שגיאה בטעינת המוצרים</h3>
+            <p>אנא נסו לרענן את הדף</p>
+          </div>
+        `;
       }
+    }
 
-      const payload = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        alert(payload.error || 'Failed to add to cart');
-        return;
+    // הוספה לסל עם אנימציה
+    async function addToCart(productId, buttonElement) {
+      const originalText = buttonElement.innerHTML;
+      
+      try {
+        // אנימציית כפתור
+        buttonElement.classList.add('adding-to-cart');
+        buttonElement.innerHTML = '<span>מוסיף...</span>';
+        
+        const response = await fetch('/api/cart', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ productId })
+        });
+
+        if (response.status === 401) {
+          window.location.href = 'login.html';
+          return;
+        }
+
+        const result = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(result.error || 'שגיאה בהוספה לסל');
+        }
+
+        // הצגת הודעת הצלחה
+        const product = allProducts.find(p => p.id === productId);
+        showSuccessToast(`✅ ${product?.title || 'המוצר'} התווסף לסל!`);
+        
+        // אנימציית הצלחה
+        buttonElement.innerHTML = '<span>✅ התווסף!</span>';
+        buttonElement.style.background = 'var(--gradient-secondary)';
+        
+        setTimeout(() => {
+          buttonElement.innerHTML = originalText;
+          buttonElement.style.background = '';
+          buttonElement.classList.remove('adding-to-cart');
+        }, 1500);
+
+      } catch (error) {
+        console.error('שגיאה בהוספה לסל:', error);
+        alert(error.message || 'שגיאה בהוספה לסל');
+        
+        buttonElement.innerHTML = originalText;
+        buttonElement.classList.remove('adding-to-cart');
       }
+    }
 
-      alert('✅ המוצר התווסף לסל!');
+    // Event Listeners
+    
+    // חיפוש בזמן אמת
+    searchInput.addEventListener('input', debounce(() => {
+      filteredProducts = currentFilter === 'all' 
+        ? [...allProducts] 
+        : allProducts.filter(product => 
+            product.title.toLowerCase().includes(currentFilter) || 
+            (product.description && product.description.toLowerCase().includes(currentFilter))
+          );
+      applySearchFilter();
+    }, 300));
+
+    // כפתורי סינון
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // עדכון מצב כפתורים
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        
+        // סינון
+        const filter = button.getAttribute('data-filter');
+        filterByCategory(filter);
+      });
     });
 
+    // הוספה לסל (Event Delegation)
+    productsContainer.addEventListener('click', async (e) => {
+      const button = e.target.closest('.add-to-cart');
+      if (!button) return;
+
+      const productId = button.getAttribute('data-id');
+      if (!productId) {
+        alert('שגיאה: מזהה מוצר חסר');
+        return;
+      }
+
+      await addToCart(productId, button);
+    });
+
+    // פונקציית עיכוב (debounce) לחיפוש
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    }
+
     // טעינה ראשונית
-    fetchAndRender();
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchProducts();
+    });
+
+    // הסתרת toast בלחיצה
+    successToast.addEventListener('click', () => {
+      successToast.classList.remove('show');
+    });
   </script>
 </body>
 </html>
