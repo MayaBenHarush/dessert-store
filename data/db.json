@@ -22,9 +22,8 @@
     {
       "username": "מאיה",
       "items": [
-        "chocolate-cake",
-        "minnie-mous-cake",
-        "caramel-cookie"
+        "caramel-cookie",
+        "bagle-cookie"
       ]
     }
   ],
@@ -279,6 +278,11 @@
       "datetime": "2025-08-16T20:10:16.397Z",
       "username": "מאיה",
       "type": "login"
+    },
+    {
+      "datetime": "2025-08-16T20:19:52.543Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
     }
   ],
   "products": [

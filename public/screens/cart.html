@@ -5,19 +5,123 @@
   <title>סל הקניות</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/styles.css" />
+  <style>
+    body {
+      background: linear-gradient(135deg, rgba(255,107,157,0.06), rgba(78,205,196,0.06));
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      margin: 0;
+    }
+
+    nav {
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      padding:14px 20px;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+      position:sticky;
+      top:0;
+      z-index:10;
+    }
+    nav a, nav button {
+      background: none;
+      border:none;
+      font-weight:600;
+      color:#444;
+      font-size:.95rem;
+      cursor:pointer;
+      padding:8px 14px;
+      border-radius: 8px;
+      transition:.2s ease;
+    }
+    nav a:hover, nav button:hover {
+      background: rgba(255,107,157,0.1);
+      color:#ff437d;
+    }
+
+    h1 {
+      text-align:center;
+      margin: 30px 0 20px;
+      font-size:2rem;
+      color:#333;
+    }
+
+    .cart-list {
+      max-width:700px;
+      margin:0 auto 60px;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      padding:0 16px;
+    }
+
+    .cart-item {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      background:#fff;
+      border-radius:14px;
+      padding:12px 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,.05);
+      transition:.2s ease;
+    }
+    .cart-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,.08);
+    }
+
+    .cart-item .left {
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .cart-item img {
+      width:60px;
+      height:60px;
+      object-fit:cover;
+      border-radius:10px;
+    }
+    .cart-item h3 {
+      margin:0;
+      font-size:1rem;
+      color:#333;
+    }
+
+    .cart-item .remove {
+      border:none;
+      background:#ff6b9d;
+      color:#fff;
+      border-radius:8px;
+      padding:8px 14px;
+      font-size:.9rem;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+    .cart-item .remove:hover {
+      background:#e24d80;
+    }
+
+    .cart-list p {
+      text-align:center;
+      padding:40px 20px;
+      color:#777;
+      background:#fff;
+      border-radius:14px;
+      box-shadow: 0 2px 6px rgba(0,0,0,.05);
+    }
+  </style>
 </head>
 <body>
 
-  <!-- ניווט – מיושר לימין ע"י ה-CSS -->
   <nav>
-    <a href="store.html">החנות</a>
-    <a href="checkout.html">לתשלום</a>
-    <a href="myitems.html">הרכישות שלי</a>
-    <a href="admin.html">ניהול</a>
-    <button id="logout">התנתקות</button>
+    <a href="store.html">🏪 החנות</a>
+    <a href="checkout.html">💳 לתשלום</a>
+    <a href="myitems.html">📦 הרכישות שלי</a>
+    <a href="admin.html">⚙️ ניהול</a>
+    <button id="logout">🚪 התנתקות</button>
   </nav>
 
-  <h1>סל הקניות</h1>
+  <h1>🛒 סל הקניות</h1>
 
   <div id="items" class="cart-list"></div>
 
@@ -44,7 +148,7 @@
       container.innerHTML = '';
 
       if (!Array.isArray(itemIds) || itemIds.length === 0) {
-        container.innerHTML = '<p>הסל ריק.</p>';
+        container.innerHTML = '<p>הסל ריק 💤</p>';
         return;
       }
 
@@ -65,7 +169,7 @@
       }
     }
 
-    // האזנת הסרה עם delegation (פעם אחת לכל הרשימה)
+    // האזנת הסרה
     document.getElementById('items').addEventListener('click', async (e) => {
       const btn = e.target.closest('.remove');
       if (!btn) return;
