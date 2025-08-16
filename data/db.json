@@ -23,7 +23,8 @@
       "username": "מאיה",
       "items": [
         "chocolate-cake",
-        "minnie-mous-cake"
+        "minnie-mous-cake",
+        "caramel-cookie"
       ]
     }
   ],
@@ -90,6 +91,21 @@
           "minnie-mous-cake"
         ],
         "date": "2025-08-16T18:06:28.912Z"
+      },
+      {
+        "items": [
+          "chocolate-cake",
+          "minnie-mous-cake",
+          "caramel-cookie"
+        ],
+        "date": "2025-08-16T19:24:50.523Z"
+      },
+      {
+        "items": [
+          "chocolate-cake",
+          "minnie-mous-cake"
+        ],
+        "date": "2025-08-16T19:24:57.312Z"
       }
     ]
   },
@@ -241,6 +257,16 @@
     },
     {
       "datetime": "2025-08-16T17:05:39.450Z",
+      "username": "מאיה",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-08-16T19:24:07.580Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-16T19:24:45.402Z",
       "username": "מאיה",
       "type": "login"
     }
