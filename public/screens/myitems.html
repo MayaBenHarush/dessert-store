@@ -12,56 +12,54 @@
     <a href="cart.html">סל הקניות</a>
     <a href="checkout.html">תשלום</a>
     <a href="myitems.html">הרכישות שלי</a>
-    <button id="logout">התנתקות</button>
-    <a href="admin.html">ניהול</a>
-
+    <a id="login-link" href="login.html">התחברות</a>
+    <button id="logout" style="display:none">התנתקות</button>
   </nav>
 
   <h1>הרכישות שלי</h1>
-
   <div id="list"></div>
 
   <script>
-    // Logout
+    async function setupAuthButtons() {
+      const loginLink = document.getElementById('login-link');
+      const logoutBtn = document.getElementById('logout');
+      let loggedIn = false;
+      try { const r = await fetch('/api/session'); loggedIn = r.ok; } catch {}
+      loginLink.style.display = loggedIn ? 'none' : '';
+      logoutBtn.style.display = loggedIn ? '' : 'none';
+    }
+    setupAuthButtons();
     document.getElementById('logout').onclick = async () => {
       try { await fetch('/api/logout', { method: 'POST' }); }
       finally { location.href = 'login.html'; }
     };
 
     const list = document.getElementById('list');
-
     (async function loadMyItems() {
       try {
         const res = await fetch('/api/my-items');
-        if (res.status === 401) {
-          location.href = 'login.html';
-          return;
-        }
+        if (res.status === 401) { location.href = 'login.html'; return; }
         const items = await res.json();
-
-        if (!Array.isArray(items) || items.length === 0) {
-          list.innerHTML = '<p class="empty">אין רכישות עדיין.</p>';
-          return;
+        if (!Array.isArray(items) || !items.length) {
+          list.innerHTML = '<p class="empty">אין רכישות עדיין.</p>'; return;
         }
-
         list.innerHTML = '';
         for (const it of items) {
           const card = document.createElement('div');
-          card.className = 'card';
+          card.className = 'item';
           const dt = it.date ? new Date(it.date) : null;
           const dateStr = dt ? dt.toLocaleString('he-IL') : '';
-
           card.innerHTML = `
             <img loading="lazy" src="/images/${it.image}" alt="${it.title}">
             <div>
-              <div><strong>${it.title}</strong></div>
+              <h3>${it.title}</h3>
               <div class="meta">${dateStr}</div>
-              <div style="font-size:13px; margin-top:6px;">${it.description || ''}</div>
+              <p>${it.description || ''}</p>
             </div>
           `;
           list.appendChild(card);
         }
-      } catch (e) {
+      } catch {
         list.innerHTML = '<p class="empty">שגיאה בטעינת הרכישות.</p>';
       }
     })();

@@ -3,39 +3,37 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 
-// מודול אחסון נתונים (טוען ושומר JSON)
 const persist = require('./persist_module');
 
-// הגנות DoS (Rate Limiting) — אם יש לכם את הקובץ modules/security.js
-const { limitLogin, limitMutations, limitAdmin } = require('./modules/security');
+// (לא חובה) rate limiters – ייטענו רק אם הקובץ קיים
+let limitLogin, limitMutations, limitAdmin;
+try {
+  ({ limitLogin, limitMutations, limitAdmin } = require('./modules/security'));
+} catch { /* no security module – ignore */ }
 
 const app = express();
 
 /* ===== Middleware כלליים ===== */
 app.use(cookieParser());
-// מגביל גודל גוף כדי למנוע הצפות payload
 app.use(express.json({ limit: '100kb' }));
 app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 
 /* ===== קבצים סטטיים: public/images, public/screens, וכו׳ ===== */
 app.use(express.static(path.join(__dirname, 'public')));
 
-/* ===== Seed: יצירת/נרמול משתמשים, והבטחת admin/admin =====
-   אנו מנרמלים את users.json למבנה של מילון:
-   {
-     "maya": { "username":"maya", "password":"1234", "role":"user" },
-     "admin": { "username":"admin", "password":"admin", "role":"admin" }
-   }
-   כך persist.getUser(username) יעבוד תקין. */
+/* ===== Seed: נרמול users + הבטחת admin/admin =====
+   אם users.json הוא מערך – נהפוך למילון לפי username.
+   אם חסר admin – נוסיף admin/admin עם role: 'admin'.
+*/
 (async function seedAdminIfMissing() {
   try {
-    let users = await persist.loadData('users'); // יכול להיות מערך/אובייקט/undefined
+    let users = await persist.loadData('users');
 
-    // אם זה מערך — נמיר למילון לפי username; אם לא קיים — נתחיל מאובייקט ריק
     if (Array.isArray(users)) {
+      // המרה למילון: { "maya": {username:"maya", password:"...", role:"user"}, ... }
       const map = {};
       for (const u of users) {
-        const key = String(u?.username || '').trim().toLowerCase();
+        const key = String(u?.username || '').trim();
         if (!key) continue;
         map[key] = {
           username: key,
@@ -44,11 +42,12 @@ app.use(express.static(path.join(__dirname, 'public')));
         };
       }
       users = map;
+      await persist.saveData('users', users);
     } else if (!users || typeof users !== 'object') {
       users = {};
+      await persist.saveData('users', users);
     }
 
-    // הוספת admin אם חסר / הוספת role אם חסר
     if (!users.admin) {
       users.admin = { username: 'admin', password: 'admin', role: 'admin' };
       await persist.saveData('users', users);
@@ -63,28 +62,27 @@ app.use(express.static(path.join(__dirname, 'public')));
   }
 })();
 
-/* ===== Rate-Limit למסלולים רגישים (אם קיים security.js) ===== */
-app.use('/api/login', limitLogin);
-app.use(['/api/cart', '/api/checkout', '/api/pay'], limitMutations);
-app.use('/api/admin', limitAdmin);
+/* ===== Rate limits (אם קיימים) ===== */
+if (limitLogin)     app.use('/api/login', limitLogin);
+if (limitMutations) app.use(['/api/cart', '/api/checkout', '/api/pay'], limitMutations);
+if (limitAdmin)     app.use('/api/admin', limitAdmin);
 
 /* ===== ייבוא מודולי ה-API ===== */
+require('./modules/session-server')(app);   // ← חדש: /api/session
 require('./modules/register-server')(app);
 require('./modules/login-server')(app);
 require('./modules/logout-server')(app);
 require('./modules/products-server')(app);
 require('./modules/cart-server')(app);
-require('./modules/checkout-server')(app);
-require('./modules/pay-server')(app);
+require('./modules/checkout-server')(app);  // ← עודכן (pending)
+require('./modules/pay-server')(app);       // ← עודכן (שולף pending, מנקה סל)
 require('./modules/myitems-server')(app);
 require('./modules/admin-server')(app);
+require('./modules/pending-server')(app); // ← חדש
 
-/* ===== טיפול ב-404 ===== */
-app.use((req, res) => {
-  res.status(404).send('Oops! Page not found');
-});
 
-/* ===== טיפול בשגיאות פנימיות ===== */
+/* ===== 404 + error handlers ===== */
+app.use((req, res) => res.status(404).send('Oops! Page not found'));
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');

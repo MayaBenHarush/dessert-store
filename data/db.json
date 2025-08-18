@@ -22,8 +22,10 @@
     {
       "username": "מאיה",
       "items": [
-        "caramel-cookie",
-        "bagle-cookie"
+        "white-design-cake",
+        "chocolate-cake",
+        "bagle-cookie",
+        "chocolate-cake"
       ]
     }
   ],
@@ -105,6 +107,38 @@
           "minnie-mous-cake"
         ],
         "date": "2025-08-16T19:24:57.312Z"
+      },
+      {
+        "items": [
+          "caramel-cookie"
+        ],
+        "date": "2025-08-16T20:21:23.667Z"
+      },
+      {
+        "items": [
+          "caramel-cookie"
+        ],
+        "date": "2025-08-18T11:07:26.967Z"
+      },
+      {
+        "items": [
+          "chocolate-cake"
+        ],
+        "date": "2025-08-18T12:06:29.703Z"
+      },
+      {
+        "items": [
+          "white-design-cake",
+          "chocolate-cake"
+        ],
+        "date": "2025-08-18T12:37:06.415Z"
+      },
+      {
+        "items": [
+          "white-design-cake",
+          "chocolate-cake"
+        ],
+        "date": "2025-08-18T13:04:19.890Z"
       }
     ]
   },
@@ -283,6 +317,86 @@
       "datetime": "2025-08-16T20:19:52.543Z",
       "username": "מאיה",
       "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-18T11:04:31.249Z",
+      "username": "מאיה",
+      "type": "logout"
+    },
+    {
+      "datetime": "2025-08-18T11:04:39.749Z",
+      "username": "מאיה",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-08-18T11:07:17.426Z",
+      "username": "מאיה",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-08-18T12:03:58.871Z",
+      "username": "מאיה",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-08-18T12:04:20.425Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-18T12:05:21.749Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-18T12:07:11.051Z",
+      "username": "מאיה",
+      "type": "logout"
+    },
+    {
+      "datetime": "2025-08-18T12:28:25.809Z",
+      "username": "מאיה",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-08-18T12:28:27.434Z",
+      "username": "מאיה",
+      "type": "logout"
+    },
+    {
+      "datetime": "2025-08-18T12:28:49.216Z",
+      "username": "מאיה",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-08-18T12:28:53.406Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-18T12:28:54.510Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-18T13:03:46.624Z",
+      "username": "מאיה",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-08-18T13:04:19.895Z",
+      "username": "מאיה",
+      "type": "pay"
+    },
+    {
+      "datetime": "2025-08-18T13:05:11.296Z",
+      "username": "מאיה",
+      "type": "logout"
+    },
+    {
+      "datetime": "2025-08-18T13:05:53.730Z",
+      "username": "מאיה",
+      "type": "login"
     }
   ],
   "products": [
@@ -370,5 +484,6 @@
       "description": "",
       "image": "white-design-cake.jpeg"
     }
-  ]
+  ],
+  "pending": []
 }

@@ -8,11 +8,22 @@
   <style>
     .ck-list { display:flex; flex-direction:column; gap:14px; margin:14px 0; }
     .ck-row  {
-      display:grid; grid-template-columns:auto 90px 1fr;
+      display:grid; grid-template-columns:auto 90px 1fr auto;
       align-items:center; gap:12px; padding:10px;
       border:1px solid #eee; border-radius:10px; background:#fff;
     }
     .ck-row img { width:90px; height:90px; object-fit:cover; border-radius:8px; }
+    .quantity-info {
+      background: var(--primary-color);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 13px;
+      font-weight: bold;
+      min-width: 50px;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
   </style>
 </head>
 <body>
@@ -21,7 +32,8 @@
     <a href="cart.html">סל הקניות</a>
     <a href="checkout.html">תשלום</a>
     <a href="myitems.html">הרכישות שלי</a>
-    <button id="logout">התנתקות</button>
+    <a id="login-link" href="login.html">התחברות</a>
+    <button id="logout" style="display:none">התנתקות</button>
     <a href="admin.html">ניהול</a>
   </nav>
 
@@ -33,7 +45,16 @@
   </form>
 
   <script>
-    // Logout
+    // ניווט דינמי
+    async function setupAuthButtons() {
+      const loginLink = document.getElementById('login-link');
+      const logoutBtn = document.getElementById('logout');
+      let loggedIn = false;
+      try { const r = await fetch('/api/session'); loggedIn = r.ok; } catch {}
+      loginLink.style.display = loggedIn ? 'none' : '';
+      logoutBtn.style.display = loggedIn ? '' : 'none';
+    }
+    setupAuthButtons();
     document.getElementById('logout').onclick = async () => {
       try { await fetch('/api/logout', { method: 'POST' }); }
       finally { location.href = 'login.html'; }
@@ -42,43 +63,42 @@
     const listBox = document.getElementById('ck-list');
 
     async function loadCheckoutList() {
-      // טען סל — אם לא מחובר, ננווט למסך התחברות
       const cartRes = await fetch('/api/cart');
       if (cartRes.status === 401) { location.href = 'login.html'; return; }
-      const ids = await cartRes.json();                         // למשל ["3","8"]
+      const quantities = await cartRes.json();
 
-      // טען מוצרים
       const prodRes = await fetch('/api/products');
       const products = await prodRes.json();
 
-      // צור שורות עם תמונה + שם + צ'קבוקס
       listBox.innerHTML = '';
-      (Array.isArray(ids) ? ids : []).forEach(id => {
-        const p = (products || []).find(x => String(x.id) === String(id));
-        if (!p) return;
+      const productIds = Object.keys(quantities);
+      
+      if (productIds.length === 0) {
+        listBox.innerHTML = '<p>הסל ריק כרגע.</p>';
+        return;
+      }
+
+      productIds.forEach(id => {
+        const quantity = quantities[id];
+        const p = products.find(x => String(x.id) === String(id));
+        if (!p || quantity <= 0) return;
+
         const row = document.createElement('label');
         row.className = 'ck-row';
         row.innerHTML = `
           <input type="checkbox" name="item" value="${String(p.id)}" checked />
           <img src="/images/${p.image}" alt="${p.title}" />
           <div><strong>${p.title}</strong></div>
+          <div class="quantity-info">כמות: ${quantity}</div>
         `;
         listBox.appendChild(row);
       });
-
-      if (!listBox.children.length) {
-        listBox.innerHTML = '<p>הסל ריק כרגע.</p>';
-      }
     }
 
-    // שליחת הפריטים ל־/api/checkout
     document.getElementById('to-pay').addEventListener('click', async () => {
       const checked = Array.from(document.querySelectorAll('input[name="item"]:checked'))
-                           .map(el => String(el.value)); // נירמול למחרוזות
-      if (!checked.length) {
-        alert('בחר לפחות פריט אחד');
-        return;
-      }
+                           .map(el => String(el.value));
+      if (!checked.length) return alert('בחר לפחות פריט אחד');
 
       const res = await fetch('/api/checkout', {
         method: 'POST',
@@ -86,15 +106,9 @@
         body: JSON.stringify({ items: checked })
       });
 
-      let j = {};
-      try { j = await res.json(); } catch {}
-
-      if (res.ok && j.ok) {
-        // הצלחה → עוברים לתשלום
-        location.href = 'pay.html';
-      } else {
-        alert(j.error || 'Checkout failed');
-      }
+      let j = {}; try { j = await res.json(); } catch {}
+      if (res.ok && j.ok) location.href = 'pay.html';
+      else alert(j.error || 'Checkout failed');
     });
 
     loadCheckoutList();

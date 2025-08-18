@@ -5,32 +5,67 @@ module.exports = (app) => {
   // POST /api/login
   app.post('/api/login', async (req, res, next) => {
     try {
-      let { username, password, rememberMe } = req.body || {};
-      const usernameNorm = String(username || '').trim().toLowerCase();
-      const passwordNorm = String(password || '').trim();
-
-      if (!usernameNorm || !passwordNorm) {
+      const { username, password, rememberMe } = req.body || {};
+      if (!username || !password) {
         return res.status(400).json({ error: 'Username and password required' });
       }
 
-      // קריאה ל-API של ה-persist (מניח משתמשים כאובייקט לפי שם-משתמש)
-      const user = await persist.getUser(usernameNorm);
-      if (!user || String(user.password) !== passwordNorm) {
+      // טען משתמש
+      const users = await persist.loadData('users');
+      let user = null;
+      
+      // תמיכה במבנה מילון וגם מערך (תאימות לאחור)
+      if (typeof users === 'object' && !Array.isArray(users)) {
+        // מבנה מילון: { "username": {username, password, role}, ... }
+        user = users[username.toLowerCase()] || users[username];
+      } else if (Array.isArray(users)) {
+        // מבנה מערך: [{username, password, role}, ...]
+        user = users.find(u => u.username === username || u.username === username.toLowerCase());
+      }
+
+      if (!user || user.password !== password) {
         return res.status(401).json({ error: 'Invalid credentials' });
       }
 
-      // קביעת העוגייה – שומרת את שם המשתמש בנורמליזציה (אותיות קטנות)
-      const maxAge = rememberMe ? 12 * 24 * 60 * 60 * 1000 : 30 * 60 * 1000;
-      res.cookie('session', usernameNorm, { maxAge, httpOnly: true });
+      // בדיקת זכור אותי - תמיכה בכל הפורמטים הנפוצים
+      const remember = !!(rememberMe === true || 
+                          rememberMe === 'true' || 
+                          rememberMe === 'on' || 
+                          rememberMe === 1 || 
+                          rememberMe === '1' ||
+                          rememberMe === 'checked');
 
-      // לוג פעילות (לבחירתך)
-      await persist.logActivity?.({
-        datetime: new Date().toISOString(),
-        username: usernameNorm,
-        type: 'login'
+      const maxAge = remember
+        ? 30 * 24 * 60 * 60 * 1000  // 30 ימים במילישניות
+        : 24 * 60 * 60 * 1000;      // 24 שעות במילישניות
+
+      // הגדרת cookie עם MaxAge מתאים
+      res.cookie('session', user.username, { 
+        maxAge, 
+        httpOnly: true,
+        secure: false, // עבור development - בproduction כדאי true
+        sameSite: 'lax'
       });
 
-      return res.json({ message: 'Logged in' });
+      // לוג פעילות
+      try {
+        let activity = await persist.loadData('activity');
+        if (!Array.isArray(activity)) activity = [];
+        activity.push({
+          datetime: new Date().toISOString(),
+          username: user.username,
+          type: 'login'
+        });
+        await persist.saveData('activity', activity);
+      } catch (e) {
+        console.error('Failed to log activity:', e);
+      }
+
+      return res.json({ 
+        message: 'Logged in successfully',
+        username: user.username,
+        remembered: remember
+      });
     } catch (err) {
       next(err);
     }

@@ -6,19 +6,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/styles.css" />
   <style>
-    .pay-items{ display:flex; flex-direction:column; gap:12px; margin:12px 0 18px; }
-    .pay-item{
-      display:flex; align-items:center; gap:12px;
-      background:#fff; border:1px solid #eee; border-radius:8px; padding:10px;
-    }
-    .pay-item img{ width:90px; height:90px; object-fit:cover; border-radius:8px; }
+    .pay-list{ display:flex; flex-direction:column; gap:12px; margin:12px 0 18px; }
+    .pay-row { display:grid; grid-template-columns:auto 90px 1fr auto; align-items:center; gap:12px;
+               background:#fff; border:1px solid #eee; border-radius:8px; padding:10px; }
+    .pay-row img{ width:90px; height:90px; object-fit:cover; border-radius:8px; }
     .pay-empty{ color:#666; }
-
     #pay-form{ display:grid; gap:12px; max-width:560px; }
     #pay-form label{ display:flex; flex-direction:column; gap:6px; }
     #pay-form input{ padding:10px; border:1px solid #ccc; border-radius:8px; font-size:16px; }
-    .row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .row{ display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
     .error{ color:#b00020; display:none; }
+    .quantity-badge {
+      background: var(--primary-color);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 13px;
+      font-weight: bold;
+      min-width: 50px;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
   </style>
 </head>
 <body>
@@ -27,123 +35,148 @@
     <a href="cart.html">סל הקניות</a>
     <a href="checkout.html">תשלום</a>
     <a href="myitems.html">הרכישות שלי</a>
-    <button id="logout">התנתקות</button>
+    <a id="login-link" href="login.html">התחברות</a>
+    <button id="logout" style="display:none">התנתקות</button>
   </nav>
 
   <h1>תשלום (דמו)</h1>
-  <p class="hint">זהו תשלום מדומה לצרכי תרגול בלבד — אין שמירה של פרטי כרטיס.</p>
+  <p class="hint">זהו תשלום דמו – אין שמירה של פרטי כרטיס.</p>
 
-  <div id="pay-items" class="pay-items"></div>
+  <form id="items-form">
+    <div id="pay-list" class="pay-list"></div>
+  </form>
 
   <form id="pay-form" novalidate>
     <label>
       מספר הכרטיס
-      <input type="text" name="cardNumber" inputmode="numeric"
-             autocomplete="cc-number" placeholder="1234 5678 9012 3456" required />
+      <input type="text" name="cardNumber" inputmode="numeric" autocomplete="cc-number" placeholder="1234 5678 9012 3456" required />
     </label>
     <label>
       שם בעל/ת הכרטיס
       <input type="text" name="cardName" autocomplete="cc-name" required />
     </label>
-
     <div class="row">
-      <label>
-        תוקף (MM/YY)
+      <label>תוקף (MM/YY)
         <input type="text" name="expiry" inputmode="numeric" autocomplete="cc-exp" placeholder="12/27" required />
       </label>
-      <label>
-        CVV
+      <label>CVV
         <input type="text" name="cvv" inputmode="numeric" autocomplete="cc-csc" placeholder="123" required />
       </label>
     </div>
-
     <div class="error" id="err"></div>
     <button id="pay-btn" type="submit">Pay</button>
   </form>
 
   <script>
+    // ניווט דינמי
+    async function setupAuthButtons() {
+      const loginLink = document.getElementById('login-link');
+      const logoutBtn = document.getElementById('logout');
+      let loggedIn = false;
+      try { const r = await fetch('/api/session'); loggedIn = r.ok; } catch {}
+      loginLink.style.display = loggedIn ? 'none' : '';
+      logoutBtn.style.display = loggedIn ? '' : 'none';
+    }
+    setupAuthButtons();
     document.getElementById('logout').onclick = async () => {
       try { await fetch('/api/logout', { method: 'POST' }); }
       finally { location.href = 'login.html'; }
     };
 
-    // מציג את ה-PENDING (לא מהסל!)
-    async function renderPayItems(){
-      const box = document.getElementById('pay-items');
+    // מציג פריטים ממתינים לתשלום (pending) עם כמויות
+    async function renderPending(){
+      const box = document.getElementById('pay-list');
       box.innerHTML = 'טוען...';
 
-      const res = await fetch('/api/checkout/pending');
-      if (res.status === 401) { location.href = 'login.html'; return; }
-      const items = await res.json();
+      const pendRes = await fetch('/api/pending');
+      if (pendRes.status === 401) { location.href = 'login.html'; return; }
+      const pendingItems = await pendRes.json();
 
-      if (!Array.isArray(items) || items.length === 0){
-        box.innerHTML = '<p class="pay-empty">אין פריטים ממתינים לתשלום.</p>';
-        return;
+      const prodRes = await fetch('/api/products');
+      const products = await prodRes.json();
+
+      // חישוב כמויות
+      const quantities = {};
+      pendingItems.forEach(id => {
+        quantities[id] = (quantities[id] || 0) + 1;
+      });
+
+      const uniqueIds = Object.keys(quantities);
+      if (!uniqueIds.length) { 
+        box.innerHTML = '<p class="pay-empty">אין פריטים ממתינים לתשלום.</p>'; 
+        return; 
       }
 
       box.innerHTML = '';
-      for (const p of items){
-        const row = document.createElement('div');
-        row.className = 'pay-item';
+      for (const id of uniqueIds){
+        const quantity = quantities[id];
+        const p = products.find(product => String(product.id) === String(id));
+        if (!p) continue;
+
+        const row = document.createElement('label');
+        row.className = 'pay-row';
         row.innerHTML = `
+          <input type="checkbox" name="item" value="${String(p.id)}" checked />
           <img src="/images/${p.image}" alt="${p.title}">
           <div>
             <div><strong>${p.title}</strong></div>
             <div class="meta">${p.description || ''}</div>
           </div>
+          <div class="quantity-badge">כמות: ${quantity}</div>
         `;
         box.appendChild(row);
       }
     }
 
-    const form = document.getElementById('pay-form');
-    const errBox = document.getElementById('err');
-    const payBtn = document.getElementById('pay-btn');
+    const payForm = document.getElementById('pay-form');
+    const errBox  = document.getElementById('err');
+    const payBtn  = document.getElementById('pay-btn');
 
-    form.addEventListener('submit', async (e) => {
+    payForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      errBox.style.display = 'none';
-      errBox.textContent = '';
+      errBox.style.display = 'none'; errBox.textContent = '';
 
-      const cardNumber = form.cardNumber.value.trim().replace(/[\s-]/g, '');
-      const cardName   = form.cardName.value.trim();
-      const expiry     = form.expiry.value.trim();
-      const cvv        = form.cvv.value.trim();
+      // איל פריטים לשלם כעת?
+      const checked = Array.from(document.querySelectorAll('input[name="item"]:checked'))
+                           .map(el => String(el.value));
+      if (!checked.length) return showErr('בחר לפחות פריט אחד לתשלום');
 
-      if (!/^\d{12,19}$/.test(cardNumber)) return showErr('מספר כרטיס לא תקין (לפחות 12 ספרות)');
+      const cardNumber = payForm.cardNumber.value.trim().replace(/[\s-]/g, '');
+      const cardName   = payForm.cardName.value.trim();
+      const expiry     = payForm.expiry.value.trim();
+      const cvv        = payForm.cvv.value.trim();
+
+      if (!/^\d{12,19}$/.test(cardNumber)) return showErr('מספר כרטיס לא תקין');
       if (!cardName) return showErr('נא למלא שם בעל/ת הכרטיס');
-      if (!/^\d{2}\/\d{2}$/.test(expiry)) return showErr('פורמט תוקף לא תקין (MM/YY)');
-      const [mm, yy] = expiry.split('/').map(n => parseInt(n, 10));
+      if (!/^\d{2}\/\d{2}$/.test(expiry)) return showErr('פורמט תוקף לא תקין');
+      const [mm, yy] = expiry.split('/').map(x => parseInt(x, 10));
       if (mm < 1 || mm > 12) return showErr('חודש תוקף לא תקין');
       if (!/^\d{3,4}$/.test(cvv)) return showErr('CVV לא תקין');
 
-      payBtn.disabled = true;
-      payBtn.textContent = 'מעבד תשלום...';
+      payBtn.disabled = true; payBtn.textContent = 'מעבד תשלום...';
       try {
         const res = await fetch('/api/pay', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ cardName, cardNumber, expiry, cvv })
+          headers: { 'Content-Type':'application/json' },
+          body: JSON.stringify({ cardName, cardNumber, expiry, cvv, items: checked })
         });
         if (res.status === 401) { location.href = 'login.html'; return; }
-        const j = await res.json().catch(()=>({}));
-
-        if (res.ok && j.ok) {
+        const payload = await res.json().catch(() => ({}));
+        if (res.ok && payload.ok) {
+          // שולם: ירד מ-pending (וכבר ירד מהסל ב-checkout)
           location.href = 'thankyou.html';
         } else {
-          showErr(j.error || 'Payment failed');
+          showErr(payload.error || 'Payment failed');
         }
       } catch {
-        showErr('שגיאת רשת — נסו שוב');
+        showErr('שגיאת רשת – נסו שוב');
       } finally {
-        payBtn.disabled = false;
-        payBtn.textContent = 'Pay';
+        payBtn.disabled = false; payBtn.textContent = 'Pay';
       }
     });
 
     function showErr(msg){ errBox.textContent = msg; errBox.style.display = 'block'; }
-
-    renderPayItems();
+    renderPending();
   </script>
 </body>
 </html>

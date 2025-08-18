@@ -2,63 +2,50 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>הרשמה</title>
-  <link rel="stylesheet" href="../styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/styles.css" />
 </head>
 <body>
-  <nav class="top-nav">
-    <a href="store.html">החנות</a>
+  <nav>
+    <a href="store.html">חנות</a>
     <a href="login.html">התחברות</a>
-    <a href="admin.html">ניהול</a>
-
   </nav>
 
   <h1>הרשמה</h1>
 
-  <form id="register-form" class="auth-form">
+  <form id="register-form" class="auth-form" autocomplete="off">
     <label class="field-username">
-      שם משתמש
+      שם משתמש:
       <input type="text" name="username" autocomplete="username" required />
     </label>
-
     <label class="field-password">
-      סיסמה
+      סיסמה:
       <input type="password" name="password" autocomplete="new-password" required />
     </label>
-
-    <div class="extras"></div>
-
     <div class="actions">
-      <button type="submit">הרשמה</button>
+      <button type="submit">Register</button>
     </div>
   </form>
 
   <script>
-    document.getElementById('register-form').addEventListener('submit', async (e) => {
+    document.getElementById('register-form').addEventListener('submit', async e => {
       e.preventDefault();
-      const f = e.target;
+      const form = e.target;
       const payload = {
-        username: f.username.value.trim(),
-        password: f.password.value
+        username: form.username.value.trim(),
+        password: form.password.value
       };
-
-      try {
-        const res = await fetch('/api/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        const json = await res.json().catch(() => ({}));
-
-        if (res.ok) {
-          alert('נרשמת בהצלחה! אפשר להתחבר עכשיו.');
-          location.href = 'login.html';
-        } else {
-          alert(json.error || 'שגיאת הרשמה');
-        }
-      } catch {
-        alert('שגיאת רשת');
+      const res = await fetch('/api/register', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      let j = {}; try { j = await res.json(); } catch {}
+      if (res.ok) {
+        alert('נרשמת בהצלחה! עכשיו אפשר להתחבר.');
+        location.href = 'login.html';
+      } else {
+        alert(j.error || 'Registration failed');
       }
     });
   </script>

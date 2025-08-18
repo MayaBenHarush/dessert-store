@@ -5,19 +5,16 @@
   <title>תודה על התשלום</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/styles.css">
-
 </head>
 <body>
-    <nav>
+  <nav>
     <a href="store.html">חנות</a>
     <a href="cart.html">סל הקניות</a>
     <a href="checkout.html">תשלום</a>
     <a href="myitems.html">הרכישות שלי</a>
-    <button id="logout">התנתקות</button>
-    <a href="admin.html">ניהול</a>
-
-    </nav>
-
+    <a id="login-link" href="login.html">התחברות</a>
+    <button id="logout" style="display:none">התנתקות</button>
+  </nav>
 
   <h1>תודה! התשלום התקבל ✅</h1>
   <p>זהו תשלום דמו לצורכי תרגול בלבד.</p>
@@ -28,6 +25,15 @@
   </div>
 
   <script>
+    async function setupAuthButtons() {
+      const loginLink = document.getElementById('login-link');
+      const logoutBtn = document.getElementById('logout');
+      let loggedIn = false;
+      try { const r = await fetch('/api/session'); loggedIn = r.ok; } catch {}
+      loginLink.style.display = loggedIn ? 'none' : '';
+      logoutBtn.style.display = loggedIn ? '' : 'none';
+    }
+    setupAuthButtons();
     document.getElementById('logout').onclick = async () => {
       try { await fetch('/api/logout', { method: 'POST' }); }
       finally { location.href = 'login.html'; }
