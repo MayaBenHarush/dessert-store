@@ -32,6 +32,24 @@
   </form>
 
   <script>
+    // טעינת נתונים שמורים מ-localStorage
+    window.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('login-form');
+      const savedUsername = localStorage.getItem('savedUsername');
+      const savedPassword = localStorage.getItem('savedPassword');
+      const wasRemembered = localStorage.getItem('rememberMe') === 'true';
+      
+      if (savedUsername) {
+        form.username.value = savedUsername;
+      }
+      if (savedPassword) {
+        form.password.value = savedPassword;
+      }
+      if (wasRemembered) {
+        form.rememberMe.checked = true;
+      }
+    });
+
     document.getElementById('login-form').addEventListener('submit', async e => {
       e.preventDefault();
       const form = e.target;
@@ -40,13 +58,33 @@
         password: form.password.value,
         rememberMe: form.rememberMe.checked
       };
+
+      // שמירה ב-localStorage רק אם זכור אותי מסומן
+      if (data.rememberMe) {
+        localStorage.setItem('savedUsername', data.username);
+        localStorage.setItem('savedPassword', data.password);
+        localStorage.setItem('rememberMe', 'true');
+      } else {
+        // ניקוי הנתונים השמורים אם זכור אותי לא מסומן
+        localStorage.removeItem('savedUsername');
+        localStorage.removeItem('savedPassword');
+        localStorage.removeItem('rememberMe');
+      }
+
       const res = await fetch('/api/login', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
-      let j = {}; try { j = await res.json(); } catch {}
-      if (res.ok) location.href = 'store.html';
-      else alert(j.error || 'Login failed');
+      
+      let j = {}; 
+      try { j = await res.json(); } catch {}
+      
+      if (res.ok) {
+        location.href = 'store.html';
+      } else {
+        alert(j.error || 'Login failed');
+      }
     });
   </script>
 </body>

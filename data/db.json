@@ -22,10 +22,7 @@
     {
       "username": "מאיה",
       "items": [
-        "white-design-cake",
-        "chocolate-cake",
-        "bagle-cookie",
-        "chocolate-cake"
+        "bagle-cookie"
       ]
     }
   ],
@@ -139,6 +136,14 @@
           "chocolate-cake"
         ],
         "date": "2025-08-18T13:04:19.890Z"
+      },
+      {
+        "items": [
+          "white-design-cake",
+          "chocolate-cake",
+          "chocolate-cake"
+        ],
+        "date": "2025-08-18T13:10:23.042Z"
       }
     ]
   },
@@ -397,6 +402,21 @@
       "datetime": "2025-08-18T13:05:53.730Z",
       "username": "מאיה",
       "type": "login"
+    },
+    {
+      "datetime": "2025-08-18T13:09:46.659Z",
+      "username": "מאיה",
+      "type": "logout"
+    },
+    {
+      "datetime": "2025-08-18T13:09:57.315Z",
+      "username": "מאיה",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-08-18T13:10:23.048Z",
+      "username": "מאיה",
+      "type": "pay"
     }
   ],
   "products": [
