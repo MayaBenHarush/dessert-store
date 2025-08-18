@@ -8,13 +8,28 @@
   <style>
     /* טוסט קטן בפינה הימנית-עליונה */
     #toast {
-      position: fixed; top: 12px; right: 12px; z-index: 9999;
-      display: none; padding: 10px 14px; background: #333; color: #fff;
-      border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,.2);
-      font-size: 14px; opacity: 0; transform: translateY(-6px);
-      transition: opacity .2s ease, transform .2s ease;
+      position: fixed; top: 20px; right: 20px; z-index: 9999;
+      display: none; padding: 12px 16px; 
+      background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+      color: #fff; border-radius: 12px; 
+      box-shadow: 0 4px 12px rgba(0,0,0,.3);
+      font-size: 14px; font-weight: 600;
+      opacity: 0; transform: translateY(-10px) scale(0.9);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      max-width: 300px;
+      text-align: center;
     }
-    #toast.show { display:block; opacity:1; transform: translateY(0); }
+    #toast.show { 
+      display: block; opacity: 1; 
+      transform: translateY(0) scale(1); 
+    }
+    #toast::before {
+      content: '✓';
+      display: inline-block;
+      margin-left: 8px;
+      font-size: 16px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -25,7 +40,8 @@
     <a href="myitems.html">הרכישות שלי</a>
     <a id="login-link" href="login.html">התחברות</a>
     <button id="logout" style="display:none">התנתקות</button>
-    <a href="admin.html">ניהול</a>
+    <a id="admin-link" href="admin.html" style="display:none">ניהול</a>
+    <button id="theme-toggle">🌙 מצב כהה</button>
   </nav>
 
   <div id="toast"></div>
@@ -35,14 +51,54 @@
   <div id="products" class="grid"></div>
 
   <script>
+    // טעינת התאמה אישית מ-localStorage (לפי הוראות המטלה)
+    function loadUICustomization() {
+      const theme = localStorage.getItem('theme') || 'light';
+      const themeToggle = document.getElementById('theme-toggle');
+      
+      if (theme === 'dark') {
+        document.body.classList.add('dark-theme');
+        themeToggle.textContent = '☀️ מצב בהיר';
+      } else {
+        document.body.classList.remove('dark-theme');
+        themeToggle.textContent = '🌙 מצב כהה';
+      }
+    }
+
+    // החלפת מצב כהה/בהיר
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      const isDark = document.body.classList.contains('dark-theme');
+      const newTheme = isDark ? 'light' : 'dark';
+      
+      localStorage.setItem('theme', newTheme);
+      loadUICustomization();
+    });
+
+    // טעינה ראשונית
+    loadUICustomization();
+
     // ניווט דינמי
     async function setupAuthButtons() {
       const loginLink = document.getElementById('login-link');
       const logoutBtn = document.getElementById('logout');
+      const adminLink = document.getElementById('admin-link');
       let loggedIn = false;
-      try { const r = await fetch('/api/session'); loggedIn = r.ok; } catch {}
+      let username = '';
+      
+      try { 
+        const r = await fetch('/api/session'); 
+        if (r.ok) {
+          loggedIn = true;
+          const data = await r.json();
+          username = data.username;
+        }
+      } catch {}
+      
       loginLink.style.display = loggedIn ? 'none' : '';
       logoutBtn.style.display = loggedIn ? '' : 'none';
+      
+      // הצגת קישור ניהול רק למשתמש admin
+      adminLink.style.display = (loggedIn && username === 'admin') ? '' : 'none';
     }
     setupAuthButtons();
     document.getElementById('logout').onclick = async () => {
@@ -50,14 +106,16 @@
       finally { location.href = 'login.html'; }
     };
 
-    // טוסט
+    // טוסט משופר
     const toastEl = document.getElementById('toast');
     let toastTimer;
     function showToast(msg) {
+      clearTimeout(toastTimer);
       toastEl.textContent = msg;
       toastEl.classList.add('show');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1500);
+      toastTimer = setTimeout(() => {
+        toastEl.classList.remove('show');
+      }, 2500);
     }
 
     // חנות
@@ -75,7 +133,7 @@
           <img src="/images/${p.image}" alt="${p.title}">
           <h3>${p.title}</h3>
           <p class="meta">${p.description || ''}</p>
-          <button data-id="${p.id}">הוסף לסל</button>
+          <button data-id="${p.id}" data-title="${p.title}">הוסף לסל</button>
         `;
         container.appendChild(card);
       }
@@ -84,19 +142,20 @@
         const btn = e.target.closest('button[data-id]');
         if (!btn) return;
         const id = btn.getAttribute('data-id');
+        const title = btn.getAttribute('data-title');
         const r = await fetch('/api/cart', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ productId: id })
         });
         if (r.ok) {
-          showToast('המוצר התווסף לסל הקניות');
+          showToast(`${title} התווסף לסל הקניות`);
         } else {
           let j = {}; try { j = await r.json(); } catch {}
           if (r.status === 401) location.href = 'login.html';
           else alert(j.error || 'שגיאה בהוספה לסל');
         }
-      }); // בלי {once:true} כדי שימשיך לעבוד לכל לחיצה
+      }, { once: false });
     }
     fetchAndRender();
   </script>

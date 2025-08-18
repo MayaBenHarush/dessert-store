@@ -10,6 +10,7 @@
   <nav>
     <a href="store.html">חנות</a>
     <a href="register.html">הרשמה</a>
+    <button id="theme-toggle">🌙 מצב כהה</button>
   </nav>
 
   <h1>התחברות</h1>
@@ -32,24 +33,33 @@
   </form>
 
   <script>
-    // טעינת נתונים שמורים מ-localStorage
-    window.addEventListener('DOMContentLoaded', () => {
-      const form = document.getElementById('login-form');
-      const savedUsername = localStorage.getItem('savedUsername');
-      const savedPassword = localStorage.getItem('savedPassword');
-      const wasRemembered = localStorage.getItem('rememberMe') === 'true';
+    // טעינת התאמה אישית מ-localStorage (לפי הוראות המטלה)
+    function loadUICustomization() {
+      const theme = localStorage.getItem('theme') || 'light';
+      const themeToggle = document.getElementById('theme-toggle');
       
-      if (savedUsername) {
-        form.username.value = savedUsername;
+      if (theme === 'dark') {
+        document.body.classList.add('dark-theme');
+        themeToggle.textContent = '☀️ מצב בהיר';
+      } else {
+        document.body.classList.remove('dark-theme');
+        themeToggle.textContent = '🌙 מצב כהה';
       }
-      if (savedPassword) {
-        form.password.value = savedPassword;
-      }
-      if (wasRemembered) {
-        form.rememberMe.checked = true;
-      }
+    }
+
+    // החלפת מצב כהה/בהיר
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      const isDark = document.body.classList.contains('dark-theme');
+      const newTheme = isDark ? 'light' : 'dark';
+      
+      localStorage.setItem('theme', newTheme);
+      loadUICustomization();
     });
 
+    // טעינה ראשונית
+    loadUICustomization();
+
+    // טופס התחברות (ללא localStorage לפרטים אישיים)
     document.getElementById('login-form').addEventListener('submit', async e => {
       e.preventDefault();
       const form = e.target;
@@ -58,18 +68,6 @@
         password: form.password.value,
         rememberMe: form.rememberMe.checked
       };
-
-      // שמירה ב-localStorage רק אם זכור אותי מסומן
-      if (data.rememberMe) {
-        localStorage.setItem('savedUsername', data.username);
-        localStorage.setItem('savedPassword', data.password);
-        localStorage.setItem('rememberMe', 'true');
-      } else {
-        // ניקוי הנתונים השמורים אם זכור אותי לא מסומן
-        localStorage.removeItem('savedUsername');
-        localStorage.removeItem('savedPassword');
-        localStorage.removeItem('rememberMe');
-      }
 
       const res = await fetch('/api/login', {
         method: 'POST', 
@@ -87,5 +85,7 @@
       }
     });
   </script>
+</body>
+</html>
 </body>
 </html>

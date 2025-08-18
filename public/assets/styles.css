@@ -259,6 +259,41 @@ button:active::after, .btn:active::after {
   height: 300px;
 }
 
+/* טטסט מעולה */
+#toast {
+  position: fixed; 
+  top: 20px; 
+  right: 20px; 
+  z-index: 9999;
+  display: none; 
+  padding: 12px 16px; 
+  background: var(--gradient-secondary);
+  color: #fff; 
+  border-radius: 12px; 
+  box-shadow: var(--shadow-lg);
+  font-size: 14px; 
+  font-weight: 600;
+  opacity: 0; 
+  transform: translateY(-10px) scale(0.9);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  max-width: 300px;
+  text-align: center;
+}
+
+#toast.show { 
+  display: block; 
+  opacity: 1; 
+  transform: translateY(0) scale(1); 
+}
+
+#toast::before {
+  content: '✓';
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
 /* טפסי התחברות/הרשמה מעוצבים */
 .auth-form {
   background: var(--bg-card);
@@ -419,6 +454,47 @@ button:active::after, .btn:active::after {
   box-shadow: var(--shadow-md);
 }
 
+/* כמויות בסל */
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.quantity-btn {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ccc;
+  background: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  transition: var(--transition-fast);
+}
+
+.quantity-btn:hover {
+  background: var(--primary-light);
+  color: white;
+}
+
+.quantity-display {
+  min-width: 40px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+  color: var(--primary-color);
+}
+
+.cart-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 /* עמוד ניהול */
 .admin-grid {
   display: grid;
@@ -539,7 +615,117 @@ button:active::after, .btn:active::after {
   display: none;
 }
 
+/* דף checkout */
+.ck-list { 
+  display:flex; 
+  flex-direction:column; 
+  gap:14px; 
+  margin:14px 0; 
+}
+
+.ck-row {
+  display:grid; 
+  grid-template-columns:auto 90px 1fr auto;
+  align-items:center; 
+  gap:12px; 
+  padding:10px;
+  border:1px solid #eee; 
+  border-radius:10px; 
+  background:#fff;
+}
+
+.ck-row img { 
+  width:90px; 
+  height:90px; 
+  object-fit:cover; 
+  border-radius:8px; 
+}
+
+.quantity-info {
+  background: var(--primary-color);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: bold;
+  min-width: 50px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
 /* דף תשלום */
+.pay-list{ 
+  display:flex; 
+  flex-direction:column; 
+  gap:12px; 
+  margin:12px 0 18px; 
+}
+
+.pay-row { 
+  display:grid; 
+  grid-template-columns:auto 90px 1fr auto; 
+  align-items:center; 
+  gap:12px;
+  background:#fff; 
+  border:1px solid #eee; 
+  border-radius:8px; 
+  padding:10px; 
+}
+
+.pay-row img{ 
+  width:90px; 
+  height:90px; 
+  object-fit:cover; 
+  border-radius:8px; 
+}
+
+.pay-empty{ 
+  color:#666; 
+}
+
+#pay-form{ 
+  display:grid; 
+  gap:12px; 
+  max-width:560px; 
+}
+
+#pay-form label{ 
+  display:flex; 
+  flex-direction:column; 
+  gap:6px; 
+}
+
+#pay-form input{ 
+  padding:10px; 
+  border:1px solid #ccc; 
+  border-radius:8px; 
+  font-size:16px; 
+}
+
+.row{ 
+  display:grid; 
+  grid-template-columns: 1fr 1fr; 
+  gap:12px; 
+}
+
+.error{ 
+  color:#b00020; 
+  display:none; 
+}
+
+.quantity-badge {
+  background: var(--primary-color);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: bold;
+  min-width: 50px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+/* דף ה items שלי */
 .pay-items {
   display: flex;
   flex-direction: column;
@@ -578,13 +764,6 @@ button:active::after, .btn:active::after {
 }
 
 /* רשת checkout */
-.ck-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin: 24px 0;
-}
-
 .ck-row {
   background: var(--bg-card);
   border-radius: 16px;
@@ -625,7 +804,7 @@ button:active::after, .btn:active::after {
   margin-top: 24px;
 }
 
-.myitems-page #list .card {
+.myitems-page #list .item {
   background: var(--bg-card);
   border-radius: 20px;
   padding: 20px;
@@ -638,7 +817,7 @@ button:active::after, .btn:active::after {
   overflow: hidden;
 }
 
-.myitems-page #list .card::before {
+.myitems-page #list .item::before {
   content: '';
   position: absolute;
   right: 0;
@@ -648,12 +827,12 @@ button:active::after, .btn:active::after {
   background: var(--gradient-primary);
 }
 
-.myitems-page #list .card:hover {
+.myitems-page #list .item:hover {
   transform: translateX(-4px);
   box-shadow: var(--shadow-md);
 }
 
-.myitems-page #list .card img {
+.myitems-page #list .item img {
   width: 120px;
   height: 120px;
   object-fit: cover;
@@ -746,7 +925,7 @@ button:active::after, .btn:active::after {
     height: 60px;
   }
   
-  .myitems-page #list .card {
+  .myitems-page #list .item {
     flex-direction: column;
     text-align: center;
   }
@@ -826,4 +1005,67 @@ textarea:focus {
   background: var(--bg-card);
   border-radius: 16px;
   box-shadow: var(--shadow-sm);
+}
+
+/* מניעת כפילות תוכן */
+.cart-list::before,
+.cart-list::after {
+  content: none !important;
+}
+
+h1::before,
+h1::after {
+  content: none !important;
+}
+
+/* כפתור החלפת נושא */
+#theme-toggle {
+  background: var(--gradient-accent);
+  color: var(--text-primary);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: var(--transition-normal);
+}
+
+#theme-toggle:hover {
+  transform: scale(1.05);
+}
+
+/* Dark Theme - התאמה אישית ב-localStorage לפי הוראות המטלה */
+.dark-theme {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --bg-card: #3a3a3a;
+  --text-primary: #ffffff;
+  --text-secondary: #cccccc;
+  --text-muted: #888888;
+}
+
+.dark-theme nav a,
+.dark-theme nav button {
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+
+.dark-theme .product,
+.dark-theme .cart-item,
+.dark-theme .auth-form,
+.dark-theme .panel {
+  background: var(--bg-card);
+  border-color: #555;
+}
+
+.dark-theme input,
+.dark-theme textarea {
+  background: var(--bg-secondary);
+  border-color: #555;
+  color: var(--text-primary);
+}
+
+.dark-theme input:focus,
+.dark-theme textarea:focus {
+  background: var(--bg-card);
 }

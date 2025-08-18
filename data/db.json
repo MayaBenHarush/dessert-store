@@ -22,7 +22,9 @@
     {
       "username": "מאיה",
       "items": [
-        "bagle-cookie"
+        "caramel-cookie",
+        "caramel-cookie",
+        "caramel-cookie"
       ]
     }
   ],
@@ -417,6 +419,56 @@
       "datetime": "2025-08-18T13:10:23.048Z",
       "username": "מאיה",
       "type": "pay"
+    },
+    {
+      "datetime": "2025-08-18T13:11:58.275Z",
+      "username": "מאיה",
+      "type": "logout"
+    },
+    {
+      "datetime": "2025-08-18T13:17:04.797Z",
+      "username": "מאיה",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-08-18T13:17:09.678Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-18T13:17:12.272Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-18T13:17:15.083Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-18T13:18:08.190Z",
+      "username": "מאיה",
+      "type": "logout"
+    },
+    {
+      "datetime": "2025-08-18T13:18:21.113Z",
+      "username": "admin",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-08-18T13:22:03.982Z",
+      "username": "admin",
+      "type": "logout"
+    },
+    {
+      "datetime": "2025-08-18T13:33:58.308Z",
+      "username": "מאיה",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-08-18T13:34:06.788Z",
+      "username": "מאיה",
+      "type": "logout"
     }
   ],
   "products": [

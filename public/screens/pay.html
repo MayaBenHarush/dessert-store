@@ -37,6 +37,7 @@
     <a href="myitems.html">הרכישות שלי</a>
     <a id="login-link" href="login.html">התחברות</a>
     <button id="logout" style="display:none">התנתקות</button>
+    <a id="admin-link" href="admin.html" style="display:none">ניהול</a>
   </nav>
 
   <h1>תשלום (דמו)</h1>
@@ -72,10 +73,22 @@
     async function setupAuthButtons() {
       const loginLink = document.getElementById('login-link');
       const logoutBtn = document.getElementById('logout');
+      const adminLink = document.getElementById('admin-link');
       let loggedIn = false;
-      try { const r = await fetch('/api/session'); loggedIn = r.ok; } catch {}
+      let username = '';
+      
+      try { 
+        const r = await fetch('/api/session'); 
+        if (r.ok) {
+          loggedIn = true;
+          const data = await r.json();
+          username = data.username;
+        }
+      } catch {}
+      
       loginLink.style.display = loggedIn ? 'none' : '';
       logoutBtn.style.display = loggedIn ? '' : 'none';
+      adminLink.style.display = (loggedIn && username === 'admin') ? '' : 'none';
     }
     setupAuthButtons();
     document.getElementById('logout').onclick = async () => {
