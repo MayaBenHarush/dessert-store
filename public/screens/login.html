@@ -18,11 +18,11 @@
   <form id="login-form" class="auth-form" autocomplete="off">
     <label class="field-username">
       שם משתמש:
-      <input type="text" name="username" autocomplete="username" required />
+      <input type="text" name="username" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly');" required />
     </label>
     <label class="field-password">
       סיסמה:
-      <input type="password" name="password" autocomplete="current-password" required />
+      <input type="password" name="password" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly');" required />
     </label>
     <div class="extras">
       <label><input type="checkbox" name="rememberMe"> זכור אותי</label>
@@ -58,6 +58,31 @@
 
     // טעינה ראשונית
     loadUICustomization();
+
+    // ניקוי שדות התחברות בכמה דרכים
+    window.addEventListener('load', () => {
+      // השהיה קצרה כדי לוודא שהדפדפן סיים לטעון
+      setTimeout(() => {
+        const form = document.getElementById('login-form');
+        form.username.value = '';
+        form.password.value = '';
+        form.rememberMe.checked = false;
+        
+        // ניקוי נוסף
+        form.reset();
+        
+        // מניעת auto-fill נוספת
+        form.username.setAttribute('value', '');
+        form.password.setAttribute('value', '');
+      }, 100);
+    });
+
+    // מניעת auto-fill בפוקוס
+    document.getElementById('login-form').addEventListener('focusin', (e) => {
+      if (e.target.tagName === 'INPUT') {
+        e.target.setAttribute('autocomplete', 'off');
+      }
+    });
 
     // טופס התחברות (ללא localStorage לפרטים אישיים)
     document.getElementById('login-form').addEventListener('submit', async e => {

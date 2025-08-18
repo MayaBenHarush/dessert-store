@@ -469,6 +469,16 @@
       "datetime": "2025-08-18T13:34:06.788Z",
       "username": "מאיה",
       "type": "logout"
+    },
+    {
+      "datetime": "2025-08-18T13:39:12.444Z",
+      "username": "מאיה",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-08-18T13:39:14.524Z",
+      "username": "מאיה",
+      "type": "logout"
     }
   ],
   "products": [
