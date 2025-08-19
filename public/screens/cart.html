@@ -8,20 +8,10 @@
   <script src="/assets/translations.js"></script>
   <style>
     .price-line{margin-top:8px;font-weight:700}
-
-    /* כפתורי כמות ומשבצת ורודה באמצע (תמיד גלוי) */
-    .qty-wrap{
-      display:flex; align-items:center; gap:10px; margin-top:8px;
-    }
-    .quantity-btn{
-      appearance:none; border:1px solid var(--text-muted, #9aa4b2); background:#fff0; color:inherit;
-      width:36px; height:36px; border-radius:10px; font-weight:900; line-height:1; cursor:pointer;
-    }
-    .qty-badge{
-      background:#ff6b9d; color:#fff; border-radius:12px; padding:8px 16px; font-weight:800; min-width:110px; text-align:center;
-      box-shadow: 0 2px 6px rgba(0,0,0,.08);
-    }
-    .qty-badge .quantity-display{ font-weight:900; }
+    .qty-wrap{display:flex;align-items:center;gap:10px;margin-top:8px;}
+    .quantity-btn{appearance:none;border:1px solid var(--text-muted,#9aa4b2);background:#fff0;color:inherit;width:36px;height:36px;border-radius:10px;font-weight:900;line-height:1;cursor:pointer;}
+    .qty-badge{background:#ff6b9d;color:#fff;border-radius:12px;padding:8px 16px;font-weight:800;min-width:110px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.08);}
+    .qty-badge .quantity-display{font-weight:900;}
   </style>
 </head>
 <body>
@@ -41,93 +31,54 @@
   <div id="items" class="cart-list"></div>
 
   <script>
-    // === מחירון (כמו שסיכמנו) ===
+    // === מחירון ===
     const PRICE_MAP={'chocolate-cake':150,'cookies-box':125,'cupcakes':160,'minnie-mous-cake':300,'nutella-box':70,'pizza-cookie':120,'white-design-cake':140};
-    const priceOf = id => (id in PRICE_MAP) ? PRICE_MAP[id] : (String(id).includes('cookie') ? 17 : 0);
-    const nis = n => `₪${n}`;
+    const priceOf=id=>(id in PRICE_MAP)?PRICE_MAP[id]:(String(id).includes('cookie')?17:0);
+    const nis=n=>`₪${n}`;
 
-    // העדפות תצוגה
-    function loadUserPreferences() {
-      const theme = localStorage.getItem('theme') || 'light';
-      if (theme === 'dark') document.body.classList.add('dark-theme');
-      window.updateLanguage();
-    }
-    function setupThemeToggle() {
-      const themeToggle = document.getElementById('theme-toggle');
-      themeToggle.addEventListener('click', () => {
-        const currentTheme = localStorage.getItem('theme') || 'light';
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        localStorage.setItem('theme', newTheme);
-        document.body.classList.toggle('dark-theme', newTheme === 'dark');
-        themeToggle.textContent = newTheme === 'dark' ? 
-          window.Translations.get('themeToggleLight') : 
-          window.Translations.get('themeToggleDark');
-      });
-    }
-    function setupLanguageToggle() {
-      const languageToggle = document.getElementById('language-toggle');
-      languageToggle.addEventListener('click', window.toggleLanguage);
-    }
+    // העדפות
+    function loadUserPreferences(){ const theme=localStorage.getItem('theme')||'light'; if(theme==='dark')document.body.classList.add('dark-theme'); window.updateLanguage(); }
+    function setupThemeToggle(){ const t=document.getElementById('theme-toggle'); t.addEventListener('click',()=>{const cur=localStorage.getItem('theme')||'light';const next=cur==='light'?'dark':'light';localStorage.setItem('theme',next);document.body.classList.toggle('dark-theme',next==='dark');t.textContent=next==='dark'?window.Translations.get('themeToggleLight'):window.Translations.get('themeToggleDark');}); }
+    function setupLanguageToggle(){ document.getElementById('language-toggle').addEventListener('click',window.toggleLanguage); }
 
-    // ניווט/הרשאות
-    async function setupAuthButtons() {
-      const loginLink = document.getElementById('login-link');
-      const logoutBtn = document.getElementById('logout');
-      const adminLink = document.querySelector('a[href="admin.html"]');
-      let loggedIn = false, username = null;
-      try {
-        const r = await fetch('/api/session');
-        if (r.ok) { loggedIn = true; const data = await r.json(); username = data.username; }
-      } catch {}
-      loginLink.style.display = loggedIn ? 'none' : '';
-      logoutBtn.style.display = loggedIn ? '' : 'none';
-      if (adminLink) adminLink.style.display = (username === 'admin') ? '' : 'none';
+    // הרשאות
+    async function setupAuthButtons(){
+      const loginLink=document.getElementById('login-link'); const logoutBtn=document.getElementById('logout'); const adminLink=document.querySelector('a[href="admin.html"]');
+      let loggedIn=false,username=null;
+      try{const r=await fetch('/api/session'); if(r.ok){loggedIn=true; const d=await r.json(); username=d.username;}}catch{}
+      loginLink.style.display=loggedIn?'none':''; logoutBtn.style.display=loggedIn?'':'none'; if(adminLink) adminLink.style.display=(username==='admin')?'':'none';
     }
-    document.getElementById('logout').onclick = async () => {
-      try { await fetch('/api/logout', { method: 'POST' }); }
-      finally { location.href = 'login.html'; }
-    };
+    document.getElementById('logout').onclick=async()=>{ try{await fetch('/api/logout',{method:'POST'});}finally{location.href='login.html';} };
 
     let products=[];
     async function loadProducts(){ const res=await fetch('/api/products'); products=await res.json(); }
 
     async function loadCart(){
-      const res=await fetch('/api/cart');
-      if(res.status===401) return location.href='login.html';
+      const res=await fetch('/api/cart'); if(res.status===401) return location.href='login.html';
       const quantities=await res.json(); // {id: count}
-      const container=document.getElementById('items');
-      container.innerHTML='';
+      const container=document.getElementById('items'); container.innerHTML='';
+      const entries=Object.entries(quantities);
+      if(entries.length===0){ container.innerHTML=`<p class="empty" data-key="cartEmpty">${window.Translations.get('cartEmpty')}</p>`; return; }
 
-      const itemsArray=Object.entries(quantities);
-      if(itemsArray.length===0){
-        container.innerHTML=`<p class="empty" data-key="cartEmpty">${window.Translations.get('cartEmpty')}</p>`;
-        return;
-      }
+      for(const [id,qty] of entries){
+        const p=products.find(x=>String(x.id)===String(id)); if(!p) continue;
+        const name=window.Translations.getProduct(p.id) || p.title;
+        const unit=priceOf(p.id); const total=unit*Number(qty);
 
-      for(const [id,quantity] of itemsArray){
-        const p=products.find(x=>String(x.id)===String(id));
-        if(!p) continue;
-
-        const productName = window.Translations.getProduct(p.id) || p.title;
-        const unit = priceOf(p.id);
-        const total = unit * Number(quantity);
-
-        const row=document.createElement('div');
-        row.className='cart-item';
+        const row=document.createElement('div'); row.className='cart-item';
         row.innerHTML=`
           <div class="left">
-            <img src="/images/${p.image}" alt="${productName}">
+            <img src="/images/${p.image}" alt="${name}">
             <div class="cart-item-info">
-              <h3>${productName}</h3>
+              <h3>${name}</h3>
 
-              <!-- מעטפת כמות: מינוס | משבצת ורודה עם "כמות: X" | פלוס -->
               <div class="qty-wrap">
                 <button class="quantity-btn minus" data-id="${p.id}" aria-label="הפחת פריט">−</button>
-                <div class="qty-badge"><span data-key="quantity">${window.Translations.get('quantity')}</span>: <span class="quantity-display">${quantity}</span></div>
+                <div class="qty-badge"><span data-key="quantity">${window.Translations.get('quantity')}</span>: <span class="quantity-display">${qty}</span></div>
                 <button class="quantity-btn plus" data-id="${p.id}" aria-label="הוסף פריט">＋</button>
               </div>
 
-              <div class="price-line">${nis(unit)} × <span class="q-val">${quantity}</span> = <strong class="total-val">${nis(total)}</strong></div>
+              <div class="price-line">${nis(unit)} × <span class="q-val">${qty}</span> = <strong class="total-val">${nis(total)}</strong></div>
             </div>
           </div>
           <button class="remove" data-id="${p.id}" data-key="removeAll">${window.Translations.get('removeAll')}</button>
@@ -136,26 +87,43 @@
       }
     }
 
-    // אירועי סל
-    document.getElementById('items').addEventListener('click', async (e) => {
-      const removeBtn = e.target.closest('.remove');
-      const plus = e.target.closest('.plus');
-      const minus = e.target.closest('.minus');
+    // אירועים
+    document.getElementById('items').addEventListener('click', async (e)=>{
+      const removeBtn=e.target.closest('.remove');
+      const plus=e.target.closest('.plus');
+      const minus=e.target.closest('.minus');
 
-      if (removeBtn) {
-        const id = removeBtn.getAttribute('data-id');
-        const del = await fetch(`/api/cart/${encodeURIComponent(id)}`, { method: 'DELETE' });
-        if (del.ok) loadCart(); else alert(window.Translations.get('errorRemoving'));
+      if(removeBtn){
+        const id=removeBtn.getAttribute('data-id');
+        // 1) ננסה end‑point ייעודי אם קיים
+        let ok=false;
+        try{
+          const r=await fetch(`/api/cart/removeAll/${encodeURIComponent(id)}`,{method:'DELETE'});
+          ok = r.ok;
+        }catch{}
+        // 2) Fallback בטוח: מחסל לפי הכמות המוצגת ע"י DELETE אחד־אחד
+        if(!ok){
+          const row=removeBtn.closest('.cart-item');
+          const q=parseInt(row.querySelector('.quantity-display')?.textContent||'1',10)||1;
+          for(let i=0;i<q;i++){ await fetch(`/api/cart/${encodeURIComponent(id)}`,{method:'DELETE'}); }
+          ok=true;
+        }
+        if(ok) loadCart(); else alert(window.Translations.get('errorRemoving'));
         return;
       }
-      if (plus) {
-        const id = plus.getAttribute('data-id');
-        await fetch('/api/cart', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ productId:id }) });
+
+      if(plus){
+        const id=plus.getAttribute('data-id');
+        await fetch('/api/cart',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({productId:id})});
         loadCart(); return;
       }
-      if (minus) {
-        const id = minus.getAttribute('data-id');
-        await fetch(`/api/cart/${encodeURIComponent(id)}`, { method:'DELETE' });
+
+      if(minus){
+        const id=minus.getAttribute('data-id');
+        // קודם מנסה end‑point ייעודי להפחתה, אחרת fallback ל‑DELETE אחד
+        let tried=false;
+        try{ const r=await fetch(`/api/cart/decrease/${encodeURIComponent(id)}`,{method:'POST'}); if(r.ok){tried=true;} }catch{}
+        if(!tried){ await fetch(`/api/cart/${encodeURIComponent(id)}`,{method:'DELETE'}); }
         loadCart(); return;
       }
     });
