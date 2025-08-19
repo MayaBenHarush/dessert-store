@@ -2,33 +2,35 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>התחברות</title>
+  <title data-page="login">התחברות</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/styles.css" />
+  <script src="/assets/translations"></script>
 </head>
 <body>
   <nav>
-    <a href="store.html">חנות</a>
-    <a href="register.html">הרשמה</a>
+    <a href="store.html" data-key="store">חנות</a>
+    <a href="register.html" data-key="register">הרשמה</a>
     <button id="theme-toggle">🌙 מצב כהה</button>
+    <button id="language-toggle">🌐 English</button>
   </nav>
 
-  <h1>התחברות</h1>
+  <h1 data-key="pageTitle.login">התחברות</h1>
 
   <form id="login-form" class="auth-form" autocomplete="off">
     <label class="field-username">
-      שם משתמש:
+      <span data-key="username">שם משתמש</span>:
       <input type="text" name="username" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly');" required />
     </label>
     <label class="field-password">
-      סיסמה:
+      <span data-key="password">סיסמה</span>:
       <input type="password" name="password" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly');" required />
     </label>
     <div class="extras">
-      <label><input type="checkbox" name="rememberMe"> זכור אותי</label>
+      <label><input type="checkbox" name="rememberMe"> <span data-key="rememberMe">זכור אותי</span></label>
     </div>
     <div class="actions">
-      <button type="submit">Login</button>
+      <button type="submit" data-key="login">Login</button>
     </div>
   </form>
 
@@ -37,13 +39,28 @@
     function loadUICustomization() {
       const theme = localStorage.getItem('theme') || 'light';
       const themeToggle = document.getElementById('theme-toggle');
+      const languageToggle = document.getElementById('language-toggle');
       
+      // עדכון נושא
       if (theme === 'dark') {
         document.body.classList.add('dark-theme');
         themeToggle.textContent = '☀️ מצב בהיר';
       } else {
         document.body.classList.remove('dark-theme');
         themeToggle.textContent = '🌙 מצב כהה';
+      }
+      
+      // עדכון כפתור שפה
+      const currentLanguage = localStorage.getItem('language') || 'he';
+      if (currentLanguage === 'en') {
+        languageToggle.textContent = '🌐 עברית';
+      } else {
+        languageToggle.textContent = '🌐 English';
+      }
+      
+      // עדכון תרגומים אם הפונקציה קיימת
+      if (typeof window.updateLanguage === 'function') {
+        window.updateLanguage();
       }
     }
 
@@ -56,8 +73,12 @@
       loadUICustomization();
     });
 
-    // טעינה ראשונית
-    loadUICustomization();
+    // החלפת שפה
+    document.getElementById('language-toggle').addEventListener('click', () => {
+      if (typeof window.toggleLanguage === 'function') {
+        window.toggleLanguage();
+      }
+    });
 
     // ניקוי שדות התחברות בכמה דרכים
     window.addEventListener('load', () => {
@@ -109,8 +130,11 @@
         alert(j.error || 'Login failed');
       }
     });
+
+    // טעינה ראשונית - עם השהיה קטנה כדי לוודא שtranslations.js נטען
+    setTimeout(() => {
+      loadUICustomization();
+    }, 100);
   </script>
-</body>
-</html>
 </body>
 </html>

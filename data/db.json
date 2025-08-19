@@ -23,7 +23,6 @@
       "username": "מאיה",
       "items": [
         "caramel-cookie",
-        "caramel-cookie",
         "caramel-cookie"
       ]
     }
@@ -479,6 +478,21 @@
       "datetime": "2025-08-18T13:39:14.524Z",
       "username": "מאיה",
       "type": "logout"
+    },
+    {
+      "datetime": "2025-08-18T13:46:43.453Z",
+      "username": "מאיה",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-08-19T10:57:43.413Z",
+      "username": "מאיה",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-08-19T11:31:06.692Z",
+      "username": "מאיה",
+      "type": "login"
     }
   ],
   "products": [

@@ -2,9 +2,10 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>מסך ניהול</title>
+  <title data-page="admin">מסך ניהול</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/styles.css">
+  <script src="/assets/translations"></script>
   <style>
     .admin-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
     @media (max-width:900px){ .admin-grid{ grid-template-columns:1fr; } }
@@ -22,27 +23,29 @@
 </head>
 <body>
   <nav>
-    <a href="store.html">חנות</a>
-    <a href="cart.html">סל הקניות</a>
-    <a href="checkout.html">תשלום</a>
-    <a href="myitems.html">הרכישות שלי</a>
-    <a id="login-link" href="login.html">התחברות</a>
-    <button id="logout" style="display:none">התנתקות</button>
-    <a href="admin.html">ניהול</a>
+    <a href="store.html" data-key="store">חנות</a>
+    <a href="cart.html" data-key="cart">סל הקניות</a>
+    <a href="checkout.html" data-key="checkout">תשלום</a>
+    <a href="myitems.html" data-key="myPurchases">הרכישות שלי</a>
+    <a id="login-link" href="login.html" data-key="login">התחברות</a>
+    <button id="logout" style="display:none" data-key="logout">התנתקות</button>
+    <a href="admin.html" data-key="admin">ניהול</a>
+    <button id="theme-toggle">🌙 מצב כהה</button>
+    <button id="language-toggle">🌐 English</button>
   </nav>
 
-  <h1>מסך ניהול</h1>
+  <h1 data-key="pageTitle.admin">מסך ניהול</h1>
 
   <div class="admin-grid">
     <section class="panel">
-      <h2>הוספת מוצר חדש</h2>
+      <h2 data-key="addProduct">הוספת מוצר חדש</h2>
       <form id="add-form" class="admin-form">
-        <label>כותרת המוצר <input type="text" name="title" required></label>
-        <label>תיאור (אופציונלי) <textarea name="description" rows="3"></textarea></label>
-        <label>תמונה (שם קובץ מתוך /public/images או URL מלא)
+        <label><span data-key="productTitle">כותרת המוצר</span> <input type="text" name="title" required></label>
+        <label><span data-key="description">תיאור (אופציונלי)</span> <textarea name="description" rows="3"></textarea></label>
+        <label><span data-key="image">תמונה</span> (שם קובץ מתוך /public/images או URL מלא)
           <input type="text" name="image" placeholder="cookie.jpg או https://…" required>
         </label>
-        <button type="submit">הוסף מוצר</button>
+        <button type="submit" data-key="addProduct">הוסף מוצר</button>
         <div class="muted">טיפ: אם מעלים קובץ ל־<code>public/images</code>, מספיק לכתוב את שמו (למשל <code>cookie.jpg</code>).</div>
       </form>
     </section>
@@ -54,12 +57,58 @@
 
     <section class="panel">
       <h2>פעילות אחרונה</h2>
-      <div class="muted">מוצג חדש←ישן.</div>
+      <div class="muted">מוצג חדש→ישן.</div>
       <div id="activity" class="admin-list"></div>
     </section>
   </div>
 
   <script>
+    // טעינת התאמות אישיות מ-localStorage
+    function loadUICustomization() {
+      const theme = localStorage.getItem('theme') || 'light';
+      const themeToggle = document.getElementById('theme-toggle');
+      const languageToggle = document.getElementById('language-toggle');
+      
+      // עדכון נושא
+      if (theme === 'dark') {
+        document.body.classList.add('dark-theme');
+        themeToggle.textContent = '☀️ מצב בהיר';
+      } else {
+        document.body.classList.remove('dark-theme');
+        themeToggle.textContent = '🌙 מצב כהה';
+      }
+      
+      // עדכון כפתור שפה
+      const currentLanguage = localStorage.getItem('language') || 'he';
+      if (currentLanguage === 'en') {
+        languageToggle.textContent = '🌐 עברית';
+      } else {
+        languageToggle.textContent = '🌐 English';
+      }
+      
+      // עדכון תרגומים אם הפונקציה קיימת
+      if (typeof window.updateLanguage === 'function') {
+        window.updateLanguage();
+      }
+    }
+
+    // החלפת נושא
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      const isDark = document.body.classList.contains('dark-theme');
+      const newTheme = isDark ? 'light' : 'dark';
+      localStorage.setItem('theme', newTheme);
+      loadUICustomization();
+    });
+
+    // החלפת שפה
+    document.getElementById('language-toggle').addEventListener('click', () => {
+      if (typeof window.toggleLanguage === 'function') {
+        window.toggleLanguage();
+        loadProducts(); // טעינה מחדש עם השפה החדשה
+        loadActivity(); // טעינה מחדש של הפעילות
+      }
+    });
+
     async function setupAuthButtons() {
       const loginLink = document.getElementById('login-link');
       const logoutBtn = document.getElementById('logout');
@@ -81,20 +130,28 @@
       if (res.status === 401) return location.href = 'login.html';
       if (res.status === 403) { productsBox.textContent = 'Admin only'; return; }
       const items = await res.json();
+      const currentLanguage = localStorage.getItem('language') || 'he';
+      
       productsBox.innerHTML = '';
       for (const p of items){
         const row = document.createElement('div');
         row.className = 'admin-row';
+        
+        // תרגום שם המוצר אם קיים
+        const productName = (window.Translations && window.Translations.getProduct) 
+          ? window.Translations.getProduct(p.id, currentLanguage) || p.title 
+          : p.title;
+        
         row.innerHTML = `
-          <img src="${p.image.startsWith('http') ? p.image : '/images/' + p.image}" alt="${p.title}">
+          <img src="${p.image.startsWith('http') ? p.image : '/images/' + p.image}" alt="${productName}">
           <div>
-            <div><strong>${p.title}</strong></div>
+            <div><strong>${productName}</strong></div>
             <div class="muted">${p.id}</div>
           </div>
-          <button data-id="${p.id}">מחק</button>
+          <button data-id="${p.id}" data-key="removeProduct">מחק</button>
         `;
         row.querySelector('button').onclick = async () => {
-          if (!confirm('למחוק את "'+p.title+'"?')) return;
+          if (!confirm('למחוק את "'+productName+'"?')) return;
           const del = await fetch('/api/admin/products/' + encodeURIComponent(p.id), { method:'DELETE' });
           if (!del.ok){
             const j = await del.json().catch(() => ({}));
@@ -103,6 +160,11 @@
           await loadProducts(); await loadActivity();
         };
         productsBox.appendChild(row);
+      }
+      
+      // עדכון תרגומים לכפתורים
+      if (typeof window.updateLanguage === 'function') {
+        window.updateLanguage();
       }
     }
 
@@ -133,16 +195,24 @@
       if (res.status === 403) { actBox.textContent = 'אין הרשאת מנהל'; return; }
       if (!res.ok) { actBox.textContent = 'שגיאה'; return; }
       const rows = await res.json();
+      const currentLanguage = localStorage.getItem('language') || 'he';
+      
       actBox.innerHTML = '';
       for (const r of rows){
         const div = document.createElement('div'); div.className = 'admin-row';
-        const when = r.datetime ? new Date(r.datetime).toLocaleString('he-IL') : '';
+        const when = r.datetime ? new Date(r.datetime).toLocaleString(currentLanguage === 'he' ? 'he-IL' : 'en-US') : '';
         div.innerHTML = `<div style="grid-column:1 / span 3;"><strong>${r.type}</strong> <span class="muted">— ${when} — ${r.username || ''}</span></div>`;
         actBox.appendChild(div);
       }
     }
 
-    loadProducts(); loadActivity();
+    setupAuthButtons();
+    // טעינה ראשונית - עם השהיה קטנה כדי לוודא שtranslations.js נטען
+    setTimeout(() => {
+      loadUICustomization();
+      loadProducts(); 
+      loadActivity();
+    }, 100);
   </script>
 </body>
 </html>

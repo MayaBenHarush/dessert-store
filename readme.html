@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>README - חנות הקינוחים</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/styles.css" />
+  <style>
+    .readme-container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: var(--shadow-lg);
+      line-height: 1.8;
+    }
+    .readme-section {
+      margin-bottom: 30px;
+      padding: 20px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .readme-section:last-child {
+      border-bottom: none;
+    }
+    .readme-section h2 {
+      color: var(--primary-color);
+      margin-bottom: 15px;
+    }
+    .routes-list {
+      background: var(--bg-primary);
+      padding: 20px;
+      border-radius: 10px;
+      margin: 10px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+    }
+    .route-item {
+      margin: 5px 0;
+      padding: 5px;
+    }
+    .route-method {
+      color: var(--primary-color);
+      font-weight: bold;
+      display: inline-block;
+      width: 60px;
+    }
+    .partner-info {
+      background: var(--gradient-secondary);
+      color: white;
+      padding: 20px;
+      border-radius: 15px;
+      margin: 15px 0;
+    }
+    .challenges {
+      background: var(--bg-primary);
+      padding: 20px;
+      border-radius: 10px;
+      border-right: 4px solid var(--primary-color);
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="store.html">חנות</a>
+    <a href="cart.html">סל הקניות</a>
+    <a href="checkout.html">תשלום</a>
+    <a href="myitems.html">הרכישות שלי</a>
+    <a href="readme.html">📖 README</a>
+    <a id="login-link" href="login.html">התחברות</a>
+    <button id="logout" style="display:none">התנתקות</button>
+    <a id="admin-link" href="admin.html" style="display:none">ניהול</a>
+    <button id="theme-toggle">🌙 מצב כהה</button>
+    <button id="language-toggle">🌐 English</button>
+  </nav>
+
+  <div class="readme-container">
+    <h1>📖 README - פרויקט גמר</h1>
+
+    <div class="readme-section">
+      <h2>🏪 שם החנות</h2>
+      <p><strong>חנות הקינוחים המתוקה</strong> - "Sweet Desserts Store"</p>
+    </div>
+
+    <div class="readme-section">
+      <h2>🍰 מה אנחנו מוכרים?</h2>
+      <p>אנחנו מוכרים מגוון רחב של קינוחים טעימים ומתוקים:</p>
+      <ul>
+        <li><strong>עוגיות מיוחדות:</strong> עוגיות בייגל, קרמל, נוטלה, לוטוס ושוקולד לבן</li>
+        <li><strong>עוגות מעוצבות:</strong> עוגות שוקולד, עוגות תפוז, ועוגות מעוצבות (כמו מיני מאוס)</li>
+        <li><strong>קופסאות מתנה:</strong> קופסאות עוגיות ונוטלה</li>
+        <li><strong>קאפקייקס:</strong> מאפינס קטנים וצבעוניים</li>
+        <li><strong>פיצה עוגיה:</strong> עוגיה בצורת פיצה - הפתעה מתוקה!</li>
+      </ul>
+    </div>
+
+    <div class="readme-section">
+      <h2>🚀 דפים נוספים שהוספתי</h2>
+      <p><em>הערה: בשלב זה יש לי את כל הדפים הבסיסיים. אני מתכנן להוסיף 4 דפים נוספים:</em></p>
+      <ol>
+        <li><strong>דף מועדפים:</strong> שמירת מוצרים למועדפים</li>
+        <li><strong>דף ביקורות:</strong> הוספת ביקורות על מוצרים</li>
+        <li><strong>דף הזמנות מיוחדות:</strong> הזמנת עוגות מותאמות אישית</li>
+        <li><strong>דף צ'אט תמיכה:</strong> מערכת הודעות עם התמיכה</li>
+      </ol>
+    </div>
+
+    <div class="readme-section">
+      <h2>😅 מה היה קשה לעשות?</h2>
+      <div class="challenges">
+        <p><strong>האתגרים העיקריים שנתקלתי בהם:</strong></p>
+        <ul>
+          <li><strong>ניהול כמויות בסל:</strong> הצגת כמויות במקום כפילויות של אותו מוצר</li>
+          <li><strong>מערכת התשלום:</strong> יצירת זרימה נכונה מ-checkout ל-pending ל-purchases</li>
+          <li><strong>אבטחה ובקרת גישה:</strong> ווידוא שרק admin יכול לגשת למסך הניהול</li>
+          <li><strong>ניהול cookies:</strong> הבנת ההבדל בין 12 ימים ל-30 דקות עבור "זכור אותי"</li>
+          <li><strong>Data persistence:</strong> ניהול קבצי JSON מרובים בצורה מסונכרנת</li>
+          <li><strong>Rate limiting:</strong> הגנה מפני DOS attacks</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="readme-section">
+      <h2>👥 מידע על השותפים</h2>
+      <div class="partner-info">
+        <p><strong>שותף:</strong> [שם השותף] - מספר זהות: [מספר זהות השותף]</p>
+        <p><strong>מה אני עשיתי:</strong></p>
+        <ul>
+          <li>פיתוח ממשק המשתמש (HTML/CSS/JavaScript)</li>
+          <li>עיצוב מערכת הניהול והאדמין</li>
+          <li>יישום מערכת הסל והתשלומים</li>
+          <li>יצירת מערכת ההתאמה האישית (Dark Mode)</li>
+        </ul>
+        <p><strong>מה השותף עשה:</strong></p>
+        <ul>
+          <li>פיתוח צד השרת (Node.js modules)</li>
+          <li>יישום מערכת ה-persistence</li>
+          <li>הגדרת מערכת האבטחה והRTe limiting</li>
+          <li>כתיבת הטסטים האוטומטיים</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="readme-section">
+      <h2>🛣️ כל הRoutes שהאפליקציה תומכת בהם</h2>
+      <div class="routes-list">
+        <h3>📄 Static Pages:</h3>
+        <div class="route-item"><span class="route-method">GET</span> / → הפניה לחנות</div>
+        <div class="route-item"><span class="route-method">GET</span> /store.html → דף החנות הראשי</div>
+        <div class="route-item"><span class="route-method">GET</span> /login.html → דף התחברות</div>
+        <div class="route-item"><span class="route-method">GET</span> /register.html → דף הרשמה</div>
+        <div class="route-item"><span class="route-method">GET</span> /cart.html → סל הקניות</div>
+        <div class="route-item"><span class="route-method">GET</span> /checkout.html → בחירת פריטים לתשלום</div>
+        <div class="route-item"><span class="route-method">GET</span> /pay.html → דף התשלום</div>
+        <div class="route-item"><span class="route-method">GET</span> /thankyou.html → דף תודה אחרי תשלום</div>
+        <div class="route-item"><span class="route-method">GET</span> /myitems.html → הרכישות שלי</div>
+        <div class="route-item"><span class="route-method">GET</span> /admin.html → מסך ניהול (admin בלבד)</div>
+        <div class="route-item"><span class="route-method">GET</span> /readme.html → דף README זה</div>
+        <div class="route-item"><span class="route-method">GET</span> /llm.html → רשימת קוד LLM</div>
+
+        <h3>🔐 Authentication Routes:</h3>
+        <div class="route-item"><span class="route-method">POST</span> /api/register → הרשמת משתמש חדש</div>
+        <div class="route-item"><span class="route-method">POST</span> /api/login → התחברות למערכת</div>
+        <div class="route-item"><span class="route-method">POST</span> /api/logout → התנתקות</div>
+        <div class="route-item"><span class="route-method">GET</span> /api/session → בדיקת סטטוס התחברות</div>
+
+        <h3>🛒 Store & Products Routes:</h3>
+        <div class="route-item"><span class="route-method">GET</span> /api/products → קבלת רשימת מוצרים (עם חיפוש)</div>
+        <div class="route-item"><span class="route-method">GET</span> /api/cart → קבלת תוכן הסל</div>
+        <div class="route-item"><span class="route-method">POST</span> /api/cart → הוספת מוצר לסל</div>
+        <div class="route-item"><span class="route-method">PUT</span> /api/cart/:id → עדכון כמות מוצר בסל</div>
+        <div class="route-item"><span class="route-method">DELETE</span> /api/cart/:id → הסרת מוצר מהסל</div>
+
+        <h3>💳 Checkout & Payment Routes:</h3>
+        <div class="route-item"><span class="route-method">POST</span> /api/checkout → העברת פריטים לתשלום</div>
+        <div class="route-item"><span class="route-method">GET</span> /api/pending → קבלת פריטים ממתינים לתשלום</div>
+        <div class="route-item"><span class="route-method">POST</span> /api/pay → ביצוע תשלום</div>
+        <div class="route-item"><span class="route-method">GET</span> /api/my-items → קבלת רכישות המשתמש</div>
+
+        <h3>👨‍💼 Admin Routes:</h3>
+        <div class="route-item"><span class="route-method">GET</span> /api/admin/activity → קבלת לוג פעילות</div>
+        <div class="route-item"><span class="route-method">GET</span> /api/admin/products → ניהול מוצרים</div>
+        <div class="route-item"><span class="route-method">POST</span> /api/admin/products → הוספת מוצר חדש</div>
+        <div class="route-item"><span class="route-method">DELETE</span> /api/admin/products/:id → מחיקת מוצר</div>
+
+        <h3>📁 Static Files:</h3>
+        <div class="route-item"><span class="route-method">GET</span> /assets/* → קבצי CSS</div>
+        <div class="route-item"><span class="route-method">GET</span> /images/* → תמונות מוצרים</div>
+      </div>
+    </div>
+
+    <div class="readme-section">
+      <h2>🧪 איך בדקתי את המערכת</h2>
+      <p><strong>שיטות הבדיקה שהשתמשתי בהן:</strong></p>
+      <ul>
+        <li><strong>בדיקות ידניות:</strong> ניווט בכל הדפים וביצוע כל הפונקציות</li>
+        <li><strong>בדיקות משתמשים:</strong> התחברות כמשתמש רגיל וכ-admin</li>
+        <li><strong>בדיקות זרימה:</strong> מהוספה לסל ועד לתשלום מוגמר</li>
+        <li><strong>בדיקות אבטחה:</strong> ניסיון גישה לדפי admin ללא הרשאה</li>
+        <li><strong>בדיקות דפדפנים:</strong> Chrome, Firefox, Edge</li>
+        <li><strong>בדיקות responsive:</strong> מובייל, טאבלט, דסקטופ</li>
+        <li><strong>בדיקות localStorage:</strong> Dark mode נשמר בין ביקורים</li>
+        <li><strong>בדיקות cookies:</strong> "זכור אותי" עובד 12 ימים vs 30 דקות</li>
+        <li><strong>בדיקות קבצי test.js:</strong> טסטים אוטומטיים עם node-fetch</li>
+      </ul>
+    </div>
+
+    <div class="readme-section">
+      <h2>⚡ תכונות מיוחדות</h2>
+      <ul>
+        <li>🎨 <strong>Dark Mode:</strong> מצב כהה שנשמר ב-localStorage</li>
+        <li>🛡️ <strong>Rate Limiting:</strong> הגנה מפני DOS attacks</li>
+        <li>📊 <strong>ניהול כמויות:</strong> הצגת כמויות במקום כפילויות</li>
+        <li>🔐 <strong>אבטחה מתקדמת:</strong> הגבלת גישה לאדמין</li>
+        <li>📱 <strong>Responsive Design:</strong> עובד על כל המכשירים</li>
+        <li>⚡ <strong>UX משופרת:</strong> הודעות טוסט, אנימציות חלקות</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    // התאמה אישית - Dark Mode (localStorage לפי הוראות המטלה)
+    function loadUICustomization() {
+      const theme = localStorage.getItem('theme') || 'light';
+      const themeToggle = document.getElementById('theme-toggle');
+      
+      if (theme === 'dark') {
+        document.body.classList.add('dark-theme');
+        themeToggle.textContent = '☀️ מצב בהיר';
+      } else {
+        document.body.classList.remove('dark-theme');
+        themeToggle.textContent = '🌙 מצב כהה';
+      }
+    }
+
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      const isDark = document.body.classList.contains('dark-theme');
+      const newTheme = isDark ? 'light' : 'dark';
+      
+      localStorage.setItem('theme', newTheme);
+      loadUICustomization();
+    });
+
+    // ניווט דינמי
+    async function setupAuthButtons() {
+      const loginLink = document.getElementById('login-link');
+      const logoutBtn = document.getElementById('logout');
+      const adminLink = document.getElementById('admin-link');
+      let loggedIn = false;
+      let username = '';
+      
+      try { 
+        const r = await fetch('/api/session'); 
+        if (r.ok) {
+          loggedIn = true;
+          const data = await r.json();
+          username = data.username;
+        }
+      } catch {}
+      
+      loginLink.style.display = loggedIn ? 'none' : '';
+      logoutBtn.style.display = loggedIn ? '' : 'none';
+      adminLink.style.display = (loggedIn && username === 'admin') ? '' : 'none';
+    }
+
+    document.getElementById('logout').onclick = async () => {
+      try { await fetch('/api/logout', { method: 'POST' }); }
+      finally { location.href = 'login.html'; }
+    };
+
+    loadUICustomization();
+    setupAuthButtons();
+  </script>
+</body>
+</html>

@@ -2,33 +2,61 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>הרשמה</title>
+  <title data-page="register">הרשמה</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/styles.css" />
+  <script src="/assets/translations.js"></script>
 </head>
 <body>
   <nav>
-    <a href="store.html">חנות</a>
-    <a href="login.html">התחברות</a>
+    <a href="store.html" data-key="store">חנות</a>
+    <a href="login.html" data-key="login">התחברות</a>
+    <button id="theme-toggle">🌙 מצב כהה</button>
+    <button id="language-toggle">🌐 English</button>
   </nav>
 
-  <h1>הרשמה</h1>
+  <h1 data-key="pageTitle.register">הרשמה</h1>
 
   <form id="register-form" class="auth-form" autocomplete="off">
     <label class="field-username">
-      שם משתמש:
+      <span data-key="username">שם משתמש</span>:
       <input type="text" name="username" autocomplete="username" required />
     </label>
     <label class="field-password">
-      סיסמה:
+      <span data-key="password">סיסמה</span>:
       <input type="password" name="password" autocomplete="new-password" required />
     </label>
     <div class="actions">
-      <button type="submit">Register</button>
+      <button type="submit" data-key="register">Register</button>
     </div>
   </form>
 
   <script>
+    // טעינת התאמות אישיות מ-localStorage
+    function loadUICustomization() {
+      const theme = localStorage.getItem('theme') || 'light';
+      if (theme === 'dark') {
+        document.body.classList.add('dark-theme');
+      } else {
+        document.body.classList.remove('dark-theme');
+      }
+      updateLanguage();
+    }
+
+    // החלפת נושא
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      const isDark = document.body.classList.contains('dark-theme');
+      const newTheme = isDark ? 'light' : 'dark';
+      localStorage.setItem('theme', newTheme);
+      loadUICustomization();
+    });
+
+    // החלפת שפה
+    document.getElementById('language-toggle').addEventListener('click', () => {
+      toggleLanguage();
+    });
+
+    // טופס הרשמה
     document.getElementById('register-form').addEventListener('submit', async e => {
       e.preventDefault();
       const form = e.target;
@@ -48,6 +76,9 @@
         alert(j.error || 'Registration failed');
       }
     });
+
+    // טעינה ראשונית
+    loadUICustomization();
   </script>
 </body>
 </html>

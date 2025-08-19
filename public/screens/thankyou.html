@@ -2,30 +2,77 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>תודה על התשלום</title>
+  <title data-page="thankyou">תודה! התשלום התקבל ✅</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/styles.css">
+  <script src="/assets/translations"></script>
 </head>
 <body>
   <nav>
-    <a href="store.html">חנות</a>
-    <a href="cart.html">סל הקניות</a>
-    <a href="checkout.html">תשלום</a>
-    <a href="myitems.html">הרכישות שלי</a>
-    <a id="login-link" href="login.html">התחברות</a>
-    <button id="logout" style="display:none">התנתקות</button>
-    <a id="admin-link" href="admin.html" style="display:none">ניהול</a>
+    <a href="store.html" data-key="store">חנות</a>
+    <a href="cart.html" data-key="cart">סל הקניות</a>
+    <a href="checkout.html" data-key="checkout">תשלום</a>
+    <a href="myitems.html" data-key="myPurchases">הרכישות שלי</a>
+    <a id="login-link" href="login.html" data-key="login">התחברות</a>
+    <button id="logout" style="display:none" data-key="logout">התנתקות</button>
+    <a id="admin-link" href="admin.html" style="display:none" data-key="admin">ניהול</a>
+    <button id="theme-toggle">🌙 מצב כהה</button>
+    <button id="language-toggle">🌐 English</button>
   </nav>
 
-  <h1>תודה! התשלום התקבל ✅</h1>
-  <p>זהו תשלום דמו לצורכי תרגול בלבד.</p>
+  <h1 data-key="pageTitle.thankyou">תודה! התשלום התקבל ✅</h1>
+  <p data-key="paymentDemo">זהו תשלום דמו לצורכי תרגול בלבד.</p>
 
   <div class="actions">
-    <a href="myitems.html">צפייה ברכישות שלי</a>
-    <a href="store.html">להמשיך לקנות</a>
+    <a href="myitems.html" data-key="viewMyPurchases">צפייה ברכישות שלי</a>
+    <a href="store.html" data-key="continueShopping">להמשיך לקנות</a>
   </div>
 
   <script>
+    // טעינת התאמות אישיות מ-localStorage
+    function loadUICustomization() {
+      const theme = localStorage.getItem('theme') || 'light';
+      const themeToggle = document.getElementById('theme-toggle');
+      const languageToggle = document.getElementById('language-toggle');
+      
+      // עדכון נושא
+      if (theme === 'dark') {
+        document.body.classList.add('dark-theme');
+        themeToggle.textContent = '☀️ מצב בהיר';
+      } else {
+        document.body.classList.remove('dark-theme');
+        themeToggle.textContent = '🌙 מצב כהה';
+      }
+      
+      // עדכון כפתור שפה
+      const currentLanguage = localStorage.getItem('language') || 'he';
+      if (currentLanguage === 'en') {
+        languageToggle.textContent = '🌐 עברית';
+      } else {
+        languageToggle.textContent = '🌐 English';
+      }
+      
+      // עדכון תרגומים
+      if (typeof window.updateLanguage === 'function') {
+        window.updateLanguage();
+      }
+    }
+
+    // החלפת נושא
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      const isDark = document.body.classList.contains('dark-theme');
+      const newTheme = isDark ? 'light' : 'dark';
+      localStorage.setItem('theme', newTheme);
+      loadUICustomization();
+    });
+
+    // החלפת שפה
+    document.getElementById('language-toggle').addEventListener('click', () => {
+      if (typeof window.toggleLanguage === 'function') {
+        window.toggleLanguage();
+      }
+    });
+
     async function setupAuthButtons() {
       const loginLink = document.getElementById('login-link');
       const logoutBtn = document.getElementById('logout');
@@ -46,11 +93,19 @@
       logoutBtn.style.display = loggedIn ? '' : 'none';
       adminLink.style.display = (loggedIn && username === 'admin') ? '' : 'none';
     }
+    
     setupAuthButtons();
     document.getElementById('logout').onclick = async () => {
       try { await fetch('/api/logout', { method: 'POST' }); }
       finally { location.href = 'login.html'; }
     };
+
+    setupAuthButtons();
+    
+    // טעינה ראשונית - עם השהיה קטנה כדי לוודא שtranslations.js נטען
+    setTimeout(() => {
+      loadUICustomization();
+    }, 100);
   </script>
 </body>
 </html>

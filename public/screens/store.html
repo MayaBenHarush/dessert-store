@@ -2,60 +2,49 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>חנות</title>
+  <title data-page="store">חנות קינוחים 🍰</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/styles.css" />
+  <script src="/assets/translations"></script>
   <style>
     /* טוסט קטן בפינה הימנית-עליונה */
     #toast {
-      position: fixed; top: 20px; right: 20px; z-index: 9999;
-      display: none; padding: 12px 16px; 
-      background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
-      color: #fff; border-radius: 12px; 
-      box-shadow: 0 4px 12px rgba(0,0,0,.3);
-      font-size: 14px; font-weight: 600;
-      opacity: 0; transform: translateY(-10px) scale(0.9);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      max-width: 300px;
-      text-align: center;
+      position: fixed; top: 12px; right: 12px; z-index: 9999;
+      display: none; padding: 10px 14px; background: #333; color: #fff;
+      border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,.2);
+      font-size: 14px; opacity: 0; transform: translateY(-6px);
+      transition: opacity .2s ease, transform .2s ease;
     }
-    #toast.show { 
-      display: block; opacity: 1; 
-      transform: translateY(0) scale(1); 
-    }
-    #toast::before {
-      content: '✓';
-      display: inline-block;
-      margin-left: 8px;
-      font-size: 16px;
-      font-weight: bold;
-    }
+    #toast.show { display:block; opacity:1; transform: translateY(0); }
   </style>
 </head>
 <body>
   <nav>
-    <a href="store.html">חנות</a>
-    <a href="cart.html">סל הקניות</a>
-    <a href="checkout.html">תשלום</a>
-    <a href="myitems.html">הרכישות שלי</a>
-    <a id="login-link" href="login.html">התחברות</a>
-    <button id="logout" style="display:none">התנתקות</button>
-    <a id="admin-link" href="admin.html" style="display:none">ניהול</a>
+    <a href="store.html" data-key="store">חנות</a>
+    <a href="cart.html" data-key="cart">סל הקניות</a>
+    <a href="checkout.html" data-key="checkout">תשלום</a>
+    <a href="myitems.html" data-key="myPurchases">הרכישות שלי</a>
+    <a id="login-link" href="login.html" data-key="login">התחברות</a>
+    <button id="logout" style="display:none" data-key="logout">התנתקות</button>
+    <a href="admin.html" data-key="admin">ניהול</a>
     <button id="theme-toggle">🌙 מצב כהה</button>
+    <button id="language-toggle">🌐 English</button>
   </nav>
 
   <div id="toast"></div>
 
-  <h1>חנות קינוחים 🍰</h1>
-  <input type="text" id="search" placeholder="חפש קינוח..." />
+  <h1 data-key="pageTitle.store">חנות קינוחים 🍰</h1>
+  <input type="text" id="search" data-placeholder-key="searchPlaceholder" placeholder="חפש קינוח..." />
   <div id="products" class="grid"></div>
 
   <script>
-    // טעינת התאמה אישית מ-localStorage (לפי הוראות המטלה)
+    // טעינת התאמות אישיות מ-localStorage (לפי הוראות המטלה)
     function loadUICustomization() {
       const theme = localStorage.getItem('theme') || 'light';
       const themeToggle = document.getElementById('theme-toggle');
+      const languageToggle = document.getElementById('language-toggle');
       
+      // עדכון נושא
       if (theme === 'dark') {
         document.body.classList.add('dark-theme');
         themeToggle.textContent = '☀️ מצב בהיר';
@@ -63,19 +52,41 @@
         document.body.classList.remove('dark-theme');
         themeToggle.textContent = '🌙 מצב כהה';
       }
+      
+      // עדכון כפתור שפה
+      const currentLanguage = localStorage.getItem('language') || 'he';
+      if (currentLanguage === 'en') {
+        languageToggle.textContent = '🌐 עברית';
+      } else {
+        languageToggle.textContent = '🌐 English';
+      }
     }
 
     // החלפת מצב כהה/בהיר
     document.getElementById('theme-toggle').addEventListener('click', () => {
       const isDark = document.body.classList.contains('dark-theme');
       const newTheme = isDark ? 'light' : 'dark';
-      
       localStorage.setItem('theme', newTheme);
       loadUICustomization();
     });
 
-    // טעינה ראשונית
-    loadUICustomization();
+    // החלפת שפה
+    document.getElementById('language-toggle').addEventListener('click', () => {
+      const currentLanguage = localStorage.getItem('language') || 'he';
+      const newLanguage = currentLanguage === 'he' ? 'en' : 'he';
+      localStorage.setItem('language', newLanguage);
+      
+      // עדכון מיידי של כפתור השפה
+      const languageToggle = document.getElementById('language-toggle');
+      if (newLanguage === 'en') {
+        languageToggle.textContent = '🌐 עברית';
+      } else {
+        languageToggle.textContent = '🌐 English';
+      }
+      
+      // טעינה מחדש של המוצרים עם השפה החדשה
+      fetchAndRender();
+    });
 
     // ניווט דינמי
     async function setupAuthButtons() {
@@ -98,7 +109,10 @@
       logoutBtn.style.display = loggedIn ? '' : 'none';
       
       // הצגת קישור ניהול רק למשתמש admin
-      adminLink.style.display = (loggedIn && username === 'admin') ? '' : 'none';
+      const adminLinkElement = document.querySelector('a[href="admin.html"]');
+      if (adminLinkElement) {
+        adminLinkElement.style.display = (loggedIn && username === 'admin') ? '' : 'none';
+      }
     }
     setupAuthButtons();
     document.getElementById('logout').onclick = async () => {
@@ -106,16 +120,14 @@
       finally { location.href = 'login.html'; }
     };
 
-    // טוסט משופר
+    // טוסט
     const toastEl = document.getElementById('toast');
     let toastTimer;
     function showToast(msg) {
-      clearTimeout(toastTimer);
       toastEl.textContent = msg;
       toastEl.classList.add('show');
-      toastTimer = setTimeout(() => {
-        toastEl.classList.remove('show');
-      }, 2500);
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1500);
     }
 
     // חנות
@@ -125,15 +137,47 @@
       const res = await fetch(`/api/products?search=${encodeURIComponent(prefix)}`);
       const products = await res.json();
       const container = document.getElementById('products');
+      const currentLanguage = localStorage.getItem('language') || 'he';
+      
       container.innerHTML = '';
       for (const p of products) {
         const card = document.createElement('div');
         card.className = 'product';
+        
+        // תרגום שם המוצר לפי השפה הנוכחית
+        let productName;
+        
+        // מילון תרגומים ישיר (כמו בmyitems.html)
+        const productTranslations = {
+          'bagle-cookie': { he: 'עוגיית בייגל', en: 'Bagel Cookie' },
+          'caramel-cookie': { he: 'עוגיית קרמל', en: 'Caramel Cookie' },
+          'chocolate-cake': { he: 'עוגת שוקולד', en: 'Chocolate Cake' },
+          'cookies-box': { he: 'קופסת עוגיות', en: 'Cookies Box' },
+          'cupcakes': { he: 'קאפקייקס', en: 'Cupcakes' },
+          'kinder-cookie': { he: 'עוגיית קינדר', en: 'Kinder Cookie' },
+          'lotus-cookie': { he: 'עוגיית לוטוס', en: 'Lotus Cookie' },
+          'minnie-mous-cake': { he: 'עוגת מיני מאוס', en: 'Minnie Mouse Cake' },
+          'nutella-box': { he: 'קופסת נוטלה', en: 'Nutella Box' },
+          'nutella-cookie': { he: 'עוגיית נוטלה', en: 'Nutella Cookie' },
+          'orange-cake': { he: 'עוגת תפוז', en: 'Orange Cake' },
+          'pizza-cookie': { he: 'עוגיית פיצה', en: 'Pizza Cookie' },
+          'white-chocolate-cookie': { he: 'עוגיית שוקולד לבן', en: 'White Chocolate Cookie' },
+          'white-design-cake': { he: 'עוגה לבנה מעוצבת', en: 'White Design Cake' }
+        };
+        
+        if (productTranslations[p.id] && productTranslations[p.id][currentLanguage]) {
+          productName = productTranslations[p.id][currentLanguage];
+        } else {
+          productName = p.title;
+        }
+        
+        const addToCartText = currentLanguage === 'en' ? 'Add to Cart' : 'הוסף לסל';
+        
         card.innerHTML = `
-          <img src="/images/${p.image}" alt="${p.title}">
-          <h3>${p.title}</h3>
+          <img src="/images/${p.image}" alt="${productName}">
+          <h3>${productName}</h3>
           <p class="meta">${p.description || ''}</p>
-          <button data-id="${p.id}" data-title="${p.title}">הוסף לסל</button>
+          <button data-id="${p.id}" data-title="${productName}">${addToCartText}</button>
         `;
         container.appendChild(card);
       }
@@ -149,14 +193,21 @@
           body: JSON.stringify({ productId: id })
         });
         if (r.ok) {
-          showToast(`${title} התווסף לסל הקניות`);
+          const addedText = currentLanguage === 'en' ? 'added to cart' : 'התווסף לסל הקניות';
+          showToast(`${title} ${addedText}`);
         } else {
           let j = {}; try { j = await r.json(); } catch {}
           if (r.status === 401) location.href = 'login.html';
-          else alert(j.error || 'שגיאה בהוספה לסל');
+          else {
+            const errorText = currentLanguage === 'en' ? 'Error adding to cart' : 'שגיאה בהוספה לסל';
+            alert(j.error || errorText);
+          }
         }
-      }, { once: false });
+      }); // בלי {once:true} כדי שימשיך לעבוד לכל לחיצה
     }
+    
+    // טעינה ראשונית
+    loadUICustomization();
     fetchAndRender();
   </script>
 </body>

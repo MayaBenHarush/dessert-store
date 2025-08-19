@@ -21,6 +21,27 @@ app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 /* ===== קבצים סטטיים: public/images, public/screens, וכו׳ ===== */
 app.use(express.static(path.join(__dirname, 'public')));
 
+// הוספת קובץ התרגומים כקובץ סטטי
+app.get('/assets/translations.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'assets', 'translations.js'));
+});
+
+/* ===== Routes מיוחדים - לפי דרישות המטלה ===== */
+// README דף - חובה לפי המטלה
+app.get('/readme.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'readme.html'));
+});
+
+// LLM דף - חובה לפי המטלה  
+app.get('/llm.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'llm.html'));
+});
+
+// הפניה של root לחנות
+app.get('/', (req, res) => {
+  res.redirect('/store.html');
+});
+
 /* ===== Seed: נרמול users + הבטחת admin/admin =====
    אם users.json הוא מערך – נהפוך למילון לפי username.
    אם חסר admin – נוסיף admin/admin עם role: 'admin'.
@@ -68,18 +89,17 @@ if (limitMutations) app.use(['/api/cart', '/api/checkout', '/api/pay'], limitMut
 if (limitAdmin)     app.use('/api/admin', limitAdmin);
 
 /* ===== ייבוא מודולי ה-API ===== */
-require('./modules/session-server')(app);   // ← חדש: /api/session
+require('./modules/session-server')(app);   
 require('./modules/register-server')(app);
 require('./modules/login-server')(app);
 require('./modules/logout-server')(app);
 require('./modules/products-server')(app);
 require('./modules/cart-server')(app);
-require('./modules/checkout-server')(app);  // ← עודכן (pending)
-require('./modules/pay-server')(app);       // ← עודכן (שולף pending, מנקה סל)
+require('./modules/checkout-server')(app);  
+require('./modules/pay-server')(app);       
 require('./modules/myitems-server')(app);
 require('./modules/admin-server')(app);
-require('./modules/pending-server')(app); // ← חדש
-
+require('./modules/pending-server')(app);
 
 /* ===== 404 + error handlers ===== */
 app.use((req, res) => res.status(404).send('Oops! Page not found'));
@@ -92,4 +112,6 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🎂 Dessert Store running at http://localhost:${PORT}`);
+  console.log(`📖 README available at http://localhost:${PORT}/readme.html`);
+  console.log(`🤖 LLM info at http://localhost:${PORT}/llm.html`);
 });

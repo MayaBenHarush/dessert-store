@@ -1019,7 +1019,7 @@ h1::after {
 }
 
 /* כפתור החלפת נושא */
-#theme-toggle {
+#theme-toggle, #language-toggle {
   background: var(--gradient-accent);
   color: var(--text-primary);
   border: none;
@@ -1028,10 +1028,38 @@ h1::after {
   font-size: 12px;
   cursor: pointer;
   transition: var(--transition-normal);
+  margin-left: 5px;
 }
 
-#theme-toggle:hover {
+#theme-toggle:hover, #language-toggle:hover {
   transform: scale(1.05);
+}
+
+/* Language-specific styles */
+[lang="en"] {
+  direction: ltr;
+  text-align: left;
+}
+
+[lang="en"] nav {
+  direction: ltr;
+  justify-content: flex-start;
+}
+
+[lang="en"] .auth-form label {
+  text-align: left;
+}
+
+[lang="en"] .auth-form input {
+  text-align: left;
+}
+
+[lang="en"] #search::placeholder {
+  text-align: left;
+}
+
+[lang="en"] h1 {
+  text-align: left;
 }
 
 /* Dark Theme - התאמה אישית ב-localStorage לפי הוראות המטלה */
