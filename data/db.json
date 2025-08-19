@@ -22,8 +22,7 @@
     {
       "username": "מאיה",
       "items": [
-        "white-design-cake",
-        "white-design-cake"
+        "pizza-cookie"
       ]
     }
   ],
@@ -543,6 +542,51 @@
       "datetime": "2025-08-19T14:55:04.016Z",
       "username": "מאיה",
       "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-19T15:12:36.507Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-19T15:12:40.562Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-19T15:12:48.937Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-19T15:12:49.971Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-19T15:27:48.397Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-19T15:27:48.399Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-19T15:27:48.402Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-19T15:28:13.408Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-19T15:29:32.899Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
     }
   ],
   "products": [
@@ -637,9 +681,13 @@
       "items": [
         "caramel-cookie",
         "caramel-cookie",
-        "chocolate-cake"
+        "chocolate-cake",
+        "caramel-cookie",
+        "white-design-cake",
+        "white-design-cake",
+        "nutella-box"
       ],
-      "ts": 1755615328640
+      "ts": 1755617378591
     }
   ]
 }

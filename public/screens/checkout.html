@@ -12,6 +12,7 @@
                border:1px solid #eee; border-radius:10px; background:#fff; }
     .ck-row img { width:90px; height:90px; object-fit:cover; border-radius:8px; }
     .price-line{ margin-top:4px; font-weight:700; }
+    #sum-box{ margin:10px 0 16px; font-weight:800; border-top:1px solid #ddd; padding-top:10px; }
   </style>
 </head>
 <body>
@@ -31,6 +32,10 @@
 
   <form id="checkout-form">
     <div id="ck-list" class="ck-list"></div>
+
+    <!-- סיכום למסומנים בלבד -->
+    <div id="sum-box"></div>
+
     <button id="to-pay" type="button">Proceed to Pay</button>
   </form>
 
@@ -113,7 +118,6 @@
         if (!p) continue;
         const productName = (window.Translations?.getProduct && window.Translations.getProduct(p.id)) || p.title;
 
-        // === חישוב מחיר יחידה וסה״כ ===
         const unit = priceOf(p.id);
         const total = unit * Number(qty);
 
@@ -129,7 +133,30 @@
         `;
         listBox.appendChild(row);
       }
+
+      updateTotal();
     }
+
+    // סיכום לפי פריטים מסומנים בלבד
+    function updateTotal(){
+      const checked = Array.from(document.querySelectorAll('input[name=item]:checked')).map(cb=>cb.value);
+      let sum=0;
+      // עוברים על כל השורות ומחברים רק מסומנים
+      document.querySelectorAll('.ck-row').forEach(row=>{
+        const id = row.querySelector('input[name=item]')?.value;
+        if(!id || !checked.includes(id)) return;
+        // החילוץ של הכמות מתוך שורת המחיר
+        const txt = row.querySelector('.price-line')?.textContent || '';
+        const m = txt.match(/×\s*(\d+)/);
+        const qty = m ? parseInt(m[1]) : 1;
+        sum += priceOf(id) * qty;
+      });
+      document.getElementById('sum-box').textContent = `סה"כ מחיר: ${nis(sum)}`;
+
+    }
+    document.getElementById('ck-list').addEventListener('change', (e)=>{
+      if(e.target && e.target.name==='item') updateTotal();
+    });
 
     document.getElementById('to-pay').addEventListener('click', async () => {
       const chosen = Array.from(document.querySelectorAll('input[name=item]:checked')).map(cb => cb.value);
