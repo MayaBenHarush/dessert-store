@@ -2,25 +2,24 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title data-page="myitems">הרכישות שלי</title>
+  <title>הרכישות שלי</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/styles.css">
-  <script src="/assets/translations"></script>
 </head>
 <body class="myitems-page">
   <nav>
-    <a href="store.html" data-key="store">חנות</a>
-    <a href="cart.html" data-key="cart">סל הקניות</a>
-    <a href="checkout.html" data-key="checkout">תשלום</a>
-    <a href="myitems.html" data-key="myPurchases">הרכישות שלי</a>
-    <a id="login-link" href="login.html" data-key="login">התחברות</a>
-    <button id="logout" style="display:none" data-key="logout">התנתקות</button>
-    <a id="admin-link" href="admin.html" style="display:none" data-key="admin">ניהול</a>
+    <a href="store.html" id="nav-store">חנות</a>
+    <a href="cart.html" id="nav-cart">סל הקניות</a>
+    <a href="checkout.html" id="nav-checkout">תשלום</a>
+    <a href="myitems.html" id="nav-myitems">הרכישות שלי</a>
+    <a id="login-link" href="login.html">התחברות</a>
+    <button id="logout" style="display:none">התנתקות</button>
+    <a id="admin-link" href="admin.html" style="display:none">ניהול</a>
     <button id="theme-toggle">🌙 מצב כהה</button>
     <button id="language-toggle">🌐 English</button>
   </nav>
 
-  <h1 data-key="pageTitle.myitems">הרכישות שלי</h1>
+  <h1 id="page-title">הרכישות שלי</h1>
   <div id="list"></div>
 
   <script>
@@ -46,6 +45,68 @@
       } else {
         languageToggle.textContent = '🌐 English';
       }
+      
+      // עדכון תרגומי הממשק
+      updateInterfaceLanguage(currentLanguage);
+    }
+
+    function updateInterfaceLanguage(lang) {
+      const translations = {
+        he: {
+          'nav-store': 'חנות',
+          'nav-cart': 'סל הקניות', 
+          'nav-checkout': 'תשלום',
+          'nav-myitems': 'הרכישות שלי',
+          'nav-login': 'התחברות',
+          'nav-logout': 'התנתקות',
+          'nav-admin': 'ניהול',
+          'page-title': 'הרכישות שלי',
+          'theme-dark': '🌙 מצב כהה',
+          'theme-light': '☀️ מצב בהיר'
+        },
+        en: {
+          'nav-store': 'Store',
+          'nav-cart': 'Shopping Cart',
+          'nav-checkout': 'Checkout', 
+          'nav-myitems': 'My Purchases',
+          'nav-login': 'Login',
+          'nav-logout': 'Logout',
+          'nav-admin': 'Admin',
+          'page-title': 'My Purchases',
+          'theme-dark': '🌙 Dark Mode',
+          'theme-light': '☀️ Light Mode'
+        }
+      };
+
+      const texts = translations[lang];
+      if (!texts) return;
+
+      // עדכון ניווט
+      document.getElementById('nav-store').textContent = texts['nav-store'];
+      document.getElementById('nav-cart').textContent = texts['nav-cart'];
+      document.getElementById('nav-checkout').textContent = texts['nav-checkout'];
+      document.getElementById('nav-myitems').textContent = texts['nav-myitems'];
+      document.getElementById('login-link').textContent = texts['nav-login'];
+      document.getElementById('logout').textContent = texts['nav-logout'];
+      const adminLink = document.getElementById('admin-link');
+      if (adminLink) adminLink.textContent = texts['nav-admin'];
+
+      // עדכון כותרת העמוד
+      document.getElementById('page-title').textContent = texts['page-title'];
+      
+      // עדכון כפתור נושא
+      const theme = localStorage.getItem('theme') || 'light';
+      const themeToggle = document.getElementById('theme-toggle');
+      themeToggle.textContent = theme === 'dark' ? texts['theme-light'] : texts['theme-dark'];
+
+      // עדכון כיוון הדף
+      if (lang === 'en') {
+        document.documentElement.setAttribute('dir', 'ltr');
+        document.documentElement.setAttribute('lang', 'en');
+      } else {
+        document.documentElement.setAttribute('dir', 'rtl');
+        document.documentElement.setAttribute('lang', 'he');
+      }
     }
 
     // החלפת נושא
@@ -69,6 +130,9 @@
       } else {
         languageToggle.textContent = '🌐 English';
       }
+      
+      // עדכון כל הממשק
+      updateInterfaceLanguage(newLanguage);
       
       // טעינה מחדש עם השפה החדשה
       loadMyItems();

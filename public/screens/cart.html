@@ -5,78 +5,7 @@
   <title data-page="cart">סל הקניות</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/styles.css" />
-  <script src="/assets/translations"></script>
-  <style>
-    /* שיפור כפתורי כמות - יותר ברורים וגלויים */
-    .quantity-controls {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-top: 8px;
-    }
-
-    .quantity-btn {
-      width: 35px;
-      height: 35px;
-      border: 2px solid var(--primary-color);
-      background: white;
-      border-radius: 8px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      font-size: 18px;
-      color: var(--primary-color);
-      transition: all 0.2s ease;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .quantity-btn:hover {
-      background: var(--primary-color);
-      color: white;
-      transform: scale(1.05);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-    }
-
-    .quantity-btn:active {
-      transform: scale(0.95);
-    }
-
-    .quantity-btn.minus {
-      background-color: #ffebee;
-      border-color: #f44336;
-      color: #f44336;
-    }
-
-    .quantity-btn.minus:hover {
-      background-color: #f44336;
-      color: white;
-    }
-
-    .quantity-btn.plus {
-      background-color: #e8f5e8;
-      border-color: #4caf50;
-      color: #4caf50;
-    }
-
-    .quantity-btn.plus:hover {
-      background-color: #4caf50;
-      color: white;
-    }
-
-    .quantity-display {
-      min-width: 45px;
-      text-align: center;
-      font-weight: bold;
-      font-size: 18px;
-      color: var(--primary-color);
-      background: var(--bg-primary);
-      padding: 8px 12px;
-      border-radius: 8px;
-      border: 1px solid #e0e0e0;
-    }
-  </style>
+  <script src="/assets/translations.js"></script>
 </head>
 <body>
   <nav>
@@ -95,67 +24,48 @@
   <div id="items" class="cart-list"></div>
 
   <script>
-    // טעינת התאמות אישיות מ-localStorage
-    function loadUICustomization() {
+    // טעינת נושא ושפה מהlocalStorage
+    function loadUserPreferences() {
       const theme = localStorage.getItem('theme') || 'light';
-      const themeToggle = document.getElementById('theme-toggle');
-      const languageToggle = document.getElementById('language-toggle');
+      const language = localStorage.getItem('language') || 'he';
       
-      // עדכון נושא
       if (theme === 'dark') {
         document.body.classList.add('dark-theme');
-        themeToggle.textContent = '☀️ מצב בהיר';
-      } else {
-        document.body.classList.remove('dark-theme');
-        themeToggle.textContent = '🌙 מצב כהה';
       }
       
-      // עדכון כפתור שפה
-      const currentLanguage = localStorage.getItem('language') || 'he';
-      if (currentLanguage === 'en') {
-        languageToggle.textContent = '🌐 עברית';
-      } else {
-        languageToggle.textContent = '🌐 English';
-      }
-      
-      // עדכון תרגומים
-      if (typeof window.updateLanguage === 'function') {
-        window.updateLanguage();
-      }
+      window.updateLanguage();
     }
 
-    // החלפת נושא
-    document.getElementById('theme-toggle').addEventListener('click', () => {
-      const isDark = document.body.classList.contains('dark-theme');
-      const newTheme = isDark ? 'light' : 'dark';
-      localStorage.setItem('theme', newTheme);
-      loadUICustomization();
-    });
+    // ניהול נושא
+    function setupThemeToggle() {
+      const themeToggle = document.getElementById('theme-toggle');
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        
+        localStorage.setItem('theme', newTheme);
+        document.body.classList.toggle('dark-theme', newTheme === 'dark');
+        
+        themeToggle.textContent = newTheme === 'dark' ? 
+          window.Translations.get('themeToggleLight') : 
+          window.Translations.get('themeToggleDark');
+      });
+    }
 
-    // החלפת שפה
-    document.getElementById('language-toggle').addEventListener('click', () => {
-      const currentLanguage = localStorage.getItem('language') || 'he';
-      const newLanguage = currentLanguage === 'he' ? 'en' : 'he';
-      localStorage.setItem('language', newLanguage);
-      
-      // עדכון מיידי של כפתור השפה
+    // ניהול שפה
+    function setupLanguageToggle() {
       const languageToggle = document.getElementById('language-toggle');
-      if (newLanguage === 'en') {
-        languageToggle.textContent = '🌐 עברית';
-      } else {
-        languageToggle.textContent = '🌐 English';
-      }
-      
-      // טעינה מחדש של הסל עם השפה החדשה
-      loadCart();
-    });
+      languageToggle.addEventListener('click', window.toggleLanguage);
+    }
 
     // ניווט דינמי
     async function setupAuthButtons() {
       const loginLink = document.getElementById('login-link');
       const logoutBtn = document.getElementById('logout');
+      const adminLink = document.querySelector('a[href="admin.html"]');
+      
       let loggedIn = false;
-      let username = '';
+      let username = null;
       
       try { 
         const r = await fetch('/api/session'); 
@@ -169,13 +79,12 @@
       loginLink.style.display = loggedIn ? 'none' : '';
       logoutBtn.style.display = loggedIn ? '' : 'none';
       
-      // הצגת קישור ניהול רק למשתמש admin
-      const adminLinkElement = document.querySelector('a[href="admin.html"]');
-      if (adminLinkElement) {
-        adminLinkElement.style.display = (loggedIn && username === 'admin') ? '' : 'none';
+      // הצגת כפתור ניהול רק למשתמש admin
+      if (adminLink) {
+        adminLink.style.display = (username === 'admin') ? '' : 'none';
       }
     }
-    setupAuthButtons();
+
     document.getElementById('logout').onclick = async () => {
       try { await fetch('/api/logout', { method: 'POST' }); }
       finally { location.href = 'login.html'; }
@@ -186,127 +95,110 @@
       const res = await fetch('/api/products');
       products = await res.json();
     }
-    
+
     async function loadCart() {
       const res = await fetch('/api/cart');
       if (res.status === 401) return location.href = 'login.html';
       const quantities = await res.json();
       const container = document.getElementById('items');
-      const currentLanguage = localStorage.getItem('language') || 'he';
-      
       container.innerHTML = '';
       
-      const productIds = Object.keys(quantities);
-      if (productIds.length === 0) {
-        const emptyText = currentLanguage === 'en' ? 'Cart is empty.' : 'הסל ריק.';
-        container.innerHTML = `<p>${emptyText}</p>`; 
+      const itemsArray = Object.entries(quantities);
+      if (itemsArray.length === 0) {
+        container.innerHTML = `<p class="empty" data-key="cartEmpty">${window.Translations.get('cartEmpty')}</p>`;
         return;
       }
-
-      // מילון תרגומים ישיר
-      const productTranslations = {
-        'bagle-cookie': { he: 'עוגיית בייגל', en: 'Bagel Cookie' },
-        'caramel-cookie': { he: 'עוגיית קרמל', en: 'Caramel Cookie' },
-        'chocolate-cake': { he: 'עוגת שוקולד', en: 'Chocolate Cake' },
-        'cookies-box': { he: 'קופסת עוגיות', en: 'Cookies Box' },
-        'cupcakes': { he: 'קאפקייקס', en: 'Cupcakes' },
-        'kinder-cookie': { he: 'עוגיית קינדר', en: 'Kinder Cookie' },
-        'lotus-cookie': { he: 'עוגיית לוטוס', en: 'Lotus Cookie' },
-        'minnie-mous-cake': { he: 'עוגת מיני מאוס', en: 'Minnie Mouse Cake' },
-        'nutella-box': { he: 'קופסת נוטלה', en: 'Nutella Box' },
-        'nutella-cookie': { he: 'עוגיית נוטלה', en: 'Nutella Cookie' },
-        'orange-cake': { he: 'עוגת תפוז', en: 'Orange Cake' },
-        'pizza-cookie': { he: 'עוגיית פיצה', en: 'Pizza Cookie' },
-        'white-chocolate-cookie': { he: 'עוגיית שוקולד לבן', en: 'White Chocolate Cookie' },
-        'white-design-cake': { he: 'עוגה לבנה מעוצבת', en: 'White Design Cake' }
-      };
-
-      for (const id of productIds) {
-        const quantity = quantities[id];
+      
+      for (const [id, quantity] of itemsArray) {
         const p = products.find(x => String(x.id) === String(id));
-        if (!p || quantity <= 0) continue;
-
-        // תרגום שם המוצר לפי השפה הנוכחית
-        let productName;
-        if (productTranslations[p.id] && productTranslations[p.id][currentLanguage]) {
-          productName = productTranslations[p.id][currentLanguage];
-        } else {
-          productName = p.title;
-        }
-
-        const removeAllText = currentLanguage === 'en' ? 'Remove All' : 'הסר הכל';
-
+        if (!p) continue;
+        
         const row = document.createElement('div');
         row.className = 'cart-item';
+        
+        // שם המוצר מתורגם
+        const productName = window.Translations.getProduct(p.id) || p.title;
+        
         row.innerHTML = `
           <div class="left">
             <img src="/images/${p.image}" alt="${productName}">
             <div class="cart-item-info">
               <h3>${productName}</h3>
+              <div class="quantity-info">
+                <span data-key="quantity">${window.Translations.get('quantity')}</span>: ${quantity}
+              </div>
               <div class="quantity-controls">
-                <button class="quantity-btn minus" data-id="${p.id}" title="הפחת כמות">−</button>
+                <button class="quantity-btn minus" data-id="${p.id}">-</button>
                 <span class="quantity-display">${quantity}</span>
-                <button class="quantity-btn plus" data-id="${p.id}" title="הוסף כמות">+</button>
+                <button class="quantity-btn plus" data-id="${p.id}">+</button>
               </div>
             </div>
           </div>
-          <button class="remove" data-id="${p.id}">${removeAllText}</button>
+          <button class="remove" data-id="${p.id}" data-key="removeAll">${window.Translations.get('removeAll')}</button>
         `;
         container.appendChild(row);
       }
     }
 
+    // ניהול אירועי סל הקניות
     document.getElementById('items').addEventListener('click', async (e) => {
-      const btn = e.target.closest('.quantity-btn, .remove');
-      if (!btn) return;
+      const btn = e.target.closest('.remove');
+      const plusBtn = e.target.closest('.plus');
+      const minusBtn = e.target.closest('.minus');
       
-      const id = btn.getAttribute('data-id');
-      
-      if (btn.classList.contains('remove')) {
-        const res = await fetch(`/api/cart/${encodeURIComponent(id)}`, { 
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ quantity: 0 })
-        });
-        if (res.ok) loadCart();
-        else {
-          let j = {}; try { j = await res.json(); } catch {}
-          const errorText = (window.Translations && window.Translations.get) 
-            ? window.Translations.get('errorRemoving') 
-            : 'שגיאה בהסרה';
-          alert(j.error || errorText);
-        }
-      } else if (btn.classList.contains('minus')) {
+      if (btn) {
+        // הסרת כל המוצר
+        const id = btn.getAttribute('data-id');
         const del = await fetch(`/api/cart/${encodeURIComponent(id)}`, { method: 'DELETE' });
-        if (del.ok) loadCart();
-        else {
-          let j = {}; try { j = await del.json(); } catch {}
-          const errorText = (window.Translations && window.Translations.get) 
-            ? window.Translations.get('errorRemoving') 
-            : 'שגיאה בהסרה';
-          alert(j.error || errorText);
+        if (del.ok) {
+          loadCart();
+        } else {
+          let j = {}; 
+          try { j = await del.json(); } catch {}
+          alert(j.error || window.Translations.get('errorRemoving'));
         }
-      } else if (btn.classList.contains('plus')) {
+      } else if (plusBtn) {
+        // הוספת יחידה
+        const id = plusBtn.getAttribute('data-id');
         const add = await fetch('/api/cart', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ productId: id })
         });
-        if (add.ok) loadCart();
-        else {
-          let j = {}; try { j = await add.json(); } catch {}
-          const errorText = (window.Translations && window.Translations.get) 
-            ? window.Translations.get('errorAdding') 
-            : 'שגיאה בהוספה';
-          alert(j.error || errorText);
+        if (add.ok) {
+          loadCart();
+        } else {
+          let j = {}; 
+          try { j = await add.json(); } catch {}
+          alert(j.error || window.Translations.get('errorAdding'));
+        }
+      } else if (minusBtn) {
+        // הפחתת יחידה
+        const id = minusBtn.getAttribute('data-id');
+        const del = await fetch(`/api/cart/${encodeURIComponent(id)}`, { method: 'DELETE' });
+        if (del.ok) {
+          loadCart();
+        } else {
+          let j = {}; 
+          try { j = await del.json(); } catch {}
+          alert(j.error || window.Translations.get('errorRemoving'));
         }
       }
     });
 
-    (async () => { 
-      await loadProducts(); 
-      loadUICustomization();
-      await loadCart(); 
+    // האזנה לשינוי שפה
+    window.addEventListener('languageChanged', () => {
+      loadCart(); // טעינה מחדש של הסל עם התרגומים החדשים
+    });
+
+    // אתחול
+    (async () => {
+      loadUserPreferences();
+      setupThemeToggle();
+      setupLanguageToggle();
+      setupAuthButtons();
+      await loadProducts();
+      await loadCart();
     })();
   </script>
 </body>
