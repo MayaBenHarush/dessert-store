@@ -22,8 +22,8 @@
     {
       "username": "מאיה",
       "items": [
-        "caramel-cookie",
-        "caramel-cookie"
+        "white-design-cake",
+        "white-design-cake"
       ]
     }
   ],
@@ -503,6 +503,46 @@
       "datetime": "2025-08-19T12:23:20.837Z",
       "username": "מאיה",
       "type": "login"
+    },
+    {
+      "datetime": "2025-08-19T13:11:56.021Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-19T13:12:04.617Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-19T13:12:07.394Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-19T14:55:00.981Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-19T14:55:00.984Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-19T14:55:04.009Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-19T14:55:04.015Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-19T14:55:04.016Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
     }
   ],
   "products": [
@@ -591,5 +631,15 @@
       "image": "white-design-cake.jpeg"
     }
   ],
-  "pending": []
+  "pending": [
+    {
+      "username": "מאיה",
+      "items": [
+        "caramel-cookie",
+        "caramel-cookie",
+        "chocolate-cake"
+      ],
+      "ts": 1755615328640
+    }
+  ]
 }

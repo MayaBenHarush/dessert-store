@@ -8,12 +8,10 @@
   <script src="/assets/translations"></script>
   <style>
     .ck-list { display:flex; flex-direction:column; gap:14px; margin:14px 0; }
-    .ck-row  {
-      display:grid; grid-template-columns:auto 90px 1fr;
-      align-items:center; gap:12px; padding:10px;
-      border:1px solid #eee; border-radius:10px; background:#fff;
-    }
+    .ck-row  { display:grid; grid-template-columns:auto 90px 1fr; align-items:center; gap:12px; padding:10px;
+               border:1px solid #eee; border-radius:10px; background:#fff; }
     .ck-row img { width:90px; height:90px; object-fit:cover; border-radius:8px; }
+    .price-line{ margin-top:4px; font-weight:700; }
   </style>
 </head>
 <body>
@@ -37,67 +35,28 @@
   </form>
 
   <script>
-    // טעינת התאמות אישיות מ-localStorage
+    // === מחירון ===
+    const PRICE_MAP={'chocolate-cake':150,'cookies-box':125,'cupcakes':160,'minnie-mous-cake':300,'nutella-box':70,'pizza-cookie':120,'white-design-cake':140};
+    const priceOf = id => (id in PRICE_MAP) ? PRICE_MAP[id] : (String(id).includes('cookie') ? 17 : 0);
+    const nis = n => `₪${n}`;
+
     function loadUICustomization() {
       const theme = localStorage.getItem('theme') || 'light';
       const themeToggle = document.getElementById('theme-toggle');
       const languageToggle = document.getElementById('language-toggle');
-      
-      // עדכון נושא
-      if (theme === 'dark') {
-        document.body.classList.add('dark-theme');
-        themeToggle.textContent = '☀️ מצב בהיר';
-      } else {
-        document.body.classList.remove('dark-theme');
-        themeToggle.textContent = '🌙 מצב כהה';
-      }
-      
-      // עדכון כפתור שפה
+      if (theme === 'dark') { document.body.classList.add('dark-theme'); themeToggle.textContent = '☀️ מצב בהיר'; }
+      else { document.body.classList.remove('dark-theme'); themeToggle.textContent = '🌙 מצב כהה'; }
       const currentLanguage = localStorage.getItem('language') || 'he';
-      if (currentLanguage === 'en') {
-        languageToggle.textContent = '🌐 עברית';
-      } else {
-        languageToggle.textContent = '🌐 English';
-      }
-      
-      // עדכון תרגומי הממשק
+      languageToggle.textContent = currentLanguage === 'en' ? '🌐 עברית' : '🌐 English';
       updateInterfaceLanguage(currentLanguage);
     }
 
     function updateInterfaceLanguage(lang) {
       const translations = {
-        he: {
-          'nav-store': 'חנות',
-          'nav-cart': 'סל הקניות', 
-          'nav-checkout': 'תשלום',
-          'nav-myitems': 'הרכישות שלי',
-          'nav-login': 'התחברות',
-          'nav-logout': 'התנתקות',
-          'nav-admin': 'ניהול',
-          'page-title': 'בחירת פריטים לתשלום',
-          'proceed-to-pay': 'המשך לתשלום',
-          'theme-dark': '🌙 מצב כהה',
-          'theme-light': '☀️ מצב בהיר'
-        },
-        en: {
-          'nav-store': 'Store',
-          'nav-cart': 'Shopping Cart',
-          'nav-checkout': 'Checkout', 
-          'nav-myitems': 'My Purchases',
-          'nav-login': 'Login',
-          'nav-logout': 'Logout',
-          'nav-admin': 'Admin',
-          'page-title': 'Select Items for Payment',
-          'proceed-to-pay': 'Proceed to Pay',
-          'theme-dark': '🌙 Dark Mode',
-          'theme-light': '☀️ Light Mode'
-        }
+        he: { 'nav-store':'חנות','nav-cart':'סל הקניות','nav-checkout':'תשלום','nav-myitems':'הרכישות שלי','nav-login':'התחברות','nav-logout':'התנתקות','nav-admin':'ניהול','page-title':'בחירת פריטים לתשלום','proceed-to-pay':'המשך לתשלום','theme-dark':'🌙 מצב כהה','theme-light':'☀️ מצב בהיר' },
+        en: { 'nav-store':'Store','nav-cart':'Shopping Cart','nav-checkout':'Checkout','nav-myitems':'My Purchases','nav-login':'Login','nav-logout':'Logout','nav-admin':'Admin','page-title':'Select Items for Payment','proceed-to-pay':'Proceed to Pay','theme-dark':'🌙 Dark Mode','theme-light':'☀️ Light Mode' }
       };
-
-      const texts = translations[lang];
-      if (!texts) return;
-
-      // עדכון ניווט
+      const texts = translations[lang]; if (!texts) return;
       document.getElementById('nav-store').textContent = texts['nav-store'];
       document.getElementById('nav-cart').textContent = texts['nav-cart'];
       document.getElementById('nav-checkout').textContent = texts['nav-checkout'];
@@ -105,171 +64,80 @@
       document.getElementById('login-link').textContent = texts['nav-login'];
       document.getElementById('logout').textContent = texts['nav-logout'];
       document.getElementById('nav-admin').textContent = texts['nav-admin'];
-
-      // עדכון כותרת העמוד וכפתור
       document.getElementById('page-title').textContent = texts['page-title'];
       document.getElementById('to-pay').textContent = texts['proceed-to-pay'];
-      
-      // עדכון כפתור נושא
       const theme = localStorage.getItem('theme') || 'light';
-      const themeToggle = document.getElementById('theme-toggle');
-      themeToggle.textContent = theme === 'dark' ? texts['theme-light'] : texts['theme-dark'];
-
-      // עדכון כיוון הדף
-      if (lang === 'en') {
-        document.documentElement.setAttribute('dir', 'ltr');
-        document.documentElement.setAttribute('lang', 'en');
-      } else {
-        document.documentElement.setAttribute('dir', 'rtl');
-        document.documentElement.setAttribute('lang', 'he');
-      }
+      document.getElementById('theme-toggle').textContent = theme === 'dark' ? texts['theme-light'] : texts['theme-dark'];
+      if (lang === 'en') { document.documentElement.dir='ltr'; document.documentElement.lang='en'; }
+      else { document.documentElement.dir='rtl'; document.documentElement.lang='he'; }
     }
 
-    // החלפת נושא
     document.getElementById('theme-toggle').addEventListener('click', () => {
       const isDark = document.body.classList.contains('dark-theme');
-      const newTheme = isDark ? 'light' : 'dark';
-      localStorage.setItem('theme', newTheme);
-      loadUICustomization();
+      localStorage.setItem('theme', isDark ? 'light' : 'dark'); loadUICustomization();
     });
-
-    // החלפת שפה
     document.getElementById('language-toggle').addEventListener('click', () => {
-      const currentLanguage = localStorage.getItem('language') || 'he';
-      const newLanguage = currentLanguage === 'he' ? 'en' : 'he';
-      localStorage.setItem('language', newLanguage);
-      
-      // עדכון מיידי של כפתור השפה
-      const languageToggle = document.getElementById('language-toggle');
-      if (newLanguage === 'en') {
-        languageToggle.textContent = '🌐 עברית';
-      } else {
-        languageToggle.textContent = '🌐 English';
-      }
-      
-      // עדכון כל הממשק
-      updateInterfaceLanguage(newLanguage);
-      
-      // טעינה מחדש עם השפה החדשה
-      loadCheckoutList();
+      const current = localStorage.getItem('language') || 'he';
+      const next = current === 'he' ? 'en' : 'he';
+      localStorage.setItem('language', next);
+      document.getElementById('language-toggle').textContent = next === 'en' ? '🌐 עברית' : '🌐 English';
+      updateInterfaceLanguage(next); loadCheckoutList();
     });
 
-    // ניווט דינמי
     async function setupAuthButtons() {
       const loginLink = document.getElementById('login-link');
       const logoutBtn = document.getElementById('logout');
-      let loggedIn = false;
-      let username = '';
-      
-      try { 
-        const r = await fetch('/api/session'); 
-        if (r.ok) {
-          loggedIn = true;
-          const data = await r.json();
-          username = data.username;
-        }
-      } catch {}
-      
+      let loggedIn = false, username = '';
+      try { const r = await fetch('/api/session'); if (r.ok) { loggedIn = true; const data = await r.json(); username = data.username; } } catch {}
       loginLink.style.display = loggedIn ? 'none' : '';
       logoutBtn.style.display = loggedIn ? '' : 'none';
-      
-      // הצגת קישור ניהול רק למשתמש admin
       const adminLinkElement = document.querySelector('a[href="admin.html"]');
-      if (adminLinkElement) {
-        adminLinkElement.style.display = (loggedIn && username === 'admin') ? '' : 'none';
-      }
+      if (adminLinkElement) adminLinkElement.style.display = (loggedIn && username === 'admin') ? '' : 'none';
     }
     setupAuthButtons();
-    document.getElementById('logout').onclick = async () => {
-      try { await fetch('/api/logout', { method: 'POST' }); }
-      finally { location.href = 'login.html'; }
-    };
+    document.getElementById('logout').onclick = async () => { try { await fetch('/api/logout', { method: 'POST' }); } finally { location.href = 'login.html'; } };
 
     const listBox = document.getElementById('ck-list');
 
     async function loadCheckoutList() {
+      listBox.innerHTML = '';
       const cartRes = await fetch('/api/cart');
-      if (cartRes.status === 401) { location.href = 'login.html'; return; }
-      const quantities = await cartRes.json();
+      if (cartRes.status === 401) { location.href='login.html'; return; }
+      const quantities = await cartRes.json(); // {id: count}
 
       const prodRes = await fetch('/api/products');
       const products = await prodRes.json();
-      const currentLanguage = localStorage.getItem('language') || 'he';
 
-      listBox.innerHTML = '';
-      const productIds = Object.keys(quantities);
-      
-      if (productIds.length === 0) {
-        const emptyText = currentLanguage === 'en' ? 'Cart is empty.' : 'הסל ריק כרגע.';
-        listBox.innerHTML = `<p>${emptyText}</p>`;
-        return;
-      }
-
-      // מילון תרגומים ישיר
-      const productTranslations = {
-        'bagle-cookie': { he: 'עוגיית בייגל', en: 'Bagel Cookie' },
-        'caramel-cookie': { he: 'עוגיית קרמל', en: 'Caramel Cookie' },
-        'chocolate-cake': { he: 'עוגת שוקולד', en: 'Chocolate Cake' },
-        'cookies-box': { he: 'קופסת עוגיות', en: 'Cookies Box' },
-        'cupcakes': { he: 'קאפקייקס', en: 'Cupcakes' },
-        'kinder-cookie': { he: 'עוגיית קינדר', en: 'Kinder Cookie' },
-        'lotus-cookie': { he: 'עוגיית לוטוס', en: 'Lotus Cookie' },
-        'minnie-mous-cake': { he: 'עוגת מיני מאוס', en: 'Minnie Mouse Cake' },
-        'nutella-box': { he: 'קופסת נוטלה', en: 'Nutella Box' },
-        'nutella-cookie': { he: 'עוגיית נוטלה', en: 'Nutella Cookie' },
-        'orange-cake': { he: 'עוגת תפוז', en: 'Orange Cake' },
-        'pizza-cookie': { he: 'עוגיית פיצה', en: 'Pizza Cookie' },
-        'white-chocolate-cookie': { he: 'עוגיית שוקולד לבן', en: 'White Chocolate Cookie' },
-        'white-design-cake': { he: 'עוגה לבנה מעוצבת', en: 'White Design Cake' }
-      };
-
-      // עדכון כפתור התשלום
-      const proceedButton = document.getElementById('to-pay');
-      proceedButton.textContent = currentLanguage === 'en' ? 'Proceed to Pay' : 'המשך לתשלום';
-
-      productIds.forEach(id => {
-        const quantity = quantities[id];
+      for (const [id, qty] of Object.entries(quantities)) {
         const p = products.find(x => String(x.id) === String(id));
-        if (!p || quantity <= 0) return;
+        if (!p) continue;
+        const productName = (window.Translations?.getProduct && window.Translations.getProduct(p.id)) || p.title;
 
-        // תרגום שם המוצר לפי השפה הנוכחית
-        let productName;
-        if (productTranslations[p.id] && productTranslations[p.id][currentLanguage]) {
-          productName = productTranslations[p.id][currentLanguage];
-        } else {
-          productName = p.title;
-        }
+        // === חישוב מחיר יחידה וסה״כ ===
+        const unit = priceOf(p.id);
+        const total = unit * Number(qty);
 
-        const row = document.createElement('label');
+        const row = document.createElement('div');
         row.className = 'ck-row';
         row.innerHTML = `
-          <input type="checkbox" name="item" value="${String(p.id)}" checked />
-          <img src="/images/${p.image}" alt="${productName}" />
-          <div><strong>${productName}</strong> (${quantity})</div>
+          <input type="checkbox" name="item" value="${p.id}" checked />
+          <img src="/images/${p.image}" alt="${productName}">
+          <div>
+            <h3>${productName}</h3>
+            <div class="price-line">${nis(unit)} × ${qty} = <strong>${nis(total)}</strong></div>
+          </div>
         `;
         listBox.appendChild(row);
-      });
+      }
     }
 
     document.getElementById('to-pay').addEventListener('click', async () => {
-      const checked = Array.from(document.querySelectorAll('input[name="item"]:checked'))
-                           .map(el => String(el.value));
-      if (!checked.length) return alert('בחר לפחות פריט אחד');
-
-      const res = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type':'application/json' },
-        body: JSON.stringify({ items: checked })
-      });
-
-      let j = {}; try { j = await res.json(); } catch {}
-      if (res.ok && j.ok) location.href = 'pay.html';
-      else alert(j.error || 'Checkout failed');
+      const chosen = Array.from(document.querySelectorAll('input[name=item]:checked')).map(cb => cb.value);
+      const res = await fetch('/api/checkout', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ items: chosen }) });
+      if (res.ok) location.href = 'pay.html';
     });
 
-    // טעינה ראשונית
-    loadUICustomization();
-    loadCheckoutList();
+    loadUICustomization(); loadCheckoutList();
   </script>
 </body>
 </html>

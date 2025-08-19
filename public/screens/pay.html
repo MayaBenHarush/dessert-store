@@ -17,17 +17,9 @@
     #pay-form input{ padding:10px; border:1px solid #ccc; border-radius:8px; font-size:16px; }
     .row{ display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
     .error{ color:#b00020; display:none; }
-    .quantity-badge {
-      background: var(--primary-color);
-      color: white;
-      padding: 6px 12px;
-      border-radius: 16px;
-      font-size: 13px;
-      font-weight: bold;
-      min-width: 50px;
-      text-align: center;
-      box-shadow: var(--shadow-sm);
-    }
+    .quantity-badge { background: var(--primary-color); color: white; padding: 6px 12px; border-radius: 16px; font-size: 13px; font-weight: bold; min-width: 50px; text-align: center; box-shadow: var(--shadow-sm); }
+    .price-line{ font-weight:700; }
+    #sum-box{ margin:10px 0 16px; font-weight:800; }
   </style>
 </head>
 <body>
@@ -48,15 +40,14 @@
 
   <form id="items-form">
     <div id="pay-list" class="pay-list"></div>
+    <div id="sum-box"></div>
   </form>
 
   <form id="pay-form" novalidate>
-    <label>
-      <span data-key="cardNumber">מספר הכרטיס</span>
+    <label><span data-key="cardNumber">מספר הכרטיס</span>
       <input type="text" name="cardNumber" inputmode="numeric" autocomplete="cc-number" placeholder="1234 5678 9012 3456" required />
     </label>
-    <label>
-      <span data-key="cardName">שם בעל/ת הכרטיס</span>
+    <label><span data-key="cardName">שם בעל/ת הכרטיס</span>
       <input type="text" name="cardName" autocomplete="cc-name" required />
     </label>
     <div class="row">
@@ -72,47 +63,28 @@
   </form>
 
   <script>
-    // טעינת התאמות אישיות מ-localStorage
+    // === מחירון ===
+    const PRICE_MAP={'chocolate-cake':150,'cookies-box':125,'cupcakes':160,'minnie-mous-cake':300,'nutella-box':70,'pizza-cookie':120,'white-design-cake':140};
+    const priceOf = id => (id in PRICE_MAP) ? PRICE_MAP[id] : (String(id).includes('cookie') ? 17 : 0);
+    const nis = n => `₪${n}`;
+
+    // התאמות אישיות
     function loadUICustomization() {
       const theme = localStorage.getItem('theme') || 'light';
       const themeToggle = document.getElementById('theme-toggle');
       const languageToggle = document.getElementById('language-toggle');
-      
-      // עדכון נושא
-      if (theme === 'dark') {
-        document.body.classList.add('dark-theme');
-        themeToggle.textContent = '☀️ מצב בהיר';
-      } else {
-        document.body.classList.remove('dark-theme');
-        themeToggle.textContent = '🌙 מצב כהה';
-      }
-      
-      // עדכון כפתור שפה
+      if (theme === 'dark') { document.body.classList.add('dark-theme'); themeToggle.textContent = '☀️ מצב בהיר'; }
+      else { document.body.classList.remove('dark-theme'); themeToggle.textContent = '🌙 מצב כהה'; }
       const currentLanguage = localStorage.getItem('language') || 'he';
-      if (currentLanguage === 'en') {
-        languageToggle.textContent = '🌐 עברית';
-      } else {
-        languageToggle.textContent = '🌐 English';
-      }
-      
-      // עדכון תרגומים
-      if (typeof window.updateLanguage === 'function') {
-        window.updateLanguage();
-      }
+      languageToggle.textContent = currentLanguage === 'en' ? '🌐 עברית' : '🌐 English';
+      if (typeof window.updateLanguage === 'function') window.updateLanguage();
     }
-
-    // החלפת נושא
     document.getElementById('theme-toggle').addEventListener('click', () => {
       const isDark = document.body.classList.contains('dark-theme');
-      const newTheme = isDark ? 'light' : 'dark';
-      localStorage.setItem('theme', newTheme);
-      loadUICustomization();
+      localStorage.setItem('theme', isDark ? 'light' : 'dark'); loadUICustomization();
     });
-
-    // החלפת שפה
     document.getElementById('language-toggle').addEventListener('click', () => {
-      toggleLanguage();
-      renderPending(); // טעינה מחדש עם השפה החדשה
+      toggleLanguage(); renderPending();
     });
 
     // ניווט דינמי
@@ -120,32 +92,18 @@
       const loginLink = document.getElementById('login-link');
       const logoutBtn = document.getElementById('logout');
       const adminLink = document.getElementById('admin-link');
-      let loggedIn = false;
-      let username = '';
-      
-      try { 
-        const r = await fetch('/api/session'); 
-        if (r.ok) {
-          loggedIn = true;
-          const data = await r.json();
-          username = data.username;
-        }
-      } catch {}
-      
+      let loggedIn = false, username = '';
+      try { const r = await fetch('/api/session'); if (r.ok) { loggedIn = true; const data = await r.json(); username = data.username; } } catch {}
       loginLink.style.display = loggedIn ? 'none' : '';
       logoutBtn.style.display = loggedIn ? '' : 'none';
       adminLink.style.display = (loggedIn && username === 'admin') ? '' : 'none';
     }
     setupAuthButtons();
-    document.getElementById('logout').onclick = async () => {
-      try { await fetch('/api/logout', { method: 'POST' }); }
-      finally { location.href = 'login.html'; }
-    };
+    document.getElementById('logout').onclick = async () => { try { await fetch('/api/logout', { method: 'POST' }); } finally { location.href = 'login.html'; } };
 
     // מציג פריטים ממתינים לתשלום (pending) עם כמויות
     async function renderPending(){
-      const box = document.getElementById('pay-list');
-      box.innerHTML = 'טוען...';
+      const box = document.getElementById('pay-list'); box.innerHTML = 'טוען...';
 
       const pendRes = await fetch('/api/pending');
       if (pendRes.status === 401) { location.href = 'login.html'; return; }
@@ -155,101 +113,72 @@
       const products = await prodRes.json();
       const currentLanguage = localStorage.getItem('language') || 'he';
 
-      // חישוב כמויות
+      // כמויות
       const quantities = {};
-      pendingItems.forEach(id => {
-        quantities[id] = (quantities[id] || 0) + 1;
-      });
+      pendingItems.forEach(id => { quantities[id] = (quantities[id] || 0) + 1; });
 
       const uniqueIds = Object.keys(quantities);
-      if (!uniqueIds.length) { 
-        box.innerHTML = `<p class="pay-empty">${Translations.get('noItemsPending')}</p>`; 
-        return; 
+      box.innerHTML = '';
+      if (uniqueIds.length === 0) {
+        box.innerHTML = `<div class="pay-empty" data-key="noItemsPending">${window.Translations.get('noItemsPending')}</div>`;
+        document.getElementById('sum-box').textContent = '';
+        return;
       }
 
-      box.innerHTML = '';
-      for (const id of uniqueIds){
-        const quantity = quantities[id];
-        const p = products.find(product => String(product.id) === String(id));
-        if (!p) continue;
+      for (const id of uniqueIds) {
+        const p = products.find(x => String(x.id) === String(id)); if (!p) continue;
+        const productName = (window.Translations?.getProduct && window.Translations.getProduct(p.id)) || p.title;
 
-        // תרגום שם המוצר
-        const productName = Translations.getProduct(p.id, currentLanguage) || p.title;
+        // === מחיר יחידה וסה״כ ===
+        const qty = quantities[id];
+        const unit = priceOf(p.id);
+        const total = unit * qty;
 
-        const row = document.createElement('label');
-        row.className = 'pay-row';
+        const row = document.createElement('div'); row.className = 'pay-row';
         row.innerHTML = `
-          <input type="checkbox" name="item" value="${String(p.id)}" checked />
+          <input type="checkbox" name="item" value="${p.id}" checked />
           <img src="/images/${p.image}" alt="${productName}">
           <div>
             <div><strong>${productName}</strong></div>
-            <div class="meta">${p.description || ''}</div>
+            <div class="price-line">${nis(unit)} × ${qty} = <strong>${nis(total)}</strong></div>
           </div>
-          <div class="quantity-badge">${Translations.get('quantity')}: ${quantity}</div>
+          <div class="quantity-badge">${window.Translations.get('quantity')}: ${qty}</div>
         `;
         box.appendChild(row);
       }
 
-      // עדכון תרגומים
-      updateLanguage();
+      updateTotal();
     }
 
-    const payForm = document.getElementById('pay-form');
-    const errBox  = document.getElementById('err');
-    const payBtn  = document.getElementById('pay-btn');
+    function updateTotal(){
+      const checks = Array.from(document.querySelectorAll('input[name=item]:checked'));
+      let sum = 0;
+      checks.forEach(cb => {
+        const id = cb.value;
+        // מוצא את השורה ושולף ממנה את הכמות
+        const row = cb.closest('.pay-row');
+        const qtyText = row.querySelector('.quantity-badge')?.textContent || '';
+        const qty = parseInt(qtyText.replace(/[^\d]/g, ''), 10) || 1;
+        sum += priceOf(id) * qty;
+      });
+      const he = (localStorage.getItem('language') || 'he') === 'he';
+      document.getElementById('sum-box').textContent = he ? `סה״כ לתשלום (מסומנים): ${nis(sum)}` : `Total (selected): ${nis(sum)}`;
+    }
 
-    payForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      errBox.style.display = 'none'; errBox.textContent = '';
-
-      // איל פריטים לשלם כעת?
-      const checked = Array.from(document.querySelectorAll('input[name="item"]:checked'))
-                           .map(el => String(el.value));
-      if (!checked.length) return showErr('בחר לפחות פריט אחד לתשלום');
-
-      const cardNumber = payForm.cardNumber.value.trim().replace(/[\s-]/g, '');
-      const cardName   = payForm.cardName.value.trim();
-      const expiry     = payForm.expiry.value.trim();
-      const cvv        = payForm.cvv.value.trim();
-
-      if (!/^\d{12,19}$/.test(cardNumber)) return showErr('מספר כרטיס לא תקין');
-      if (!cardName) return showErr('נא למלא שם בעל/ת הכרטיס');
-      if (!/^\d{2}\/\d{2}$/.test(expiry)) return showErr('פורמט תוקף לא תקין');
-      const [mm, yy] = expiry.split('/').map(x => parseInt(x, 10));
-      if (mm < 1 || mm > 12) return showErr('חודש תוקף לא תקין');
-      if (!/^\d{3,4}$/.test(cvv)) return showErr('CVV לא תקין');
-
-      payBtn.disabled = true; 
-      payBtn.textContent = Translations.get('processing');
-      
-      try {
-        const res = await fetch('/api/pay', {
-          method: 'POST',
-          headers: { 'Content-Type':'application/json' },
-          body: JSON.stringify({ cardName, cardNumber, expiry, cvv, items: checked })
-        });
-        if (res.status === 401) { location.href = 'login.html'; return; }
-        const payload = await res.json().catch(() => ({}));
-        if (res.ok && payload.ok) {
-          // שולם: ירד מ-pending (וכבר ירד מהסל ב-checkout)
-          location.href = 'thankyou.html';
-        } else {
-          showErr(payload.error || 'Payment failed');
-        }
-      } catch {
-        showErr('שגיאת רשת – נסו שוב');
-      } finally {
-        payBtn.disabled = false; 
-        payBtn.textContent = Translations.get('pay');
-      }
+    document.getElementById('pay-list').addEventListener('change', (e) => {
+      if (e.target && e.target.name === 'item') updateTotal();
     });
 
-    function showErr(msg){ errBox.textContent = msg; errBox.style.display = 'block'; }
-    
-    setupAuthButtons();
-    // טעינה ראשונית
-    loadUICustomization();
-    renderPending();
+    document.getElementById('pay-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      // דמו – לא משנה סכום בפועל
+      const btn = document.getElementById('pay-btn');
+      btn.disabled = true; btn.textContent = window.Translations.get('processing') || 'מעבד תשלום...';
+      await fetch('/api/pay', { method:'POST' });
+      location.href = 'thankyou.html';
+    });
+
+    loadUICustomization(); renderPending();
   </script>
 </body>
 </html>
