@@ -101,7 +101,8 @@ require('./modules/myitems-server')(app);
 require('./modules/admin-server')(app);
 require('./modules/pending-server')(app);
 
-// מודול עוגות מותאמות - צריך לטעון לפני מודול העגלה
+/* ===== Middleware לעוגות מותאמות - לפני מודול העגלה ===== */
+// מודול עוגות מותאמות
 let customCakeModule;
 try {
   customCakeModule = require('./modules/custom-cake-server')(app);
@@ -110,10 +111,6 @@ try {
   console.error('Custom cake module failed to load:', e.message);
 }
 
-// מודול עגלה רגיל
-require('./modules/cart-server')(app);
-
-/* ===== Middleware לעוגות מותאמות ===== */
 // יירוט בקשות עוגות מותאמות לפני מודול העגלה הרגיל
 if (customCakeModule) {
   app.post('/api/cart', async (req, res, next) => {
@@ -122,16 +119,21 @@ if (customCakeModule) {
       
       // אם זה עוגה מותאמת, העבר לפונקציה המתאימה
       if (productId === 'custom-cake' && customDesign) {
+        console.log('🎂 Processing custom cake request:', customDesign);
         return await customCakeModule.handleCustomCake(req, res, next);
       }
       
       // אחרת, המשך למודול העגלה הרגיל
       next();
     } catch (err) {
+      console.error('Custom cake middleware error:', err);
       next(err);
     }
   });
 }
+
+// מודול עגלה רגיל - צריך להיות אחרי ה-middleware של עוגות מותאמות
+require('./modules/cart-server')(app);
 
 /* ===== Error handlers ===== */
 app.use((req, res) => res.status(404).send('Oops! Page not found'));

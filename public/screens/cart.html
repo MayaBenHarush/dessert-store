@@ -8,123 +8,103 @@
   <style>
     .empty { padding: 28px; color: #667; text-align: center; }
     .qty-wrap { display:flex; align-items:center; gap:10px; margin-top:8px; }
-    .quantity-btn { appearance:none; border:1px solid #c8cdd6; background:#fff; width:36px; height:36px; border-radius:10px; font-weight:900; cursor:pointer; }
-    .qty-badge { background:#ff6b9d; color:#fff; border-radius:12px; padding:8px 16px; font-weight:800; min-width:110px; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,.08); }
-    .price-line { margin-top:6px; font-weight:700; }
+    .quantity-btn { 
+      appearance:none; 
+      border:2px solid var(--primary-color); 
+      background:white; 
+      color:var(--primary-color);
+      width:36px; 
+      height:36px; 
+      border-radius:10px; 
+      font-weight:900; 
+      font-size:18px;
+      cursor:pointer; 
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      /* תמיד גלויים */
+      opacity: 1;
+      visibility: visible;
+    }
+    .quantity-btn:hover {
+      background: var(--primary-color);
+      color: white;
+      transform: scale(1.1);
+    }
+    .qty-badge { 
+      background: var(--primary-color); 
+      color: white; 
+      border-radius: 12px; 
+      padding: 8px 16px; 
+      font-weight: 800; 
+      min-width: 110px; 
+      text-align: center; 
+      box-shadow: 0 2px 6px rgba(0,0,0,.08);
+      font-size: 14px;
+    }
+    .price-line { margin-top:6px; font-weight:700; color: var(--primary-color); }
     .cart-item h3 { margin:0 0 6px 0; }
     
-    .custom-cake-item {
-      background: linear-gradient(135deg, #fff5f5 0%, #ffe0e6 100%);
-      border: 2px solid var(--primary-color);
+    /* עיצוב מיוחד לעוגות מותאמות */
+    .custom-cake-badge {
+      background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+      color: white;
+      padding: 4px 12px;
       border-radius: 20px;
-      padding: 20px;
-      margin-bottom: 16px;
-      position: relative;
-    }
-    
-    .custom-cake-item::before {
-      content: '🎨';
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      font-size: 20px;
-    }
-    
-    .custom-cake-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-    }
-    
-    .custom-cake-title {
-      font-size: 18px;
+      font-size: 12px;
       font-weight: bold;
-      color: var(--primary-color);
-      margin: 0;
-    }
-    
-    .cake-preview-mini {
-      width: 80px;
-      height: 50px;
-      border-radius: 50%;
-      margin: 10px 0;
-      box-shadow: var(--shadow-sm);
-      position: relative;
+      margin-right: 8px;
       display: inline-block;
     }
     
-    .cake-preview-mini::before {
-      content: '';
-      position: absolute;
-      top: -5px;
-      left: -5px;
-      right: -5px;
-      height: 15px;
-      background: currentColor;
-      border-radius: 50%;
-      opacity: 0.8;
-    }
-    
     .design-details {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin: 10px 0;
-      font-size: 14px;
+      background: rgba(255, 107, 157, 0.1);
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-top: 8px;
+      font-size: 13px;
+      line-height: 1.4;
+      border-right: 3px solid var(--primary-color);
     }
     
     .design-detail {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      display: inline-block;
+      margin-left: 12px;
+      color: #666;
+      font-weight: 500;
+    }
+    
+    .design-detail:first-child {
+      margin-left: 0;
+    }
+    
+    .design-detail strong {
+      color: var(--primary-color);
+      font-weight: 700;
     }
     
     .color-dot {
       width: 16px;
       height: 16px;
       border-radius: 50%;
-      border: 1px solid #ddd;
       display: inline-block;
+      margin-left: 4px;
+      border: 2px solid #ddd;
+      vertical-align: middle;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
     }
     
-    .custom-text-display {
-      background: rgba(255, 255, 255, 0.7);
-      padding: 8px 12px;
+    .custom-text-preview {
+      background: white;
+      border: 2px solid var(--primary-color);
       border-radius: 8px;
-      margin: 8px 0;
+      padding: 6px 12px;
       font-weight: bold;
-      text-align: center;
-      border: 1px solid var(--primary-color);
-    }
-    
-    .remove-custom {
-      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    
-    .remove-custom:hover {
-      transform: scale(1.05);
-      box-shadow: var(--shadow-md);
-    }
-    
-    .cart-section {
-      margin-bottom: 30px;
-    }
-    
-    .section-title {
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 15px;
-      color: var(--text-primary);
-      border-bottom: 2px solid var(--primary-color);
-      padding-bottom: 8px;
+      display: inline-block;
+      margin-right: 8px;
+      font-size: 13px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
   </style>
 </head>
@@ -143,17 +123,7 @@
 
   <h1>סל הקניות</h1>
   
-  <!-- עוגות מותאמות אישית -->
-  <div class="cart-section" id="customCakesSection" style="display: none;">
-    <div class="section-title">🎨 עוגות מותאמות אישית</div>
-    <div id="customCakesList"></div>
-  </div>
-  
-  <!-- מוצרים רגילים -->
-  <div class="cart-section" id="regularItemsSection">
-    <div class="section-title">🛒 מוצרים רגילים</div>
-    <div id="items" class="cart-list"></div>
-  </div>
+  <div id="items" class="cart-list"></div>
 
   <script>
     // ===== helpers =====
@@ -237,127 +207,94 @@
       return {};
     }
 
-    // פונקציה לתרגום שמות צבעים
-    function getColorName(colorCode) {
+    // פונקציה לתרגום צבעים
+    function getColorName(color) {
       const colorNames = {
-        '#f8f9fa': 'לבן',
-        '#6c757d': 'שחור', 
-        '#dc3545': 'אדום',
-        '#e83e8c': 'ורוד',
-        '#28a745': 'ירוק',
-        '#007bff': 'כחול',
-        '#ffc107': 'צהוב',
-        '#fd7e14': 'כתום',
-        '#6f42c1': 'סגול',
-        '#20c997': 'טורקיז',
-        '#ffffff': 'לבן'
+        'pink': 'ורוד',
+        'white': 'לבן', 
+        'green': 'ירוק',
+        'red': 'אדום',
+        'purple': 'סגול',
+        'light-blue': 'כחול בהיר',
+        'orange': 'כתום'
       };
-      return colorNames[colorCode] || 'צבע מותאם';
+      return colorNames[color] || color;
     }
 
-    // רינדור עוגה מותאמת
-    function renderCustomCake(customCake) {
+    // פונקציה ליצירת מפתח ייחודי לעוגה מותאמת
+    function getCustomCakeKey(design) {
+      return `${design.size}-${design.color}-${design.text || ''}-${design.textColor}`;
+    }
+
+    // רינדור עוגה מותאמת - עדכון כדי להסיר "מעוצבת" ולהוסיף פרטי כיתוב
+    function renderCustomCake(customCake, quantity = 1) {
       const design = customCake.design;
       const sizeText = design.size === 'bento' ? 'בנטו (10 ס"מ)' : 'גדולה (22 ס"מ)';
+      const colorName = getColorName(design.color);
+      const total = design.price * quantity;
       
-      const div = document.createElement('div');
-      div.className = 'custom-cake-item';
-      div.innerHTML = `
-        <div class="custom-cake-header">
-          <h3 class="custom-cake-title">עוגה מותאמת אישית - ${sizeText}</h3>
-          <button class="remove-custom" data-id="${customCake.id}">הסר</button>
-        </div>
-        
-        <div class="cake-preview-mini" style="background: ${design.cakeColor}; color: ${design.frostingColor1};">
-        </div>
-        
-        <div class="design-details">
-          <div class="design-detail">
-            <span>🎂 צבע עוגה:</span>
-            <div class="color-dot" style="background: ${design.cakeColor};"></div>
-            <span>${getColorName(design.cakeColor)}</span>
-          </div>
-          <div class="design-detail">
-            <span>🍰 קצפת:</span>
-            <div class="color-dot" style="background: ${design.frostingColor1};"></div>
-            <span>${getColorName(design.frostingColor1)}</span>
-          </div>
-          ${design.frostingColor2 ? `
-          <div class="design-detail">
-            <span>🎨 קצפת נוספת:</span>
-            <div class="color-dot" style="background: ${design.frostingColor2};"></div>
-            <span>${getColorName(design.frostingColor2)}</span>
-          </div>
-          ` : ''}
-          <div class="design-detail">
-            <span>💰 מחיר:</span>
-            <strong>${nis(design.price)}</strong>
+      const row = document.createElement('div');
+      row.className = 'cart-item';
+      row.innerHTML = `
+        <div class="left">
+          <img src="/images/cakes/${design.imageFile || 'cake-' + design.color + '.png'}" alt="עוגה מותאמת">
+          <div class="cart-item-info">
+            <h3>
+              <span class="custom-cake-badge">🎨 מותאמת</span>
+              עוגה ${sizeText}
+            </h3>
+            <div class="qty-wrap">
+              <button class="quantity-btn minus" data-custom-key="${getCustomCakeKey(design)}" aria-label="הפחת">−</button>
+              <div class="qty-badge">כמות: <span class="quantity-display">${quantity}</span></div>
+              <button class="quantity-btn plus" data-custom-key="${getCustomCakeKey(design)}" aria-label="הוסף">+</button>
+            </div>
+            <div class="design-details">
+              <span class="design-detail"><strong>צבע:</strong> ${colorName}</span>
+              ${design.text ? `<span class="design-detail"><strong>כיתוב:</strong> <span class="custom-text-preview" style="color: ${design.textColor}">"${design.text}"</span></span>` : '<span class="design-detail">ללא כיתוב</span>'}
+            </div>
+            <div class="price-line">${nis(design.price)} × <span class="q-val">${quantity}</span> = <strong class="total-val">${nis(total)}</strong></div>
           </div>
         </div>
-        
-        ${design.text ? `
-        <div class="custom-text-display">
-          "${design.text}"
-        </div>
-        ` : ''}
+        <button class="remove" data-custom-key="${getCustomCakeKey(design)}">הסר הכל</button>
       `;
       
-      return div;
+      return row;
     }
 
     // טעינת עגלה עם תמיכה בעוגות מותאמות
+    let customCakes = []; // משתנה גלובלי כדי לגשת אליו מהפונקציות
+    let groupedCustomCakes = {}; // משתנה גלובלי לעוגות מקובצות
     async function loadCart(){
-      const res = await fetch('/api/cart-with-custom');
-      if (res.status === 401) { location.href = 'login.html'; return; }
+      const itemsBox = document.getElementById('items');
       
+      // ניסיון לטעינה עם תמיכה בעוגות מותאמות
       let cartData;
       try {
+        const res = await fetch('/api/cart-with-custom');
+        if (res.status === 401) { location.href = 'login.html'; return; }
         cartData = await res.json();
       } catch {
-        // אם זה לא עובד, נשתמש בAPI הישן
+        // אם זה לא עובד, נשתמש ב-API הישן
         const oldRes = await fetch('/api/cart');
         if (oldRes.status === 401) { location.href = 'login.html'; return; }
         const quantities = toQtyMap(await oldRes.json());
         cartData = { regularItems: quantities, customCakes: [] };
       }
 
-      const { regularItems, customCakes } = cartData;
-      const itemsBox = document.getElementById('items');
-      const customCakesBox = document.getElementById('customCakesList');
-      const customSection = document.getElementById('customCakesSection');
-      const regularSection = document.getElementById('regularItemsSection');
-
-      // נקה תוכן קודם
+      const { regularItems, customCakes: cakesData } = cartData;
+      customCakes = cakesData || []; // שמירה במשתנה הגלובלי
       itemsBox.innerHTML = '';
-      customCakesBox.innerHTML = '';
 
-      // הצג עוגות מותאמות
-      if (customCakes && customCakes.length > 0) {
-        customSection.style.display = 'block';
-        customCakes.forEach(customCake => {
-          const cakeElement = renderCustomCake(customCake);
-          customCakesBox.appendChild(cakeElement);
-        });
-      } else {
-        customSection.style.display = 'none';
-      }
+      let hasItems = false;
 
-      // הצג מוצרים רגילים
+      // הצגת מוצרים רגילים
       const entries = Object.entries(regularItems || {});
-      if (entries.length === 0) {
-        if (customCakes.length === 0) {
-          itemsBox.innerHTML = '<p class="empty">הסל ריק.</p>';
-          regularSection.querySelector('.section-title').style.display = 'none';
-        } else {
-          itemsBox.innerHTML = '<p class="empty">אין מוצרים רגילים בסל.</p>';
-        }
-      } else {
-        regularSection.querySelector('.section-title').style.display = 'block';
-        
+      if (entries.length > 0) {
+        hasItems = true;
         for (const [id, qty] of entries){
           const p = products.find(x => String(x.id) === String(id)) || {id, title:id, image:''};
           const title = nameHe(p);
-          const unit  = priceOf(p);
+          const unit = priceOf(p);
           const total = unit * Number(qty);
 
           const row = document.createElement('div');
@@ -380,55 +317,131 @@
           itemsBox.appendChild(row);
         }
       }
+
+      // הצגת עוגות מותאמות (משולבות עם המוצרים הרגילים)
+      if (customCakes && customCakes.length > 0) {
+        hasItems = true;
+        
+        // קיבוץ עוגות מותאמות לפי מאפיינים זהים
+        groupedCustomCakes = {};
+        customCakes.forEach(cake => {
+          const key = getCustomCakeKey(cake.design);
+          if (!groupedCustomCakes[key]) {
+            groupedCustomCakes[key] = {
+              cake: cake,
+              quantity: 0,
+              ids: []
+            };
+          }
+          groupedCustomCakes[key].quantity++;
+          groupedCustomCakes[key].ids.push(cake.id);
+        });
+        
+        // הצגת עוגות מותאמות עם כמויות מקובצות
+        Object.values(groupedCustomCakes).forEach(group => {
+          const cakeElement = renderCustomCake(group.cake, group.quantity);
+          itemsBox.appendChild(cakeElement);
+        });
+      }
+
+      // אם אין פריטים כלל
+      if (!hasItems) {
+        itemsBox.innerHTML = '<p class="empty">הסל ריק.</p>';
+      }
     }
 
     // ===== actions =====
     document.getElementById('items').addEventListener('click', async (e) => {
-      const plus  = e.target.closest('.plus');
+      const plus = e.target.closest('.plus');
       const minus = e.target.closest('.minus');
-      const rem   = e.target.closest('.remove');
+      const rem = e.target.closest('.remove');
+      
       if (plus){
         const id = plus.getAttribute('data-id');
-        await fetch('/api/cart', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ productId:id }) });
-        loadCart();
+        const customKey = plus.getAttribute('data-custom-key');
+        
+        if (customKey) {
+          // הוספת עוגה מותאמת - נוסיף עוד אחת זהה
+          try {
+            const group = groupedCustomCakes[customKey];
+            if (group && group.cake) {
+              const response = await fetch('/api/cart', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  productId: 'custom-cake',
+                  customDesign: group.cake.design
+                })
+              });
+              if (response.ok) {
+                loadCart();
+              }
+            }
+          } catch (error) {
+            console.error('Error adding custom cake:', error);
+          }
+        } else if (id) {
+          await fetch('/api/cart', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ productId:id }) });
+          loadCart();
+        }
       } else if (minus){
         const id = minus.getAttribute('data-id');
-        let ok=false;
-        try{ const r=await fetch(`/api/cart/decrease/${encodeURIComponent(id)}`,{method:'POST'}); ok=r.ok; }catch{}
-        if(!ok) await fetch(`/api/cart/${encodeURIComponent(id)}`,{method:'DELETE'});
-        loadCart();
-      } else if (rem){
-        const id = rem.getAttribute('data-id');
-        let ok=false;
-        try{ const r=await fetch(`/api/cart/removeAll/${encodeURIComponent(id)}`,{method:'DELETE'}); ok=r.ok; }catch{}
-        if(!ok){
-          const q = parseInt(rem.closest('.cart-item').querySelector('.quantity-display').textContent||'1',10)||1;
-          for(let i=0;i<q;i++){ await fetch(`/api/cart/${encodeURIComponent(id)}`,{method:'DELETE'}); }
-          ok=true;
-        }
-        if(ok) loadCart();
-      }
-    });
-
-    // מחיקת עוגה מותאמת
-    document.getElementById('customCakesList').addEventListener('click', async (e) => {
-      const removeBtn = e.target.closest('.remove-custom');
-      if (removeBtn) {
-        const customCakeId = removeBtn.getAttribute('data-id');
-        if (confirm('האם אתה בטוח שברצונך להסיר את העוגה המותאמת מהסל?')) {
+        const customKey = minus.getAttribute('data-custom-key');
+        
+        if (customKey) {
+          // הפחתת עוגה מותאמת - נסיר את הראשונה מהקבוצה
           try {
-            const response = await fetch(`/api/custom-cake/${encodeURIComponent(customCakeId)}`, {
-              method: 'DELETE'
-            });
-            if (response.ok) {
-              loadCart(); // רענן את התצוגה
-            } else {
-              alert('שגיאה בהסרת העוגה מהסל');
+            const group = groupedCustomCakes[customKey];
+            if (group && group.ids.length > 0) {
+              const response = await fetch(`/api/custom-cake/${encodeURIComponent(group.ids[0])}`, {
+                method: 'DELETE'
+              });
+              if (response.ok) {
+                loadCart();
+              }
             }
           } catch (error) {
             console.error('Error removing custom cake:', error);
-            alert('שגיאה בהסרת העוגה מהסל');
           }
+        } else if (id) {
+          let ok=false;
+          try{ const r=await fetch(`/api/cart/decrease/${encodeURIComponent(id)}`,{method:'POST'}); ok=r.ok; }catch{}
+          if(!ok) await fetch(`/api/cart/${encodeURIComponent(id)}`,{method:'DELETE'});
+          loadCart();
+        }
+      } else if (rem){
+        const id = rem.getAttribute('data-id');
+        const customKey = rem.getAttribute('data-custom-key');
+        
+        if (customKey) {
+          // מחיקת כל העוגות המותאמות מאותו סוג
+          if (confirm('האם אתה בטוח שברצונך להסיר את כל העוגות המותאמות מסוג זה מהסל?')) {
+            try {
+              const group = groupedCustomCakes[customKey];
+              if (group && group.ids) {
+                // נמחק את כל העוגות בקבוצה
+                for (const cakeId of group.ids) {
+                  await fetch(`/api/custom-cake/${encodeURIComponent(cakeId)}`, {
+                    method: 'DELETE'
+                  });
+                }
+                loadCart();
+              }
+            } catch (error) {
+              console.error('Error removing custom cakes:', error);
+              alert('שגיאה בהסרת העוגות מהסל');
+            }
+          }
+        } else if (id) {
+          // מחיקת מוצר רגיל
+          let ok=false;
+          try{ const r=await fetch(`/api/cart/removeAll/${encodeURIComponent(id)}`,{method:'DELETE'}); ok=r.ok; }catch{}
+          if(!ok){
+            const q = parseInt(rem.closest('.cart-item').querySelector('.quantity-display').textContent||'1',10)||1;
+            for(let i=0;i<q;i++){ await fetch(`/api/cart/${encodeURIComponent(id)}`,{method:'DELETE'}); }
+            ok=true;
+          }
+          if(ok) loadCart();
         }
       }
     });

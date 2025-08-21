@@ -24,7 +24,12 @@
       "items": [
         "bagle-cookie",
         "bagle-cookie",
-        "bagle-cookie"
+        "bagle-cookie",
+        "bagle-cookie",
+        "bagle-cookie",
+        "custom-cake-1755789531164-58m0ygnuw",
+        "custom-cake-1755789536188-qhmbjjyw9",
+        "custom-cake-1755789542596-ch7sy10p8"
       ]
     }
   ],
@@ -694,6 +699,52 @@
       "datetime": "2025-08-21T12:12:27.915Z",
       "username": "מאיה",
       "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-21T14:59:29.194Z",
+      "username": "מאיה",
+      "type": "add-custom-cake-to-cart",
+      "details": "bento orange cake with \" נילנ \" in #333333"
+    },
+    {
+      "datetime": "2025-08-21T15:04:34.594Z",
+      "username": "מאיה",
+      "type": "add-custom-cake-to-cart",
+      "details": "bento orange cake with \" נילנ \" in #333333"
+    },
+    {
+      "datetime": "2025-08-21T15:04:37.510Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-21T15:18:39.469Z",
+      "username": "מאיה",
+      "type": "add-custom-cake-to-cart",
+      "details": "bento orange cake with \" נילנ \" in #333333"
+    },
+    {
+      "datetime": "2025-08-21T15:18:43.232Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-21T15:18:51.169Z",
+      "username": "מאיה",
+      "type": "add-custom-cake-to-cart",
+      "details": "bento green cake with \"no text\" in #ffc107"
+    },
+    {
+      "datetime": "2025-08-21T15:18:56.195Z",
+      "username": "מאיה",
+      "type": "add-custom-cake-to-cart",
+      "details": "bento green cake with \"no text\" in #ffc107"
+    },
+    {
+      "datetime": "2025-08-21T15:19:02.606Z",
+      "username": "מאיה",
+      "type": "add-custom-cake-to-cart",
+      "details": "large light-blue cake with \"no text\" in #333333"
     }
   ],
   "products": [
@@ -795,6 +846,92 @@
         "nutella-box"
       ],
       "ts": 1755617378591
+    }
+  ],
+  "customCakes": [
+    {
+      "id": "custom-cake-1755788369184-8oterfenn",
+      "username": "מאיה",
+      "design": {
+        "size": "bento",
+        "color": "orange",
+        "text": " נילנ ",
+        "textColor": "#333333",
+        "price": 140,
+        "imageFile": "cake-orange.png"
+      },
+      "createdAt": "2025-08-21T14:59:29.187Z",
+      "status": "removed-from-cart"
+    },
+    {
+      "id": "custom-cake-1755788674586-bn70nq0r2",
+      "username": "מאיה",
+      "design": {
+        "size": "bento",
+        "color": "orange",
+        "text": " נילנ ",
+        "textColor": "#333333",
+        "price": 140,
+        "imageFile": "cake-orange.png"
+      },
+      "createdAt": "2025-08-21T15:04:34.587Z",
+      "status": "removed-from-cart"
+    },
+    {
+      "id": "custom-cake-1755789519462-jzjln1al4",
+      "username": "מאיה",
+      "design": {
+        "size": "bento",
+        "color": "orange",
+        "text": " נילנ ",
+        "textColor": "#333333",
+        "price": 140,
+        "imageFile": "cake-orange.png"
+      },
+      "createdAt": "2025-08-21T15:18:39.464Z",
+      "status": "removed-from-cart"
+    },
+    {
+      "id": "custom-cake-1755789531164-58m0ygnuw",
+      "username": "מאיה",
+      "design": {
+        "size": "bento",
+        "color": "green",
+        "text": "",
+        "textColor": "#ffc107",
+        "price": 140,
+        "imageFile": "cake-green.png"
+      },
+      "createdAt": "2025-08-21T15:18:51.166Z",
+      "status": "in-cart"
+    },
+    {
+      "id": "custom-cake-1755789536188-qhmbjjyw9",
+      "username": "מאיה",
+      "design": {
+        "size": "bento",
+        "color": "green",
+        "text": "",
+        "textColor": "#ffc107",
+        "price": 140,
+        "imageFile": "cake-green.png"
+      },
+      "createdAt": "2025-08-21T15:18:56.189Z",
+      "status": "in-cart"
+    },
+    {
+      "id": "custom-cake-1755789542596-ch7sy10p8",
+      "username": "מאיה",
+      "design": {
+        "size": "large",
+        "color": "light-blue",
+        "text": "",
+        "textColor": "#333333",
+        "price": 300,
+        "imageFile": "cake-light-blue.png"
+      },
+      "createdAt": "2025-08-21T15:19:02.598Z",
+      "status": "in-cart"
     }
   ]
 }
