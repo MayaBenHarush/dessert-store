@@ -1,1099 +1,232 @@
-/* עיצוב מחודש לחנות קינוחים - צבעים מודרניים וחווית משתמש משופרת */
-
-:root {
-  /* צבעים ראשיים */
-  --primary-color: #ff6b9d;
-  --primary-light: #ffabc9;
-  --primary-dark: #e91e63;
-  --secondary-color: #4ecdc4;
-  --secondary-light: #7dd3db;
-  --accent-color: #ffd93d;
-  
-  /* נייטרלים */
-  --bg-primary: #faf9ff;
-  --bg-secondary: #ffffff;
-  --bg-card: #ffffff;
-  --text-primary: #2d3748;
-  --text-secondary: #718096;
-  --text-muted: #a0aec0;
-  
-  /* גרדיאנטים */
-  --gradient-primary: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
-  --gradient-secondary: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
-  --gradient-accent: linear-gradient(135deg, #ffd93d 0%, #ff9a9e 100%);
-  --gradient-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  
-  /* צללים */
-  --shadow-sm: 0 2px 4px rgba(0,0,0,0.08);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
-  --shadow-lg: 0 8px 25px rgba(0,0,0,0.12);
-  --shadow-xl: 0 20px 40px rgba(0,0,0,0.15);
-  
-  /* מעברים */
-  --transition-fast: all 0.2s ease;
-  --transition-normal: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* עיצוב בסיסי */
-* {
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  margin: 0;
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-  line-height: 1.6;
-}
-
-/* ניווט מעוצב */
-nav {
-  display: flex;
-  direction: ltr;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-bottom: 32px;
-  align-items: center;
-  padding: 16px 0;
-}
-
-nav a,
-nav button {
-  text-decoration: none;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 12px;
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-  font-weight: 600;
-  font-size: 14px;
-  cursor: pointer;
-  transition: var(--transition-normal);
-  box-shadow: var(--shadow-sm);
-  position: relative;
-  overflow: hidden;
-}
-
-nav a:hover,
-nav button:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-  background: var(--primary-light);
-  color: white;
-}
-
-nav a:active,
-nav button:active {
-  transform: translateY(0);
-}
-
-/* כפתור מיוחד להתנתקות */
-nav button#logout {
-  background: var(--gradient-primary);
-  color: white;
-}
-
-nav button#logout:hover {
-  background: var(--primary-dark);
-  transform: translateY(-2px) scale(1.05);
-}
-
-/* כותרות */
-h1 {
-  text-align: right;
-  color: var(--text-primary);
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 24px;
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-shadow: none;
-}
-
-h2 {
-  color: var(--text-primary);
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 16px;
-}
-
-h3 {
-  color: var(--text-primary);
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin: 12px 0 8px;
-}
-
-/* רשת מוצרים מעוצבת */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
-  padding: 20px 0;
-}
-
-.product {
-  background: var(--bg-card);
-  border-radius: 20px;
-  padding: 20px;
-  box-shadow: var(--shadow-sm);
-  transition: var(--transition-normal);
-  position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.product::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: var(--gradient-accent);
-  transform: scaleX(0);
-  transition: var(--transition-normal);
-  transform-origin: left;
-}
-
-.product:hover {
-  transform: translateY(-8px);
-  box-shadow: var(--shadow-lg);
-}
-
-.product:hover::before {
-  transform: scaleX(1);
-}
-
-.product img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 16px;
-  margin-bottom: 16px;
-  transition: var(--transition-normal);
-}
-
-.product:hover img {
-  transform: scale(1.05);
-}
-
-.product h3 {
-  color: var(--text-primary);
-  font-size: 1.25rem;
-  margin-bottom: 8px;
-}
-
-.product p {
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-  margin-bottom: 16px;
-  line-height: 1.5;
-}
-
-.meta {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-top: 8px;
-}
-
-/* כפתורים מעוצבים */
-button, .btn {
-  background: var(--gradient-secondary);
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 12px;
-  font-weight: 600;
-  font-size: 14px;
-  cursor: pointer;
-  transition: var(--transition-normal);
-  box-shadow: var(--shadow-sm);
-  position: relative;
-  overflow: hidden;
-}
-
-button:hover, .btn:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-button:active, .btn:active {
-  transform: translateY(0);
-}
-
-.add-to-cart {
-  background: var(--gradient-primary) !important;
-  width: 100%;
-  margin-top: 8px;
-}
-
-.add-to-cart:hover {
-  background: var(--primary-dark) !important;
-  transform: translateY(-2px) scale(1.02);
-}
-
-/* אפקט רדן לכפתורים */
-button::after, .btn::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
-}
-
-button:active::after, .btn:active::after {
-  width: 300px;
-  height: 300px;
-}
-
-/* טטסט מעולה */
-#toast {
-  position: fixed; 
-  top: 20px; 
-  right: 20px; 
-  z-index: 9999;
-  display: none; 
-  padding: 12px 16px; 
-  background: var(--gradient-secondary);
-  color: #fff; 
-  border-radius: 12px; 
-  box-shadow: var(--shadow-lg);
-  font-size: 14px; 
-  font-weight: 600;
-  opacity: 0; 
-  transform: translateY(-10px) scale(0.9);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  max-width: 300px;
-  text-align: center;
-}
-
-#toast.show { 
-  display: block; 
-  opacity: 1; 
-  transform: translateY(0) scale(1); 
-}
-
-#toast::before {
-  content: '✓';
-  display: inline-block;
-  margin-left: 8px;
-  font-size: 16px;
-  font-weight: bold;
-}
-
-/* טפסי התחברות/הרשמה מעוצבים */
-.auth-form {
-  background: var(--bg-card);
-  padding: 40px;
-  border-radius: 24px;
-  box-shadow: var(--shadow-xl);
-  max-width: 500px;
-  margin: 40px auto;
-  position: relative;
-  overflow: hidden;
-}
-
-.auth-form::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 6px;
-  background: var(--gradient-accent);
-}
-
-.auth-form label {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 20px;
-  text-align: right;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.auth-form input[type="text"],
-.auth-form input[type="password"] {
-  padding: 16px;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  font-size: 16px;
-  transition: var(--transition-normal);
-  background: var(--bg-primary);
-  text-align: right;
-}
-
-.auth-form input:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1);
-  background: white;
-}
-
-.auth-form .actions {
-  margin-top: 24px;
-}
-
-.auth-form button {
-  width: 100%;
-  padding: 16px;
-  font-size: 16px;
-  font-weight: 700;
-  background: var(--gradient-primary);
-}
-
-/* חיפוש מעוצב */
-#search {
-  width: 100%;
-  max-width: 400px;
-  padding: 16px 20px;
-  border: 2px solid #e2e8f0;
-  border-radius: 50px;
-  font-size: 16px;
-  margin-bottom: 32px;
-  transition: var(--transition-normal);
-  background: var(--bg-secondary);
-  box-shadow: var(--shadow-sm);
-}
-
-#search:focus {
-  outline: none;
-  border-color: var(--secondary-color);
-  box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.1);
-}
-
-#search::placeholder {
-  color: var(--text-muted);
-  text-align: right;
-}
-
-/* סל קניות מעוצב */
-.cart-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-top: 24px;
-}
-
-.cart-item {
-  background: var(--bg-card);
-  border-radius: 20px;
-  padding: 20px;
-  box-shadow: var(--shadow-sm);
-  transition: var(--transition-normal);
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: 20px;
-  position: relative;
-  overflow: hidden;
-}
-
-.cart-item::before {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background: var(--gradient-secondary);
-}
-
-.cart-item:hover {
-  transform: translateX(-4px);
-  box-shadow: var(--shadow-md);
-}
-
-.cart-item .left {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.cart-item img {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 16px;
-  box-shadow: var(--shadow-sm);
-}
-
-.cart-item h3 {
-  margin: 0;
-  font-size: 1.25rem;
-  color: var(--text-primary);
-}
-
-.cart-item .remove {
-  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition-normal);
-}
-
-.cart-item .remove:hover {
-  transform: scale(1.05);
-  box-shadow: var(--shadow-md);
-}
-
-/* כמויות בסל */
-.quantity-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.quantity-btn {
-  width: 30px;
-  height: 30px;
-  border: 1px solid #ccc;
-  background: #fff;
-  border-radius: 6px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  transition: var(--transition-fast);
-}
-
-.quantity-btn:hover {
-  background: var(--primary-light);
-  color: white;
-}
-
-.quantity-display {
-  min-width: 40px;
-  text-align: center;
-  font-weight: bold;
-  font-size: 16px;
-  color: var(--primary-color);
-}
-
-.cart-item-info {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-/* עמוד ניהול */
-.admin-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin-top: 24px;
-}
-
-.panel {
-  background: var(--bg-card);
-  border-radius: 20px;
-  padding: 24px;
-  box-shadow: var(--shadow-md);
-  position: relative;
-  overflow: hidden;
-}
-
-.panel::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: var(--gradient-accent);
-}
-
-.panel h2 {
-  margin-top: 0;
-  color: var(--text-primary);
-}
-
-.admin-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.admin-row {
-  background: var(--bg-primary);
-  border-radius: 12px;
-  padding: 16px;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 16px;
-  transition: var(--transition-fast);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-}
-
-.admin-row:hover {
-  background: white;
-  box-shadow: var(--shadow-sm);
-}
-
-.admin-row img {
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: 12px;
-}
-
-.admin-row button {
-  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
-  color: white;
-  padding: 8px 16px;
-  font-size: 12px;
-}
-
-/* טפסי ניהול */
-.admin-form label {
-  display: block;
-  margin-bottom: 16px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.admin-form input,
-.admin-form textarea {
-  width: 100%;
-  padding: 12px 16px;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  font-size: 14px;
-  transition: var(--transition-normal);
-  background: var(--bg-primary);
-  margin-top: 4px;
-}
-
-.admin-form input:focus,
-.admin-form textarea:focus {
-  outline: none;
-  border-color: var(--secondary-color);
-  box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.1);
-  background: white;
-}
-
-.admin-form button {
-  margin-top: 16px;
-  background: var(--gradient-secondary);
-}
-
-.muted {
-  color: var(--text-muted);
-  font-size: 12px;
-  margin-top: 8px;
-}
-
-/* הודעות שגיאה */
-.error-box {
-  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
-  color: white;
-  padding: 12px 16px;
-  border-radius: 12px;
-  margin: 16px 0;
-  font-weight: 600;
-  box-shadow: var(--shadow-sm);
-  display: none;
-}
-
-/* דף checkout */
-.ck-list { 
-  display:flex; 
-  flex-direction:column; 
-  gap:14px; 
-  margin:14px 0; 
-}
-
-.ck-row {
-  display:grid; 
-  grid-template-columns:auto 90px 1fr auto;
-  align-items:center; 
-  gap:12px; 
-  padding:10px;
-  border:1px solid #eee; 
-  border-radius:10px; 
-  background:#fff;
-}
-
-.ck-row img { 
-  width:90px; 
-  height:90px; 
-  object-fit:cover; 
-  border-radius:8px; 
-}
-
-.quantity-info {
-  background: var(--primary-color);
-  color: white;
-  padding: 6px 12px;
-  border-radius: 16px;
-  font-size: 13px;
-  font-weight: bold;
-  min-width: 50px;
-  text-align: center;
-  box-shadow: var(--shadow-sm);
-}
-
-/* דף תשלום */
-.pay-list{ 
-  display:flex; 
-  flex-direction:column; 
-  gap:12px; 
-  margin:12px 0 18px; 
-}
-
-.pay-row { 
-  display:grid; 
-  grid-template-columns:auto 90px 1fr auto; 
-  align-items:center; 
-  gap:12px;
-  background:#fff; 
-  border:1px solid #eee; 
-  border-radius:8px; 
-  padding:10px; 
-}
-
-.pay-row img{ 
-  width:90px; 
-  height:90px; 
-  object-fit:cover; 
-  border-radius:8px; 
-}
-
-.pay-empty{ 
-  color:#666; 
-}
-
-#pay-form{ 
-  display:grid; 
-  gap:12px; 
-  max-width:560px; 
-}
-
-#pay-form label{ 
-  display:flex; 
-  flex-direction:column; 
-  gap:6px; 
-}
-
-#pay-form input{ 
-  padding:10px; 
-  border:1px solid #ccc; 
-  border-radius:8px; 
-  font-size:16px; 
-}
-
-.row{ 
-  display:grid; 
-  grid-template-columns: 1fr 1fr; 
-  gap:12px; 
-}
-
-.error{ 
-  color:#b00020; 
-  display:none; 
-}
-
-.quantity-badge {
-  background: var(--primary-color);
-  color: white;
-  padding: 6px 12px;
-  border-radius: 16px;
-  font-size: 13px;
-  font-weight: bold;
-  min-width: 50px;
-  text-align: center;
-  box-shadow: var(--shadow-sm);
-}
-
-/* דף ה items שלי */
-.pay-items {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin: 24px 0;
-}
-
-.pay-item {
-  background: var(--bg-card);
-  border-radius: 16px;
-  padding: 16px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  box-shadow: var(--shadow-sm);
-  transition: var(--transition-fast);
-}
-
-.pay-item:hover {
-  box-shadow: var(--shadow-md);
-}
-
-.pay-item img {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 12px;
-}
-
-#pay-form {
-  background: var(--bg-card);
-  padding: 32px;
-  border-radius: 20px;
-  box-shadow: var(--shadow-lg);
-  max-width: 500px;
-}
-
-/* רשת checkout */
-.ck-row {
-  background: var(--bg-card);
-  border-radius: 16px;
-  padding: 16px;
-  display: grid;
-  grid-template-columns: auto 80px 1fr;
-  align-items: center;
-  gap: 16px;
-  box-shadow: var(--shadow-sm);
-  transition: var(--transition-fast);
-  cursor: pointer;
-}
-
-.ck-row:hover {
-  box-shadow: var(--shadow-md);
-  background: var(--bg-primary);
-}
-
-.ck-row img {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 12px;
-}
-
-.ck-row input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
-  accent-color: var(--primary-color);
-  cursor: pointer;
-}
-
-/* עמוד הרכישות שלי */
-.myitems-page #list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-top: 24px;
-}
-
-.myitems-page #list .item {
-  background: var(--bg-card);
-  border-radius: 20px;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  box-shadow: var(--shadow-sm);
-  transition: var(--transition-normal);
-  position: relative;
-  overflow: hidden;
-}
-
-.myitems-page #list .item::before {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background: var(--gradient-primary);
-}
-
-.myitems-page #list .item:hover {
-  transform: translateX(-4px);
-  box-shadow: var(--shadow-md);
-}
-
-.myitems-page #list .item img {
-  width: 120px;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 16px;
-  flex: 0 0 auto;
-  box-shadow: var(--shadow-sm);
-}
-
-/* כפתורי פעולה */
-.actions {
-  display: flex;
-  gap: 16px;
-  margin-top: 32px;
-  justify-content: center;
-}
-
-.actions a {
-  background: var(--gradient-secondary);
-  color: white;
-  text-decoration: none;
-  padding: 12px 24px;
-  border-radius: 12px;
-  font-weight: 600;
-  transition: var(--transition-normal);
-  box-shadow: var(--shadow-sm);
-}
-
-.actions a:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-/* רספונסיביות */
-@media (max-width: 900px) {
-  .admin-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  }
-}
-
-@media (max-width: 768px) {
-  body {
-    padding: 16px;
-  }
-  
-  nav {
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  
-  nav a,
-  nav button {
-    padding: 10px 16px;
-    font-size: 13px;
-  }
-  
-  h1 {
-    font-size: 2rem;
-  }
-  
-  .grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .auth-form {
-    padding: 24px;
-    margin: 20px auto;
-  }
-  
-  .cart-item {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
-  
-  .cart-item .left {
-    flex-direction: column;
-    text-align: center;
-  }
-  
-  .ck-row {
-    grid-template-columns: auto 1fr;
-    gap: 12px;
-  }
-  
-  .ck-row img {
-    width: 60px;
-    height: 60px;
-  }
-  
-  .myitems-page #list .item {
-    flex-direction: column;
-    text-align: center;
-  }
-  
-  .pay-item {
-    flex-direction: column;
-    text-align: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .actions {
-    flex-direction: column;
-  }
-  
-  #pay-form {
-    padding: 20px;
-  }
-  
-  .admin-row {
-    grid-template-columns: 1fr;
-    text-align: center;
-    gap: 12px;
-  }
-}
-
-/* אנימציות מיוחדות */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-}
-
-.product {
-  animation: fadeInUp 0.5s ease forwards;
-}
-
-.add-to-cart:active {
-  animation: pulse 0.3s ease;
-}
-
-/* הדגשת פוקוס לנגישות */
-*:focus {
-  outline: 2px solid var(--primary-color);
-  outline-offset: 2px;
-}
-
-button:focus,
-.btn:focus,
-input:focus,
-textarea:focus {
-  outline: 2px solid var(--primary-color);
-  outline-offset: 2px;
-}
-
-/* עמוד ריק */
-.empty {
-  text-align: center;
-  color: var(--text-muted);
-  font-size: 1.1rem;
-  margin: 40px 0;
-  padding: 40px;
-  background: var(--bg-card);
-  border-radius: 16px;
-  box-shadow: var(--shadow-sm);
-}
-
-/* מניעת כפילות תוכן */
-.cart-list::before,
-.cart-list::after {
-  content: none !important;
-}
-
-h1::before,
-h1::after {
-  content: none !important;
-}
-
-/* כפתור החלפת נושא */
-#theme-toggle, #language-toggle {
-  background: var(--gradient-accent);
-  color: var(--text-primary);
-  border: none;
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 12px;
-  cursor: pointer;
-  transition: var(--transition-normal);
-  margin-left: 5px;
-}
-
-#theme-toggle:hover, #language-toggle:hover {
-  transform: scale(1.05);
-}
-
-/* Language-specific styles */
-[lang="en"] {
-  direction: ltr;
-  text-align: left;
-}
-
-[lang="en"] nav {
-  direction: ltr;
-  justify-content: flex-start;
-}
-
-[lang="en"] .auth-form label {
-  text-align: left;
-}
-
-[lang="en"] .auth-form input {
-  text-align: left;
-}
-
-[lang="en"] #search::placeholder {
-  text-align: left;
-}
-
-[lang="en"] h1 {
-  text-align: left;
-}
-
-/* Dark Theme - התאמה אישית ב-localStorage לפי הוראות המטלה */
-.dark-theme {
-  --bg-primary: #1a1a1a;
-  --bg-secondary: #2d2d2d;
-  --bg-card: #3a3a3a;
-  --text-primary: #ffffff;
-  --text-secondary: #cccccc;
-  --text-muted: #888888;
-}
-
-.dark-theme nav a,
-.dark-theme nav button {
-  background: var(--bg-card);
-  color: var(--text-primary);
-}
-
-.dark-theme .product,
-.dark-theme .cart-item,
-.dark-theme .auth-form,
-.dark-theme .panel {
-  background: var(--bg-card);
-  border-color: #555;
-}
-
-.dark-theme input,
-.dark-theme textarea {
-  background: var(--bg-secondary);
-  border-color: #555;
-  color: var(--text-primary);
-}
-
-.dark-theme input:focus,
-.dark-theme textarea:focus {
-  background: var(--bg-card);
+/* =========================
+   Base / Theme Variables
+   ========================= */
+:root{
+  --bg: #f7f7fb;
+  --surface: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --primary: #ff6b9d;
+  --primary-2: #4ecdc4;
+  --accent: #a78bfa;
+
+  --radius: 18px;
+  --radius-sm: 12px;
+
+  --shadow-sm: 0 2px 8px rgba(0,0,0,.06);
+  --shadow-md: 0 6px 18px rgba(0,0,0,.08);
+  --shadow-lg: 0 14px 40px rgba(0,0,0,.12);
+
+  --trans: .18s ease;
+
+  --grad-primary: linear-gradient(135deg, #ff6b9d, #f43f5e);
+  --grad-secondary: linear-gradient(135deg, #4ecdc4, #80e1db);
+  --grad-accent: linear-gradient(135deg, #fbc2eb, #a6c1ee);
+}
+
+.dark-theme{
+  --bg:#0f1220;
+  --surface:#151a2b;
+  --text:#f1f5f9;
+  --muted:#95a3b8;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,.35);
+  --shadow-md: 0 6px 18px rgba(0,0,0,.4);
+  --shadow-lg: 0 14px 40px rgba(0,0,0,.55);
+}
+
+/* =========================
+   Resets
+   ========================= */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; font-family:system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  background: radial-gradient(1200px 600px at 90% -10%, rgba(255,107,157,.08), transparent 55%) ,
+              radial-gradient(700px 500px at 10% 0%, rgba(78,205,196,.08), transparent 60%) ,
+              var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+
+img{max-width:100%; display:block}
+a{color:inherit; text-decoration:none}
+button{font:inherit}
+
+/* =========================
+   Navigation
+   ========================= */
+nav{
+  display:flex; align-items:center; gap:12px;
+  padding:16px 20px; position:sticky; top:0; z-index:10;
+  background:transparent; backdrop-filter:saturate(180%) blur(2px);
+}
+nav a, nav button{
+  border:none; background:#fff; color:#111;
+  padding:10px 16px; border-radius:999px; box-shadow:var(--shadow-sm);
+  transition:transform var(--trans), box-shadow var(--trans), background var(--trans);
+}
+.dark-theme nav a, .dark-theme nav button{ background:#1f2436; color:#e5e7eb; }
+nav a:hover, nav button:hover{ transform:translateY(-2px); box-shadow:var(--shadow-md); }
+nav button{ cursor:pointer }
+
+/* =========================
+   Headings / Utilities
+   ========================= */
+h1{
+  text-align:center; font-size:clamp(26px, 3.6vw, 40px);
+  margin:18px 0 10px; letter-spacing:.5px;
+  display:flex; justify-content:center; align-items:center; gap:10px;
+  color:#d23966;
+}
+
+/* Pills / Badges / Buttons */
+.btn{
+  border:none; cursor:pointer; border-radius:12px; padding:10px 16px;
+  background:var(--grad-primary); color:#fff; box-shadow:var(--shadow-sm);
+  transition:transform var(--trans), box-shadow var(--trans), opacity var(--trans);
+}
+.btn:hover{ transform:translateY(-1px); box-shadow:var(--shadow-md); }
+.btn:active{ transform:translateY(0) }
+
+/* Inputs */
+input[type="text"], input[type="password"], input[type="search"], input[type="number"], input[type="email"]{
+  width:100%; padding:12px 14px; border:1px solid #e5e7eb; border-radius:14px;
+  background:#f2f6ff; color:var(--text); outline:none;
+}
+.dark-theme input[type="text"], .dark-theme input[type="password"], .dark-theme input[type="search"], .dark-theme input[type="number"], .dark-theme input[type="email"]{
+  background:#0f162a; border-color:#2a3451; color:#e5e7eb;
+}
+
+/* =========================
+   Store Grid / Product cards
+   ========================= */
+.grid{
+  display:grid; gap:16px; padding:12px 18px 40px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  max-width:1200px; margin:0 auto;
+}
+.product{
+  background:var(--surface); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow-sm);
+  transition:transform var(--trans), box-shadow var(--trans);
+  display:flex; flex-direction:column; gap:10px; padding:12px;
+}
+.product:hover{ transform:translateY(-3px); box-shadow:var(--shadow-md); }
+.product img{ width:100%; height:180px; object-fit:cover; border-radius:14px }
+.product h3{ margin:0; font-size:18px }
+.product p{ margin:0; color:var(--muted) }
+.product .add-to-cart{
+  margin-top:auto; padding:12px 16px; border-radius:12px; border:none; cursor:pointer;
+  background:var(--grad-secondary); color:#0b1220; font-weight:800;
+  transition:transform var(--trans), box-shadow var(--trans), opacity var(--trans);
+}
+.product .add-to-cart:hover{ transform:translateY(-1px); box-shadow:var(--shadow-sm) }
+
+/* Badge on product hover (optional) */
+.product .product-badge{
+  position:absolute; inset-inline-start:16px; inset-block-start:16px;
+  background:var(--grad-accent); color:#222; padding:4px 12px; border-radius:16px; font-weight:800; font-size:12px;
+  box-shadow:var(--shadow-sm); opacity:0; transform:translateY(-10px); transition:var(--trans);
+}
+.product:hover .product-badge{ opacity:1; transform:translateY(0) }
+
+/* =========================
+   Cart
+   ========================= */
+.cart-list{
+  display:flex; flex-direction:column; gap:18px;
+  padding:10px 16px 40px; max-width:1100px; margin:0 auto;
+}
+.cart-item{
+  display:flex; justify-content:space-between; align-items:center; gap:16px;
+  background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow-sm);
+  padding:14px 16px;
+}
+.cart-item .left{
+  display:flex; align-items:center; gap:16px; min-width:0;
+}
+.cart-item img{
+  width:120px; height:120px; object-fit:cover; border-radius:14px; box-shadow:var(--shadow-sm);
+}
+.cart-item .cart-item-info{ display:flex; flex-direction:column; gap:6px; min-width:0 }
+.cart-item h3{ margin:0; font-size:20px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+.remove{
+  border:none; background:#ff5b73; color:#fff; padding:10px 14px; border-radius:10px; cursor:pointer;
+  box-shadow:var(--shadow-sm); transition:transform var(--trans), box-shadow var(--trans), opacity var(--trans);
+}
+.remove:hover{ transform:translateY(-1px); box-shadow:var(--shadow-md) }
+
+/* כמות — כפתורים תמיד גלויים עם הסימנים עצמם */
+.qty-wrap{ display:flex; align-items:center; gap:10px; margin-top:6px; }
+.quantity-btn{
+  appearance:none; border:1px solid #c8cdd6; background:#fff;
+  width:38px; height:38px; border-radius:10px; font-weight:900;
+  font-size:18px; line-height:1; cursor:pointer; user-select:none; color:#222;
+}
+.dark-theme .quantity-btn{ background:#0f162a; color:#e5e7eb; border-color:#2a3451 }
+.quantity-btn:active{ transform:translateY(1px) }
+
+.qty-badge{
+  background:#ff6b9d; color:#fff; border-radius:12px; padding:8px 16px;
+  font-weight:800; min-width:110px; text-align:center; box-shadow:var(--shadow-sm);
+}
+.qty-badge .quantity-display{ font-weight:900 }
+
+.price-line{ margin-top:6px; font-weight:700; color:var(--text) }
+.dark-theme .price-line{ color:#e5e7eb }
+
+/* =========================
+   Checkout
+   ========================= */
+.ck-list{ display:flex; flex-direction:column; gap:14px; margin:14px 0 }
+.ck-row{
+  display:grid; grid-template-columns:auto 90px 1fr; align-items:center; gap:12px;
+  padding:10px; background:var(--surface); border-radius:var(--radius-sm); box-shadow:var(--shadow-sm);
+}
+.ck-row img{ width:90px; height:90px; object-fit:cover; border-radius:10px }
+#sum-box{ margin:10px 0 16px; font-weight:800; border-top:1px solid #e5e7eb; padding-top:10px }
+
+/* =========================
+   Pay (דמו)
+   ========================= */
+.pay-list{ display:flex; flex-direction:column; gap:12px; margin:12px 0 18px }
+.pay-row{
+  display:grid; grid-template-columns:auto 90px 1fr auto; align-items:center; gap:12px;
+  background:var(--surface); border-radius:var(--radius-sm); box-shadow:var(--shadow-sm); padding:10px;
+}
+.pay-row img{ width:90px; height:90px; object-fit:cover; border-radius:10px }
+.quantity-badge{
+  background: var(--primary); color:#fff; padding: 6px 12px; border-radius: 16px; font-size: 13px; font-weight: 800;
+  min-width: 50px; text-align: center; box-shadow: var(--shadow-sm);
+}
+
+/* =========================
+   Forms
+   ========================= */
+form .row{ display:grid; grid-template-columns: 1fr 1fr; gap:12px }
+form label{ display:flex; flex-direction:column; gap:6px }
+.error{ color:#b00020; display:none }
+
+/* =========================
+   Toasts / Helpers
+   ========================= */
+.success-toast{
+  position:fixed; inset-inline-end:20px; inset-block-start:20px; z-index:1000;
+  background:var(--grad-secondary); color:#0b1220; padding:14px 18px; border-radius:12px; font-weight:800;
+  transform:translateX(400px); transition:var(--trans); box-shadow:var(--shadow-lg);
+  display:flex; align-items:center; gap:8px;
+}
+.success-toast.show{ transform:none }
+
+/* =========================
+   Responsive
+   ========================= */
+@media (max-width: 860px){
+  .cart-item{ align-items:flex-start; }
+  .cart-item img{ width:96px; height:96px }
+  nav{ flex-wrap:wrap; gap:8px }
+}
+@media (max-width: 560px){
+  .ck-row{ grid-template-columns:auto 72px 1fr }
+  .pay-row{ grid-template-columns:auto 72px 1fr auto }
+  .product img{ height:160px }
 }
