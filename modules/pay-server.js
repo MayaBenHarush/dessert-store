@@ -1,6 +1,8 @@
 // modules/pay-server.js
 // בתשלום: מאמת פרטי כרטיס (דמו), מעביר את הפריטים הנבחרים מ-pending ל-purchases,
 // ומוחק רק את הפריטים שעליהם שולם מה-pending.
+// מעודכן לתמיכה בעוגות מותאמות
+
 const persist = require('../persist_module');
 
 module.exports = (app) => {
@@ -42,23 +44,51 @@ module.exports = (app) => {
         return res.status(400).json({ error: 'No items pending payment' });
       }
 
-      // חישוב כמויות בpending
+      // הפרדה בין מוצרים רגילים לעוגות מותאמות
+      const pendingRegularItems = allPendingItems.filter(id => !id.startsWith('custom-cake-'));
+      const pendingCustomCakes = allPendingItems.filter(id => id.startsWith('custom-cake-'));
+      
+      // חישוב כמויות מוצרים רגילים
       const pendingQuantities = {};
-      allPendingItems.forEach(id => {
+      pendingRegularItems.forEach(id => {
         pendingQuantities[id] = (pendingQuantities[id] || 0) + 1;
       });
 
       // יצירת רשימת פריטים לרכישה על בסיס הפריטים הנבחרים
       const itemsToPurchase = [];
+      
       selectedItems.forEach(selectedId => {
-        const quantity = pendingQuantities[selectedId] || 0;
-        for (let i = 0; i < quantity; i++) {
-          itemsToPurchase.push(selectedId);
+        if (selectedId.startsWith('custom-cake-')) {
+          // עוגה מותאמת - נוסיף רק אם היא בpending
+          if (pendingCustomCakes.includes(selectedId)) {
+            itemsToPurchase.push(selectedId);
+          }
+        } else {
+          // מוצר רגיל - נוסיף לפי הכמות
+          const quantity = pendingQuantities[selectedId] || 0;
+          for (let i = 0; i < quantity; i++) {
+            itemsToPurchase.push(selectedId);
+          }
         }
       });
 
       if (itemsToPurchase.length === 0) {
         return res.status(400).json({ error: 'Selected items not available for payment' });
+      }
+
+      // עדכון סטטוס עוגות מותאמות לפני הוספה לרכישות
+      const customCakeIds = itemsToPurchase.filter(id => id.startsWith('custom-cake-'));
+      if (customCakeIds.length > 0) {
+        let customCakes = await persist.loadData('customCakes');
+        if (Array.isArray(customCakes)) {
+          customCakes.forEach(cake => {
+            if (customCakeIds.includes(cake.id) && cake.username === username) {
+              cake.status = 'purchased';
+              cake.purchaseDate = new Date().toISOString();
+            }
+          });
+          await persist.saveData('customCakes', customCakes);
+        }
       }
 
       // הוספה ל-purchases
@@ -83,7 +113,12 @@ module.exports = (app) => {
       // לוג פעילות
       let activity = await persist.loadData('activity');
       if (!Array.isArray(activity)) activity = [];
-      activity.push({ datetime: new Date().toISOString(), username, type: 'pay' });
+      activity.push({ 
+        datetime: new Date().toISOString(), 
+        username, 
+        type: 'pay',
+        details: `Purchased ${itemsToPurchase.length} items (${customCakeIds.length} custom cakes)`
+      });
       await persist.saveData('activity', activity);
 
       return res.json({ ok: true });

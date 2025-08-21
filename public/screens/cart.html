@@ -12,6 +12,120 @@
     .qty-badge { background:#ff6b9d; color:#fff; border-radius:12px; padding:8px 16px; font-weight:800; min-width:110px; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,.08); }
     .price-line { margin-top:6px; font-weight:700; }
     .cart-item h3 { margin:0 0 6px 0; }
+    
+    .custom-cake-item {
+      background: linear-gradient(135deg, #fff5f5 0%, #ffe0e6 100%);
+      border: 2px solid var(--primary-color);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    
+    .custom-cake-item::before {
+      content: '🎨';
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 20px;
+    }
+    
+    .custom-cake-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .custom-cake-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--primary-color);
+      margin: 0;
+    }
+    
+    .cake-preview-mini {
+      width: 80px;
+      height: 50px;
+      border-radius: 50%;
+      margin: 10px 0;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      display: inline-block;
+    }
+    
+    .cake-preview-mini::before {
+      content: '';
+      position: absolute;
+      top: -5px;
+      left: -5px;
+      right: -5px;
+      height: 15px;
+      background: currentColor;
+      border-radius: 50%;
+      opacity: 0.8;
+    }
+    
+    .design-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 10px 0;
+      font-size: 14px;
+    }
+    
+    .design-detail {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .color-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 1px solid #ddd;
+      display: inline-block;
+    }
+    
+    .custom-text-display {
+      background: rgba(255, 255, 255, 0.7);
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin: 8px 0;
+      font-weight: bold;
+      text-align: center;
+      border: 1px solid var(--primary-color);
+    }
+    
+    .remove-custom {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .remove-custom:hover {
+      transform: scale(1.05);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .cart-section {
+      margin-bottom: 30px;
+    }
+    
+    .section-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: var(--text-primary);
+      border-bottom: 2px solid var(--primary-color);
+      padding-bottom: 8px;
+    }
   </style>
 </head>
 <body>
@@ -20,20 +134,33 @@
     <a href="cart.html">סל הקניות</a>
     <a href="checkout.html">תשלום</a>
     <a href="myitems.html">הרכישות שלי</a>
+    <a href="cake-designer.html">עוגה בעיצוב</a>
     <a id="login-link" href="login.html">התחברות</a>
     <button id="logout" style="display:none">התנתקות</button>
     <a href="admin.html" id="admin-link" style="display:none">ניהול</a>
+    <a href="/screens/cake-designer.html">🎨 עיצוב עוגה</a>
   </nav>
 
   <h1>סל הקניות</h1>
-  <div id="items" class="cart-list"></div>
+  
+  <!-- עוגות מותאמות אישית -->
+  <div class="cart-section" id="customCakesSection" style="display: none;">
+    <div class="section-title">🎨 עוגות מותאמות אישית</div>
+    <div id="customCakesList"></div>
+  </div>
+  
+  <!-- מוצרים רגילים -->
+  <div class="cart-section" id="regularItemsSection">
+    <div class="section-title">🛒 מוצרים רגילים</div>
+    <div id="items" class="cart-list"></div>
+  </div>
 
   <script>
     // ===== helpers =====
     const nis = n => `₪${n}`;
     const slug = s => String(s||'').trim().toLowerCase().replace(/[^\p{L}\p{N} ]/gu,'').replace(/\s+/g,'-');
 
-    // מחירון וספר שמות (כמו בדפים האחרים)
+    // מחירון ושמות (כמו בקובץ המקורי)
     const PRICE_MAP = {
       'chocolate-cake':150, '8-cookies-box':125, 'cupcakes':160, 'minnie-mous-cake':300,
       'nutella-box':70, 'chocolate-pizza-xl':120, 'bento-design-cake':140,
@@ -81,9 +208,8 @@
       products = await r.json();
     }
 
-    // ממיר כל תגובת /api/cart למפה {id:qty}
+    // המרת תגובת /api/cart למפה {id:qty}
     function toQtyMap(payload){
-      // עטיפות שכיחות
       if (payload && typeof payload === 'object' && !Array.isArray(payload)) {
         if (Array.isArray(payload.items)) payload = payload.items;
         else if (Array.isArray(payload.cart)) payload = payload.cart;
@@ -111,45 +237,148 @@
       return {};
     }
 
+    // פונקציה לתרגום שמות צבעים
+    function getColorName(colorCode) {
+      const colorNames = {
+        '#f8f9fa': 'לבן',
+        '#6c757d': 'שחור', 
+        '#dc3545': 'אדום',
+        '#e83e8c': 'ורוד',
+        '#28a745': 'ירוק',
+        '#007bff': 'כחול',
+        '#ffc107': 'צהוב',
+        '#fd7e14': 'כתום',
+        '#6f42c1': 'סגול',
+        '#20c997': 'טורקיז',
+        '#ffffff': 'לבן'
+      };
+      return colorNames[colorCode] || 'צבע מותאם';
+    }
+
+    // רינדור עוגה מותאמת
+    function renderCustomCake(customCake) {
+      const design = customCake.design;
+      const sizeText = design.size === 'bento' ? 'בנטו (10 ס"מ)' : 'גדולה (22 ס"מ)';
+      
+      const div = document.createElement('div');
+      div.className = 'custom-cake-item';
+      div.innerHTML = `
+        <div class="custom-cake-header">
+          <h3 class="custom-cake-title">עוגה מותאמת אישית - ${sizeText}</h3>
+          <button class="remove-custom" data-id="${customCake.id}">הסר</button>
+        </div>
+        
+        <div class="cake-preview-mini" style="background: ${design.cakeColor}; color: ${design.frostingColor1};">
+        </div>
+        
+        <div class="design-details">
+          <div class="design-detail">
+            <span>🎂 צבע עוגה:</span>
+            <div class="color-dot" style="background: ${design.cakeColor};"></div>
+            <span>${getColorName(design.cakeColor)}</span>
+          </div>
+          <div class="design-detail">
+            <span>🍰 קצפת:</span>
+            <div class="color-dot" style="background: ${design.frostingColor1};"></div>
+            <span>${getColorName(design.frostingColor1)}</span>
+          </div>
+          ${design.frostingColor2 ? `
+          <div class="design-detail">
+            <span>🎨 קצפת נוספת:</span>
+            <div class="color-dot" style="background: ${design.frostingColor2};"></div>
+            <span>${getColorName(design.frostingColor2)}</span>
+          </div>
+          ` : ''}
+          <div class="design-detail">
+            <span>💰 מחיר:</span>
+            <strong>${nis(design.price)}</strong>
+          </div>
+        </div>
+        
+        ${design.text ? `
+        <div class="custom-text-display">
+          "${design.text}"
+        </div>
+        ` : ''}
+      `;
+      
+      return div;
+    }
+
+    // טעינת עגלה עם תמיכה בעוגות מותאמות
     async function loadCart(){
-      const res = await fetch('/api/cart');
+      const res = await fetch('/api/cart-with-custom');
       if (res.status === 401) { location.href = 'login.html'; return; }
-      const raw = await res.json();
-      const quantities = toQtyMap(raw);
-
-      const box = document.getElementById('items');
-      box.innerHTML = '';
-
-      const entries = Object.entries(quantities);
-      if (entries.length === 0){
-        box.innerHTML = '<p class="empty">הסל ריק.</p>';
-        return;
+      
+      let cartData;
+      try {
+        cartData = await res.json();
+      } catch {
+        // אם זה לא עובד, נשתמש בAPI הישן
+        const oldRes = await fetch('/api/cart');
+        if (oldRes.status === 401) { location.href = 'login.html'; return; }
+        const quantities = toQtyMap(await oldRes.json());
+        cartData = { regularItems: quantities, customCakes: [] };
       }
 
-      for (const [id, qty] of entries){
-        const p = products.find(x => String(x.id) === String(id)) || {id, title:id, image:''};
-        const title = nameHe(p);
-        const unit  = priceOf(p);
-        const total = unit * Number(qty);
+      const { regularItems, customCakes } = cartData;
+      const itemsBox = document.getElementById('items');
+      const customCakesBox = document.getElementById('customCakesList');
+      const customSection = document.getElementById('customCakesSection');
+      const regularSection = document.getElementById('regularItemsSection');
 
-        const row = document.createElement('div');
-        row.className = 'cart-item';
-        row.innerHTML = `
-          <div class="left">
-            <img src="/images/${p.image || 'placeholder.png'}" alt="${title}">
-            <div class="cart-item-info">
-              <h3>${title}</h3>
-              <div class="qty-wrap">
-                <button class="quantity-btn minus" data-id="${p.id}" aria-label="הפחת">−</button>
-                <div class="qty-badge">כמות: <span class="quantity-display">${qty}</span></div>
-                <button class="quantity-btn plus" data-id="${p.id}" aria-label="הוסף">＋</button>
+      // נקה תוכן קודם
+      itemsBox.innerHTML = '';
+      customCakesBox.innerHTML = '';
+
+      // הצג עוגות מותאמות
+      if (customCakes && customCakes.length > 0) {
+        customSection.style.display = 'block';
+        customCakes.forEach(customCake => {
+          const cakeElement = renderCustomCake(customCake);
+          customCakesBox.appendChild(cakeElement);
+        });
+      } else {
+        customSection.style.display = 'none';
+      }
+
+      // הצג מוצרים רגילים
+      const entries = Object.entries(regularItems || {});
+      if (entries.length === 0) {
+        if (customCakes.length === 0) {
+          itemsBox.innerHTML = '<p class="empty">הסל ריק.</p>';
+          regularSection.querySelector('.section-title').style.display = 'none';
+        } else {
+          itemsBox.innerHTML = '<p class="empty">אין מוצרים רגילים בסל.</p>';
+        }
+      } else {
+        regularSection.querySelector('.section-title').style.display = 'block';
+        
+        for (const [id, qty] of entries){
+          const p = products.find(x => String(x.id) === String(id)) || {id, title:id, image:''};
+          const title = nameHe(p);
+          const unit  = priceOf(p);
+          const total = unit * Number(qty);
+
+          const row = document.createElement('div');
+          row.className = 'cart-item';
+          row.innerHTML = `
+            <div class="left">
+              <img src="/images/${p.image || 'placeholder.png'}" alt="${title}">
+              <div class="cart-item-info">
+                <h3>${title}</h3>
+                <div class="qty-wrap">
+                  <button class="quantity-btn minus" data-id="${p.id}" aria-label="הפחת">−</button>
+                  <div class="qty-badge">כמות: <span class="quantity-display">${qty}</span></div>
+                  <button class="quantity-btn plus" data-id="${p.id}" aria-label="הוסף">+</button>
+                </div>
+                <div class="price-line">${nis(unit)} × <span class="q-val">${qty}</span> = <strong class="total-val">${nis(total)}</strong></div>
               </div>
-              <div class="price-line">${nis(unit)} × <span class="q-val">${qty}</span> = <strong class="total-val">${nis(total)}</strong></div>
             </div>
-          </div>
-          <button class="remove" data-id="${p.id}">הסר הכל</button>
-        `;
-        box.appendChild(row);
+            <button class="remove" data-id="${p.id}">הסר הכל</button>
+          `;
+          itemsBox.appendChild(row);
+        }
       }
     }
 
@@ -164,14 +393,12 @@
         loadCart();
       } else if (minus){
         const id = minus.getAttribute('data-id');
-        // תמיכה בשני השרתים: decrease או מחיקה יחידה
         let ok=false;
         try{ const r=await fetch(`/api/cart/decrease/${encodeURIComponent(id)}`,{method:'POST'}); ok=r.ok; }catch{}
         if(!ok) await fetch(`/api/cart/${encodeURIComponent(id)}`,{method:'DELETE'});
         loadCart();
       } else if (rem){
         const id = rem.getAttribute('data-id');
-        // הסר הכל (אם אין route ייעודי — מחיקה בלולאה לפי הכמות הנוכחית)
         let ok=false;
         try{ const r=await fetch(`/api/cart/removeAll/${encodeURIComponent(id)}`,{method:'DELETE'}); ok=r.ok; }catch{}
         if(!ok){
@@ -183,11 +410,34 @@
       }
     });
 
+    // מחיקת עוגה מותאמת
+    document.getElementById('customCakesList').addEventListener('click', async (e) => {
+      const removeBtn = e.target.closest('.remove-custom');
+      if (removeBtn) {
+        const customCakeId = removeBtn.getAttribute('data-id');
+        if (confirm('האם אתה בטוח שברצונך להסיר את העוגה המותאמת מהסל?')) {
+          try {
+            const response = await fetch(`/api/custom-cake/${encodeURIComponent(customCakeId)}`, {
+              method: 'DELETE'
+            });
+            if (response.ok) {
+              loadCart(); // רענן את התצוגה
+            } else {
+              alert('שגיאה בהסרת העוגה מהסל');
+            }
+          } catch (error) {
+            console.error('Error removing custom cake:', error);
+            alert('שגיאה בהסרת העוגה מהסל');
+          }
+        }
+      }
+    });
+
     // ===== boot =====
     (async () => {
       try{
-        await loadProducts();  // חשוב: קודם מוצרים
-        await loadCart();      // ואז הסל
+        await loadProducts();
+        await loadCart();
       }catch(e){
         console.error(e);
         document.getElementById('items').innerHTML = '<p class="empty">שגיאה בטעינת הסל.</p>';
