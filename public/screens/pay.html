@@ -40,7 +40,6 @@
 
   <form id="items-form">
     <div id="pay-list" class="pay-list"></div>
-    <!-- שורת סיכום -->
     <div id="sum-box"></div>
   </form>
 
@@ -64,12 +63,16 @@
   </form>
 
   <script>
-    // === מחירון ===
-    const PRICE_MAP={'chocolate-cake':150,'cookies-box':125,'cupcakes':160,'minnie-mous-cake':300,'nutella-box':70,'pizza-cookie':120,'white-design-cake':140};
-    const priceOf = id => (id in PRICE_MAP) ? PRICE_MAP[id] : (String(id).includes('cookie') ? 17 : 0);
-    const nis = n => `₪${n}`;
+    const slugify = s => String(s||'').trim().toLowerCase().replace(/[^\p{L}\p{N} ]/gu,'').replace(/\s+/g,'-');
+    const nis=n=>`₪${n}`;
+    const PRICE_MAP={'chocolate-cake':150,'8-cookies-box':125,'cupcakes':160,'minnie-mous-cake':300,'nutella-box':70,'chocolate-pizza-xl':120,'bento-design-cake':140,'chocolate-design-cake':180,'orange-cake':70,'white-design-cake':140,'pizza-cookie':120,'pizza cookie':120};
+    const productTranslations={
+      he:{'chocolate-cake':'עוגת שוקולד מעוצבת','8-cookies-box':'מארז 8 עוגיות','cupcakes':'קאפקייקס','minnie-mous-cake':'עוגת מיני מאוס','nutella-box':'מארז מגולגלות נוטלה','chocolate-pizza-xl':'פיצת שוקולד גדולה','bento-design-cake':'עוגת בנטו מעוצבת','chocolate-design-cake':'עוגת שוקולד מעוצבת','orange-cake':'עוגת תפוזים','bagle-cookie':'עוגיית בייגל','caramel-cookie':'עוגיית קרמל','kinder-cookie':'עוגיית קינדר','lotus-cookie':'עוגיית לוטוס','nutella-cookie':'עוגיית נוטלה','white-chocolate-cookie':'עוגיית שוקולד לבן','white-design-cake':'עוגת בנטו מעוצבת','pizza-cookie':'פיצת שוקולד גדולה','pizza cookie':'פיצת שוקולד גדולה'},
+      en:{'chocolate-cake':'Chocolate Design Cake','8-cookies-box':'8 Cookies Box','cupcakes':'Cupcakes','minnie-mous-cake':'Minnie Mouse Cake','nutella-box':'Nutella Box','chocolate-pizza-xl':'Chocolate Pizza XL','bento-design-cake':'Bento Design Cake','chocolate-design-cake':'Chocolate Design Cake','orange-cake':'Orange Cake','bagle-cookie':'Bagel Cookie','caramel-cookie':'Caramel Cookie','kinder-cookie':'Kinder Cookie','lotus-cookie':'Lotus Cookie','nutella-cookie':'Nutella Cookie','white-chocolate-cookie':'White Chocolate Cookie','white-design-cake':'Bento Design Cake','pizza-cookie':'Chocolate Pizza XL','pizza cookie':'Chocolate Pizza XL'}
+    };
+    const priceOf = (prod)=>{const id=String(prod.id??''); const title=String(prod.title??''); const k=[id,slugify(id),title,slugify(title)].find(x=>x in PRICE_MAP); return k?PRICE_MAP[k]:(/(cookie)/i.test(id+title)?17:0);};
+    const nameOf = (prod,lang)=>{const id=String(prod.id??''); const title=String(prod.title??''); const dict=productTranslations[lang]||{}; const k=[id,slugify(id),title,slugify(title)].find(x=>dict[x]); return k?dict[k]:(window.Translations?.getProduct?.(id)||title||id);};
 
-    // התאמות אישיות
     function loadUICustomization() {
       const theme = localStorage.getItem('theme') || 'light';
       const themeToggle = document.getElementById('theme-toggle');
@@ -80,21 +83,14 @@
       languageToggle.textContent = currentLanguage === 'en' ? '🌐 עברית' : '🌐 English';
       if (typeof window.updateLanguage === 'function') window.updateLanguage();
     }
-    document.getElementById('theme-toggle').addEventListener('click', () => {
-      const isDark = document.body.classList.contains('dark-theme');
-      localStorage.setItem('theme', isDark ? 'light' : 'dark'); loadUICustomization();
-    });
-    document.getElementById('language-toggle').addEventListener('click', () => {
-      toggleLanguage(); renderPending();
-    });
+    document.getElementById('theme-toggle').addEventListener('click', () => { const isDark=document.body.classList.contains('dark-theme'); localStorage.setItem('theme', isDark?'light':'dark'); loadUICustomization(); });
+    document.getElementById('language-toggle').addEventListener('click', () => { toggleLanguage(); renderPending(); });
 
-    // ניווט דינמי
     async function setupAuthButtons() {
       const loginLink = document.getElementById('login-link');
       const logoutBtn = document.getElementById('logout');
       const adminLink = document.getElementById('admin-link');
-      let loggedIn = false, username = '';
-      try { const r = await fetch('/api/session'); if (r.ok) { loggedIn = true; const data = await r.json(); username = data.username; } } catch {}
+      let loggedIn=false, username=''; try{ const r=await fetch('/api/session'); if(r.ok){ loggedIn=true; const d=await r.json(); username=d.username; } }catch{}
       loginLink.style.display = loggedIn ? 'none' : '';
       logoutBtn.style.display = loggedIn ? '' : 'none';
       adminLink.style.display = (loggedIn && username === 'admin') ? '' : 'none';
@@ -102,7 +98,6 @@
     setupAuthButtons();
     document.getElementById('logout').onclick = async () => { try { await fetch('/api/logout', { method: 'POST' }); } finally { location.href = 'login.html'; } };
 
-    // מציג פריטים ממתינים לתשלום (pending) עם כמויות ומחיר כולל
     async function renderPending(){
       const box = document.getElementById('pay-list'); box.innerHTML = 'טוען...';
 
@@ -112,7 +107,6 @@
 
       const prodRes = await fetch('/api/products');
       const products = await prodRes.json();
-      const currentLanguage = localStorage.getItem('language') || 'he';
 
       const quantities = {};
       pendingItems.forEach(id => { quantities[id] = (quantities[id] || 0) + 1; });
@@ -125,12 +119,14 @@
         return;
       }
 
+      const lang = localStorage.getItem('language') || 'he';
+
       for (const id of uniqueIds) {
-        const p = products.find(x => String(x.id) === String(id)); if (!p) continue;
-        const productName = (window.Translations?.getProduct && window.Translations.getProduct(p.id)) || p.title;
+        const p = products.find(x => String(x.id) === String(id)) || {id, title:id, image:''};
+        const productName = nameOf(p, lang);
 
         const qty = quantities[id];
-        const unit = priceOf(p.id);
+        const unit = priceOf(p);
         const total = unit * qty;
 
         const row = document.createElement('div'); row.className = 'pay-row';
@@ -157,16 +153,12 @@
         const row = cb.closest('.pay-row');
         const qtyText = row.querySelector('.quantity-badge')?.textContent || '';
         const qty = parseInt(qtyText.replace(/[^\d]/g, ''), 10) || 1;
-        sum += priceOf(id) * qty;
+        const title = row.querySelector('strong')?.textContent || id;
+        sum += priceOf({id, title}) * qty;
       });
-     
       document.getElementById('sum-box').textContent = `סה"כ מחיר: ${nis(sum)}`;
-
     }
-
-    document.getElementById('pay-list').addEventListener('change', (e) => {
-      if (e.target && e.target.name === 'item') updateTotal();
-    });
+    document.getElementById('pay-list').addEventListener('change', (e) => { if (e.target && e.target.name === 'item') updateTotal(); });
 
     document.getElementById('pay-form').addEventListener('submit', async e => {
       e.preventDefault();

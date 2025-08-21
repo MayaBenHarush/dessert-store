@@ -24,10 +24,15 @@
   <div id="list"></div>
 
   <script>
-    // === מחירון ===
-    const PRICE_MAP={'chocolate-cake':150,'cookies-box':125,'cupcakes':160,'minnie-mous-cake':300,'nutella-box':70,'pizza-cookie':120,'white-design-cake':140};
-    const priceOf = id => (id in PRICE_MAP) ? PRICE_MAP[id] : (String(id).includes('cookie') ? 17 : 0);
-    const nis = n => `₪${n}`;
+    const slugify = s => String(s||'').trim().toLowerCase().replace(/[^\p{L}\p{N} ]/gu,'').replace(/\s+/g,'-');
+    const nis=n=>`₪${n}`;
+    const PRICE_MAP={'chocolate-cake':150,'8-cookies-box':125,'cupcakes':160,'minnie-mous-cake':300,'nutella-box':70,'chocolate-pizza-xl':120,'bento-design-cake':140,'chocolate-design-cake':180,'orange-cake':70,'white-design-cake':140,'pizza-cookie':120,'pizza cookie':120};
+    const NAMES={
+      he:{'chocolate-cake':'עוגת שוקולד מעוצבת','8-cookies-box':'מארז 8 עוגיות','cupcakes':'קאפקייקס','minnie-mous-cake':'עוגת מיני מאוס','nutella-box':'מארז מגולגלות נוטלה','chocolate-pizza-xl':'פיצת שוקולד גדולה','bento-design-cake':'עוגת בנטו מעוצבת','chocolate-design-cake':'עוגת שוקולד מעוצבת','orange-cake':'עוגת תפוזים','bagle-cookie':'עוגיית בייגל','caramel-cookie':'עוגיית קרמל','kinder-cookie':'עוגיית קינדר','lotus-cookie':'עוגיית לוטוס','nutella-cookie':'עוגיית נוטלה','white-chocolate-cookie':'עוגיית שוקולד לבן','white-design-cake':'עוגת בנטו מעוצבת','pizza-cookie':'פיצת שוקולד גדולה','pizza cookie':'פיצת שוקולד גדולה'},
+      en:{'chocolate-cake':'Chocolate Design Cake','8-cookies-box':'8 Cookies Box','cupcakes':'Cupcakes','minnie-mous-cake':'Minnie Mouse Cake','nutella-box':'Nutella Box','chocolate-pizza-xl':'Chocolate Pizza XL','bento-design-cake':'Bento Design Cake','chocolate-design-cake':'Chocolate Design Cake','orange-cake':'Orange Cake','bagle-cookie':'Bagel Cookie','caramel-cookie':'Caramel Cookie','kinder-cookie':'Kinder Cookie','lotus-cookie':'Lotus Cookie','nutella-cookie':'Nutella Cookie','white-chocolate-cookie':'White Chocolate Cookie','white-design-cake':'Bento Design Cake','pizza-cookie':'Chocolate Pizza XL','pizza cookie':'Chocolate Pizza XL'}
+    };
+    const priceOf = (prod)=>{const id=String(prod.id??''); const title=String(prod.title??''); const k=[id,slugify(id),title,slugify(title)].find(x=>x in PRICE_MAP); return k?PRICE_MAP[k]:(/(cookie)/i.test(id+title)?17:0);};
+    const nameOf = (prod,lang)=>{const id=String(prod.id??''); const title=String(prod.title??''); const dict=NAMES[lang]||{}; const k=[id,slugify(id),title,slugify(title)].find(x=>dict[x]); return k?dict[k]:(title||id);};
 
     function loadUICustomization() {
       const theme = localStorage.getItem('theme') || 'light';
@@ -39,13 +44,9 @@
       languageToggle.textContent = currentLanguage === 'en' ? '🌐 עברית' : '🌐 English';
       updateInterfaceLanguage(currentLanguage);
     }
-
     function updateInterfaceLanguage(lang) {
-      const translations = {
-        he: { 'nav-store':'חנות','nav-cart':'סל הקניות','nav-checkout':'תשלום','nav-myitems':'הרכישות שלי','nav-login':'התחברות','nav-logout':'התנתקות','nav-admin':'ניהול','page-title':'הרכישות שלי','theme-dark':'🌙 מצב כהה','theme-light':'☀️ מצב בהיר' },
-        en: { 'nav-store':'Store','nav-cart':'Shopping Cart','nav-checkout':'Checkout','nav-myitems':'My Purchases','nav-login':'Login','nav-logout':'Logout','nav-admin':'Admin','page-title':'My Purchases','theme-dark':'🌙 Dark Mode','theme-light':'☀️ Light Mode' }
-      };
-      const texts = translations[lang]; if (!texts) return;
+      const texts = {he:{'nav-store':'חנות','nav-cart':'סל הקניות','nav-checkout':'תשלום','nav-myitems':'הרכישות שלי','nav-login':'התחברות','nav-logout':'התנתקות','nav-admin':'ניהול','page-title':'הרכישות שלי','theme-dark':'🌙 מצב כהה','theme-light':'☀️ מצב בהיר'},en:{'nav-store':'Store','nav-cart':'Shopping Cart','nav-checkout':'Checkout','nav-myitems':'My Purchases','nav-login':'Login','nav-logout':'Logout','nav-admin':'Admin','page-title':'My Purchases','theme-dark':'🌙 Dark Mode','theme-light':'☀️ Light Mode'}}[lang];
+      if (!texts) return;
       document.getElementById('nav-store').textContent = texts['nav-store'];
       document.getElementById('nav-cart').textContent = texts['nav-cart'];
       document.getElementById('nav-checkout').textContent = texts['nav-checkout'];
@@ -59,25 +60,14 @@
       if (lang === 'en') { document.documentElement.dir='ltr'; document.documentElement.lang='en'; }
       else { document.documentElement.dir='rtl'; document.documentElement.lang='he'; }
     }
-
-    document.getElementById('theme-toggle').addEventListener('click', () => {
-      const isDark = document.body.classList.contains('dark-theme');
-      localStorage.setItem('theme', isDark ? 'light' : 'dark'); loadUICustomization();
-    });
-    document.getElementById('language-toggle').addEventListener('click', () => {
-      const current = localStorage.getItem('language') || 'he';
-      const next = current === 'he' ? 'en' : 'he';
-      localStorage.setItem('language', next);
-      document.getElementById('language-toggle').textContent = next === 'en' ? '🌐 עברית' : '🌐 English';
-      updateInterfaceLanguage(next); loadMyItems();
-    });
+    document.getElementById('theme-toggle').addEventListener('click', () => { const isDark=document.body.classList.contains('dark-theme'); localStorage.setItem('theme', isDark?'light':'dark'); loadUICustomization(); });
+    document.getElementById('language-toggle').addEventListener('click', () => { const current = localStorage.getItem('language') || 'he'; const next = current === 'he' ? 'en' : 'he'; localStorage.setItem('language', next); document.getElementById('language-toggle').textContent = next === 'en' ? '🌐 עברית' : '🌐 English'; updateInterfaceLanguage(next); loadMyItems(); });
 
     async function setupAuthButtons() {
       const loginLink = document.getElementById('login-link');
       const logoutBtn = document.getElementById('logout');
       const adminLink = document.getElementById('admin-link');
-      let loggedIn = false, username = '';
-      try { const r = await fetch('/api/session'); if (r.ok) { loggedIn = true; const data = await r.json(); username = data.username; } } catch {}
+      let loggedIn=false, username=''; try { const r = await fetch('/api/session'); if (r.ok) { loggedIn = true; const data = await r.json(); username = data.username; } } catch {}
       loginLink.style.display = loggedIn ? 'none' : '';
       logoutBtn.style.display = loggedIn ? '' : 'none';
       if (adminLink) adminLink.style.display = (loggedIn && username === 'admin') ? '' : 'none';
@@ -98,9 +88,12 @@
           return;
         }
 
+        const lang = localStorage.getItem('language') || 'he';
+
         for (const it of items) {
-          const productName = (window.Translations?.getProduct && window.Translations.getProduct(it.id)) || it.title;
-          const price = priceOf(it.id);
+          const p = { id: it.id, title: it.title, image: it.image };
+          const productName = nameOf(p, lang);
+          const price = priceOf(p);
 
           const card = document.createElement('div');
           card.className = 'item';

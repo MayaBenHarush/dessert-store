@@ -2,133 +2,197 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title data-page="cart">סל הקניות</title>
+  <title>סל הקניות</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/styles.css" />
-  <script src="/assets/translations.js"></script>
   <style>
-    .price-line{margin-top:8px;font-weight:700}
-    .qty-wrap{display:flex;align-items:center;gap:10px;margin-top:8px;}
-    .quantity-btn{appearance:none;border:1px solid var(--text-muted,#9aa4b2);background:#fff0;color:inherit;width:36px;height:36px;border-radius:10px;font-weight:900;line-height:1;cursor:pointer;}
-    .qty-badge{background:#ff6b9d;color:#fff;border-radius:12px;padding:8px 16px;font-weight:800;min-width:110px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.08);}
-    .qty-badge .quantity-display{font-weight:900;}
+    .empty { padding: 28px; color: #667; text-align: center; }
+    .qty-wrap { display:flex; align-items:center; gap:10px; margin-top:8px; }
+    .quantity-btn { appearance:none; border:1px solid #c8cdd6; background:#fff; width:36px; height:36px; border-radius:10px; font-weight:900; cursor:pointer; }
+    .qty-badge { background:#ff6b9d; color:#fff; border-radius:12px; padding:8px 16px; font-weight:800; min-width:110px; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,.08); }
+    .price-line { margin-top:6px; font-weight:700; }
+    .cart-item h3 { margin:0 0 6px 0; }
   </style>
 </head>
 <body>
   <nav>
-    <a href="store.html" data-key="store">חנות</a>
-    <a href="cart.html" data-key="cart">סל הקניות</a>
-    <a href="checkout.html" data-key="checkout">תשלום</a>
-    <a href="myitems.html" data-key="myPurchases">הרכישות שלי</a>
-    <a id="login-link" href="login.html" data-key="login">התחברות</a>
-    <button id="logout" style="display:none" data-key="logout">התנתקות</button>
-    <a href="admin.html" data-key="admin">ניהול</a>
-    <button id="theme-toggle">🌙 מצב כהה</button>
-    <button id="language-toggle">🌐 English</button>
+    <a href="store.html">חנות</a>
+    <a href="cart.html">סל הקניות</a>
+    <a href="checkout.html">תשלום</a>
+    <a href="myitems.html">הרכישות שלי</a>
+    <a id="login-link" href="login.html">התחברות</a>
+    <button id="logout" style="display:none">התנתקות</button>
+    <a href="admin.html" id="admin-link" style="display:none">ניהול</a>
   </nav>
 
-  <h1 data-key="pageTitle.cart">סל הקניות</h1>
+  <h1>סל הקניות</h1>
   <div id="items" class="cart-list"></div>
 
   <script>
-    // === מחירון ===
-    const PRICE_MAP={'chocolate-cake':150,'cookies-box':125,'cupcakes':160,'minnie-mous-cake':300,'nutella-box':70,'pizza-cookie':120,'white-design-cake':140};
-    const priceOf=id=>(id in PRICE_MAP)?PRICE_MAP[id]:(String(id).includes('cookie')?17:0);
-    const nis=n=>`₪${n}`;
+    // ===== helpers =====
+    const nis = n => `₪${n}`;
+    const slug = s => String(s||'').trim().toLowerCase().replace(/[^\p{L}\p{N} ]/gu,'').replace(/\s+/g,'-');
 
-    // העדפות
-    function loadUserPreferences(){ const theme=localStorage.getItem('theme')||'light'; if(theme==='dark')document.body.classList.add('dark-theme'); window.updateLanguage(); }
-    function setupThemeToggle(){ const t=document.getElementById('theme-toggle'); t.addEventListener('click',()=>{const cur=localStorage.getItem('theme')||'light';const next=cur==='light'?'dark':'light';localStorage.setItem('theme',next);document.body.classList.toggle('dark-theme',next==='dark');t.textContent=next==='dark'?window.Translations.get('themeToggleLight'):window.Translations.get('themeToggleDark');}); }
-    function setupLanguageToggle(){ document.getElementById('language-toggle').addEventListener('click',window.toggleLanguage); }
+    // מחירון וספר שמות (כמו בדפים האחרים)
+    const PRICE_MAP = {
+      'chocolate-cake':150, '8-cookies-box':125, 'cupcakes':160, 'minnie-mous-cake':300,
+      'nutella-box':70, 'chocolate-pizza-xl':120, 'bento-design-cake':140,
+      'chocolate-design-cake':180, 'orange-cake':70, 'white-design-cake':140,
+      'pizza-cookie':120, 'pizza cookie':120
+    };
+    const NAME_HE = {
+      'chocolate-cake':'עוגת שוקולד מעוצבת','8-cookies-box':'מארז 8 עוגיות','cupcakes':'קאפקייקס','minnie-mous-cake':'עוגת מיני מאוס',
+      'nutella-box':'מארז מגולגלות נוטלה','chocolate-pizza-xl':'פיצת שוקולד גדולה','bento-design-cake':'עוגת בנטו מעוצבת',
+      'chocolate-design-cake':'עוגת שוקולד מעוצבת','orange-cake':'עוגת תפוזים',
+      'bagle-cookie':'עוגיית בייגל','caramel-cookie':'עוגיית קרמל','kinder-cookie':'עוגיית קינדר',
+      'lotus-cookie':'עוגיית לוטוס','nutella-cookie':'עוגיית נוטלה','white-chocolate-cookie':'עוגיית שוקולד לבן',
+      'white-design-cake':'עוגת בנטו מעוצבת','pizza-cookie':'פיצת שוקולד גדולה','pizza cookie':'פיצת שוקולד גדולה'
+    };
+    const priceOf = (p) => {
+      const keys = [p.id, slug(p.id), p.title, slug(p.title)];
+      const hit = keys.find(k => k && PRICE_MAP[k] != null);
+      return hit ? PRICE_MAP[hit] : (/(cookie)/i.test(String(p.id)+p.title) ? 17 : 0);
+    };
+    const nameHe = (p) => {
+      const keys = [p.id, slug(p.id), p.title, slug(p.title)];
+      const hit = keys.find(k => k && NAME_HE[k]);
+      return hit ? NAME_HE[hit] : (p.title || p.id);
+    };
 
-    // הרשאות
-    async function setupAuthButtons(){
-      const loginLink=document.getElementById('login-link'); const logoutBtn=document.getElementById('logout'); const adminLink=document.querySelector('a[href="admin.html"]');
-      let loggedIn=false,username=null;
-      try{const r=await fetch('/api/session'); if(r.ok){loggedIn=true; const d=await r.json(); username=d.username;}}catch{}
-      loginLink.style.display=loggedIn?'none':''; logoutBtn.style.display=loggedIn?'':'none'; if(adminLink) adminLink.style.display=(username==='admin')?'':'none';
+    // ===== auth header =====
+    (async function setupAuth(){
+      try{
+        const r = await fetch('/api/session');
+        if (r.ok){
+          const d = await r.json();
+          document.getElementById('login-link').style.display = 'none';
+          document.getElementById('logout').style.display = '';
+          if (d.username === 'admin') document.getElementById('admin-link').style.display = '';
+        }
+      }catch{}
+    })();
+    document.getElementById('logout').onclick = async () => { try { await fetch('/api/logout', { method:'POST' }); } finally { location.href='login.html'; } };
+
+    // ===== data =====
+    let products = [];
+    async function loadProducts(){
+      const r = await fetch('/api/products');
+      if (!r.ok) throw new Error('products failed');
+      products = await r.json();
     }
-    document.getElementById('logout').onclick=async()=>{ try{await fetch('/api/logout',{method:'POST'});}finally{location.href='login.html';} };
 
-    let products=[];
-    async function loadProducts(){ const res=await fetch('/api/products'); products=await res.json(); }
+    // ממיר כל תגובת /api/cart למפה {id:qty}
+    function toQtyMap(payload){
+      // עטיפות שכיחות
+      if (payload && typeof payload === 'object' && !Array.isArray(payload)) {
+        if (Array.isArray(payload.items)) payload = payload.items;
+        else if (Array.isArray(payload.cart)) payload = payload.cart;
+      }
+      const q = {};
+      if (Array.isArray(payload)){
+        for (const it of payload){
+          if (it == null) continue;
+          if (typeof it === 'string' || typeof it === 'number') q[it] = (q[it]||0)+1;
+          else if (typeof it === 'object') {
+            const id = it.id ?? it.productId ?? it._id;
+            if (!id) continue;
+            const add = it.qty ?? it.count ?? 1;
+            q[id] = (q[id]||0) + Number(add);
+          }
+        }
+        return q;
+      }
+      if (payload && typeof payload === 'object'){
+        for (const [id,v] of Object.entries(payload)){
+          q[id] = typeof v === 'number' ? v : Number(v?.qty ?? v?.count ?? 1);
+        }
+        return q;
+      }
+      return {};
+    }
 
     async function loadCart(){
-      const res=await fetch('/api/cart'); if(res.status===401) return location.href='login.html';
-      const quantities=await res.json(); // {id: count}
-      const container=document.getElementById('items'); container.innerHTML='';
-      const entries=Object.entries(quantities);
-      if(entries.length===0){ container.innerHTML=`<p class="empty" data-key="cartEmpty">${window.Translations.get('cartEmpty')}</p>`; return; }
+      const res = await fetch('/api/cart');
+      if (res.status === 401) { location.href = 'login.html'; return; }
+      const raw = await res.json();
+      const quantities = toQtyMap(raw);
 
-      for(const [id,qty] of entries){
-        const p=products.find(x=>String(x.id)===String(id)); if(!p) continue;
-        const name=window.Translations.getProduct(p.id) || p.title;
-        const unit=priceOf(p.id); const total=unit*Number(qty);
+      const box = document.getElementById('items');
+      box.innerHTML = '';
 
-        const row=document.createElement('div'); row.className='cart-item';
-        row.innerHTML=`
-          <div class="left">
-            <img src="/images/${p.image}" alt="${name}">
-            <div class="cart-item-info">
-              <h3>${name}</h3>
-
-              <div class="qty-wrap">
-                <button class="quantity-btn minus" data-id="${p.id}" aria-label="הפחת פריט">−</button>
-                <div class="qty-badge"><span data-key="quantity">${window.Translations.get('quantity')}</span>: <span class="quantity-display">${qty}</span></div>
-                <button class="quantity-btn plus" data-id="${p.id}" aria-label="הוסף פריט">＋</button>
-              </div>
-
-              <div class="price-line">${nis(unit)} × <span class="q-val">${qty}</span> = <strong class="total-val">${nis(total)}</strong></div>
-            </div>
-          </div>
-          <button class="remove" data-id="${p.id}" data-key="removeAll">${window.Translations.get('removeAll')}</button>
-        `;
-        container.appendChild(row);
-      }
-    }
-
-    // אירועים
-    document.getElementById('items').addEventListener('click', async (e)=>{
-      const removeBtn=e.target.closest('.remove');
-      const plus=e.target.closest('.plus');
-      const minus=e.target.closest('.minus');
-
-      if(removeBtn){
-        const id=removeBtn.getAttribute('data-id');
-        // 1) ננסה end‑point ייעודי אם קיים
-        let ok=false;
-        try{
-          const r=await fetch(`/api/cart/removeAll/${encodeURIComponent(id)}`,{method:'DELETE'});
-          ok = r.ok;
-        }catch{}
-        // 2) Fallback בטוח: מחסל לפי הכמות המוצגת ע"י DELETE אחד־אחד
-        if(!ok){
-          const row=removeBtn.closest('.cart-item');
-          const q=parseInt(row.querySelector('.quantity-display')?.textContent||'1',10)||1;
-          for(let i=0;i<q;i++){ await fetch(`/api/cart/${encodeURIComponent(id)}`,{method:'DELETE'}); }
-          ok=true;
-        }
-        if(ok) loadCart(); else alert(window.Translations.get('errorRemoving'));
+      const entries = Object.entries(quantities);
+      if (entries.length === 0){
+        box.innerHTML = '<p class="empty">הסל ריק.</p>';
         return;
       }
 
-      if(plus){
-        const id=plus.getAttribute('data-id');
-        await fetch('/api/cart',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({productId:id})});
-        loadCart(); return;
-      }
+      for (const [id, qty] of entries){
+        const p = products.find(x => String(x.id) === String(id)) || {id, title:id, image:''};
+        const title = nameHe(p);
+        const unit  = priceOf(p);
+        const total = unit * Number(qty);
 
-      if(minus){
-        const id=minus.getAttribute('data-id');
-        // קודם מנסה end‑point ייעודי להפחתה, אחרת fallback ל‑DELETE אחד
-        let tried=false;
-        try{ const r=await fetch(`/api/cart/decrease/${encodeURIComponent(id)}`,{method:'POST'}); if(r.ok){tried=true;} }catch{}
-        if(!tried){ await fetch(`/api/cart/${encodeURIComponent(id)}`,{method:'DELETE'}); }
-        loadCart(); return;
+        const row = document.createElement('div');
+        row.className = 'cart-item';
+        row.innerHTML = `
+          <div class="left">
+            <img src="/images/${p.image || 'placeholder.png'}" alt="${title}">
+            <div class="cart-item-info">
+              <h3>${title}</h3>
+              <div class="qty-wrap">
+                <button class="quantity-btn minus" data-id="${p.id}" aria-label="הפחת">−</button>
+                <div class="qty-badge">כמות: <span class="quantity-display">${qty}</span></div>
+                <button class="quantity-btn plus" data-id="${p.id}" aria-label="הוסף">＋</button>
+              </div>
+              <div class="price-line">${nis(unit)} × <span class="q-val">${qty}</span> = <strong class="total-val">${nis(total)}</strong></div>
+            </div>
+          </div>
+          <button class="remove" data-id="${p.id}">הסר הכל</button>
+        `;
+        box.appendChild(row);
+      }
+    }
+
+    // ===== actions =====
+    document.getElementById('items').addEventListener('click', async (e) => {
+      const plus  = e.target.closest('.plus');
+      const minus = e.target.closest('.minus');
+      const rem   = e.target.closest('.remove');
+      if (plus){
+        const id = plus.getAttribute('data-id');
+        await fetch('/api/cart', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ productId:id }) });
+        loadCart();
+      } else if (minus){
+        const id = minus.getAttribute('data-id');
+        // תמיכה בשני השרתים: decrease או מחיקה יחידה
+        let ok=false;
+        try{ const r=await fetch(`/api/cart/decrease/${encodeURIComponent(id)}`,{method:'POST'}); ok=r.ok; }catch{}
+        if(!ok) await fetch(`/api/cart/${encodeURIComponent(id)}`,{method:'DELETE'});
+        loadCart();
+      } else if (rem){
+        const id = rem.getAttribute('data-id');
+        // הסר הכל (אם אין route ייעודי — מחיקה בלולאה לפי הכמות הנוכחית)
+        let ok=false;
+        try{ const r=await fetch(`/api/cart/removeAll/${encodeURIComponent(id)}`,{method:'DELETE'}); ok=r.ok; }catch{}
+        if(!ok){
+          const q = parseInt(rem.closest('.cart-item').querySelector('.quantity-display').textContent||'1',10)||1;
+          for(let i=0;i<q;i++){ await fetch(`/api/cart/${encodeURIComponent(id)}`,{method:'DELETE'}); }
+          ok=true;
+        }
+        if(ok) loadCart();
       }
     });
 
-    (async()=>{ loadUserPreferences(); setupThemeToggle(); setupLanguageToggle(); await setupAuthButtons(); await loadProducts(); await loadCart(); })();
+    // ===== boot =====
+    (async () => {
+      try{
+        await loadProducts();  // חשוב: קודם מוצרים
+        await loadCart();      // ואז הסל
+      }catch(e){
+        console.error(e);
+        document.getElementById('items').innerHTML = '<p class="empty">שגיאה בטעינת הסל.</p>';
+      }
+    })();
   </script>
 </body>
 </html>
