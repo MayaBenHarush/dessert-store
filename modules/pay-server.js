@@ -1,129 +1,208 @@
 // modules/pay-server.js
-// בתשלום: מאמת פרטי כרטיס (דמו), מעביר את הפריטים הנבחרים מ-pending ל-purchases,
-// ומוחק רק את הפריטים שעליהם שולם מה-pending.
-// מעודכן לתמיכה בעוגות מותאמות
-
 const persist = require('../persist_module');
 
-module.exports = (app) => {
-  app.post('/api/pay', async (req, res, next) => {
+module.exports = function(app) {
+  
+  // קופונים זמינים
+  const COUPONS = {
+    'WELCOME10': { discount: 10, type: 'percent', description: 'הנחה של 10%' },
+    'SAVE20': { discount: 20, type: 'fixed', description: 'הנחה של 20 ₪' },
+    'FREESHIP': { discount: 29, type: 'shipping', description: 'משלוח חינם' },
+    'VIP15': { discount: 15, type: 'percent', description: 'הנחה של 15% ללקוחות VIP' }
+  };
+
+  const SHIPPING_COST = 29;
+
+  // API לוולידציה של קופון
+  app.get('/api/validate-coupon/:code', async (req, res) => {
     try {
-      const username = req.cookies?.session;
-      if (!username) return res.status(401).json({ error: 'Not logged in' });
-
-      const { cardName, cardNumber, expiry, cvv, items } = req.body || {};
-
-      // ולידציה בסיסית (דמו בלבד)
-      if (!cardName || typeof cardName !== 'string') {
-        return res.status(400).json({ error: 'Invalid cardName' });
-      }
-      const digits = String(cardNumber || '').replace(/[\s-]/g, '');
-      if (!/^\d{12,19}$/.test(digits)) {
-        return res.status(400).json({ error: 'Invalid cardNumber' });
-      }
-      if (!/^\d{2}\/\d{2}$/.test(String(expiry || ''))) {
-        return res.status(400).json({ error: 'Invalid expiry' });
-      }
-      if (!/^\d{3,4}$/.test(String(cvv || ''))) {
-        return res.status(400).json({ error: 'Invalid cvv' });
-      }
-
-      // רשימת הפריטים הנבחרים לתשלום
-      const selectedItems = Array.isArray(items) ? items.map(String) : [];
-      if (!selectedItems.length) {
-        return res.status(400).json({ error: 'No items selected for payment' });
-      }
-
-      // קבלת פריטים מ-pending
-      let pending = await persist.loadData('pending');
-      if (!Array.isArray(pending)) pending = [];
-      const row = pending.find(r => r.username === username);
-      const allPendingItems = row && Array.isArray(row.items) ? row.items.map(String) : [];
+      const couponCode = req.params.code.toUpperCase();
       
-      if (allPendingItems.length === 0) {
-        return res.status(400).json({ error: 'No items pending payment' });
-      }
-
-      // הפרדה בין מוצרים רגילים לעוגות מותאמות
-      const pendingRegularItems = allPendingItems.filter(id => !id.startsWith('custom-cake-'));
-      const pendingCustomCakes = allPendingItems.filter(id => id.startsWith('custom-cake-'));
-      
-      // חישוב כמויות מוצרים רגילים
-      const pendingQuantities = {};
-      pendingRegularItems.forEach(id => {
-        pendingQuantities[id] = (pendingQuantities[id] || 0) + 1;
-      });
-
-      // יצירת רשימת פריטים לרכישה על בסיס הפריטים הנבחרים
-      const itemsToPurchase = [];
-      
-      selectedItems.forEach(selectedId => {
-        if (selectedId.startsWith('custom-cake-')) {
-          // עוגה מותאמת - נוסיף רק אם היא בpending
-          if (pendingCustomCakes.includes(selectedId)) {
-            itemsToPurchase.push(selectedId);
-          }
-        } else {
-          // מוצר רגיל - נוסיף לפי הכמות
-          const quantity = pendingQuantities[selectedId] || 0;
-          for (let i = 0; i < quantity; i++) {
-            itemsToPurchase.push(selectedId);
-          }
-        }
-      });
-
-      if (itemsToPurchase.length === 0) {
-        return res.status(400).json({ error: 'Selected items not available for payment' });
-      }
-
-      // עדכון סטטוס עוגות מותאמות לפני הוספה לרכישות
-      const customCakeIds = itemsToPurchase.filter(id => id.startsWith('custom-cake-'));
-      if (customCakeIds.length > 0) {
-        let customCakes = await persist.loadData('customCakes');
-        if (Array.isArray(customCakes)) {
-          customCakes.forEach(cake => {
-            if (customCakeIds.includes(cake.id) && cake.username === username) {
-              cake.status = 'purchased';
-              cake.purchaseDate = new Date().toISOString();
-            }
-          });
-          await persist.saveData('customCakes', customCakes);
-        }
-      }
-
-      // הוספה ל-purchases
-      await persist.appendPurchase(username, {
-        items: itemsToPurchase.slice(),
-        date: new Date().toISOString()
-      });
-
-      // הסרת הפריטים ששולמו מ-pending
-      const remainingPendingItems = allPendingItems.filter(id => !selectedItems.includes(id));
-      
-      if (remainingPendingItems.length === 0) {
-        // אם לא נשארו פריטים, נסיר את הרשומה כולה
-        const restPending = pending.filter(r => r.username !== username);
-        await persist.saveData('pending', restPending);
+      if (COUPONS[couponCode]) {
+        res.json({
+          valid: true,
+          coupon: COUPONS[couponCode]
+        });
       } else {
-        // אם נשארו פריטים, נעדכן את הרשימה
-        row.items = remainingPendingItems;
-        await persist.saveData('pending', pending);
+        res.status(400).json({
+          valid: false,
+          error: 'קוד קופון לא תקין'
+        });
       }
-
-      // לוג פעילות
-      let activity = await persist.loadData('activity');
-      if (!Array.isArray(activity)) activity = [];
-      activity.push({ 
-        datetime: new Date().toISOString(), 
-        username, 
-        type: 'pay',
-        details: `Purchased ${itemsToPurchase.length} items (${customCakeIds.length} custom cakes)`
-      });
-      await persist.saveData('activity', activity);
-
-      return res.json({ ok: true });
-    } catch (err) {
-      next(err);
+    } catch (error) {
+      console.error('Coupon validation error:', error);
+      res.status(500).json({ error: 'שגיאת שרת' });
     }
   });
+
+  // API לתשלום משופר
+  app.post('/api/pay', async (req, res) => {
+    try {
+      const username = req.cookies.username;
+      if (!username) {
+        return res.status(401).json({ error: 'לא מחובר' });
+      }
+
+      const { cardName, cardNumber, expiry, cvv, orderData, coupon } = req.body;
+
+      // ולידציה בסיסית
+      if (!cardName || !cardNumber || !expiry || !cvv) {
+        return res.status(400).json({ error: 'חסרים פרטי כרטיס' });
+      }
+
+      // ולידציות נוספות
+      const cleanCardNumber = cardNumber.replace(/[\s-]/g, '');
+      if (!/^\d{12,19}$/.test(cleanCardNumber)) {
+        return res.status(400).json({ error: 'מספר כרטיס לא תקין' });
+      }
+
+      if (!/^\d{2}\/\d{2}$/.test(expiry)) {
+        return res.status(400).json({ error: 'תוקף לא תקין' });
+      }
+
+      if (!/^\d{3,4}$/.test(cvv)) {
+        return res.status(400).json({ error: 'CVV לא תקין' });
+      }
+
+      // סימולציה של תהליך תשלום (במציאות זה יהיה קריאה לספק תשלומים)
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // חישוב מחירים מחדש בשרת לאבטחה
+      let finalOrderData = {
+        subtotal: orderData?.subtotal || 0,
+        shipping: SHIPPING_COST,
+        discount: 0,
+        total: 0,
+        items: orderData?.items || []
+      };
+
+      // יישום קופון הנחה
+      let appliedDiscount = 0;
+      let finalShipping = SHIPPING_COST;
+      
+      if (coupon && COUPONS[coupon]) {
+        const couponData = COUPONS[coupon];
+        
+        if (couponData.type === 'percent') {
+          appliedDiscount = Math.round(finalOrderData.subtotal * couponData.discount / 100);
+        } else if (couponData.type === 'fixed') {
+          appliedDiscount = Math.min(couponData.discount, finalOrderData.subtotal);
+        } else if (couponData.type === 'shipping') {
+          finalShipping = 0;
+        }
+      }
+
+      finalOrderData.discount = appliedDiscount;
+      finalOrderData.shipping = finalShipping;
+      finalOrderData.total = finalOrderData.subtotal - appliedDiscount + finalShipping;
+
+      // יצירת רשומת רכישה תואמת למבנה הקיים
+      const purchaseItem = {
+        items: [],
+        date: new Date().toISOString()
+      };
+
+      // הוספת פריטים לרכישה בפורמט הקיים
+      if (orderData?.items) {
+        for (const item of orderData.items) {
+          for (let i = 0; i < item.qty; i++) {
+            if (item.type === 'custom') {
+              // עוגות מותאמות - נשאיר את ה-ID המלא
+              purchaseItem.items.push(item.id);
+            } else {
+              // מוצרים רגילים
+              purchaseItem.items.push(item.id);
+            }
+          }
+        }
+      }
+
+      // שמירת הרכישה במבנה הקיים
+      let purchases = await persist.loadData('purchases') || {};
+      if (!purchases[username]) {
+        purchases[username] = [];
+      }
+      purchases[username].push(purchaseItem);
+      await persist.saveData('purchases', purchases);
+
+      // הוספת רשומה לאקטיביטי
+      try {
+        let activity = await persist.loadData('activity') || [];
+        activity.push({
+          datetime: new Date().toISOString(),
+          username,
+          type: 'pay'
+        });
+        await persist.saveData('activity', activity);
+      } catch (actError) {
+        console.warn('Failed to log activity:', actError);
+      }
+
+      // ניקוי העגלה לאחר תשלום מוצלח
+      try {
+        // ניקוי עגלה רגילה
+        let db = await persist.loadData('db') || {};
+        if (db.carts && Array.isArray(db.carts)) {
+          db.carts = db.carts.filter(cart => cart.username !== username);
+          await persist.saveData('db', db);
+        }
+
+        // ניקוי עוגות מותאמות
+        if (db.customCakes && Array.isArray(db.customCakes)) {
+          // סימון עוגות מותאמות כנרכשות
+          for (let cake of db.customCakes) {
+            if (cake.username === username && cake.status === 'in-cart') {
+              cake.status = 'purchased';
+            }
+          }
+          await persist.saveData('db', db);
+        }
+
+        // גם ניקוי מהקבצים הנפרדים אם קיימים
+        try {
+          let carts = await persist.loadData('carts') || [];
+          if (Array.isArray(carts)) {
+            carts = carts.filter(cart => cart.username !== username);
+            await persist.saveData('carts', carts);
+          }
+        } catch {}
+
+      } catch (clearError) {
+        console.warn('Failed to clear cart after payment:', clearError);
+        // לא נכשיל את התשלום בגלל שגיאה בניקוי העגלה
+      }
+
+      res.json({
+        success: true,
+        total: finalOrderData.total,
+        message: 'התשלום הושלם בהצלחה!'
+      });
+
+    } catch (error) {
+      console.error('Payment error:', error);
+      res.status(500).json({ error: 'שגיאה בעיבוד התשלום' });
+    }
+  });
+
+  // API לקבלת היסטוריית רכישות (שיפור לדף "הרכישות שלי")
+  app.get('/api/my-purchases', async (req, res) => {
+    try {
+      const username = req.cookies.username;
+      if (!username) {
+        return res.status(401).json({ error: 'לא מחובר' });
+      }
+
+      const purchases = await persist.loadData('purchases') || {};
+      const userPurchases = purchases[username] || [];
+
+      // מיון לפי תאריך (החדשים ראשון)
+      userPurchases.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      res.json(userPurchases);
+    } catch (error) {
+      console.error('Get purchases error:', error);
+      res.status(500).json({ error: 'שגיאה בטעינת הרכישות' });
+    }
+  });
+
 };

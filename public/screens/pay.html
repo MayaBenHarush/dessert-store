@@ -2,174 +2,679 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title data-page="pay">תשלום (דמו)</title>
+  <title>תשלום (דמו)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/styles.css" />
-  <script src="/assets/translations"></script>
   <style>
-    .pay-list{ display:flex; flex-direction:column; gap:12px; margin:12px 0 18px; }
-    .pay-row { display:grid; grid-template-columns:auto 90px 1fr auto; align-items:center; gap:12px;
-               background:#fff; border:1px solid #eee; border-radius:8px; padding:10px; }
-    .pay-row img{ width:90px; height:90px; object-fit:cover; border-radius:8px; }
-    .pay-empty{ color:#666; }
-    #pay-form{ display:grid; gap:12px; max-width:560px; }
-    #pay-form label{ display:flex; flex-direction:column; gap:6px; }
-    #pay-form input{ padding:10px; border:1px solid #ccc; border-radius:8px; font-size:16px; }
-    .row{ display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
-    .error{ color:#b00020; display:none; }
-    .quantity-badge { background: var(--primary-color); color: white; padding: 6px 12px; border-radius: 16px; font-size: 13px; font-weight: bold; min-width: 50px; text-align: center; box-shadow: var(--shadow-sm); }
-    .price-line{ font-weight:700; }
-    #sum-box{ margin:10px 0 16px; font-weight:800; border-top:1px solid #ddd; padding-top:10px; }
+    .payment-container {
+      max-width: 500px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: var(--shadow-lg);
+    }
+    .payment-form {
+      display: grid;
+      gap: 20px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .form-group label {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .form-group input {
+      padding: 12px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      background: var(--bg-primary);
+    }
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1);
+      background: white;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+    .pay-button {
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      padding: 16px 24px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+    .pay-button:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .pay-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .demo-notice {
+      background: rgba(255, 193, 7, 0.1);
+      border: 1px solid #ffc107;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 20px;
+      text-align: center;
+      color: #856404;
+      font-size: 14px;
+    }
+    .error-message {
+      background: #ffe6e6;
+      border: 1px solid #ff9999;
+      color: #cc0000;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      display: none;
+    }
+    
+    /* קופון הנחה */
+    .coupon-section {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 20px;
+      border: 1px dashed #ccc;
+    }
+    .coupon-input-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+    .coupon-input-row input {
+      flex: 1;
+    }
+    .coupon-apply-btn {
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      white-space: nowrap;
+      font-size: 14px;
+    }
+    .coupon-apply-btn:hover {
+      background: #218838;
+    }
+    .coupon-apply-btn:disabled {
+      background: #6c757d;
+      cursor: not-allowed;
+    }
+    .coupon-message {
+      margin-top: 10px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .coupon-success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .coupon-error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    
+    /* סיכום עלויות */
+    .summary-box {
+      background: var(--bg-primary);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid #e2e8f0;
+    }
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding: 8px 0;
+      font-size: 16px;
+    }
+    .summary-total {
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--primary-color);
+      border-top: 2px solid var(--primary-color);
+      padding-top: 15px;
+      margin-top: 15px;
+    }
+    .shipping-line {
+      color: #666;
+      font-size: 15px;
+    }
+    .discount-line {
+      color: #28a745;
+      font-weight: 600;
+    }
+    .strikethrough {
+      text-decoration: line-through;
+      color: #999;
+    }
   </style>
 </head>
 <body>
   <nav>
-    <a href="store.html" data-key="store">חנות</a>
-    <a href="cart.html" data-key="cart">סל הקניות</a>
-    <a href="checkout.html" data-key="checkout">תשלום</a>
-    <a href="myitems.html" data-key="myPurchases">הרכישות שלי</a>
-    <a id="login-link" href="login.html" data-key="login">התחברות</a>
-    <button id="logout" style="display:none" data-key="logout">התנתקות</button>
-    <a id="admin-link" href="admin.html" style="display:none" data-key="admin">ניהול</a>
-    <a href="/screens/cake-designer.html">🎨 עיצוב עוגה</a>
+    <a href="store.html">חנות</a>
+    <a href="cart.html">סל הקניות</a>
+    <a href="checkout.html">בחירת פריטים</a>
+    <a href="myitems.html">הרכישות שלי</a>
+    <a href="cake-designer.html">עיצוב עוגה</a>
+    <a id="login-link" href="login.html">התחברות</a>
+    <button id="logout" style="display:none">התנתקות</button>
+    <a href="admin.html" id="admin-link" style="display:none">ניהול</a>
     <button id="theme-toggle">🌙 מצב כהה</button>
     <button id="language-toggle">🌐 English</button>
   </nav>
 
-  <h1 data-key="pageTitle.pay">תשלום (דמו)</h1>
-  <p class="hint" data-key="paymentDemo">זהו תשלום דמו – אין שמירה של פרטי כרטיס.</p>
-
-  <form id="items-form">
-    <div id="pay-list" class="pay-list"></div>
-    <div id="sum-box"></div>
-  </form>
-
-  <form id="pay-form" novalidate>
-    <label><span data-key="cardNumber">מספר הכרטיס</span>
-      <input type="text" name="cardNumber" inputmode="numeric" autocomplete="cc-number" placeholder="1234 5678 9012 3456" required />
-    </label>
-    <label><span data-key="cardName">שם בעל/ת הכרטיס</span>
-      <input type="text" name="cardName" autocomplete="cc-name" required />
-    </label>
-    <div class="row">
-      <label><span data-key="expiry">תוקף (MM/YY)</span>
-        <input type="text" name="expiry" inputmode="numeric" autocomplete="cc-exp" placeholder="12/27" required />
-      </label>
-      <label><span data-key="cvv">CVV</span>
-        <input type="text" name="cvv" inputmode="numeric" autocomplete="cc-csc" placeholder="123" required />
-      </label>
+  <div class="payment-container">
+    <h1>תשלום (דמו)</h1>
+    
+    <div class="demo-notice">
+      זהו תשלום דמו לצורכי תרגול בלבד - אין שמירה של פרטי כרטיס
     </div>
-    <div class="error" id="err"></div>
-    <button id="pay-btn" type="submit" data-key="pay">Pay</button>
-  </form>
+
+    <div id="error-message" class="error-message"></div>
+
+    <!-- קופון הנחה - קודם -->
+    <div class="coupon-section">
+      <div class="form-group">
+        <label for="coupon-code">קופון הנחה (אופציונלי)</label>
+        <div class="coupon-input-row">
+          <input type="text" id="coupon-code" placeholder="הכנס קוד קופון" maxlength="20">
+          <button type="button" id="apply-coupon-btn" class="coupon-apply-btn">החל</button>
+        </div>
+      </div>
+      <div id="coupon-message" class="coupon-message" style="display: none;"></div>
+    </div>
+
+    <!-- עלות כוללת - אחרי הקופון -->
+    <div class="summary-box" id="order-summary">
+      <h3>עלות כוללת</h3>
+      <div id="summary-content">
+        <div class="summary-line">
+          <span>עלות הפריטים:</span>
+          <span id="items-cost">₪0</span>
+        </div>
+        <div class="summary-line shipping-line">
+          <span>עלות משלוח:</span>
+          <span id="shipping-cost">₪29</span>
+        </div>
+        <div id="discount-line" class="summary-line discount-line" style="display: none;">
+          <span id="discount-text">הנחה:</span>
+          <span id="discount-amount">-₪0</span>
+        </div>
+        <div class="summary-line summary-total">
+          <span>סה"כ לתשלום:</span>
+          <span id="total-cost">₪29</span>
+        </div>
+      </div>
+    </div>
+
+    <form class="payment-form" id="payment-form">
+      <div class="form-group">
+        <label for="cardNumber">מספר כרטיס</label>
+        <input type="text" id="cardNumber" name="cardNumber" 
+               placeholder="1234 5678 9012 3456" 
+               inputmode="numeric" 
+               autocomplete="cc-number" required>
+      </div>
+
+      <div class="form-group">
+        <label for="cardName">שם בעל/ת הכרטיס</label>
+        <input type="text" id="cardName" name="cardName" 
+               placeholder="שם מלא" 
+               autocomplete="cc-name" required>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="expiry">תוקף (MM/YY)</label>
+          <input type="text" id="expiry" name="expiry" 
+                 placeholder="12/27" 
+                 inputmode="numeric" 
+                 autocomplete="cc-exp" required>
+        </div>
+        <div class="form-group">
+          <label for="cvv">CVV</label>
+          <input type="text" id="cvv" name="cvv" 
+                 placeholder="123" 
+                 inputmode="numeric" 
+                 autocomplete="cc-csc" required>
+        </div>
+      </div>
+
+      <button type="submit" class="pay-button" id="pay-btn">
+        שלם עכשיו
+      </button>
+    </form>
+  </div>
 
   <script>
-    const slugify = s => String(s||'').trim().toLowerCase().replace(/[^\p{L}\p{N} ]/gu,'').replace(/\s+/g,'-');
-    const nis=n=>`₪${n}`;
-    const PRICE_MAP={'chocolate-cake':150,'8-cookies-box':125,'cupcakes':160,'minnie-mous-cake':300,'nutella-box':70,'chocolate-pizza-xl':120,'bento-design-cake':140,'chocolate-design-cake':180,'orange-cake':70,'white-design-cake':140,'pizza-cookie':120,'pizza cookie':120};
-    const productTranslations={
-      he:{'chocolate-cake':'עוגת שוקולד מעוצבת','8-cookies-box':'מארז 8 עוגיות','cupcakes':'קאפקייקס','minnie-mous-cake':'עוגת מיני מאוס','nutella-box':'מארז מגולגלות נוטלה','chocolate-pizza-xl':'פיצת שוקולד גדולה','bento-design-cake':'עוגת בנטו מעוצבת','chocolate-design-cake':'עוגת שוקולד מעוצבת','orange-cake':'עוגת תפוזים','bagle-cookie':'עוגיית בייגל','caramel-cookie':'עוגיית קרמל','kinder-cookie':'עוגיית קינדר','lotus-cookie':'עוגיית לוטוס','nutella-cookie':'עוגיית נוטלה','white-chocolate-cookie':'עוגיית שוקולד לבן','white-design-cake':'עוגת בנטו מעוצבת','pizza-cookie':'פיצת שוקולד גדולה','pizza cookie':'פיצת שוקולד גדולה'},
-      en:{'chocolate-cake':'Chocolate Design Cake','8-cookies-box':'8 Cookies Box','cupcakes':'Cupcakes','minnie-mous-cake':'Minnie Mouse Cake','nutella-box':'Nutella Box','chocolate-pizza-xl':'Chocolate Pizza XL','bento-design-cake':'Bento Design Cake','chocolate-design-cake':'Chocolate Design Cake','orange-cake':'Orange Cake','bagle-cookie':'Bagel Cookie','caramel-cookie':'Caramel Cookie','kinder-cookie':'Kinder Cookie','lotus-cookie':'Lotus Cookie','nutella-cookie':'Nutella Cookie','white-chocolate-cookie':'White Chocolate Cookie','white-design-cake':'Bento Design Cake','pizza-cookie':'Chocolate Pizza XL','pizza cookie':'Chocolate Pizza XL'}
+    // פונקציות עזר
+    const nis = n => `₪${n}`;
+    const slug = s => String(s||'').trim().toLowerCase().replace(/[^\p{L}\p{N} ]/gu,'').replace(/\s+/g,'-');
+
+    // הגדרות קופונים ומשלוח
+    const SHIPPING_COST = 29;
+    const COUPONS = {
+      'WELCOME10': { discount: 10, type: 'percent', description: 'הנחה של 10%' },
+      'SAVE20': { discount: 20, type: 'fixed', description: 'הנחה של 20 ₪' },
+      'FREESHIP': { discount: 29, type: 'shipping', description: 'משלוח חינם' },
+      'VIP15': { discount: 15, type: 'percent', description: 'הנחה של 15% ללקוחות VIP' }
     };
-    const priceOf = (prod)=>{const id=String(prod.id??''); const title=String(prod.title??''); const k=[id,slugify(id),title,slugify(title)].find(x=>x in PRICE_MAP); return k?PRICE_MAP[k]:(/(cookie)/i.test(id+title)?17:0);};
-    const nameOf = (prod,lang)=>{const id=String(prod.id??''); const title=String(prod.title??''); const dict=productTranslations[lang]||{}; const k=[id,slugify(id),title,slugify(title)].find(x=>dict[x]); return k?dict[k]:(window.Translations?.getProduct?.(id)||title||id);};
 
-    function loadUICustomization() {
-      const theme = localStorage.getItem('theme') || 'light';
-      const themeToggle = document.getElementById('theme-toggle');
-      const languageToggle = document.getElementById('language-toggle');
-      if (theme === 'dark') { document.body.classList.add('dark-theme'); themeToggle.textContent = '☀️ מצב בהיר'; }
-      else { document.body.classList.remove('dark-theme'); themeToggle.textContent = '🌙 מצב כהה'; }
-      const currentLanguage = localStorage.getItem('language') || 'he';
-      languageToggle.textContent = currentLanguage === 'en' ? '🌐 עברית' : '🌐 English';
-      if (typeof window.updateLanguage === 'function') window.updateLanguage();
+    // מחירון ושמות מוצרים (בהתאם לפרוייקט שלך)
+    const PRICE_MAP = {
+      'chocolate-cake':150, 'cookies-box':125, 'cupcakes':160, 'minnie-mous-cake':300,
+      'nutella-box':70, 'pizza-cookie':120, 'orange-cake':70, 'white-design-cake':140
+    };
+    
+    const NAME_HE = {
+      'chocolate-cake':'עוגת שוקולד','cookies-box':'מארז עוגיות','cupcakes':'קאפקייקס',
+      'minnie-mous-cake':'עוגת מיני מאוס','nutella-box':'מארז נוטלה','pizza-cookie':'פיצת שוקולד',
+      'orange-cake':'עוגת תפוזים','white-design-cake':'עוגה מעוצבת לבנה',
+      'bagle-cookie':'עוגיית בייגל','caramel-cookie':'עוגיית קרמל','kinder-cookie':'עוגיית קינדר',
+      'lotus-cookie':'עוגיית לוטוס','nutella-cookie':'עוגיית נוטלה','white-chocolate-cookie':'עוגיית שוקולד לבן'
+    };
+
+    const priceOf = (p) => {
+      const id = String(p.id || p.title || '');
+      const keys = [id, slug(id), p.title, slug(p.title)];
+      const hit = keys.find(k => k && PRICE_MAP[k] != null);
+      return hit ? PRICE_MAP[hit] : (/(cookie)/i.test(String(id)+String(p.title)) ? 17 : 0);
+    };
+
+    const nameHe = (p) => {
+      const id = String(p.id || p.title || '');
+      const keys = [id, slug(id), p.title, slug(p.title)];
+      const hit = keys.find(k => k && NAME_HE[k]);
+      return hit ? NAME_HE[hit] : (p.title || id);
+    };
+
+    let currentCoupon = null;
+    let orderData = {
+      subtotal: 0,
+      shipping: SHIPPING_COST,
+      discount: 0,
+      total: 0,
+      items: []
+    };
+
+    // אתחול הדף
+    (async function setupAuth(){
+      try{
+        const r = await fetch('/api/session');
+        if (r.ok){
+          const d = await r.json();
+          document.getElementById('login-link').style.display = 'none';
+          document.getElementById('logout').style.display = '';
+          if (d.username === 'admin') document.getElementById('admin-link').style.display = '';
+        }
+      }catch{}
+    })();
+
+    document.getElementById('logout').onclick = async () => { 
+      try { await fetch('/api/logout', { method:'POST' }); } 
+      finally { location.href='login.html'; } 
+    };
+
+    // המרת תגובת /api/cart למפה {id:qty}
+    function toQtyMap(payload) {
+      if (payload && typeof payload === 'object' && Array.isArray(payload.items)) payload = payload.items;
+      const q = {};
+      if (Array.isArray(payload)) {
+        for (const it of payload) {
+          if (typeof it === 'string') { 
+            q[it] = (q[it] || 0) + 1; 
+            continue; 
+          }
+          if (it && typeof it === 'object') {
+            const id = it.id || it.productId;
+            const qty = Number(it.qty ?? it.quantity ?? 1);
+            if (id) q[id] = (q[id] || 0) + qty;
+          }
+        }
+      } else if (payload && typeof payload === 'object') {
+        for (const [id, val] of Object.entries(payload)) {
+          q[id] = typeof val === 'number' ? val : Number(val?.qty ?? val?.quantity ?? 1);
+        }
+      }
+      return q;
     }
-    document.getElementById('theme-toggle').addEventListener('click', () => { const isDark=document.body.classList.contains('dark-theme'); localStorage.setItem('theme', isDark?'light':'dark'); loadUICustomization(); });
-    document.getElementById('language-toggle').addEventListener('click', () => { toggleLanguage(); renderPending(); });
 
-    async function setupAuthButtons() {
-      const loginLink = document.getElementById('login-link');
-      const logoutBtn = document.getElementById('logout');
-      const adminLink = document.getElementById('admin-link');
-      let loggedIn=false, username=''; try{ const r=await fetch('/api/session'); if(r.ok){ loggedIn=true; const d=await r.json(); username=d.username; } }catch{}
-      loginLink.style.display = loggedIn ? 'none' : '';
-      logoutBtn.style.display = loggedIn ? '' : 'none';
-      adminLink.style.display = (loggedIn && username === 'admin') ? '' : 'none';
+    // טעינת נתוני מוצרים
+    let PRODUCTS = [];
+    async function loadProducts() {
+      try {
+        const r = await fetch('/api/products');
+        PRODUCTS = r.ok ? await r.json() : [];
+      } catch {}
     }
-    setupAuthButtons();
-    document.getElementById('logout').onclick = async () => { try { await fetch('/api/logout', { method: 'POST' }); } finally { location.href = 'login.html'; } };
 
-    async function renderPending(){
-      const box = document.getElementById('pay-list'); box.innerHTML = 'טוען...';
+    // קבלת פרטי ההזמנה מהעגלה
+    async function loadOrderSummary() {
+      try {
+        // טעינת נתוני העגלה לסיכום
+        const res = await fetch('/api/cart-with-custom');
+        if (res.status === 401) {
+          location.href = 'login.html';
+          return;
+        }
 
-      const pendRes = await fetch('/api/pending');
-      if (pendRes.status === 401) { location.href = 'login.html'; return; }
-      const pendingItems = await pendRes.json();
+        let cartData;
+        if (res.ok) {
+          cartData = await res.json();
+        } else {
+          // fallback לAPI הישן
+          const oldRes = await fetch('/api/cart');
+          if (oldRes.status === 401) {
+            location.href = 'login.html';
+            return;
+          }
+          const quantities = toQtyMap(await oldRes.json());
+          cartData = { regularItems: quantities, customCakes: [] };
+        }
 
-      const prodRes = await fetch('/api/products');
-      const products = await prodRes.json();
+        const { regularItems = {}, customCakes = [] } = cartData;
+        
+        let subtotal = 0;
+        let itemCount = 0;
+        orderData.items = [];
 
-      const quantities = {};
-      pendingItems.forEach(id => { quantities[id] = (quantities[id] || 0) + 1; });
+        // חישוב מוצרים רגילים
+        for (const [id, qty] of Object.entries(regularItems)) {
+          const p = PRODUCTS.find(x => String(x.id) === String(id)) || { id, title: id };
+          const price = priceOf(p);
+          const itemSubtotal = price * qty;
+          subtotal += itemSubtotal;
+          itemCount += qty;
+          
+          orderData.items.push({
+            id,
+            name: nameHe(p),
+            qty,
+            price,
+            subtotal: itemSubtotal,
+            type: 'regular'
+          });
+        }
 
-      const uniqueIds = Object.keys(quantities);
-      box.innerHTML = '';
-      if (uniqueIds.length === 0) {
-        box.innerHTML = `<div class="pay-empty" data-key="noItemsPending">${window.Translations.get('noItemsPending')}</div>`;
-        document.getElementById('sum-box').textContent = '';
+        // חישוב עוגות מותאמות
+        if (customCakes.length > 0) {
+          const grouped = {};
+          customCakes.forEach(cake => {
+            const key = `${cake.design.size}-${cake.design.color}`;
+            if (!grouped[key]) {
+              grouped[key] = { cake: cake, count: 0 };
+            }
+            grouped[key].count++;
+          });
+
+          for (const group of Object.values(grouped)) {
+            const cake = group.cake;
+            const itemSubtotal = cake.design.price * group.count;
+            subtotal += itemSubtotal;
+            itemCount += group.count;
+            const sizeText = cake.design.size === 'bento' ? 'בנטו' : 'גדולה';
+            const itemName = `עוגה מותאמת ${sizeText}`;
+            
+            orderData.items.push({
+              id: `custom-${cake.id}`,
+              name: itemName,
+              qty: group.count,
+              price: cake.design.price,
+              subtotal: itemSubtotal,
+              type: 'custom'
+            });
+          }
+        }
+
+        if (itemCount === 0) {
+          document.getElementById('items-cost').textContent = '₪0';
+          document.getElementById('total-cost').textContent = nis(SHIPPING_COST);
+          document.getElementById('pay-btn').textContent = `שלם ${nis(SHIPPING_COST)}`;
+          document.getElementById('pay-btn').disabled = true;
+          return;
+        }
+
+        orderData.subtotal = subtotal;
+        updateOrderDisplay();
+
+      } catch (error) {
+        console.error('Error loading order summary:', error);
+        document.getElementById('items-cost').textContent = 'שגיאה';
+      }
+    }
+
+    // עדכון תצוגת העלויות
+    function updateOrderDisplay() {
+      let discount = 0;
+      let shippingCost = orderData.shipping;
+      let discountText = '';
+      
+      if (currentCoupon) {
+        const couponData = COUPONS[currentCoupon];
+        if (couponData.type === 'percent') {
+          discount = Math.round(orderData.subtotal * couponData.discount / 100);
+          discountText = `הנחה של ${couponData.discount}% על הפריטים`;
+        } else if (couponData.type === 'fixed') {
+          discount = Math.min(couponData.discount, orderData.subtotal);
+          discountText = `הנחה של ${discount} ₪ על הפריטים`;
+        } else if (couponData.type === 'shipping') {
+          shippingCost = 0;
+          discountText = 'משלוח חינם';
+        }
+      }
+
+      orderData.discount = discount;
+      orderData.total = orderData.subtotal - discount + shippingCost;
+
+      // עדכון התצוגה
+      document.getElementById('items-cost').textContent = nis(orderData.subtotal);
+      
+      // עדכון משלוח
+      const shippingElement = document.getElementById('shipping-cost');
+      if (shippingCost === 0 && currentCoupon && COUPONS[currentCoupon].type === 'shipping') {
+        shippingElement.innerHTML = '<span class="strikethrough">₪29</span> חינם!';
+        shippingElement.style.color = '#28a745';
+      } else {
+        shippingElement.textContent = '₪29';
+        shippingElement.style.color = '#666';
+      }
+      
+      // עדכון הנחה
+      const discountLine = document.getElementById('discount-line');
+      if (discount > 0) {
+        document.getElementById('discount-text').textContent = discountText + ':';
+        document.getElementById('discount-amount').textContent = `-${nis(discount)}`;
+        discountLine.style.display = 'flex';
+      } else if (currentCoupon && COUPONS[currentCoupon].type === 'shipping' && shippingCost === 0) {
+        document.getElementById('discount-text').textContent = discountText + ':';
+        document.getElementById('discount-amount').textContent = 'הוחל';
+        discountLine.style.display = 'flex';
+      } else {
+        discountLine.style.display = 'none';
+      }
+      
+      // עדכון סה"כ
+      document.getElementById('total-cost').textContent = nis(orderData.total);
+      document.getElementById('pay-btn').textContent = `שלם ${nis(orderData.total)}`;
+    }
+
+    // טיפול בקופון הנחה
+    document.getElementById('apply-coupon-btn').addEventListener('click', applyCoupon);
+    document.getElementById('coupon-code').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') applyCoupon();
+    });
+
+    function applyCoupon() {
+      const couponCode = document.getElementById('coupon-code').value.trim().toUpperCase();
+      const messageDiv = document.getElementById('coupon-message');
+      const btn = document.getElementById('apply-coupon-btn');
+      
+      if (!couponCode) {
+        showCouponMessage('אנא הכנס קוד קופון', 'error');
         return;
       }
 
-      const lang = localStorage.getItem('language') || 'he';
+      btn.disabled = true;
+      btn.textContent = 'בודק...';
 
-      for (const id of uniqueIds) {
-        const p = products.find(x => String(x.id) === String(id)) || {id, title:id, image:''};
-        const productName = nameOf(p, lang);
-
-        const qty = quantities[id];
-        const unit = priceOf(p);
-        const total = unit * qty;
-
-        const row = document.createElement('div'); row.className = 'pay-row';
-        row.innerHTML = `
-          <input type="checkbox" name="item" value="${p.id}" checked />
-          <img src="/images/${p.image}" alt="${productName}">
-          <div>
-            <div><strong>${productName}</strong></div>
-            <div class="price-line">${nis(unit)} × ${qty} = <strong>${nis(total)}</strong></div>
-          </div>
-          <div class="quantity-badge">${window.Translations.get('quantity')}: ${qty}</div>
-        `;
-        box.appendChild(row);
-      }
-
-      updateTotal();
+      // סימולציה של בדיקת קופון
+      setTimeout(() => {
+        if (COUPONS[couponCode]) {
+          currentCoupon = couponCode;
+          const coupon = COUPONS[couponCode];
+          showCouponMessage(`✅ הקופון הוחל בהצלחה! ${coupon.description}`, 'success');
+          document.getElementById('coupon-code').disabled = true;
+          btn.textContent = 'הוחל';
+          updateOrderDisplay();
+        } else {
+          showCouponMessage('❌ קוד קופון לא תקין', 'error');
+          btn.disabled = false;
+          btn.textContent = 'החל';
+        }
+      }, 1000);
     }
 
-    function updateTotal(){
-      const checks = Array.from(document.querySelectorAll('input[name=item]:checked'));
-      let sum = 0;
-      checks.forEach(cb => {
-        const id = cb.value;
-        const row = cb.closest('.pay-row');
-        const qtyText = row.querySelector('.quantity-badge')?.textContent || '';
-        const qty = parseInt(qtyText.replace(/[^\d]/g, ''), 10) || 1;
-        const title = row.querySelector('strong')?.textContent || id;
-        sum += priceOf({id, title}) * qty;
-      });
-      document.getElementById('sum-box').textContent = `סה"כ מחיר: ${nis(sum)}`;
+    function showCouponMessage(message, type) {
+      const messageDiv = document.getElementById('coupon-message');
+      messageDiv.className = `coupon-message ${type === 'success' ? 'coupon-success' : 'coupon-error'}`;
+      messageDiv.innerHTML = message;
+      messageDiv.style.display = 'block';
     }
-    document.getElementById('pay-list').addEventListener('change', (e) => { if (e.target && e.target.name === 'item') updateTotal(); });
 
-    document.getElementById('pay-form').addEventListener('submit', async e => {
+    // טיפול בטופס התשלום
+    document.getElementById('payment-form').addEventListener('submit', async (e) => {
       e.preventDefault();
+      
       const btn = document.getElementById('pay-btn');
-      btn.disabled = true; btn.textContent = window.Translations.get('processing') || 'מעבד תשלום...';
-      await fetch('/api/pay', { method:'POST' });
-      location.href = 'thankyou.html';
+      const errorMsg = document.getElementById('error-message');
+      const form = e.target;
+      
+      // הסתרת שגיאות קודמות
+      errorMsg.style.display = 'none';
+      
+      // ולידציה בסיסית
+      const cardName = form.cardName.value.trim();
+      const cardNumber = form.cardNumber.value.replace(/[\s-]/g, '');
+      const expiry = form.expiry.value.trim();
+      const cvv = form.cvv.value.trim();
+      
+      if (!cardName) {
+        showError('נא למלא שם בעל הכרטיס');
+        return;
+      }
+      
+      if (!/^\d{12,19}$/.test(cardNumber)) {
+        showError('מספר כרטיס לא תקין (12-19 ספרות)');
+        return;
+      }
+      
+      if (!/^\d{2}\/\d{2}$/.test(expiry)) {
+        showError('תוקף לא תקין (פורמט: MM/YY)');
+        return;
+      }
+      
+      if (!/^\d{3,4}$/.test(cvv)) {
+        showError('CVV לא תקין (3-4 ספרות)');
+        return;
+      }
+      
+      // התחלת תהליך התשלום
+      btn.disabled = true;
+      btn.textContent = 'מעבד תשלום...';
+      
+      try {
+        // שליחת בקשת תשלום
+        const response = await fetch('/api/pay', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            cardName,
+            cardNumber,
+            expiry,
+            cvv,
+            orderData: orderData,
+            coupon: currentCoupon
+          })
+        });
+
+        if (response.ok) {
+          // התשלום הצליח
+          location.href = 'thankyou.html';
+        } else {
+          const error = await response.json().catch(() => ({}));
+          showError(error.error || 'שגיאה בתשלום. נסה שוב.');
+          btn.disabled = false;
+          btn.textContent = `שלם ${nis(orderData.total)}`;
+        }
+      } catch (error) {
+        console.error('Payment error:', error);
+        showError('שגיאת רשת. בדוק את החיבור ונסה שוב.');
+        btn.disabled = false;
+        btn.textContent = `שלם ${nis(orderData.total)}`;
+      }
     });
 
-    loadUICustomization(); renderPending();
+    function showError(message) {
+      const errorMsg = document.getElementById('error-message');
+      errorMsg.textContent = message;
+      errorMsg.style.display = 'block';
+      errorMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // פורמט אוטומטי למספר כרטיס
+    document.getElementById('cardNumber').addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\s/g, '').replace(/\D/g, '');
+      value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+      e.target.value = value;
+    });
+
+    // פורמט אוטומטי לתוקף
+    document.getElementById('expiry').addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length >= 2) {
+        value = value.substring(0, 2) + '/' + value.substring(2, 4);
+      }
+      e.target.value = value;
+    });
+
+    // פורמט אוטומטי ל-CVV
+    document.getElementById('cvv').addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/\D/g, '').substring(0, 4);
+    });
+
+    // טעינה ראשונית
+    (async() => { 
+      await loadProducts(); 
+      setupAuth();
+      await loadOrderSummary();
+    })();
   </script>
 </body>
 </html>

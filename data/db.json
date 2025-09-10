@@ -9,6 +9,11 @@
       "username": "מאיה",
       "password": "123",
       "role": "user"
+    },
+    "מאיה1": {
+      "username": "מאיה1",
+      "password": "123",
+      "role": "user"
     }
   },
   "carts": [
@@ -26,10 +31,22 @@
         "bagle-cookie",
         "bagle-cookie",
         "bagle-cookie",
-        "bagle-cookie",
         "custom-cake-1755789531164-58m0ygnuw",
         "custom-cake-1755789536188-qhmbjjyw9",
-        "custom-cake-1755789542596-ch7sy10p8"
+        "custom-cake-1755789542596-ch7sy10p8",
+        "custom-cake-1755790467633-orkubhn1e",
+        "caramel-cookie",
+        "custom-cake-1755791175782-cof4x5964",
+        "caramel-cookie",
+        "custom-cake-1755976596749-g72pwdj4x"
+      ]
+    },
+    {
+      "username": "מאיה1",
+      "items": [
+        "chocolate-cake",
+        "custom-cake-1757366770917-7rndtz2dx",
+        "custom-cake-1757366779206-bqrmlkx4u"
       ]
     }
   ],
@@ -745,6 +762,78 @@
       "username": "מאיה",
       "type": "add-custom-cake-to-cart",
       "details": "large light-blue cake with \"no text\" in #333333"
+    },
+    {
+      "datetime": "2025-08-21T15:34:27.640Z",
+      "username": "מאיה",
+      "type": "add-custom-cake-to-cart",
+      "details": "bento green cake with \"no text\" in #ffc107"
+    },
+    {
+      "datetime": "2025-08-21T15:45:45.003Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-21T15:46:15.792Z",
+      "username": "מאיה",
+      "type": "add-custom-cake-to-cart",
+      "details": "large green cake with \"מזל טוב\" in #ff9800"
+    },
+    {
+      "datetime": "2025-08-21T16:12:47.376Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-08-23T19:16:36.811Z",
+      "username": "מאיה",
+      "type": "add-custom-cake-to-cart",
+      "details": "bento purple cake with \"מזל טוב\" in #ffffff"
+    },
+    {
+      "datetime": "2025-09-08T21:08:37.320Z",
+      "username": "מאיה1",
+      "type": "register"
+    },
+    {
+      "datetime": "2025-09-08T21:08:47.138Z",
+      "username": "מאיה1",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-09-08T21:09:18.344Z",
+      "username": "מאיה1",
+      "type": "add-custom-cake-to-cart",
+      "details": "large pink cake with \"גהג ה\" in #ff1744"
+    },
+    {
+      "datetime": "2025-09-08T21:15:52.450Z",
+      "username": "מאיה1",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-09-08T21:16:10.293Z",
+      "username": "מאיה1",
+      "type": "add-custom-cake-to-cart",
+      "details": "large green cake with \"no text\" in #333333"
+    },
+    {
+      "datetime": "2025-09-08T21:16:22.514Z",
+      "username": "מאיה1",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-09-08T21:26:10.924Z",
+      "username": "מאיה1",
+      "type": "add-custom-cake-to-cart",
+      "details": "large green cake with \"no text\" in #333333"
+    },
+    {
+      "datetime": "2025-09-08T21:26:19.216Z",
+      "username": "מאיה1",
+      "type": "add-custom-cake-to-cart",
+      "details": "bento pink cake with \"no text\" in #333333"
     }
   ],
   "products": [
@@ -931,6 +1020,104 @@
         "imageFile": "cake-light-blue.png"
       },
       "createdAt": "2025-08-21T15:19:02.598Z",
+      "status": "in-cart"
+    },
+    {
+      "id": "custom-cake-1755790467633-orkubhn1e",
+      "username": "מאיה",
+      "design": {
+        "size": "bento",
+        "color": "green",
+        "text": "",
+        "textColor": "#ffc107",
+        "price": 140,
+        "imageFile": "cake-green.png"
+      },
+      "createdAt": "2025-08-21T15:34:27.634Z",
+      "status": "in-cart"
+    },
+    {
+      "id": "custom-cake-1755791175782-cof4x5964",
+      "username": "מאיה",
+      "design": {
+        "size": "large",
+        "color": "green",
+        "text": "מזל טוב",
+        "textColor": "#ff9800",
+        "price": 300,
+        "imageFile": "cake-green.png"
+      },
+      "createdAt": "2025-08-21T15:46:15.785Z",
+      "status": "in-cart"
+    },
+    {
+      "id": "custom-cake-1755976596749-g72pwdj4x",
+      "username": "מאיה",
+      "design": {
+        "size": "bento",
+        "color": "purple",
+        "text": "מזל טוב",
+        "textColor": "#ffffff",
+        "price": 140,
+        "imageFile": "cake-purple.png"
+      },
+      "createdAt": "2025-08-23T19:16:36.755Z",
+      "status": "in-cart"
+    },
+    {
+      "id": "custom-cake-1757365758327-2efznx94e",
+      "username": "מאיה1",
+      "design": {
+        "size": "large",
+        "color": "pink",
+        "text": "גהג ה",
+        "textColor": "#ff1744",
+        "price": 300,
+        "imageFile": "cake-pink.png"
+      },
+      "createdAt": "2025-09-08T21:09:18.328Z",
+      "status": "removed-from-cart"
+    },
+    {
+      "id": "custom-cake-1757366170287-ou5zajofu",
+      "username": "מאיה1",
+      "design": {
+        "size": "large",
+        "color": "green",
+        "text": "",
+        "textColor": "#333333",
+        "price": 300,
+        "imageFile": "cake-green.png"
+      },
+      "createdAt": "2025-09-08T21:16:10.288Z",
+      "status": "removed-from-cart"
+    },
+    {
+      "id": "custom-cake-1757366770917-7rndtz2dx",
+      "username": "מאיה1",
+      "design": {
+        "size": "large",
+        "color": "green",
+        "text": "",
+        "textColor": "#333333",
+        "price": 300,
+        "imageFile": "cake-green.png"
+      },
+      "createdAt": "2025-09-08T21:26:10.919Z",
+      "status": "in-cart"
+    },
+    {
+      "id": "custom-cake-1757366779206-bqrmlkx4u",
+      "username": "מאיה1",
+      "design": {
+        "size": "bento",
+        "color": "pink",
+        "text": "",
+        "textColor": "#333333",
+        "price": 140,
+        "imageFile": "cake-pink.png"
+      },
+      "createdAt": "2025-09-08T21:26:19.208Z",
       "status": "in-cart"
     }
   ]

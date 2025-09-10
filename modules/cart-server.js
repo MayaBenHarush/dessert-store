@@ -26,14 +26,58 @@ module.exports = (app) => {
     }
   });
 
-  // POST /api/cart – הוספה לסל
-  // body: { productId }
+  // GET /api/cart-with-custom – החזרת מוצרים רגילים ועוגות מותאמות
+  app.get('/api/cart-with-custom', async (req, res, next) => {
+    try {
+      const username = req.cookies.session;
+      if (!username) return res.status(401).json({ error: 'Not logged in' });
+
+      // קבלת עגלה רגילה
+      let carts = asArray(await persist.loadData('carts'));
+      const cart = carts.find(c => c.username === username);
+      const items = cart && Array.isArray(cart.items) ? cart.items.map(String) : [];
+      
+      // הפרדה בין מוצרים רגילים לעוגות מותאמות
+      const regularItems = items.filter(id => !id.startsWith('custom-cake-'));
+      const customCakeIds = items.filter(id => id.startsWith('custom-cake-'));
+      
+      // חישוב כמויות מוצרים רגילים
+      const quantities = {};
+      regularItems.forEach(id => {
+        quantities[id] = (quantities[id] || 0) + 1;
+      });
+
+      // קבלת עוגות מותאמות
+      const customCakes = asArray(await persist.loadData('customCakes'));
+      const userCustomCakes = customCakes.filter(cake => 
+        cake.username === username && 
+        cake.status === 'in-cart' &&
+        customCakeIds.includes(cake.id)
+      );
+      
+      res.json({
+        regularItems: quantities,
+        customCakes: userCustomCakes
+      });
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // POST /api/cart – הוספה לסל (כולל עוגות מותאמות)
   app.post('/api/cart', async (req, res, next) => {
     try {
       const username = req.cookies.session;
       if (!username) return res.status(401).json({ error: 'Not logged in' });
 
-      const { productId } = req.body || {};
+      const { productId, customDesign } = req.body || {};
+      
+      // טיפול בעוגות מותאמות
+      if (productId === 'custom-cake' && customDesign) {
+        return await handleCustomCakeAddition(req, res, next);
+      }
+
+      // טיפול במוצרים רגילים
       const id = String(productId || '');
       if (!id) return res.status(400).json({ error: 'productId required' });
 
@@ -51,7 +95,7 @@ module.exports = (app) => {
       }
       if (!Array.isArray(cart.items)) cart.items = [];
 
-      cart.items.push(id); // שומר תמיד כמחרוזת
+      cart.items.push(id);
       await persist.saveData('carts', carts);
 
       // לוג פעילות
@@ -64,6 +108,79 @@ module.exports = (app) => {
       next(err);
     }
   });
+
+  // פונקציה פנימית לטיפול בהוספת עוגות מותאמות
+  async function handleCustomCakeAddition(req, res, next) {
+    try {
+      const username = req.cookies.session;
+      const { customDesign } = req.body;
+
+      // וולידציה של נתוני העיצוב
+      const { size, color, text, textColor, price, imageFile } = customDesign;
+      
+      if (!size || !color || price === undefined) {
+        return res.status(400).json({ error: 'Missing required design parameters' });
+      }
+
+      if (text && text.length > 20) {
+        return res.status(400).json({ error: 'Text too long (max 20 characters)' });
+      }
+
+      // יצירת ID ייחודי לעוגה המותאמת
+      const customCakeId = `custom-cake-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+      // שמירת פרטי העוגה המותאמת
+      let customCakes = asArray(await persist.loadData('customCakes'));
+      const customCakeData = {
+        id: customCakeId,
+        username,
+        design: {
+          size,
+          color,
+          text: text || '',
+          textColor: textColor || '#333333',
+          price,
+          imageFile: imageFile || `cake-${color}.png`
+        },
+        createdAt: new Date().toISOString(),
+        status: 'in-cart'
+      };
+
+      customCakes.push(customCakeData);
+      await persist.saveData('customCakes', customCakes);
+
+      // הוספה לסל
+      let carts = asArray(await persist.loadData('carts'));
+      let cart = carts.find(c => c.username === username);
+      if (!cart) {
+        cart = { username, items: [] };
+        carts.push(cart);
+      }
+      if (!Array.isArray(cart.items)) cart.items = [];
+
+      cart.items.push(customCakeId);
+      await persist.saveData('carts', carts);
+
+      // לוג פעילות
+      let activity = asArray(await persist.loadData('activity'));
+      activity.push({ 
+        datetime: new Date().toISOString(), 
+        username, 
+        type: 'add-custom-cake-to-cart',
+        details: `${size} ${color} cake with "${text || 'no text'}" in ${textColor}`
+      });
+      await persist.saveData('activity', activity);
+
+      res.json({ 
+        ok: true, 
+        customCakeId,
+        productTitle: `עוגה מותאמת ${size === 'bento' ? 'בנטו' : 'גדולה'} - ${color}`,
+        design: customDesign
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 
   // DELETE /api/cart/:id – הסרת יחידה אחת של מוצר מהסל
   app.delete('/api/cart/:id', async (req, res, next) => {
@@ -121,6 +238,42 @@ module.exports = (app) => {
       }
 
       await persist.saveData('carts', carts);
+      res.json({ ok: true });
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // DELETE /api/custom-cake/:id – הסרת עוגה מותאמת מהסל
+  app.delete('/api/custom-cake/:id', async (req, res, next) => {
+    try {
+      const username = req.cookies.session;
+      if (!username) return res.status(401).json({ error: 'Not logged in' });
+
+      const customCakeId = req.params.id;
+
+      // הסרה מהסל
+      let carts = asArray(await persist.loadData('carts'));
+      const cart = carts.find(c => c.username === username);
+      if (cart && Array.isArray(cart.items)) {
+        const index = cart.items.findIndex(id => String(id) === customCakeId);
+        if (index !== -1) {
+          cart.items.splice(index, 1);
+          await persist.saveData('carts', carts);
+        }
+      }
+
+      // עדכון סטטוס העוגה
+      let customCakes = asArray(await persist.loadData('customCakes'));
+      const cakeIndex = customCakes.findIndex(cake => 
+        cake.id === customCakeId && cake.username === username
+      );
+      
+      if (cakeIndex !== -1) {
+        customCakes[cakeIndex].status = 'removed-from-cart';
+        await persist.saveData('customCakes', customCakes);
+      }
+
       res.json({ ok: true });
     } catch (err) {
       next(err);

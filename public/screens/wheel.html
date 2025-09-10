@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>גלגל מזל מתוק</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/assets/styles.css">
+  <style>
+    .wheel-wrap{display:flex;flex-direction:column;align-items:center;gap:16px}
+    .wheel-card{background:var(--bg-card);border-radius:20px;box-shadow:var(--shadow-lg);padding:24px;max-width:560px;width:100%;text-align:center}
+    .wheel{width:320px;height:320px;border-radius:50%;border:10px solid #fff;box-shadow:var(--shadow-md);position:relative;transition:transform 5s cubic-bezier(.2,.7,.1,1)}
+    /* חץ כלפי מטה */
+    .needle{width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:18px solid var(--primary-dark);margin-bottom:4px}
+    .segments{position:absolute;inset:0;border-radius:50%;
+      /* 9 פלחים – אפורים מפוזרים לסירוגין (NONE בכל אינדקס זוגי) */
+      background:conic-gradient(
+        #bdbdbd 0deg 40deg,      /* NONE idx0 */
+        #ff6b9d 40deg 80deg,     /* 10% */
+        #bdbdbd 80deg 120deg,    /* NONE idx2 */
+        #ffd93d 120deg 160deg,   /* קינוח */
+        #bdbdbd 160deg 200deg,   /* NONE idx4 */
+        #4ecdc4 200deg 240deg,   /* משלוח */
+        #bdbdbd 240deg 280deg,   /* NONE idx6 */
+        #ff9a9e 280deg 320deg,   /* 50 ₪ */
+        #bdbdbd 320deg 360deg    /* NONE idx8 */
+      );
+    }
+    .labels{position:absolute;inset:0;border-radius:50%}
+    .labels span{position:absolute;left:50%;top:50%;transform-origin:0 0;font-weight:800;color:#333}
+    .labels span small{display:block;font-weight:600;font-size:12px;color:#444;opacity:.8}
+    .spin-btn{margin-top:8px}
+    .note{color:var(--text-muted);font-size:12px}
+    .prize{font-size:20px;font-weight:800;margin-top:10px}
+    .coupon{font-family:ui-monospace, Menlo, Consolas, monospace;background:#111;color:#fff;display:inline-block;padding:6px 10px;border-radius:8px;margin-top:8px;letter-spacing:1px}
+    .disabled{opacity:.6;pointer-events:none}
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="store.html">חנות</a>
+    <a href="cart.html">סל הקניות</a>
+    <a href="checkout.html">תשלום</a>
+    <a href="myitems.html">הרכישות שלי</a>
+    <a id="login-link" href="login.html">התחברות</a>
+    <button id="logout" style="display:none">התנתקות</button>
+    <a href="admin.html" id="admin-link" style="display:none">ניהול</a>
+    <a href="/screens/cake-designer.html">🎨 עיצוב עוגה</a>
+    <a href="wheel.html">🎡 גלגל מזל</a>
+    
+    <button id="theme-toggle">🌙 מצב כהה</button>
+    <button id="language-toggle">🌐 English</button>
+  </nav>
+
+  <h1>גלגל מזל מתוק 🍭</h1>
+
+  <div class="wheel-wrap">
+    <div class="needle"></div>
+    <div class="wheel-card">
+      <div style="display:flex;justify-content:center">
+        <div id="wheel" class="wheel">
+          <div class="segments"></div>
+          <div class="labels">
+            <!-- מיקומים בקירוב למרכז כל פלח (כל פלח 40°) -->
+            <span style="transform:rotate(-90deg) translate(90px,-6px)">—<small>לא זכיתי</small></span>
+            <span style="transform:rotate(-50deg) translate(95px,-6px)">10%<small>הנחה</small></span>
+            <span style="transform:rotate(-10deg) translate(90px,-6px)">—<small>לא זכיתי</small></span>
+            <span style="transform:rotate(30deg) translate(85px,-6px)">🎁<small>קינוח</small></span>
+            <span style="transform:rotate(70deg) translate(85px,-6px)">—<small>לא זכיתי</small></span>
+            <span style="transform:rotate(110deg) translate(85px,-6px)">🚚<small>משלוח</small></span>
+            <span style="transform:rotate(150deg) translate(85px,-6px)">—<small>לא זכיתי</small></span>
+            <span style="transform:rotate(190deg) translate(85px,-6px)">₪50<small>שובר</small></span>
+            <span style="transform:rotate(230deg) translate(85px,-6px)">—<small>לא זכיתי</small></span>
+          </div>
+        </div>
+      </div>
+
+      <button id="spin" class="btn spin-btn">סובב את הגלגל</button>
+      <div class="note">אפשרות אחת ליום לכל משתמש.</div>
+
+      <div id="result" class="prize" aria-live="polite"></div>
+      <div id="coupon" class="coupon" style="display:none"></div>
+    </div>
+  </div>
+
+  <script>
+    (async function(){
+      try{
+        const r=await fetch('/api/session'); 
+        if(r.ok){document.getElementById('login-link').style.display='none';document.getElementById('logout').style.display='';}
+      }catch{}
+    })();
+    document.getElementById('logout').onclick=async()=>{try{await fetch('/api/logout',{method:'POST'})}finally{location.href='login.html'}};
+
+    const wheel = document.getElementById('wheel');
+    const spinBtn = document.getElementById('spin');
+    const resultBox = document.getElementById('result');
+    const couponBox = document.getElementById('coupon');
+
+    function spinVisual(targetAngle){
+      wheel.style.transition = 'none';
+      const current = wheel._angle || 0;
+      wheel.style.transform = `rotate(${current}deg)`;
+      requestAnimationFrame(()=>{
+        const spins = 360*5 + targetAngle;
+        wheel.style.transition = 'transform 5s cubic-bezier(.2,.7,.1,1)';
+        wheel._angle = current + spins;
+        wheel.style.transform = `rotate(${wheel._angle}deg)`;
+      });
+    }
+
+    async function spin(){
+      spinBtn.classList.add('disabled');
+      resultBox.textContent = 'מגריל...';
+      couponBox.style.display='none';
+
+      try{
+        const r = await fetch('/api/wheel/spin', { method:'POST' });
+        const body = await r.json();
+        if(!r.ok){
+          resultBox.textContent = body?.message || 'לא ניתן להגריל כרגע';
+          spinBtn.classList.remove('disabled');
+          return;
+        }
+        const { angle, message, coupon } = body;
+
+        spinVisual(angle);
+
+        setTimeout(()=>{
+          resultBox.textContent = message;
+          if (coupon?.code){
+            couponBox.textContent = coupon.code + (coupon.expiresAt ? ` • עד ${new Date(coupon.expiresAt).toLocaleDateString('he-IL')}` : '');
+            couponBox.style.display='inline-block';
+          }
+        }, 5200);
+      }catch(e){
+        resultBox.textContent = 'בעיה ברשת. נסה/י שוב.';
+        spinBtn.classList.remove('disabled');
+      }
+    }
+
+    spinBtn.addEventListener('click', spin);
+  </script>
+</body>
+</html>

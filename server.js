@@ -5,6 +5,9 @@ const path = require('path');
 
 const persist = require('./persist_module');
 
+// ✅ מודול גלגל המזל מתוך תיקיית modules
+const registerWheelRoutes = require('./modules/wheel-server');
+
 // Rate limiters (אם קיימים)
 let limitLogin, limitMutations, limitAdmin;
 try {
@@ -101,39 +104,23 @@ require('./modules/myitems-server')(app);
 require('./modules/admin-server')(app);
 require('./modules/pending-server')(app);
 
-/* ===== Middleware לעוגות מותאמות - לפני מודול העגלה ===== */
-// מודול עוגות מותאמות
+// מודול עגלה רגיל - טוען ראשון
+require('./modules/cart-server')(app);
+
+/* ===== מודול עוגות מותאמות - ללא הגדרת routes נוספים ===== */
 let customCakeModule;
 try {
-  customCakeModule = require('./modules/custom-cake-server')(app);
+  // טוען את המודול בלי להעביר app כדי לא ליצור routes כפולים
+  const customCakeServerModule = require('./modules/custom-cake-server');
+  customCakeModule = customCakeServerModule(app);
   console.log('✔ Custom cake module loaded');
 } catch (e) {
   console.error('Custom cake module failed to load:', e.message);
+  customCakeModule = null;
 }
 
-// יירוט בקשות עוגות מותאמות לפני מודול העגלה הרגיל
-if (customCakeModule) {
-  app.post('/api/cart', async (req, res, next) => {
-    try {
-      const { productId, customDesign } = req.body || {};
-      
-      // אם זה עוגה מותאמת, העבר לפונקציה המתאימה
-      if (productId === 'custom-cake' && customDesign) {
-        console.log('🎂 Processing custom cake request:', customDesign);
-        return await customCakeModule.handleCustomCake(req, res, next);
-      }
-      
-      // אחרת, המשך למודול העגלה הרגיל
-      next();
-    } catch (err) {
-      console.error('Custom cake middleware error:', err);
-      next(err);
-    }
-  });
-}
-
-// מודול עגלה רגיל - צריך להיות אחרי ה-middleware של עוגות מותאמות
-require('./modules/cart-server')(app);
+/* ===== ✅ חיבור ראוטים של גלגל המזל ===== */
+registerWheelRoutes(app);
 
 /* ===== Error handlers ===== */
 app.use((req, res) => res.status(404).send('Oops! Page not found'));
@@ -149,4 +136,5 @@ app.listen(PORT, () => {
   console.log(`📖 README available at http://localhost:${PORT}/readme.html`);
   console.log(`🤖 LLM info at http://localhost:${PORT}/llm.html`);
   console.log(`🎨 Cake Designer at http://localhost:${PORT}/cake-designer.html`);
+  console.log(`🎡 Sweet Wheel at http://localhost:${PORT}/screens/wheel.html`);
 });

@@ -1,0 +1,16 @@
+{
+  "users": {},
+  "guests": {
+    "l7f1bbme": {
+      "last": "2025-08-21T17:27:14.678Z",
+      "prizeId": "PCT10",
+      "coupon": {
+        "code": "WHEEL10",
+        "type": "percent",
+        "value": 10,
+        "issuedAt": "2025-08-21T17:27:14.678Z",
+        "expiresAt": "2025-08-28T17:27:14.678Z"
+      }
+    }
+  }
+}
