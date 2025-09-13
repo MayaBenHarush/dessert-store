@@ -37,21 +37,21 @@
 </head>
 <body>
   <nav>
-    <a href="store.html">חנות</a>
-    <a href="cart.html">סל הקניות</a>
-    <a href="checkout.html">תשלום</a>
-    <a href="myitems.html">הרכישות שלי</a>
+    <a href="store.html" id="nav-store">חנות</a>
+    <a href="cart.html" id="nav-cart">סל הקניות</a>
+    <a href="checkout.html" id="nav-checkout">תשלום</a>
+    <a href="myitems.html" id="nav-myitems">הרכישות שלי</a>
     <a id="login-link" href="login.html">התחברות</a>
     <button id="logout" style="display:none">התנתקות</button>
-    <a href="admin.html" id="admin-link" style="display:none">ניהול</a>
-    <a href="/screens/cake-designer.html">🎨 עיצוב עוגה</a>
-    <a href="wheel.html">🎡 גלגל מזל</a>
-    
+    <a href="admin.html" id="nav-admin" style="display:none">ניהול</a>
+    <a href="cake-designer.html">🎨 <span id="nav-cake-designer">עיצוב עוגה</span></a>
+    <a href="dessert-finder.html" id="nav-dessert-finder">🔍 מציאת קינוח מושלם</a>
+    <a href="wheel.html">🎡 <span id="nav-wheel-text">גלגל מזל</span></a>
     <button id="theme-toggle">🌙 מצב כהה</button>
     <button id="language-toggle">🌐 English</button>
   </nav>
 
-  <h1>גלגל מזל מתוק 🍭</h1>
+  <h1 id="main-title">גלגל מזל מתוק 🭐</h1>
 
   <div class="wheel-wrap">
     <div class="needle"></div>
@@ -59,23 +59,14 @@
       <div style="display:flex;justify-content:center">
         <div id="wheel" class="wheel">
           <div class="segments"></div>
-          <div class="labels">
-            <!-- מיקומים בקירוב למרכז כל פלח (כל פלח 40°) -->
-            <span style="transform:rotate(-90deg) translate(90px,-6px)">—<small>לא זכיתי</small></span>
-            <span style="transform:rotate(-50deg) translate(95px,-6px)">10%<small>הנחה</small></span>
-            <span style="transform:rotate(-10deg) translate(90px,-6px)">—<small>לא זכיתי</small></span>
-            <span style="transform:rotate(30deg) translate(85px,-6px)">🎁<small>קינוח</small></span>
-            <span style="transform:rotate(70deg) translate(85px,-6px)">—<small>לא זכיתי</small></span>
-            <span style="transform:rotate(110deg) translate(85px,-6px)">🚚<small>משלוח</small></span>
-            <span style="transform:rotate(150deg) translate(85px,-6px)">—<small>לא זכיתי</small></span>
-            <span style="transform:rotate(190deg) translate(85px,-6px)">₪50<small>שובר</small></span>
-            <span style="transform:rotate(230deg) translate(85px,-6px)">—<small>לא זכיתי</small></span>
+          <div class="labels" id="wheel-labels">
+            <!-- התוויות יווצרו דינמית ב-JavaScript -->
           </div>
         </div>
       </div>
 
       <button id="spin" class="btn spin-btn">סובב את הגלגל</button>
-      <div class="note">אפשרות אחת ליום לכל משתמש.</div>
+      <div class="note" id="note-text">אפשרות אחת ליום לכל משתמש.</div>
 
       <div id="result" class="prize" aria-live="polite"></div>
       <div id="coupon" class="coupon" style="display:none"></div>
@@ -83,24 +74,244 @@
   </div>
 
   <script>
+    // מערכת תרגום עצמאית
+    const TRANSLATIONS = {
+      he: {
+        // כותרות וטקסטים עיקריים
+        title: 'גלגל מזל מתוק 🭐',
+        spinButton: 'סובב את הגלגל',
+        oncePerDay: 'אפשרות אחת ליום לכל משתמש.',
+        
+        // תפריט ניווט
+        navStore: 'חנות',
+        navCart: 'סל הקניות',
+        navCheckout: 'תשלום',
+        navMyitems: 'הרכישות שלי',
+        navLogin: 'התחברות',
+        navLogout: 'התנתקות',
+        navAdmin: 'ניהול',
+        navCakeDesigner: 'עיצוב עוגה',
+        navDessertFinder: '🔍 מציאת קינוח מושלם',
+        navWheel: 'גלגל מזל',
+        
+        // תוויות הגלגל
+        noWin: 'לא זכיתי',
+        discount: 'הנחה',
+        dessert: 'קינוח',
+        delivery: 'משלוח',
+        voucher: 'שובר',
+        
+        // הודעות משחק
+        spinning: 'מגריל...',
+        cannotSpin: 'לא ניתן להגריל כרגע',
+        networkError: 'בעיה ברשת. נסה/י שוב.',
+        until: 'עד',
+        
+        // כפתורי ממשק
+        themeToggleDark: 'מצב כהה',
+        themeToggleLight: 'מצב בהיר'
+      },
+      en: {
+        // כותרות וטקסטים עיקריים
+        title: 'Sweet Lucky Wheel 🭐',
+        spinButton: 'Spin the Wheel',
+        oncePerDay: 'One chance per day for each user.',
+        
+        // תפריט ניווט
+        navStore: 'Store',
+        navCart: 'Shopping Cart',
+        navCheckout: 'Checkout',
+        navMyitems: 'My Purchases',
+        navLogin: 'Login',
+        navLogout: 'Logout',
+        navAdmin: 'Admin',
+        navCakeDesigner: 'Cake Designer',
+        navDessertFinder: '🔍 Find Perfect Dessert',
+        navWheel: 'Lucky Wheel',
+        
+        // תוויות הגלגל
+        noWin: "Didn't Win",
+        discount: 'Discount',
+        dessert: 'Dessert',
+        delivery: 'Delivery',
+        voucher: 'Voucher',
+        
+        // הודעות משחק
+        spinning: 'Spinning...',
+        cannotSpin: 'Cannot spin right now',
+        networkError: 'Network error. Please try again.',
+        until: 'until',
+        
+        // כפתורי ממשק
+        themeToggleDark: 'Dark Mode',
+        themeToggleLight: 'Light Mode'
+      }
+    };
+
+    // פונקציה לקבלת טקסט בשפה הנוכחית
+    function getText(key) {
+      const currentLang = localStorage.getItem('language') || 'he';
+      return TRANSLATIONS[currentLang][key] || TRANSLATIONS.he[key] || key;
+    }
+
+    // עדכון תוויות הגלגל
+    function updateWheelLabels() {
+      // הגדרת מבנה התוויות
+      const wheelLabels = [
+        { rotation: -90, distance: 90, symbol: '—', text: getText('noWin') },
+        { rotation: -50, distance: 95, symbol: '10%', text: getText('discount') },
+        { rotation: -10, distance: 90, symbol: '—', text: getText('noWin') },
+        { rotation: 30, distance: 85, symbol: '🎁', text: getText('dessert') },
+        { rotation: 70, distance: 85, symbol: '—', text: getText('noWin') },
+        { rotation: 110, distance: 85, symbol: '🚚', text: getText('delivery') },
+        { rotation: 150, distance: 85, symbol: '—', text: getText('noWin') },
+        { rotation: 190, distance: 85, symbol: '₪50', text: getText('voucher') },
+        { rotation: 230, distance: 85, symbol: '—', text: getText('noWin') }
+      ];
+
+      // יצירת התוויות מחדש
+      const labelsContainer = document.getElementById('wheel-labels');
+      labelsContainer.innerHTML = '';
+
+      wheelLabels.forEach((label, index) => {
+        const span = document.createElement('span');
+        span.id = `label-${index + 1}`;
+        span.style.position = 'absolute';
+        span.style.left = '50%';
+        span.style.top = '50%';
+        span.style.transformOrigin = '0 0';
+        span.style.transform = `rotate(${label.rotation}deg) translate(${label.distance}px,-6px)`;
+        span.style.fontWeight = '800';
+        span.style.color = '#333';
+        
+        const small = document.createElement('small');
+        small.style.display = 'block';
+        small.style.fontWeight = '600';
+        small.style.fontSize = '12px';
+        small.style.color = '#444';
+        small.style.opacity = '0.8';
+        small.textContent = label.text;
+        
+        span.textContent = label.symbol;
+        span.appendChild(small);
+        labelsContainer.appendChild(span);
+      });
+    }
+
+    // עדכון כל הטקסטים בדף
+    function updateAllTexts() {
+      // עדכון הכותרת הראשית
+      document.getElementById('main-title').textContent = getText('title');
+      
+      // עדכון כפתור הסיבוב
+      document.getElementById('spin').textContent = getText('spinButton');
+      
+      // עדכון ההודעה
+      document.getElementById('note-text').textContent = getText('oncePerDay');
+      
+      // עדכון התפריט
+      document.getElementById('nav-store').textContent = getText('navStore');
+      document.getElementById('nav-cart').textContent = getText('navCart');
+      document.getElementById('nav-checkout').textContent = getText('navCheckout');
+      document.getElementById('nav-myitems').textContent = getText('navMyitems');
+      document.getElementById('login-link').textContent = getText('navLogin');
+      document.getElementById('logout').textContent = getText('navLogout');
+      document.getElementById('nav-admin').textContent = getText('navAdmin');
+      
+      // עדכון הכפתורים עם האייקונים
+      document.getElementById('nav-cake-designer').textContent = getText('navCakeDesigner');
+      document.getElementById('nav-dessert-finder').textContent = getText('navDessertFinder');
+      document.getElementById('nav-wheel-text').textContent = getText('navWheel');
+      
+      // עדכון תוויות הגלגל
+      updateWheelLabels();
+    }
+
+    // טעינת התאמות אישיות
+    function loadUICustomization() {
+      const currentLang = localStorage.getItem('language') || 'he';
+      const theme = localStorage.getItem('theme') || 'light';
+      
+      // עדכון כיוון השפה
+      if (currentLang === 'en') {
+        document.documentElement.dir = 'ltr';
+        document.documentElement.lang = 'en';
+        document.getElementById('language-toggle').textContent = '🌐 עברית';
+      } else {
+        document.documentElement.dir = 'rtl';
+        document.documentElement.lang = 'he';
+        document.getElementById('language-toggle').textContent = '🌐 English';
+      }
+      
+      // עדכון נושא
+      const themeToggle = document.getElementById('theme-toggle');
+      if (theme === 'dark') {
+        document.body.classList.add('dark-theme');
+        themeToggle.textContent = '☀️ ' + getText('themeToggleLight');
+      } else {
+        document.body.classList.remove('dark-theme');
+        themeToggle.textContent = '🌙 ' + getText('themeToggleDark');
+      }
+      
+      // עדכון כל הטקסטים
+      updateAllTexts();
+    }
+
+    // החלפת נושא
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      const isDark = document.body.classList.contains('dark-theme');
+      localStorage.setItem('theme', isDark ? 'light' : 'dark');
+      loadUICustomization();
+    });
+
+    // החלפת שפה
+    document.getElementById('language-toggle').addEventListener('click', () => {
+      const currentLang = localStorage.getItem('language') || 'he';
+      const nextLang = currentLang === 'he' ? 'en' : 'he';
+      localStorage.setItem('language', nextLang);
+      
+      loadUICustomization();
+      
+      // נקה תוצאות קודמות
+      const resultBox = document.getElementById('result');
+      const couponBox = document.getElementById('coupon');
+      resultBox.textContent = '';
+      couponBox.style.display = 'none';
+    });
+
+    // הגדרת אימות
     (async function(){
       try{
-        const r=await fetch('/api/session'); 
-        if(r.ok){document.getElementById('login-link').style.display='none';document.getElementById('logout').style.display='';}
+        const r = await fetch('/api/session'); 
+        if(r.ok){
+          document.getElementById('login-link').style.display = 'none';
+          document.getElementById('logout').style.display = '';
+          
+          const data = await r.json();
+          if (data.username === 'admin') {
+            document.getElementById('nav-admin').style.display = '';
+          }
+        }
       }catch{}
     })();
-    document.getElementById('logout').onclick=async()=>{try{await fetch('/api/logout',{method:'POST'})}finally{location.href='login.html'}};
+    
+    document.getElementById('logout').onclick = async () => {
+      try { await fetch('/api/logout', {method:'POST'}); }
+      finally { location.href = 'login.html'; }
+    };
 
+    // אלמנטים של המשחק
     const wheel = document.getElementById('wheel');
     const spinBtn = document.getElementById('spin');
     const resultBox = document.getElementById('result');
     const couponBox = document.getElementById('coupon');
 
+    // אנימציית סיבוב הגלגל
     function spinVisual(targetAngle){
       wheel.style.transition = 'none';
       const current = wheel._angle || 0;
       wheel.style.transform = `rotate(${current}deg)`;
-      requestAnimationFrame(()=>{
+      requestAnimationFrame(() => {
         const spins = 360*5 + targetAngle;
         wheel.style.transition = 'transform 5s cubic-bezier(.2,.7,.1,1)';
         wheel._angle = current + spins;
@@ -108,37 +319,55 @@
       });
     }
 
+    // פונקציית הסיבוב
     async function spin(){
       spinBtn.classList.add('disabled');
-      resultBox.textContent = 'מגריל...';
-      couponBox.style.display='none';
+      resultBox.textContent = getText('spinning');
+      couponBox.style.display = 'none';
 
       try{
         const r = await fetch('/api/wheel/spin', { method:'POST' });
         const body = await r.json();
+        
         if(!r.ok){
-          resultBox.textContent = body?.message || 'לא ניתן להגריל כרגע';
+          resultBox.textContent = body?.message || getText('cannotSpin');
           spinBtn.classList.remove('disabled');
           return;
         }
+        
         const { angle, message, coupon } = body;
-
         spinVisual(angle);
 
-        setTimeout(()=>{
+        setTimeout(() => {
           resultBox.textContent = message;
           if (coupon?.code){
-            couponBox.textContent = coupon.code + (coupon.expiresAt ? ` • עד ${new Date(coupon.expiresAt).toLocaleDateString('he-IL')}` : '');
-            couponBox.style.display='inline-block';
+            const currentLang = localStorage.getItem('language') || 'he';
+            const expiryText = coupon.expiresAt 
+              ? ` • ${getText('until')} ${new Date(coupon.expiresAt).toLocaleDateString(currentLang === 'he' ? 'he-IL' : 'en-US')}` 
+              : '';
+            couponBox.textContent = coupon.code + expiryText;
+            couponBox.style.display = 'inline-block';
           }
         }, 5200);
+        
       }catch(e){
-        resultBox.textContent = 'בעיה ברשת. נסה/י שוב.';
+        resultBox.textContent = getText('networkError');
         spinBtn.classList.remove('disabled');
       }
     }
 
+    // הוספת event listener לכפתור הסיבוב
     spinBtn.addEventListener('click', spin);
+    
+    // טעינה ראשונית
+    document.addEventListener('DOMContentLoaded', () => {
+      // וודא שברירת המחדל היא עברית
+      if (!localStorage.getItem('language')) {
+        localStorage.setItem('language', 'he');
+      }
+      
+      loadUICustomization();
+    });
   </script>
 </body>
 </html>

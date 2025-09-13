@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>מציאת הקינוח המושלם</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/styles.css" />
+  <script src="/assets/translations.js"></script>
+  <style>
+    .finder-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: var(--shadow-xl);
+    }
+    
+    .quiz-section {
+      margin-bottom: 40px;
+    }
+    
+    .question-header {
+      background: var(--gradient-primary);
+      color: white;
+      padding: 20px;
+      border-radius: 16px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    
+    .question-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0;
+    }
+    
+    .question-subtitle {
+      font-size: 1rem;
+      opacity: 0.9;
+      margin: 8px 0 0 0;
+    }
+    
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+    
+    .option-card {
+      background: var(--bg-primary);
+      border: 3px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 20px;
+      cursor: pointer;
+      transition: var(--transition-normal);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .option-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-secondary);
+      transform: scaleX(0);
+      transition: var(--transition-normal);
+      transform-origin: right;
+    }
+    
+    .option-card:hover {
+      border-color: var(--primary-color);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .option-card:hover::before {
+      transform: scaleX(1);
+    }
+    
+    .option-card.selected {
+      border-color: var(--primary-color);
+      background: var(--primary-light);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .option-card.selected::before {
+      transform: scaleX(1);
+      background: white;
+    }
+    
+    .option-emoji {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+      display: block;
+    }
+    
+    .option-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+    
+    .option-description {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      line-height: 1.4;
+    }
+    
+    .progress-bar {
+      background: #e2e8f0;
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 32px 0;
+    }
+    
+    .progress-fill {
+      background: var(--gradient-secondary);
+      height: 100%;
+      transition: width 0.5s ease;
+      border-radius: 4px;
+    }
+    
+    .quiz-navigation {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 32px;
+    }
+    
+    .quiz-btn {
+      background: var(--gradient-secondary);
+      color: white;
+      border: none;
+      padding: 12px 32px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: var(--transition-normal);
+    }
+    
+    .quiz-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .quiz-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .quiz-btn.primary {
+      background: var(--gradient-primary);
+    }
+    
+    .results-section {
+      display: none;
+      text-align: center;
+    }
+    
+    .results-header {
+      background: var(--gradient-accent);
+      color: var(--text-primary);
+      padding: 32px;
+      border-radius: 20px;
+      margin-bottom: 32px;
+    }
+    
+    .results-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    
+    .results-subtitle {
+      font-size: 1.2rem;
+      opacity: 0.8;
+    }
+    
+    .recommendation-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin: 32px 0;
+    }
+    
+    .recommendation-card {
+      background: var(--bg-primary);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition-normal);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .recommendation-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: var(--gradient-primary);
+    }
+    
+    .recommendation-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-xl);
+    }
+    
+    .recommendation-card.perfect-match::before {
+      background: var(--gradient-accent);
+      height: 8px;
+    }
+    
+    .recommendation-card.perfect-match {
+      border: 2px solid var(--accent-color);
+    }
+    
+    .match-badge {
+      background: var(--gradient-accent);
+      color: var(--text-primary);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: inline-block;
+    }
+    
+    .recommendation-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 16px;
+    }
+    
+    .recommendation-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+    
+    .recommendation-price {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 12px;
+    }
+    
+    .recommendation-description {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+    
+    .recommendation-reasons {
+      background: rgba(255, 107, 157, 0.1);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 16px;
+    }
+    
+    .recommendation-reasons h4 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin: 0 0 8px 0;
+    }
+    
+    .recommendation-reasons ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .recommendation-reasons li {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+      position: relative;
+      padding-right: 16px;
+    }
+    
+    .recommendation-reasons li::before {
+      content: "✓";
+      position: absolute;
+      right: 0;
+      color: var(--primary-color);
+      font-weight: bold;
+    }
+    
+    .add-to-cart-btn {
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition-normal);
+      width: 100%;
+    }
+    
+    .add-to-cart-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .restart-quiz {
+      background: var(--gradient-secondary);
+      color: white;
+      border: none;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: var(--transition-normal);
+      margin-top: 32px;
+    }
+    
+    .restart-quiz:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .hidden {
+      display: none !important;
+    }
+    
+    /* אנימציות */
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    .question-slide-in {
+      animation: slideInRight 0.5s ease;
+    }
+    
+    @keyframes confetti {
+      0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1) rotate(180deg);
+        opacity: 0;
+      }
+    }
+    
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background: var(--accent-color);
+      animation: confetti 1s ease-out;
+      pointer-events: none;
+      z-index: 1000;
+    }
+    
+    @media (max-width: 768px) {
+      .finder-container {
+        padding: 24px;
+        margin: 16px;
+        border-radius: 16px;
+      }
+      
+      .options-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .quiz-navigation {
+        flex-direction: column;
+        gap: 16px;
+      }
+      
+      .recommendation-cards {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="store.html" data-key="nav.store">חנות</a>
+    <a href="cart.html" data-key="nav.cart">סל הקניות</a>
+    <a href="checkout.html" data-key="nav.checkout">תשלום</a>
+    <a href="myitems.html" data-key="nav.myPurchases">הרכישות שלי</a>
+    <a id="login-link" href="login.html" data-key="nav.login">התחברות</a>
+    <button id="logout" style="display:none" data-key="nav.logout">התנתקות</button>
+    <a href="admin.html" id="admin-link" style="display:none" data-key="nav.admin">ניהול</a>
+    <a href="cake-designer.html">🎨 <span data-key="nav.cakeDesigner">עיצוב עוגה</span></a>
+    <a href="wheel.html">🎡 <span data-key="nav.wheel">גלגל מזל</span></a>
+    <a href="dessert-finder.html" style="background: var(--gradient-accent); color: var(--text-primary);" data-key="nav.dessertFinder">🔍 מציאת קינוח</a>
+    <button id="theme-toggle" data-key="themeToggleDark">🌙 מצב כהה</button>
+    <button id="language-toggle">🌐 English</button>
+  </nav>
+
+  <div class="finder-container">
+    <h1 id="main-title" style="text-align: center; margin-bottom: 32px;" data-key="dessertFinder.title">🔍 מציאת הקינוח המושלם</h1>
+    
+    <!-- סעיף חידון -->
+    <div id="quiz-section" class="quiz-section">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+      </div>
+      
+      <div id="question-container">
+        <!-- השאלות יוכנסו כאן דינמית -->
+      </div>
+      
+      <div class="quiz-navigation">
+        <button id="prev-btn" class="quiz-btn" disabled data-key="dessertFinder.prevQuestion">שאלה קודמת</button>
+        <span id="question-counter" data-key="dessertFinder.questionCounter">שאלה 1 מתוך 6</span>
+        <button id="next-btn" class="quiz-btn primary" disabled data-key="dessertFinder.nextQuestion">שאלה הבאה</button>
+      </div>
+    </div>
+    
+    <!-- סעיף תוצאות -->
+    <div id="results-section" class="results-section">
+      <div class="results-header">
+        <h2 class="results-title" data-key="dessertFinder.foundForYou">מצאנו בשבילך!</h2>
+        <p class="results-subtitle" data-key="dessertFinder.perfectDesserts">הקינוחים המושלמים בהתאם להעדפות שלך</p>
+      </div>
+      
+      <div id="recommendations-container" class="recommendation-cards">
+        <!-- ההמלצות יוכנסו כאן דינמית -->
+      </div>
+      
+      <button id="restart-quiz" class="restart-quiz" data-key="dessertFinder.restartQuiz">התחל שוב</button>
+    </div>
+  </div>
+
+  <script>
+    // טעינת התאמות אישיות מ-localStorage
+    function loadUICustomization() {
+      const theme = localStorage.getItem('theme') || 'light';
+      const themeToggle = document.getElementById('theme-toggle');
+      const languageToggle = document.getElementById('language-toggle');
+      
+      // עדכון נושא
+      if (theme === 'dark') {
+        document.body.classList.add('dark-theme');
+        if (window.Translations && window.Translations.get) {
+          themeToggle.textContent = '☀️ ' + window.Translations.get('themeToggleLight');
+        } else {
+          themeToggle.textContent = '☀️ מצב בהיר';
+        }
+      } else {
+        document.body.classList.remove('dark-theme');
+        if (window.Translations && window.Translations.get) {
+          themeToggle.textContent = '🌙 ' + window.Translations.get('themeToggleDark');
+        } else {
+          themeToggle.textContent = '🌙 מצב כהה';
+        }
+      }
+      
+      // עדכון כפתור שפה
+      const currentLanguage = localStorage.getItem('language') || 'he';
+      if (currentLanguage === 'en') {
+        languageToggle.textContent = '🌐 עברית';
+        document.documentElement.dir = 'ltr';
+        document.documentElement.lang = 'en';
+      } else {
+        languageToggle.textContent = '🌐 English';
+        document.documentElement.dir = 'rtl';
+        document.documentElement.lang = 'he';
+      }
+      
+      // עדכון תרגומים
+      if (window.Translations && window.Translations.updateDomTexts) {
+        window.Translations.updateDomTexts();
+      }
+      
+      // עדכון השאלות והאפשרויות
+      updateQuestionTexts(currentLanguage);
+    }
+
+    // החלפת נושא
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      const isDark = document.body.classList.contains('dark-theme');
+      localStorage.setItem('theme', isDark ? 'light' : 'dark');
+      loadUICustomization();
+    });
+
+    // החלפת שפה
+    document.getElementById('language-toggle').addEventListener('click', () => {
+      if (window.Translations && window.Translations.toggleLanguage) {
+        window.Translations.toggleLanguage();
+        loadUICustomization();
+        showQuestion(currentQuestion); // רענון השאלה הנוכחית
+      } else {
+        const current = localStorage.getItem('language') || 'he';
+        const next = current === 'he' ? 'en' : 'he';
+        localStorage.setItem('language', next);
+        loadUICustomization();
+        showQuestion(currentQuestion);
+      }
+    });
+
+    // נתוני השאלות והאפשרויות - דו לשוני
+    const QUESTIONS = {
+      he: [
+        {
+          id: 'occasion',
+          title: 'איזה אירוע את מתכננת?',
+          subtitle: 'זה יעזור לנו להמליץ על הגודל והסגנון המתאים',
+          options: [
+            { id: 'personal', emoji: '😋', title: 'פינוק אישי', description: 'רק בשבילי או לשניים' },
+            { id: 'family', emoji: '👨‍👩‍👧‍👦', title: 'ערב משפחתי', description: '3-6 אנשים' },
+            { id: 'party', emoji: '🎉', title: 'מסיבה/אירוע', description: '7+ אנשים' },
+            { id: 'gift', emoji: '🎁', title: 'מתנה מיוחדת', description: 'לתת למישהו אהוב' }
+          ]
+        },
+        {
+          id: 'taste_preference',
+          title: 'איזה טעם הכי מענייין אותך?',
+          subtitle: 'בואי נמצא את הטעם שיגרום לך להתמוגג',
+          options: [
+            { id: 'chocolate', emoji: '🍫', title: 'שוקולד עשיר', description: 'אוהבת שוקולד אמיתי' },
+            { id: 'fruity', emoji: '🍊', title: 'פירותי ורענן', description: 'תפוזים וטעמים רעננים' },
+            { id: 'sweet_treats', emoji: '🍯', title: 'מתוק וחמד', description: 'לוטוס, נוטלה, קרמל' },
+            { id: 'mixed', emoji: '🌈', title: 'אוהבת הכל', description: 'פתוחה להפתעות' }
+          ]
+        },
+        {
+          id: 'texture',
+          title: 'איזה מרקם הכי מושלם בשבילך?',
+          subtitle: 'הטקסטורה משפיעה על כל החוויה',
+          options: [
+            { id: 'soft_cake', emoji: '🧽', title: 'עוגה רכה וספוגית', description: 'נמסת בפה' },
+            { id: 'crunchy', emoji: '🥨', title: 'פריך ופריך', description: 'עוגיות עם נשיכה' },
+            { id: 'creamy', emoji: '🍰', title: 'קרמי וחלק', description: 'קאפקייקס עם קרם' },
+            { id: 'mixed_texture', emoji: '🎯', title: 'שילוב מרקמים', description: 'רך וקריספי ביחד' }
+          ]
+        },
+        {
+          id: 'dietary',
+          title: 'יש הגבלות תזונתיות שכדאי לדעת?',
+          subtitle: 'נוודא שהמוצר מתאים לך',
+          options: [
+            { id: 'none', emoji: '✨', title: 'ללא הגבלות', description: 'אוכלת הכל בתיאבון' },
+            { id: 'nuts_aware', emoji: '🥜', title: 'נזהרת מאגוזים', description: 'אלרגיה או העדפה' },
+            { id: 'light', emoji: '🪶', title: 'משהו קל יותר', description: 'לא כבד מדי' },
+            { id: 'portions', emoji: '🔢', title: 'מנות אישיות', description: 'מעדיפה מנות קטנות' }
+          ]
+        },
+        {
+          id: 'budget',
+          title: 'איזה תקציב נוח לך?',
+          subtitle: 'נמצא משהו מושלם בטווח המחירים שלך',
+          options: [
+            { id: 'budget', emoji: '💰', title: 'עד 100 ₪', description: 'משהו נחמד ובמחיר נוח' },
+            { id: 'medium', emoji: '💳', title: '100-200 ₪', description: 'מוכנה להשקיע באיכות' },
+            { id: 'premium', emoji: '💎', title: '200+ ₪', description: 'מחפשת משהו מיוחד' },
+            { id: 'flexible', emoji: '🎯', title: 'גמיש', description: 'תלוי במה שמתאים' }
+          ]
+        },
+        {
+          id: 'presentation',
+          title: 'כמה חשוב לך המראה והעיצוב?',
+          subtitle: 'זה משפיע על הבחירה בין מוצרים פשוטים למעוצבים',
+          options: [
+            { id: 'simple', emoji: '🤎', title: 'פשוט וטעים', description: 'הטעם מעל הכל' },
+            { id: 'nice', emoji: '📸', title: 'יפה לתמונות', description: 'נחמד להציג' },
+            { id: 'wow', emoji: '🌟', title: 'משהו שמרשים', description: 'להפתיע ולבלוט' },
+            { id: 'custom', emoji: '🎨', title: 'מותאם אישית', description: 'עיצוב בהתאמה אישית' }
+          ]
+        }
+      ],
+      en: [
+        {
+          id: 'occasion',
+          title: 'What occasion are you planning for?',
+          subtitle: 'This will help us recommend the right size and style',
+          options: [
+            { id: 'personal', emoji: '😋', title: 'Personal treat', description: 'Just for me or two people' },
+            { id: 'family', emoji: '👨‍👩‍👧‍👦', title: 'Family evening', description: '3-6 people' },
+            { id: 'party', emoji: '🎉', title: 'Party/Event', description: '7+ people' },
+            { id: 'gift', emoji: '🎁', title: 'Special gift', description: 'For someone special' }
+          ]
+        },
+        {
+          id: 'taste_preference',
+          title: 'Which flavor interests you most?',
+          subtitle: 'Let\'s find the taste that will make you melt',
+          options: [
+            { id: 'chocolate', emoji: '🍫', title: 'Rich chocolate', description: 'Love real chocolate' },
+            { id: 'fruity', emoji: '🍊', title: 'Fruity and fresh', description: 'Oranges and fresh flavors' },
+            { id: 'sweet_treats', emoji: '🍯', title: 'Sweet and lovely', description: 'Lotus, Nutella, caramel' },
+            { id: 'mixed', emoji: '🌈', title: 'Love everything', description: 'Open to surprises' }
+          ]
+        },
+        {
+          id: 'texture',
+          title: 'Which texture is perfect for you?',
+          subtitle: 'Texture affects the whole experience',
+          options: [
+            { id: 'soft_cake', emoji: '🧽', title: 'Soft and spongy cake', description: 'Melts in your mouth' },
+            { id: 'crunchy', emoji: '🥨', title: 'Crunchy and crisp', description: 'Cookies with a bite' },
+            { id: 'creamy', emoji: '🍰', title: 'Creamy and smooth', description: 'Cupcakes with cream' },
+            { id: 'mixed_texture', emoji: '🎯', title: 'Mixed textures', description: 'Soft and crispy together' }
+          ]
+        },
+        {
+          id: 'dietary',
+          title: 'Any dietary restrictions we should know about?',
+          subtitle: 'We\'ll make sure the product suits you',
+          options: [
+            { id: 'none', emoji: '✨', title: 'No restrictions', description: 'Eat everything with appetite' },
+            { id: 'nuts_aware', emoji: '🥜', title: 'Careful with nuts', description: 'Allergy or preference' },
+            { id: 'light', emoji: '🪶', title: 'Something lighter', description: 'Not too heavy' },
+            { id: 'portions', emoji: '🔢', title: 'Individual portions', description: 'Prefer small portions' }
+          ]
+        },
+        {
+          id: 'budget',
+          title: 'What budget works for you?',
+          subtitle: 'We\'ll find something perfect in your price range',
+          options: [
+            { id: 'budget', emoji: '💰', title: 'Up to ₪100', description: 'Something nice at a good price' },
+            { id: 'medium', emoji: '💳', title: '₪100-200', description: 'Ready to invest in quality' },
+            { id: 'premium', emoji: '💎', title: '₪200+', description: 'Looking for something special' },
+            { id: 'flexible', emoji: '🎯', title: 'Flexible', description: 'Depends on what fits' }
+          ]
+        },
+        {
+          id: 'presentation',
+          title: 'How important is appearance and design?',
+          subtitle: 'This affects choosing between simple and decorated products',
+          options: [
+            { id: 'simple', emoji: '🤎', title: 'Simple and tasty', description: 'Taste above all' },
+            { id: 'nice', emoji: '📸', title: 'Nice for photos', description: 'Good to show off' },
+            { id: 'wow', emoji: '🌟', title: 'Something impressive', description: 'To surprise and stand out' },
+            { id: 'custom', emoji: '🎨', title: 'Custom made', description: 'Personalized design' }
+          ]
+        }
+      ]
+    };
+
+    // מיפוי מוצרים עם מטאדטה מורחבת
+    const PRODUCTS = {
+      'nutella-cookie': {
+        id: 'nutella-cookie',
+        title: { he: 'עוגיית נוטלה', en: 'Nutella Cookie' },
+        price: 17,
+        image: 'nutella-cookie.jpg',
+        description: { 
+          he: 'עוגיית נוטלה רכה ומפנקת עם טעם עשיר', 
+          en: 'Soft and indulgent Nutella cookie with rich flavor' 
+        },
+        categories: ['personal', 'family'],
+        tastes: ['sweet_treats', 'chocolate', 'mixed'],
+        textures: ['soft_cake', 'mixed_texture'],
+        dietary: ['none', 'light'],
+        budget: ['budget'],
+        presentation: ['simple', 'nice'],
+        score_bonus: { sweet_treats: 15, soft_cake: 10 }
+      },
+      'chocolate-cookie': {
+        id: 'chocolate-cookie',
+        title: { he: 'עוגיית שוקולד', en: 'Chocolate Cookie' },
+        price: 17,
+        image: 'chocolate-cookie.jpg',
+        description: { 
+          he: 'עוגיית שוקולד קלאסית ואהובה', 
+          en: 'Classic and beloved chocolate cookie' 
+        },
+        categories: ['personal', 'family'],
+        tastes: ['chocolate', 'mixed'],
+        textures: ['crunchy', 'mixed_texture'],
+        dietary: ['none', 'light'],
+        budget: ['budget'],
+        presentation: ['simple', 'nice'],
+        score_bonus: { chocolate: 15, crunchy: 10 }
+      },
+      'lotus-cookie': {
+        id: 'lotus-cookie',
+        title: { he: 'עוגיית לוטוס', en: 'Lotus Cookie' },
+        price: 17,
+        image: 'lotus-cookie.jpg',
+        description: { 
+          he: 'עוגיית לוטוס ייחודית עם הטעם המוכחר', 
+          en: 'Unique Lotus cookie with familiar flavor' 
+        },
+        categories: ['personal', 'family'],
+        tastes: ['sweet_treats', 'mixed'],
+        textures: ['crunchy', 'mixed_texture'],
+        dietary: ['none', 'light'],
+        budget: ['budget'],
+        presentation: ['simple', 'nice'],
+        score_bonus: { sweet_treats: 15, crunchy: 10 }
+      },
+      'nutella-box': {
+        id: 'nutella-box',
+        title: { he: 'מארז מגולגלות נוטלה', en: 'Nutella Box' },
+        price: 70,
+        image: 'nutella-box.jpg',
+        description: { 
+          he: 'מארז של מגולגלות נוטלה פריכות ומפנקות', 
+          en: 'Box of crunchy and indulgent Nutella rolls' 
+        },
+        categories: ['family', 'gift'],
+        tastes: ['sweet_treats', 'chocolate', 'mixed'],
+        textures: ['crunchy', 'mixed_texture'],
+        dietary: ['none'],
+        budget: ['budget'],
+        presentation: ['nice', 'wow'],
+        score_bonus: { sweet_treats: 20, family: 15, gift: 15 }
+      },
+      'orange-cake': {
+        id: 'orange-cake',
+        title: { he: 'עוגת תפוזים', en: 'Orange Cake' },
+        price: 70,
+        image: 'orange-cake.jpg',
+        description: { 
+          he: 'עוגת תפוזים ספוגית ורעננה', 
+          en: 'Spongy and fresh orange cake' 
+        },
+        categories: ['family', 'gift'],
+        tastes: ['fruity', 'mixed'],
+        textures: ['soft_cake'],
+        dietary: ['none', 'light'],
+        budget: ['budget'],
+        presentation: ['simple', 'nice'],
+        score_bonus: { fruity: 20, soft_cake: 15 }
+      },
+      '8-cookies-box': {
+        id: '8-cookies-box',
+        title: { he: 'מארז 8 עוגיות', en: '8 Cookies Box' },
+        price: 125,
+        image: '8-cookies-box.jpg',
+        description: { 
+          he: 'מארז מגוון של 8 עוגיות בטעמים שונים', 
+          en: 'Variety box of 8 cookies in different flavors' 
+        },
+        categories: ['family', 'party', 'gift'],
+        tastes: ['mixed', 'chocolate', 'sweet_treats'],
+        textures: ['mixed_texture', 'crunchy'],
+        dietary: ['none', 'portions'],
+        budget: ['medium'],
+        presentation: ['nice', 'wow'],
+        score_bonus: { mixed: 20, family: 15, gift: 15, portions: 15 }
+      },
+      'chocolate-pizza-xl': {
+        id: 'chocolate-pizza-xl',
+        title: { he: 'פיצת שוקולד גדולה', en: 'Chocolate Pizza XL' },
+        price: 120,
+        image: 'chocolate-pizza-xl.jpg',
+        description: { 
+          he: 'פיצת שוקולד ענק ומיוחדת לחלוקה', 
+          en: 'Huge and special chocolate pizza for sharing' 
+        },
+        categories: ['party', 'family'],
+        tastes: ['chocolate', 'mixed'],
+        textures: ['mixed_texture', 'crunchy'],
+        dietary: ['none'],
+        budget: ['medium'],
+        presentation: ['wow', 'nice'],
+        score_bonus: { party: 20, chocolate: 15, wow: 15 }
+      },
+      'bento-design-cake': {
+        id: 'bento-design-cake',
+        title: { he: 'עוגת בנטו מעוצבת', en: 'Bento Design Cake' },
+        price: 140,
+        image: 'bento-design-cake.jpg',
+        description: { 
+          he: 'עוגת בנטו מעוצבת ויפהפיה לאירועים מיוחדים', 
+          en: 'Beautifully designed bento cake for special occasions' 
+        },
+        categories: ['family', 'gift'],
+        tastes: ['mixed', 'chocolate'],
+        textures: ['soft_cake', 'creamy'],
+        dietary: ['none'],
+        budget: ['medium'],
+        presentation: ['wow', 'nice'],
+        score_bonus: { gift: 20, wow: 20, soft_cake: 15 }
+      },
+      'chocolate-cake': {
+        id: 'chocolate-cake',
+        title: { he: 'עוגת שוקולד מעוצבת', en: 'Chocolate Design Cake' },
+        price: 150,
+        image: 'chocolate-cake.jpg',
+        description: { 
+          he: 'עוגת שוקולד מעוצבת במיוחד לאירועים חגיגיים', 
+          en: 'Specially designed chocolate cake for celebrations' 
+        },
+        categories: ['family', 'party', 'gift'],
+        tastes: ['chocolate', 'mixed'],
+        textures: ['soft_cake', 'creamy'],
+        dietary: ['none'],
+        budget: ['medium'],
+        presentation: ['wow', 'custom'],
+        score_bonus: { chocolate: 25, wow: 20, party: 15 }
+      },
+      'cupcakes': {
+        id: 'cupcakes',
+        title: { he: 'קאפקייקס', en: 'Cupcakes' },
+        price: 160,
+        image: 'cupcakes.jpg',
+        description: { 
+          he: 'קאפקייקס מעוצבים עם קרם עשיר', 
+          en: 'Decorated cupcakes with rich cream' 
+        },
+        categories: ['family', 'party', 'gift'],
+        tastes: ['mixed', 'chocolate', 'sweet_treats'],
+        textures: ['creamy', 'soft_cake'],
+        dietary: ['none', 'portions'],
+        budget: ['medium'],
+        presentation: ['nice', 'wow'],
+        score_bonus: { creamy: 20, portions: 20, party: 15 }
+      },
+      'minnie-mous-cake': {
+        id: 'minnie-mous-cake',
+        title: { he: 'עוגת מיני מאוס', en: 'Minnie Mouse Cake' },
+        price: 300,
+        image: 'minnie-mous-cake.jpg',
+        description: { 
+          he: 'עוגת מיני מאוס מעוצבת במיוחד לאירועי ילדים', 
+          en: 'Specially designed Minnie Mouse cake for children\'s events' 
+        },
+        categories: ['party', 'gift'],
+        tastes: ['mixed', 'chocolate'],
+        textures: ['soft_cake', 'creamy'],
+        dietary: ['none'],
+        budget: ['premium'],
+        presentation: ['wow', 'custom'],
+        score_bonus: { party: 25, wow: 25, custom: 25, gift: 20 }
+      }
+    };
+
+    // מצב האפליקציה
+    let currentQuestion = 0;
+    let answers = {};
+    let isAuthenticated = false;
+
+    // DOM elements
+    const questionContainer = document.getElementById('question-container');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const questionCounter = document.getElementById('question-counter');
+    const progressFill = document.getElementById('progress-fill');
+    const quizSection = document.getElementById('quiz-section');
+    const resultsSection = document.getElementById('results-section');
+    const recommendationsContainer = document.getElementById('recommendations-container');
+    const restartBtn = document.getElementById('restart-quiz');
+
+    // פונקציה לעדכון טקסטים של השאלות
+    function updateQuestionTexts(lang) {
+      const currentLang = lang || localStorage.getItem('language') || 'he';
+      
+      // עדכון מונה השאלות
+      if (questionCounter) {
+        const counterTexts = {
+          he: `שאלה ${currentQuestion + 1} מתוך ${QUESTIONS.he.length}`,
+          en: `Question ${currentQuestion + 1} of ${QUESTIONS.en.length}`
+        };
+        questionCounter.textContent = counterTexts[currentLang];
+      }
+    }
+
+    // אתחול האפליקציה
+    async function initApp() {
+      await checkAuth();
+      showQuestion(0);
+    }
+
+    // בדיקת אימות משתמש
+    async function checkAuth() {
+      try {
+        const response = await fetch('/api/session');
+        isAuthenticated = response.ok;
+      } catch (error) {
+        isAuthenticated = false;
+      }
+    }
+
+    // הצגת שאלה
+    function showQuestion(index) {
+      const currentLang = localStorage.getItem('language') || 'he';
+      const questions = QUESTIONS[currentLang];
+      
+      if (index < 0 || index >= questions.length) return;
+      
+      currentQuestion = index;
+      const question = questions[index];
+      
+      // עדכון progress bar
+      const progress = ((index + 1) / questions.length) * 100;
+      progressFill.style.width = `${progress}%`;
+      
+      // עדכון מונה שאלות
+      updateQuestionTexts(currentLang);
+      
+      // יצירת HTML לשאלה
+      questionContainer.innerHTML = `
+        <div class="question-slide-in">
+          <div class="question-header">
+            <h2 class="question-title">${question.title}</h2>
+            <p class="question-subtitle">${question.subtitle}</p>
+          </div>
+          
+          <div class="options-grid">
+            ${question.options.map(option => `
+              <div class="option-card" data-value="${option.id}" onclick="selectOption('${question.id}', '${option.id}')">
+                <span class="option-emoji">${option.emoji}</span>
+                <div class="option-title">${option.title}</div>
+                <div class="option-description">${option.description}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+      
+      // סימון תשובה קיימת
+      if (answers[question.id]) {
+        const selectedCard = questionContainer.querySelector(`[data-value="${answers[question.id]}"]`);
+        if (selectedCard) {
+          selectedCard.classList.add('selected');
+        }
+      }
+      
+      // עדכון כפתורי ניווט
+      prevBtn.disabled = index === 0;
+      nextBtn.disabled = !answers[question.id];
+      
+      const currentLangTexts = {
+        he: { next: 'שאלה הבאה', results: 'צפה בתוצאות' },
+        en: { next: 'Next Question', results: 'View Results' }
+      };
+      
+      nextBtn.textContent = index === questions.length - 1 
+        ? currentLangTexts[currentLang].results 
+        : currentLangTexts[currentLang].next;
+    }
+
+    // בחירת אפשרות
+    function selectOption(questionId, optionId) {
+      answers[questionId] = optionId;
+      
+      // עדכון ויזואלי
+      const cards = questionContainer.querySelectorAll('.option-card');
+      cards.forEach(card => card.classList.remove('selected'));
+      
+      const selectedCard = questionContainer.querySelector(`[data-value="${optionId}"]`);
+      if (selectedCard) {
+        selectedCard.classList.add('selected');
+        
+        // אפקט ויזואלי
+        selectedCard.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+          selectedCard.style.transform = '';
+        }, 150);
+      }
+      
+      // עדכון כפתור הבא
+      nextBtn.disabled = false;
+    }
+
+    // חישוב המלצות
+    function calculateRecommendations() {
+      const currentLang = localStorage.getItem('language') || 'he';
+      const productScores = {};
+      
+      // אתחול ציונים
+      Object.keys(PRODUCTS).forEach(productId => {
+        productScores[productId] = 0;
+      });
+      
+      // חישוב ציונים בהתאם לתשובות
+      Object.entries(answers).forEach(([questionId, answerId]) => {
+        Object.entries(PRODUCTS).forEach(([productId, product]) => {
+          // ציון בסיסי לקטגוריות מתאימות
+          if (questionId === 'occasion' && product.categories.includes(answerId)) {
+            productScores[productId] += 25;
+          }
+          if (questionId === 'taste_preference' && product.tastes.includes(answerId)) {
+            productScores[productId] += 30;
+          }
+          if (questionId === 'texture' && product.textures.includes(answerId)) {
+            productScores[productId] += 25;
+          }
+          if (questionId === 'dietary' && product.dietary.includes(answerId)) {
+            productScores[productId] += 15;
+          }
+          if (questionId === 'budget' && product.budget.includes(answerId)) {
+            productScores[productId] += 20;
+          }
+          if (questionId === 'presentation' && product.presentation.includes(answerId)) {
+            productScores[productId] += 20;
+          }
+          
+          // בונוס ציונים מיוחדים
+          if (product.score_bonus && product.score_bonus[answerId]) {
+            productScores[productId] += product.score_bonus[answerId];
+          }
+        });
+      });
+      
+      // מיון לפי ציון
+      const sortedProducts = Object.entries(productScores)
+        .map(([productId, score]) => ({
+          ...PRODUCTS[productId],
+          score: score,
+          displayTitle: PRODUCTS[productId].title[currentLang] || PRODUCTS[productId].title.he,
+          displayDescription: PRODUCTS[productId].description[currentLang] || PRODUCTS[productId].description.he
+        }))
+        .filter(product => product.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 4); // 4 המלצות מובילות
+      
+      return sortedProducts;
+    }
+
+    // יצירת סיבות להמלצה
+    function generateReasons(product, answers) {
+      const currentLang = localStorage.getItem('language') || 'he';
+      const reasons = [];
+      
+      const reasonTexts = {
+        he: {
+          'personal': 'מתאים לפינוק אישי',
+          'family': 'נהדר לערב משפחתי',
+          'party': 'מושלם למסיבות',
+          'gift': 'מתנה מרשימה',
+          'chocolate': 'עשיר בשוקולד איכותי',
+          'fruity': 'טעם פירותי מרענן',
+          'sweet_treats': 'מתקתק בדיוק הנכון',
+          'mixed': 'מגוון טעמים מפתיע',
+          'soft_cake': 'מרקם רך ונמס בפה',
+          'crunchy': 'פריכות מושלמת',
+          'creamy': 'קרמי ומפנק',
+          'mixed_texture': 'שילוב מרקמים מעניין',
+          'budget_match': 'במחיר נוח וידידותי',
+          'high_score': 'התאמה מושלמת להעדפות שלך'
+        },
+        en: {
+          'personal': 'Perfect for personal indulgence',
+          'family': 'Great for family evening',
+          'party': 'Perfect for parties',
+          'gift': 'Impressive gift',
+          'chocolate': 'Rich in quality chocolate',
+          'fruity': 'Refreshing fruity taste',
+          'sweet_treats': 'Just the right sweetness',
+          'mixed': 'Surprising variety of flavors',
+          'soft_cake': 'Soft texture that melts in mouth',
+          'crunchy': 'Perfect crunchiness',
+          'creamy': 'Creamy and indulgent',
+          'mixed_texture': 'Interesting texture combination',
+          'budget_match': 'At a comfortable and friendly price',
+          'high_score': 'Perfect match for your preferences'
+        }
+      };
+      
+      const texts = reasonTexts[currentLang];
+      
+      if (answers.occasion && product.categories.includes(answers.occasion)) {
+        reasons.push(texts[answers.occasion]);
+      }
+      
+      if (answers.taste_preference && product.tastes.includes(answers.taste_preference)) {
+        reasons.push(texts[answers.taste_preference]);
+      }
+      
+      if (answers.texture && product.textures.includes(answers.texture)) {
+        reasons.push(texts[answers.texture]);
+      }
+      
+      if (product.price <= 100 && answers.budget === 'budget') {
+        reasons.push(texts['budget_match']);
+      }
+      
+      if (product.score > 120) {
+        reasons.push(texts['high_score']);
+      }
+      
+      return reasons.slice(0, 3); // מקסימום 3 סיבות
+    }
+
+    // הצגת תוצאות
+    function showResults() {
+      const currentLang = localStorage.getItem('language') || 'he';
+      const recommendations = calculateRecommendations();
+      
+      if (recommendations.length === 0) {
+        const noResultsTexts = {
+          he: {
+            title: 'אופס! לא מצאנו התאמה מושלמת',
+            subtitle: 'אולי נסי לשנות חלק מהתשובות או פני אלינו לייעוץ אישי'
+          },
+          en: {
+            title: 'Oops! We couldn\'t find a perfect match',
+            subtitle: 'Maybe try changing some answers or contact us for personal advice'
+          }
+        };
+        
+        const texts = noResultsTexts[currentLang];
+        recommendationsContainer.innerHTML = `
+          <div style="text-align: center; padding: 40px;">
+            <h3>${texts.title}</h3>
+            <p>${texts.subtitle}</p>
+          </div>
+        `;
+      } else {
+        const matchBadgeTexts = {
+          he: '⭐ ההתאמה הטובה ביותר',
+          en: '⭐ Best Match'
+        };
+        
+        const reasonsTitleTexts = {
+          he: 'למה זה מתאים לך:',
+          en: 'Why this suits you:'
+        };
+        
+        const addToCartTexts = {
+          he: 'הוסף לסל הקניות',
+          en: 'Add to Cart'
+        };
+        
+        recommendationsContainer.innerHTML = recommendations.map((product, index) => `
+          <div class="recommendation-card ${index === 0 ? 'perfect-match' : ''}">
+            ${index === 0 ? `<div class="match-badge">${matchBadgeTexts[currentLang]}</div>` : ''}
+            <img src="/images/${product.image}" alt="${product.displayTitle}" class="recommendation-image" onerror="this.src='/images/placeholder.png'">
+            <h3 class="recommendation-title">${product.displayTitle}</h3>
+            <div class="recommendation-price">₪${product.price}</div>
+            <p class="recommendation-description">${product.displayDescription}</p>
+            <div class="recommendation-reasons">
+              <h4>${reasonsTitleTexts[currentLang]}</h4>
+              <ul>
+                ${generateReasons(product, answers).map(reason => `<li>${reason}</li>`).join('')}
+              </ul>
+            </div>
+            <button class="add-to-cart-btn" onclick="addToCart('${product.id}', '${product.displayTitle}')">
+              ${addToCartTexts[currentLang]}
+            </button>
+          </div>
+        `).join('');
+      }
+      
+      // מעבר לתוצאות עם אנימציה
+      quizSection.style.display = 'none';
+      resultsSection.style.display = 'block';
+      
+      // אפקט קונפטי להתאמה מושלמת
+      if (recommendations.length > 0 && recommendations[0].score > 120) {
+        createConfetti();
+      }
+    }
+
+    // אפקט קונפטי
+    function createConfetti() {
+      for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+          const confetti = document.createElement('div');
+          confetti.className = 'confetti';
+          confetti.style.left = Math.random() * window.innerWidth + 'px';
+          confetti.style.top = Math.random() * window.innerHeight + 'px';
+          confetti.style.backgroundColor = ['#ff6b9d', '#4ecdc4', '#ffd93d', '#ff9a9e'][Math.floor(Math.random() * 4)];
+          document.body.appendChild(confetti);
+          
+          setTimeout(() => confetti.remove(), 1000);
+        }, i * 100);
+      }
+    }
+
+    // הוספה לסל
+    async function addToCart(productId, productTitle) {
+      if (!isAuthenticated) {
+        const currentLang = localStorage.getItem('language') || 'he';
+        const loginTexts = {
+          he: 'יש להתחבר כדי להוסיף מוצרים לסל',
+          en: 'Please login to add products to cart'
+        };
+        alert(loginTexts[currentLang]);
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      try {
+        const response = await fetch('/api/cart', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ productId })
+        });
+        
+        if (response.ok) {
+          const currentLang = localStorage.getItem('language') || 'he';
+          const button = event.target;
+          const originalText = button.textContent;
+          
+          const successTexts = {
+            he: '✓ נוסף לסל!',
+            en: '✓ Added to Cart!'
+          };
+          
+          button.textContent = successTexts[currentLang];
+          button.style.background = '#28a745';
+          
+          setTimeout(() => {
+            button.textContent = originalText;
+            button.style.background = '';
+          }, 2000);
+          
+          // אפקט ויזואלי נוסף
+          button.style.transform = 'scale(0.95)';
+          setTimeout(() => {
+            button.style.transform = '';
+          }, 150);
+        } else {
+          throw new Error('Failed to add to cart');
+        }
+      } catch (error) {
+        console.error('Error adding to cart:', error);
+        const currentLang = localStorage.getItem('language') || 'he';
+        const errorTexts = {
+          he: 'שגיאה בהוספה לסל. נסה שוב.',
+          en: 'Error adding to cart. Please try again.'
+        };
+        alert(errorTexts[currentLang]);
+      }
+    }
+
+    // התחלה מחדש
+    function restartQuiz() {
+      currentQuestion = 0;
+      answers = {};
+      quizSection.style.display = 'block';
+      resultsSection.style.display = 'none';
+      showQuestion(0);
+    }
+
+    // Event listeners
+    prevBtn.addEventListener('click', () => {
+      if (currentQuestion > 0) {
+        showQuestion(currentQuestion - 1);
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      const currentLang = localStorage.getItem('language') || 'he';
+      const questions = QUESTIONS[currentLang];
+      
+      if (currentQuestion < questions.length - 1) {
+        showQuestion(currentQuestion + 1);
+      } else {
+        showResults();
+      }
+    });
+
+    restartBtn.addEventListener('click', restartQuiz);
+
+    async function setupAuth() {
+      try {
+        const r = await fetch('/api/session');
+        if (r.ok) {
+          const data = await r.json();
+          document.getElementById('login-link').style.display = 'none';
+          document.getElementById('logout').style.display = '';
+          if (data.username === 'admin') {
+            document.getElementById('admin-link').style.display = '';
+          }
+          isAuthenticated = true;
+        }
+      } catch {}
+    }
+
+    document.getElementById('logout').onclick = async () => {
+      try { await fetch('/api/logout', { method: 'POST' }); }
+      finally { location.href = 'login.html'; }
+    };
+
+    // הפעלת האפליקציה
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        loadUICustomization();
+        setupAuth();
+        initApp();
+      }, 100);
+    });
+
+    // הוספת פונקציה גלובלית לבחירת אפשרות
+    window.selectOption = selectOption;
+    window.addToCart = addToCart;
+  </script>
+</body>
+</html>

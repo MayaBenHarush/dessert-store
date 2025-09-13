@@ -35,12 +35,30 @@
     // טעינת התאמות אישיות מ-localStorage
     function loadUICustomization() {
       const theme = localStorage.getItem('theme') || 'light';
+      const themeToggle = document.getElementById('theme-toggle');
+      const languageToggle = document.getElementById('language-toggle');
+      
+      // עדכון נושא
       if (theme === 'dark') {
         document.body.classList.add('dark-theme');
+        themeToggle.textContent = '☀️ מצב בהיר';
       } else {
         document.body.classList.remove('dark-theme');
+        themeToggle.textContent = '🌙 מצב כהה';
       }
-      updateLanguage();
+      
+      // עדכון כפתור שפה
+      const currentLanguage = localStorage.getItem('language') || 'he';
+      if (currentLanguage === 'en') {
+        languageToggle.textContent = '🌐 עברית';
+      } else {
+        languageToggle.textContent = '🌐 English';
+      }
+      
+      // עדכון תרגומים אם הפונקציה קיימת
+      if (typeof window.updateLanguage === 'function') {
+        window.updateLanguage();
+      }
     }
 
     // החלפת נושא
@@ -53,7 +71,9 @@
 
     // החלפת שפה
     document.getElementById('language-toggle').addEventListener('click', () => {
-      toggleLanguage();
+      if (typeof window.toggleLanguage === 'function') {
+        window.toggleLanguage();
+      }
     });
 
     // טופס הרשמה

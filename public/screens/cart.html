@@ -5,6 +5,7 @@
   <title>סל הקניות</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/styles.css" />
+  <script src="/assets/translations.js"></script>
   <style>
     .empty { padding: 28px; color: #667; text-align: center; }
     .qty-wrap { display:flex; align-items:center; gap:10px; margin-top:8px; }
@@ -23,7 +24,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      /* תמיד גלויים */
       opacity: 1;
       visibility: visible;
     }
@@ -46,7 +46,6 @@
     .price-line { margin-top:6px; font-weight:700; color: var(--primary-color); }
     .cart-item h3 { margin:0 0 6px 0; }
     
-    /* עיצוב מיוחד לעוגות מותאמות */
     .custom-cake-badge {
       background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
       color: white;
@@ -84,17 +83,6 @@
       font-weight: 700;
     }
     
-    .color-dot {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      display: inline-block;
-      margin-left: 4px;
-      border: 2px solid #ddd;
-      vertical-align: middle;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-    }
-    
     .custom-text-preview {
       background: white;
       border: 2px solid var(--primary-color);
@@ -110,55 +98,102 @@
 </head>
 <body>
   <nav>
-    <a href="store.html">חנות</a>
-    <a href="cart.html">סל הקניות</a>
-    <a href="checkout.html">תשלום</a>
-    <a href="myitems.html">הרכישות שלי</a>
-    <a id="login-link" href="login.html">התחברות</a>
-    <button id="logout" style="display:none">התנתקות</button>
-    <a href="admin.html" id="admin-link" style="display:none">ניהול</a>
+    <a href="store.html" id="nav-store" data-key="nav.store">חנות</a>
+    <a href="cart.html" id="nav-cart" data-key="nav.cart">סל הקניות</a>
+    <a href="checkout.html" id="nav-checkout" data-key="nav.checkout">תשלום</a>
+    <a href="myitems.html" id="nav-myitems" data-key="nav.myPurchases">הרכישות שלי</a>
+    <a id="login-link" href="login.html" data-key="nav.login">התחברות</a>
+    <button id="logout" style="display:none" data-key="nav.logout">התנתקות</button>
+    <a href="admin.html" id="nav-admin" data-key="nav.admin" style="display:none">ניהול</a>
     <a href="/screens/cake-designer.html">🎨 עיצוב עוגה</a>
+    <a href="dessert-finder.html" data-key="nav.dessertFinder">🔍 מציאת קינוח מושלם</a>
     <a href="wheel.html">🎡 גלגל מזל</a>
-    
     <button id="theme-toggle">🌙 מצב כהה</button>
     <button id="language-toggle">🌐 English</button>
-
-    
   </nav>
-
-  <h1>סל הקניות</h1>
+  <h1 data-key="pages.cartTitle">סל הקניות</h1>
   
   <div id="items" class="cart-list"></div>
 
   <script>
+    // טעינת התאמות אישיות מ-localStorage
+    function loadUICustomization() {
+      const theme = localStorage.getItem('theme') || 'light';
+      const themeToggle = document.getElementById('theme-toggle');
+      const languageToggle = document.getElementById('language-toggle');
+      
+      // עדכון נושא
+      if (theme === 'dark') {
+        document.body.classList.add('dark-theme');
+        themeToggle.textContent = window.Translations ? window.Translations.get('themeToggleLight') : '☀️ מצב בהיר';
+      } else {
+        document.body.classList.remove('dark-theme');
+        themeToggle.textContent = window.Translations ? window.Translations.get('themeToggleDark') : '🌙 מצב כהה';
+      }
+      
+      // עדכון כפתור שפה
+      const currentLanguage = localStorage.getItem('language') || 'he';
+      languageToggle.textContent = currentLanguage === 'en' ? '🌐 עברית' : '🌐 English';
+      
+      // עדכון תרגומים
+      if (window.Translations && window.Translations.updateDomTexts) {
+        window.Translations.updateDomTexts();
+      }
+      
+      // עדכון כיוון הדף
+      document.documentElement.lang = currentLanguage;
+      document.documentElement.dir = currentLanguage === 'en' ? 'ltr' : 'rtl';
+    }
+
+    // החלפת נושא
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      const isDark = document.body.classList.contains('dark-theme');
+      const newTheme = isDark ? 'light' : 'dark';
+      localStorage.setItem('theme', newTheme);
+      loadUICustomization();
+    });
+
+    // החלפת שפה
+    document.getElementById('language-toggle').addEventListener('click', () => {
+      if (window.toggleLanguage && typeof window.toggleLanguage === 'function') {
+        window.toggleLanguage();
+        loadUICustomization();
+        loadCart(); // טעינה מחדש עם השפה החדשה
+      } else {
+        // fallback אם הפונקציה לא נטענה
+        const currentLang = localStorage.getItem('language') || 'he';
+        const newLang = currentLang === 'he' ? 'en' : 'he';
+        localStorage.setItem('language', newLang);
+        loadUICustomization();
+        loadCart();
+      }
+    });
+
     // ===== helpers =====
     const nis = n => `₪${n}`;
     const slug = s => String(s||'').trim().toLowerCase().replace(/[^\p{L}\p{N} ]/gu,'').replace(/\s+/g,'-');
 
-    // מחירון ושמות (כמו בקובץ המקורי)
+    // מחירון ושמות
     const PRICE_MAP = {
       'chocolate-cake':150, '8-cookies-box':125, 'cupcakes':160, 'minnie-mous-cake':300,
       'nutella-box':70, 'chocolate-pizza-xl':120, 'bento-design-cake':140,
       'chocolate-design-cake':180, 'orange-cake':70, 'white-design-cake':140,
       'pizza-cookie':120, 'pizza cookie':120
     };
-    const NAME_HE = {
-      'chocolate-cake':'עוגת שוקולד מעוצבת','8-cookies-box':'מארז 8 עוגיות','cupcakes':'קאפקייקס','minnie-mous-cake':'עוגת מיני מאוס',
-      'nutella-box':'מארז מגולגלות נוטלה','chocolate-pizza-xl':'פיצת שוקולד גדולה','bento-design-cake':'עוגת בנטו מעוצבת',
-      'chocolate-design-cake':'עוגת שוקולד מעוצבת','orange-cake':'עוגת תפוזים',
-      'bagle-cookie':'עוגיית בייגל','caramel-cookie':'עוגיית קרמל','kinder-cookie':'עוגיית קינדר',
-      'lotus-cookie':'עוגיית לוטוס','nutella-cookie':'עוגיית נוטלה','white-chocolate-cookie':'עוגיית שוקולד לבן',
-      'white-design-cake':'עוגת בנטו מעוצבת','pizza-cookie':'פיצת שוקולד גדולה','pizza cookie':'פיצת שוקולד גדולה'
-    };
+
     const priceOf = (p) => {
       const keys = [p.id, slug(p.id), p.title, slug(p.title)];
       const hit = keys.find(k => k && PRICE_MAP[k] != null);
       return hit ? PRICE_MAP[hit] : (/(cookie)/i.test(String(p.id)+p.title) ? 17 : 0);
     };
-    const nameHe = (p) => {
-      const keys = [p.id, slug(p.id), p.title, slug(p.title)];
-      const hit = keys.find(k => k && NAME_HE[k]);
-      return hit ? NAME_HE[hit] : (p.title || p.id);
+
+    const nameOf = (p, lang = null) => {
+      const currentLang = lang || localStorage.getItem('language') || 'he';
+      if (window.Translations && window.Translations.getProduct) {
+        const translated = window.Translations.getProduct(p.id);
+        if (translated && translated !== p.id) return translated;
+      }
+      return p.title || p.id;
     };
 
     // ===== auth header =====
@@ -169,7 +204,7 @@
           const d = await r.json();
           document.getElementById('login-link').style.display = 'none';
           document.getElementById('logout').style.display = '';
-          if (d.username === 'admin') document.getElementById('admin-link').style.display = '';
+          if (d.username === 'admin') document.getElementById('nav-admin').style.display = '';
         }
       }catch{}
     })();
@@ -214,16 +249,18 @@
 
     // פונקציה לתרגום צבעים
     function getColorName(color) {
+      const currentLang = localStorage.getItem('language') || 'he';
       const colorNames = {
-        'pink': 'ורוד',
-        'white': 'לבן', 
-        'green': 'ירוק',
-        'red': 'אדום',
-        'purple': 'סגול',
-        'light-blue': 'כחול בהיר',
-        'orange': 'כתום'
+        he: {
+          'pink': 'ורוד', 'white': 'לבן', 'green': 'ירוק', 'red': 'אדום',
+          'purple': 'סגול', 'light-blue': 'כחול בהיר', 'orange': 'כתום'
+        },
+        en: {
+          'pink': 'Pink', 'white': 'White', 'green': 'Green', 'red': 'Red',
+          'purple': 'Purple', 'light-blue': 'Light Blue', 'orange': 'Orange'
+        }
       };
-      return colorNames[color] || color;
+      return colorNames[currentLang]?.[color] || color;
     }
 
     // פונקציה ליצירת מפתח ייחודי לעוגה מותאמת
@@ -231,46 +268,61 @@
       return `${design.size}-${design.color}-${design.text || ''}-${design.textColor}`;
     }
 
-    // רינדור עוגה מותאמת - עדכון כדי להסיר "מעוצבת" ולהוסיף פרטי כיתוב
+    // רינדור עוגה מותאמת
     function renderCustomCake(customCake, quantity = 1) {
       const design = customCake.design;
-      const sizeText = design.size === 'bento' ? 'בנטו (10 ס"מ)' : 'גדולה (22 ס"מ)';
+      const currentLang = localStorage.getItem('language') || 'he';
+      
+      const sizeText = currentLang === 'en' 
+        ? (design.size === 'bento' ? 'Bento (10cm)' : 'Large (22cm)')
+        : (design.size === 'bento' ? 'בנטו (10 ס"מ)' : 'גדולה (22 ס"מ)');
+      
       const colorName = getColorName(design.color);
       const total = design.price * quantity;
+      
+      const customBadge = currentLang === 'en' ? '🎨 Custom' : '🎨 מותאמת';
+      const cakeText = currentLang === 'en' ? 'Cake' : 'עוגה';
+      const quantityText = currentLang === 'en' ? 'Quantity:' : 'כמות:';
+      const colorText = currentLang === 'en' ? 'Color:' : 'צבע:';
+      const textText = currentLang === 'en' ? 'Text:' : 'כיתוב:';
+      const noTextText = currentLang === 'en' ? 'No text' : 'ללא כיתוב';
+      const removeAllText = currentLang === 'en' ? 'Remove All' : 'הסר הכל';
       
       const row = document.createElement('div');
       row.className = 'cart-item';
       row.innerHTML = `
         <div class="left">
-          <img src="/images/cakes/${design.imageFile || 'cake-' + design.color + '.png'}" alt="עוגה מותאמת">
+          <img src="/images/cakes/${design.imageFile || 'cake-' + design.color + '.png'}" alt="${cakeText}">
           <div class="cart-item-info">
             <h3>
-              <span class="custom-cake-badge">🎨 מותאמת</span>
-              עוגה ${sizeText}
+              <span class="custom-cake-badge">${customBadge}</span>
+              ${cakeText} ${sizeText}
             </h3>
             <div class="qty-wrap">
               <button class="quantity-btn minus" data-custom-key="${getCustomCakeKey(design)}" aria-label="הפחת">−</button>
-              <div class="qty-badge">כמות: <span class="quantity-display">${quantity}</span></div>
+              <div class="qty-badge">${quantityText} <span class="quantity-display">${quantity}</span></div>
               <button class="quantity-btn plus" data-custom-key="${getCustomCakeKey(design)}" aria-label="הוסף">+</button>
             </div>
             <div class="design-details">
-              <span class="design-detail"><strong>צבע:</strong> ${colorName}</span>
-              ${design.text ? `<span class="design-detail"><strong>כיתוב:</strong> <span class="custom-text-preview" style="color: ${design.textColor}">"${design.text}"</span></span>` : '<span class="design-detail">ללא כיתוב</span>'}
+              <span class="design-detail"><strong>${colorText}</strong> ${colorName}</span>
+              ${design.text ? `<span class="design-detail"><strong>${textText}</strong> <span class="custom-text-preview" style="color: ${design.textColor}">"${design.text}"</span></span>` : `<span class="design-detail">${noTextText}</span>`}
             </div>
             <div class="price-line">${nis(design.price)} × <span class="q-val">${quantity}</span> = <strong class="total-val">${nis(total)}</strong></div>
           </div>
         </div>
-        <button class="remove" data-custom-key="${getCustomCakeKey(design)}">הסר הכל</button>
+        <button class="remove" data-custom-key="${getCustomCakeKey(design)}">${removeAllText}</button>
       `;
       
       return row;
     }
 
     // טעינת עגלה עם תמיכה בעוגות מותאמות
-    let customCakes = []; // משתנה גלובלי כדי לגשת אליו מהפונקציות
-    let groupedCustomCakes = {}; // משתנה גלובלי לעוגות מקובצות
+    let customCakes = [];
+    let groupedCustomCakes = {};
+    
     async function loadCart(){
       const itemsBox = document.getElementById('items');
+      const currentLang = localStorage.getItem('language') || 'he';
       
       // ניסיון לטעינה עם תמיכה בעוגות מותאמות
       let cartData;
@@ -279,7 +331,6 @@
         if (res.status === 401) { location.href = 'login.html'; return; }
         cartData = await res.json();
       } catch {
-        // אם זה לא עובד, נשתמש ב-API הישן
         const oldRes = await fetch('/api/cart');
         if (oldRes.status === 401) { location.href = 'login.html'; return; }
         const quantities = toQtyMap(await oldRes.json());
@@ -287,7 +338,7 @@
       }
 
       const { regularItems, customCakes: cakesData } = cartData;
-      customCakes = cakesData || []; // שמירה במשתנה הגלובלי
+      customCakes = cakesData || [];
       itemsBox.innerHTML = '';
 
       let hasItems = false;
@@ -298,9 +349,12 @@
         hasItems = true;
         for (const [id, qty] of entries){
           const p = products.find(x => String(x.id) === String(id)) || {id, title:id, image:''};
-          const title = nameHe(p);
+          const title = nameOf(p, currentLang);
           const unit = priceOf(p);
           const total = unit * Number(qty);
+
+          const quantityText = currentLang === 'en' ? 'Quantity:' : 'כמות:';
+          const removeAllText = currentLang === 'en' ? 'Remove All' : 'הסר הכל';
 
           const row = document.createElement('div');
           row.className = 'cart-item';
@@ -311,19 +365,19 @@
                 <h3>${title}</h3>
                 <div class="qty-wrap">
                   <button class="quantity-btn minus" data-id="${p.id}" aria-label="הפחת">−</button>
-                  <div class="qty-badge">כמות: <span class="quantity-display">${qty}</span></div>
+                  <div class="qty-badge">${quantityText} <span class="quantity-display">${qty}</span></div>
                   <button class="quantity-btn plus" data-id="${p.id}" aria-label="הוסף">+</button>
                 </div>
                 <div class="price-line">${nis(unit)} × <span class="q-val">${qty}</span> = <strong class="total-val">${nis(total)}</strong></div>
               </div>
             </div>
-            <button class="remove" data-id="${p.id}">הסר הכל</button>
+            <button class="remove" data-id="${p.id}">${removeAllText}</button>
           `;
           itemsBox.appendChild(row);
         }
       }
 
-      // הצגת עוגות מותאמות (משולבות עם המוצרים הרגילים)
+      // הצגת עוגות מותאמות
       if (customCakes && customCakes.length > 0) {
         hasItems = true;
         
@@ -351,7 +405,8 @@
 
       // אם אין פריטים כלל
       if (!hasItems) {
-        itemsBox.innerHTML = '<p class="empty">הסל ריק.</p>';
+        const emptyText = currentLang === 'en' ? 'Your cart is empty.' : 'הסל ריק.';
+        itemsBox.innerHTML = `<p class="empty">${emptyText}</p>`;
       }
     }
 
@@ -366,7 +421,6 @@
         const customKey = plus.getAttribute('data-custom-key');
         
         if (customKey) {
-          // הוספת עוגה מותאמת - נוסיף עוד אחת זהה
           try {
             const group = groupedCustomCakes[customKey];
             if (group && group.cake) {
@@ -394,7 +448,6 @@
         const customKey = minus.getAttribute('data-custom-key');
         
         if (customKey) {
-          // הפחתת עוגה מותאמת - נסיר את הראשונה מהקבוצה
           try {
             const group = groupedCustomCakes[customKey];
             if (group && group.ids.length > 0) {
@@ -417,14 +470,17 @@
       } else if (rem){
         const id = rem.getAttribute('data-id');
         const customKey = rem.getAttribute('data-custom-key');
+        const currentLang = localStorage.getItem('language') || 'he';
         
         if (customKey) {
-          // מחיקת כל העוגות המותאמות מאותו סוג
-          if (confirm('האם אתה בטוח שברצונך להסיר את כל העוגות המותאמות מסוג זה מהסל?')) {
+          const confirmMsg = currentLang === 'en' 
+            ? 'Are you sure you want to remove all custom cakes of this type from the cart?'
+            : 'האם אתה בטוח שברצונך להסיר את כל העוגות המותאמות מסוג זה מהסל?';
+          
+          if (confirm(confirmMsg)) {
             try {
               const group = groupedCustomCakes[customKey];
               if (group && group.ids) {
-                // נמחק את כל העוגות בקבוצה
                 for (const cakeId of group.ids) {
                   await fetch(`/api/custom-cake/${encodeURIComponent(cakeId)}`, {
                     method: 'DELETE'
@@ -434,11 +490,11 @@
               }
             } catch (error) {
               console.error('Error removing custom cakes:', error);
-              alert('שגיאה בהסרת העוגות מהסל');
+              const errorMsg = currentLang === 'en' ? 'Error removing cakes from cart' : 'שגיאה בהסרת העוגות מהסל';
+              alert(errorMsg);
             }
           }
         } else if (id) {
-          // מחיקת מוצר רגיל
           let ok=false;
           try{ const r=await fetch(`/api/cart/removeAll/${encodeURIComponent(id)}`,{method:'DELETE'}); ok=r.ok; }catch{}
           if(!ok){
@@ -455,10 +511,18 @@
     (async () => {
       try{
         await loadProducts();
+        
+        // המתנה קצרה לטעינת מערכת התרגום
+        setTimeout(() => {
+          loadUICustomization();
+        }, 200);
+        
         await loadCart();
       }catch(e){
         console.error(e);
-        document.getElementById('items').innerHTML = '<p class="empty">שגיאה בטעינת הסל.</p>';
+        const currentLang = localStorage.getItem('language') || 'he';
+        const errorText = currentLang === 'en' ? 'Error loading cart.' : 'שגיאה בטעינת הסל.';
+        document.getElementById('items').innerHTML = `<p class="empty">${errorText}</p>`;
       }
     })();
   </script>
