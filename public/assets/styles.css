@@ -1097,3 +1097,26 @@ h1::after {
 .dark-theme textarea:focus {
   background: var(--bg-card);
 }
+/* כל הכפתורים/קישורים בתפריט יהיו באותו גודל */
+nav a,
+nav button {
+  min-width: 120px;   /* רוחב אחיד מינימלי */
+  height: 42px;       /* גובה אחיד */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-sizing: border-box;
+}
+/* ניווט – כפתורים אחידים קצת יותר גבוהים */
+nav a,
+nav button {
+  min-width: 100px;     /* נשאר אותו רוחב */
+  height: 42px;         /* טיפה יותר גבוה */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.9rem;    /* גודל טקסט אחיד */
+  box-sizing: border-box;
+}
