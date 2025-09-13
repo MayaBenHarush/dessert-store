@@ -37,16 +37,22 @@
 </head>
 <body>
   <nav>
-    <a href="store.html" id="nav-store">חנות</a>
-    <a href="cart.html" id="nav-cart">סל הקניות</a>
-    <a href="checkout.html" id="nav-checkout">תשלום</a>
-    <a href="myitems.html" id="nav-myitems">הרכישות שלי</a>
-    <a id="login-link" href="login.html">התחברות</a>
-    <button id="logout" style="display:none">התנתקות</button>
-    <a href="admin.html" id="nav-admin" style="display:none">ניהול</a>
+    <a href="store.html" id="nav-store" data-key="nav.store">חנות</a>
+    <a href="cart.html" id="nav-cart" data-key="nav.cart">סל הקניות</a>
+    <a href="checkout.html" id="nav-checkout" data-key="nav.checkout">תשלום</a>
+    <a href="myitems.html" id="nav-myitems" data-key="nav.myPurchases">הרכישות שלי</a>
+    <a id="login-link" href="login.html" data-key="nav.login">התחברות</a>
+    <button id="logout" style="display:none" data-key="nav.logout">התנתקות</button>
+    <a href="admin.html" id="nav-admin" data-key="nav.admin" style="display:none">ניהול</a>
+
+    <!-- הכפתורים עם האייקונים וה־id שהקוד כבר משתמש בהם -->
     <a href="cake-designer.html">🎨 <span id="nav-cake-designer">עיצוב עוגה</span></a>
     <a href="dessert-finder.html" id="nav-dessert-finder">🔍 מציאת קינוח מושלם</a>
     <a href="wheel.html">🎡 <span id="nav-wheel-text">גלגל מזל</span></a>
+
+    <!-- קישור מתכונים כפי שהוספת -->
+    <a href="recipes.html" id="nav-recipes" data-key="nav.recipes">🍪 מתכונים</a>
+
     <button id="theme-toggle">🌙 מצב כהה</button>
     <button id="language-toggle">🌐 English</button>
   </nav>
@@ -81,7 +87,8 @@
         title: 'גלגל מזל מתוק 🭐',
         spinButton: 'סובב את הגלגל',
         oncePerDay: 'אפשרות אחת ליום לכל משתמש.',
-        
+        limitOncePerDay: 'אפשר להגריל רק פעם ביום. נסו שוב מחר',
+
         // תפריט ניווט
         navStore: 'חנות',
         navCart: 'סל הקניות',
@@ -93,31 +100,32 @@
         navCakeDesigner: 'עיצוב עוגה',
         navDessertFinder: '🔍 מציאת קינוח מושלם',
         navWheel: 'גלגל מזל',
-        
+
         // תוויות הגלגל
         noWin: 'לא זכיתי',
         discount: 'הנחה',
         dessert: 'קינוח',
         delivery: 'משלוח',
         voucher: 'שובר',
-        
+
         // הודעות משחק
         spinning: 'מגריל...',
         cannotSpin: 'לא ניתן להגריל כרגע',
         networkError: 'בעיה ברשת. נסה/י שוב.',
         until: 'עד',
-        
+
         // כפתורי ממשק
         themeToggleDark: 'מצב כהה',
         themeToggleLight: 'מצב בהיר'
       },
       en: {
-        // כותרות וטקסטים עיקריים
+        // Titles
         title: 'Sweet Lucky Wheel 🭐',
         spinButton: 'Spin the Wheel',
         oncePerDay: 'One chance per day for each user.',
-        
-        // תפריט ניווט
+        limitOncePerDay: 'You can spin only once per day. Try again tomorrow.',
+
+        // Nav
         navStore: 'Store',
         navCart: 'Shopping Cart',
         navCheckout: 'Checkout',
@@ -128,21 +136,21 @@
         navCakeDesigner: 'Cake Designer',
         navDessertFinder: '🔍 Find Perfect Dessert',
         navWheel: 'Lucky Wheel',
-        
-        // תוויות הגלגל
+
+        // Wheel labels
         noWin: "Didn't Win",
         discount: 'Discount',
         dessert: 'Dessert',
         delivery: 'Delivery',
         voucher: 'Voucher',
-        
-        // הודעות משחק
+
+        // Game messages
         spinning: 'Spinning...',
         cannotSpin: 'Cannot spin right now',
         networkError: 'Network error. Please try again.',
         until: 'until',
-        
-        // כפתורי ממשק
+
+        // UI
         themeToggleDark: 'Dark Mode',
         themeToggleLight: 'Light Mode'
       }
@@ -154,22 +162,32 @@
       return TRANSLATIONS[currentLang][key] || TRANSLATIONS.he[key] || key;
     }
 
+    // ✅ נרמול הודעות שמגיעות מהשרת (למשל בעברית כששפת הממשק EN)
+    function normalizeServerMessage(msg){
+      const lang = localStorage.getItem('language') || 'he';
+      if (!msg) return '';
+      const hasHebrew = /[\u0590-\u05FF]/.test(msg);
+      if (lang === 'en' && hasHebrew) {
+        // תרגום כללי למגבלת פעם ביום
+        return getText('limitOncePerDay');
+      }
+      return msg;
+    }
+
     // עדכון תוויות הגלגל
     function updateWheelLabels() {
-      // הגדרת מבנה התוויות
       const wheelLabels = [
-        { rotation: -90, distance: 90, symbol: '—', text: getText('noWin') },
-        { rotation: -50, distance: 95, symbol: '10%', text: getText('discount') },
-        { rotation: -10, distance: 90, symbol: '—', text: getText('noWin') },
-        { rotation: 30, distance: 85, symbol: '🎁', text: getText('dessert') },
-        { rotation: 70, distance: 85, symbol: '—', text: getText('noWin') },
-        { rotation: 110, distance: 85, symbol: '🚚', text: getText('delivery') },
-        { rotation: 150, distance: 85, symbol: '—', text: getText('noWin') },
-        { rotation: 190, distance: 85, symbol: '₪50', text: getText('voucher') },
-        { rotation: 230, distance: 85, symbol: '—', text: getText('noWin') }
+        { rotation: -90, distance: 90, symbol: '—',   text: getText('noWin')     },
+        { rotation: -50, distance: 95, symbol: '10%', text: getText('discount')  },
+        { rotation: -10, distance: 90, symbol: '—',   text: getText('noWin')     },
+        { rotation:  30, distance: 85, symbol: '🎁',  text: getText('dessert')   },
+        { rotation:  70, distance: 85, symbol: '—',   text: getText('noWin')     },
+        { rotation: 110, distance: 85, symbol: '🚚',  text: getText('delivery')  },
+        { rotation: 150, distance: 85, symbol: '—',   text: getText('noWin')     },
+        { rotation: 190, distance: 85, symbol: '₪50', text: getText('voucher')   },
+        { rotation: 230, distance: 85, symbol: '—',   text: getText('noWin')     }
       ];
 
-      // יצירת התוויות מחדש
       const labelsContainer = document.getElementById('wheel-labels');
       labelsContainer.innerHTML = '';
 
@@ -183,7 +201,7 @@
         span.style.transform = `rotate(${label.rotation}deg) translate(${label.distance}px,-6px)`;
         span.style.fontWeight = '800';
         span.style.color = '#333';
-        
+
         const small = document.createElement('small');
         small.style.display = 'block';
         small.style.fontWeight = '600';
@@ -191,7 +209,7 @@
         small.style.color = '#444';
         small.style.opacity = '0.8';
         small.textContent = label.text;
-        
+
         span.textContent = label.symbol;
         span.appendChild(small);
         labelsContainer.appendChild(span);
@@ -200,16 +218,11 @@
 
     // עדכון כל הטקסטים בדף
     function updateAllTexts() {
-      // עדכון הכותרת הראשית
       document.getElementById('main-title').textContent = getText('title');
-      
-      // עדכון כפתור הסיבוב
       document.getElementById('spin').textContent = getText('spinButton');
-      
-      // עדכון ההודעה
       document.getElementById('note-text').textContent = getText('oncePerDay');
-      
-      // עדכון התפריט
+
+      // תפריט
       document.getElementById('nav-store').textContent = getText('navStore');
       document.getElementById('nav-cart').textContent = getText('navCart');
       document.getElementById('nav-checkout').textContent = getText('navCheckout');
@@ -217,13 +230,14 @@
       document.getElementById('login-link').textContent = getText('navLogin');
       document.getElementById('logout').textContent = getText('navLogout');
       document.getElementById('nav-admin').textContent = getText('navAdmin');
-      
-      // עדכון הכפתורים עם האייקונים
-      document.getElementById('nav-cake-designer').textContent = getText('navCakeDesigner');
-      document.getElementById('nav-dessert-finder').textContent = getText('navDessertFinder');
-      document.getElementById('nav-wheel-text').textContent = getText('navWheel');
-      
-      // עדכון תוויות הגלגל
+
+      const ncd = document.getElementById('nav-cake-designer');
+      if (ncd) ncd.textContent = getText('navCakeDesigner');
+      const ndf = document.getElementById('nav-dessert-finder');
+      if (ndf) ndf.textContent = getText('navDessertFinder');
+      const nwt = document.getElementById('nav-wheel-text');
+      if (nwt) nwt.textContent = getText('navWheel');
+
       updateWheelLabels();
     }
 
@@ -231,8 +245,7 @@
     function loadUICustomization() {
       const currentLang = localStorage.getItem('language') || 'he';
       const theme = localStorage.getItem('theme') || 'light';
-      
-      // עדכון כיוון השפה
+
       if (currentLang === 'en') {
         document.documentElement.dir = 'ltr';
         document.documentElement.lang = 'en';
@@ -242,8 +255,7 @@
         document.documentElement.lang = 'he';
         document.getElementById('language-toggle').textContent = '🌐 English';
       }
-      
-      // עדכון נושא
+
       const themeToggle = document.getElementById('theme-toggle');
       if (theme === 'dark') {
         document.body.classList.add('dark-theme');
@@ -252,8 +264,7 @@
         document.body.classList.remove('dark-theme');
         themeToggle.textContent = '🌙 ' + getText('themeToggleDark');
       }
-      
-      // עדכון כל הטקסטים
+
       updateAllTexts();
     }
 
@@ -269,9 +280,9 @@
       const currentLang = localStorage.getItem('language') || 'he';
       const nextLang = currentLang === 'he' ? 'en' : 'he';
       localStorage.setItem('language', nextLang);
-      
+
       loadUICustomization();
-      
+
       // נקה תוצאות קודמות
       const resultBox = document.getElementById('result');
       const couponBox = document.getElementById('coupon');
@@ -282,11 +293,11 @@
     // הגדרת אימות
     (async function(){
       try{
-        const r = await fetch('/api/session'); 
+        const r = await fetch('/api/session');
         if(r.ok){
           document.getElementById('login-link').style.display = 'none';
           document.getElementById('logout').style.display = '';
-          
+
           const data = await r.json();
           if (data.username === 'admin') {
             document.getElementById('nav-admin').style.display = '';
@@ -294,14 +305,14 @@
         }
       }catch{}
     })();
-    
+
     document.getElementById('logout').onclick = async () => {
       try { await fetch('/api/logout', {method:'POST'}); }
       finally { location.href = 'login.html'; }
     };
 
     // אלמנטים של המשחק
-    const wheel = document.getElementById('wheel');
+    const wheel  = document.getElementById('wheel');
     const spinBtn = document.getElementById('spin');
     const resultBox = document.getElementById('result');
     const couponBox = document.getElementById('coupon');
@@ -328,28 +339,30 @@
       try{
         const r = await fetch('/api/wheel/spin', { method:'POST' });
         const body = await r.json();
-        
+
         if(!r.ok){
-          resultBox.textContent = body?.message || getText('cannotSpin');
+          const safeMsg = normalizeServerMessage(body?.message) || getText('cannotSpin');
+          resultBox.textContent = safeMsg;
           spinBtn.classList.remove('disabled');
           return;
         }
-        
+
         const { angle, message, coupon } = body;
         spinVisual(angle);
 
         setTimeout(() => {
-          resultBox.textContent = message;
+          const safeMsg = normalizeServerMessage(message);
+          resultBox.textContent = safeMsg || '';
           if (coupon?.code){
             const currentLang = localStorage.getItem('language') || 'he';
-            const expiryText = coupon.expiresAt 
-              ? ` • ${getText('until')} ${new Date(coupon.expiresAt).toLocaleDateString(currentLang === 'he' ? 'he-IL' : 'en-US')}` 
+            const expiryText = coupon.expiresAt
+              ? ` • ${getText('until')} ${new Date(coupon.expiresAt).toLocaleDateString(currentLang === 'he' ? 'he-IL' : 'en-US')}`
               : '';
             couponBox.textContent = coupon.code + expiryText;
             couponBox.style.display = 'inline-block';
           }
         }, 5200);
-        
+
       }catch(e){
         resultBox.textContent = getText('networkError');
         spinBtn.classList.remove('disabled');
@@ -358,14 +371,12 @@
 
     // הוספת event listener לכפתור הסיבוב
     spinBtn.addEventListener('click', spin);
-    
+
     // טעינה ראשונית
     document.addEventListener('DOMContentLoaded', () => {
-      // וודא שברירת המחדל היא עברית
       if (!localStorage.getItem('language')) {
         localStorage.setItem('language', 'he');
       }
-      
       loadUICustomization();
     });
   </script>
