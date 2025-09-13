@@ -45,8 +45,8 @@
       "username": "מאיה1",
       "items": [
         "chocolate-cake",
-        "custom-cake-1757366770917-7rndtz2dx",
-        "custom-cake-1757366779206-bqrmlkx4u"
+        "custom-cake-1757366779206-bqrmlkx4u",
+        "custom-cake-1757772326282-h33j9i4ct"
       ]
     }
   ],
@@ -834,6 +834,12 @@
       "username": "מאיה1",
       "type": "add-custom-cake-to-cart",
       "details": "bento pink cake with \"no text\" in #333333"
+    },
+    {
+      "datetime": "2025-09-13T14:05:26.290Z",
+      "username": "מאיה1",
+      "type": "add-custom-cake-to-cart",
+      "details": "bento pink cake with \"no text\" in #333333"
     }
   ],
   "products": [
@@ -1104,7 +1110,7 @@
         "imageFile": "cake-green.png"
       },
       "createdAt": "2025-09-08T21:26:10.919Z",
-      "status": "in-cart"
+      "status": "removed-from-cart"
     },
     {
       "id": "custom-cake-1757366779206-bqrmlkx4u",
@@ -1118,6 +1124,20 @@
         "imageFile": "cake-pink.png"
       },
       "createdAt": "2025-09-08T21:26:19.208Z",
+      "status": "in-cart"
+    },
+    {
+      "id": "custom-cake-1757772326282-h33j9i4ct",
+      "username": "מאיה1",
+      "design": {
+        "size": "bento",
+        "color": "pink",
+        "text": "",
+        "textColor": "#333333",
+        "price": 140,
+        "imageFile": "cake-pink.png"
+      },
+      "createdAt": "2025-09-13T14:05:26.285Z",
       "status": "in-cart"
     }
   ]

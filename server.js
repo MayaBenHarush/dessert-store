@@ -42,7 +42,13 @@ app.get('/llm.html', (req, res) => {
 
 // דף עיצוב עוגות - חדש!
 app.get('/cake-designer.html', (req, res) => {
+  // נשאר בדיוק כפי ששלחת (לא נגעתי)
   res.sendFile(path.join(__dirname, 'cake-designer.html'));
+});
+
+// ✅ דף מתכונים (היה diy.html) — רק שינוי שם ל-recipes.html
+app.get('/recipes.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'recipes.html'));
 });
 
 // הפניה של root לחנות
@@ -107,10 +113,13 @@ require('./modules/pending-server')(app);
 // מודול עגלה רגיל - טוען ראשון
 require('./modules/cart-server')(app);
 
+/* ===== ✅ מודול מתכונים ===== */
+// היה: ./modules/diy-recipes-server
+require('./modules/recipes-server')(app);
+
 /* ===== מודול עוגות מותאמות - ללא הגדרת routes נוספים ===== */
 let customCakeModule;
 try {
-  // טוען את המודול בלי להעביר app כדי לא ליצור routes כפולים
   const customCakeServerModule = require('./modules/custom-cake-server');
   customCakeModule = customCakeServerModule(app);
   console.log('✔ Custom cake module loaded');
@@ -136,5 +145,6 @@ app.listen(PORT, () => {
   console.log(`📖 README available at http://localhost:${PORT}/readme.html`);
   console.log(`🤖 LLM info at http://localhost:${PORT}/llm.html`);
   console.log(`🎨 Cake Designer at http://localhost:${PORT}/cake-designer.html`);
-  console.log(`🎡 Sweet Wheel at http://localhost:${PORT}/screens/wheel.html`);
+  console.log(`🍪 Recipes at http://localhost:${PORT}/recipes.html`);
+  console.log(`🎡 Sweet Wheel at http://localhost:${PORT}/wheel.html`);
 });

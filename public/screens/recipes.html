@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>עשה זאת בעצמך - מתכונים ביתיים</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/styles.css" />
+  <script src="/assets/translations.js"></script>
+  <style>
+    .diy-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .recipe-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+      margin-top: 30px;
+    }
+    .recipe-card {
+      background: var(--bg-card);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: var(--shadow-lg);
+      transition: var(--transition-normal);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .recipe-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: var(--gradient-primary);
+      transform: scaleX(0);
+      transition: var(--transition-normal);
+      transform-origin: right;
+    }
+    .recipe-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-xl); }
+    .recipe-card:hover::before { transform: scaleX(1); }
+    .recipe-title { font-size: 1.8rem; font-weight: 700; color: var(--text-primary); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+    .recipe-icon { font-size: 2rem; background: var(--gradient-secondary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .ingredients, .instructions { margin-bottom: 25px; }
+    .section-title { font-size: 1.3rem; font-weight: 600; color: var(--primary-color); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+    .ingredients ul, .instructions ol { padding-right: 20px; line-height: 1.7; }
+    .ingredients li { margin-bottom: 8px; color: var(--text-secondary); font-weight: 500; }
+    .instructions li { margin-bottom: 12px; color: var(--text-secondary); line-height: 1.8; }
+    .difficulty-badge { position: absolute; top: 20px; left: 20px; background: var(--gradient-accent); color: var(--text-primary); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; box-shadow: var(--shadow-sm); }
+    .prep-time { background: rgba(255, 107, 157, 0.1); border-radius: 12px; padding: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border-right: 4px solid var(--primary-color); }
+    .time-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .time-value { font-weight: 700; color: var(--primary-color); font-size: 1.1rem; }
+    .time-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
+    .tips-section { background: var(--gradient-accent); color: var(--text-primary); border-radius: 16px; padding: 20px; margin-top: 20px; }
+    .tips-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .intro-section { background: var(--gradient-primary); color: white; border-radius: 20px; padding: 40px; text-align: center; margin-bottom: 40px; position: relative; overflow: hidden; }
+    .intro-section::before { content: ''; position: absolute; top: -50%; right: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); animation: float 6s ease-in-out infinite; }
+    @keyframes float { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 33% { transform: translate(30px, -30px) rotate(120deg); } 66% { transform: translate(-20px, 20px) rotate(240deg); } }
+    .intro-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 16px; position: relative; }
+    .intro-subtitle { font-size: 1.2rem; opacity: 0.9; position: relative; }
+    .recipe-category { display: inline-block; background: var(--secondary-color); color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
+    @media (max-width: 768px) {
+      .recipe-grid { grid-template-columns: 1fr; gap: 20px; }
+      .recipe-card { padding: 20px; }
+      .intro-section { padding: 30px 20px; }
+      .intro-title { font-size: 2rem; }
+      .prep-time { flex-direction: column; gap: 12px; }
+    }
+    .sparkle { position: absolute; width: 6px; height: 6px; background: rgba(255, 255, 255, 0.8); border-radius: 50%; animation: sparkle 2s infinite; pointer-events: none; }
+    @keyframes sparkle { 0%, 100% { opacity: 0; transform: scale(0); } 50% { opacity: 1; transform: scale(1); } }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="store.html" id="nav-store" data-key="nav.store">חנות</a>
+    <a href="cart.html" id="nav-cart" data-key="nav.cart">סל הקניות</a>
+    <a href="checkout.html" id="nav-checkout" data-key="nav.checkout">תשלום</a>
+    <a href="myitems.html" id="nav-myitems" data-key="nav.myPurchases">הרכישות שלי</a>
+    <a id="login-link" href="login.html" data-key="nav.login">התחברות</a>
+    <button id="logout" style="display:none" data-key="nav.logout">התנתקות</button>
+    <a href="admin.html" id="nav-admin" style="display:none" data-key="nav.admin">ניהול</a>
+    <a href="cake-designer.html">🎨 <span data-key="nav.cakeDesigner">עיצוב עוגה</span></a>
+    <a href="dessert-finder.html">🔍 <span data-key="nav.dessertFinder">מציאת קינוח מושלם</span></a>
+    <a href="wheel.html">🎡 <span data-key="nav.wheel">גלגל מזל</span></a>
+
+    <!-- 🔁 שינוי יחיד כאן: diy.html → recipes.html -->
+    <a href="recipes.html" style="background: var(--gradient-accent); color: var(--text-primary);">
+      🍪 <span id="nav-diy-text">עשה זאת בעצמך</span>
+    </a>
+
+    <button id="theme-toggle" data-key="themeToggleDark">🌙 מצב כהה</button>
+    <button id="language-toggle">🌐 English</button>
+  </nav>
+
+  <div class="diy-container">
+    <div class="intro-section">
+      <div class="sparkle" style="top: 20%; left: 15%; animation-delay: 0s;"></div>
+      <div class="sparkle" style="top: 60%; left: 80%; animation-delay: 1s;"></div>
+      <div class="sparkle" style="top: 80%; left: 20%; animation-delay: 0.5s;"></div>
+      <h1 class="intro-title" id="page-title">🍪 עשה זאת בעצמך</h1>
+      <p class="intro-subtitle" id="page-subtitle">מתכונים פשוטים וטעימים להכנה ביתית</p>
+    </div>
+
+    <div class="recipe-grid">
+      <!-- כדורי שוקולד -->
+      <div class="recipe-card">
+        <div class="difficulty-badge" id="easy-badge">קל</div>
+        <div class="recipe-category" id="no-bake-category">ללא אפייה</div>
+        <h2 class="recipe-title">
+          <span class="recipe-icon">🍫</span>
+          <span id="chocolate-balls-title">כדורי שוקולד</span>
+        </h2>
+        <div class="prep-time">
+          <div class="time-item">
+            <div class="time-value">15</div>
+            <div class="time-label" id="prep-time-label">דקות הכנה</div>
+          </div>
+          <div class="time-item">
+            <div class="time-value">3+</div>
+            <div class="time-label" id="chill-time-label">שעות קירור</div>
+          </div>
+        </div>
+        <div class="ingredients">
+          <h3 class="section-title">
+            📝 <span id="ingredients-title">רכיבים</span>
+          </h3>
+          <ul id="chocolate-balls-ingredients">
+            <li>300 גרם ביסקוויטים מסוג "פתי בר" מפוררים</li>
+            <li>8 קוביות שוקולד מריר (30 גרם)</li>
+            <li>50 גרם חמאה</li>
+            <li>3 כפות אבקת קקאו</li>
+            <li>3-4 כפות סוכר גדושות</li>
+            <li>חצי כוס חלב (לפרווה – מים)</li>
+            <li>קוקוס לציפוי</li>
+          </ul>
+        </div>
+        <div class="instructions">
+          <h3 class="section-title">
+            👨‍🍳 <span id="instructions-title">אופן ההכנה</span>
+          </h3>
+          <ol id="chocolate-balls-instructions">
+            <li>מניחים בקערת זכוכית את החמאה וקוביות השוקולד וממיסים במיקרוגל מספר שניות. מוציאים ומערבבים עד שמתקבלת תערובת שוקולד חלקה.</li>
+            <li>מערבבים חצי כוס חלב (או מים) עם אבקת הקקאו והסוכר. מומלץ לערבב את הסוכר והקקאו בכמה כפות מים רותחים ולאחר מכן להוסיף חלב/מים עד חצי כוס. לאחר שהסוכר נמס שופכים לקערת השוקולד.</li>
+            <li>מוסיפים לקערה את פירורי הביסקוויטים ומערבבים היטב. אם במקרה התערובת יוצאת קצת יבשה או מתפוררת יש להוסיף מים או חלב לפי הצורך.</li>
+            <li>בעזרת הידיים יוצרים כדורים וטובלים בתוך צלחת קטנה עם קוקוס.</li>
+            <li>עוטפים בניילון נצמד ומאחסנים במקרר 3 שעות לפחות לפני ההגשה.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- קינוח פירות יער -->
+      <div class="recipe-card">
+        <div class="difficulty-badge" id="medium-badge">בינוני</div>
+        <div class="recipe-category" id="dessert-category">קינוח בכוס</div>
+        <h2 class="recipe-title">
+          <span class="recipe-icon">🫐</span>
+          <span id="berry-dessert-title">קינוח פירות יער, גבינה ופירורים</span>
+        </h2>
+        <div class="prep-time">
+          <div class="time-item">
+            <div class="time-value">45</div>
+            <div class="time-label" id="prep-time-label-2">דקות הכנה</div>
+          </div>
+          <div class="time-item">
+            <div class="time-value">12</div>
+            <div class="time-label" id="bake-time-label">דקות אפייה</div>
+          </div>
+        </div>
+        <div class="ingredients">
+          <h3 class="section-title">📝 רכיבים</h3>
+          <div style="margin-bottom: 15px;">
+            <strong>תחתית פירות יער:</strong>
+            <ul id="berry-base-ingredients">
+              <li>2 כוסות (230 ג') תערובת פירות יער מוקפאים</li>
+              <li>חצי כוס (120 מ"ל) מים</li>
+              <li>2 כפות גדושות (35 ג') סוכר</li>
+            </ul>
+          </div>
+          <div style="margin-bottom: 15px;">
+            <strong>קרם גבינה:</strong>
+            <ul id="cheese-cream-ingredients">
+              <li>2 מיכלי שמנת מתוקה/להקצפה (500 מ"ל)</li>
+              <li>חצי כוס (100 ג') סוכר</li>
+              <li>4 כפות מלאות (50 ג') אבקת אינסטנט פודינג וניל</li>
+              <li>חצי כוס (120 מ"ל) חלב קר</li>
+              <li>250 גרם גבינה לבנה 5% או 9%</li>
+            </ul>
+          </div>
+          <div>
+            <strong>פירורים קראמבל:</strong>
+            <ul id="crumble-ingredients">
+              <li>כוס (140 גרם) קמח לבן</li>
+              <li>2 כפות גדושות (35 ג') סוכר</li>
+              <li>50 גרם חמאה או מרגרינה רכה בטמפ' החדר</li>
+              <li>2 כפות (16 ג') שמן</li>
+              <li>חלמון ביצה או 1-2 כפות מים (לפי הצורך)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="instructions">
+          <h3 class="section-title">👨‍🍳 אופן ההכנה</h3>
+          <ol id="berry-dessert-instructions">
+            <li><strong>הכנת תחתית פירות יער:</strong> טוחנים בעזרת מוט בלנדר ידני את החומרים (פירות יער, מים וסוכר) עד לקבלת מחית אחידה.</li>
+            <li><strong>הכנת קרם גבינה:</strong> מקציפים את השמנת במשך כחצי דקה עם הסוכר. מוסיפים חלב ואינסטנט פודינג וניל וממשיכים להקציף עד לקבלת קצפת יציבה. מוסיפים את הגבינה הלבנה ומערבבים בעזרת כף/לקקן בתנועות קיפול.</li>
+            <li><strong>הכנת פירורים קראמבל:</strong> מחממים תנור מראש ל-180 מעלות. מערבבים בעזרת כף את כל החומרים לפי הסדר הרשום, עד לקבלת תערובת בצקית מעט פירורית. פורשים נייר אפיה בתבנית ומשטחים את התערובת על נייר האפיה. מכניסים לתנור החם ואופים במשך 10-12 דקות, עד להזהבה קלה. מוציאים מהתנור ומניחים לבצק להתקרר ומפוררים לפירורים קטנים.</li>
+            <li><strong>עיצוב הכוסות:</strong> מניחים בתחתית כל כוס כף ממחית פירות היער. מעל מזלפים קרם גבינה (מומלץ להשתמש בשקית זילוף או שקית אוכל גזורה בקצה). מפזרים מעל פירורים.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- וופל בלגי -->
+      <div class="recipe-card">
+        <div class="difficulty-badge" id="easy-badge-2">קל</div>
+        <div class="recipe-category" id="breakfast-category">ארוחת בוקר</div>
+        <h2 class="recipe-title">
+          <span class="recipe-icon">🧇</span>
+          <span id="waffle-title">וופל בלגי</span>
+        </h2>
+        <div class="prep-time">
+          <div class="time-item">
+            <div class="time-value">20</div>
+            <div class="time-label" id="total-time-label">דקות סה"כ</div>
+          </div>
+          <div class="time-item">
+            <div class="time-value">8</div>
+            <div class="time-label" id="cook-time-label">דקות בישול</div>
+          </div>
+        </div>
+        <div class="ingredients">
+          <h3 class="section-title">📝 רכיבים</h3>
+          <ul id="waffle-ingredients">
+            <li>כוס קמח רגיל</li>
+            <li>כפית שטוחה שמרים יבשים</li>
+            <li>3 כפות סוכר לבן</li>
+            <li>חצי כוס חלב חמים (לא רותח)</li>
+            <li>1 כפית תמצית וניל</li>
+            <li>1 ביצה</li>
+            <li>שליש כוס שמן</li>
+            <li>קמצוץ מלח</li>
+          </ul>
+        </div>
+        <div class="instructions">
+          <h3 class="section-title">👨‍🍳 אופן ההכנה</h3>
+          <ol id="waffle-instructions">
+            <li>מערבבים היטב בקערה את הקמח עם השמרים. מוסיפים סוכר, חלב, תמצית וניל וביצה ומערבבים היטב.</li>
+            <li>בסוף מוסיפים שמן וקמצוץ מלח ומערבבים עד לקבלת תערובת אחידה (אין לערבב יותר מידי אחרת המרקם יהפוך לקשה וכבד).</li>
+            <li>מכסים את התערובת ומניחים בצד למשך כ10 דקות (לא חובה).</li>
+            <li>משמנים היטב את המכשיר ומחממים אותו כשהוא סגור. כשהוא חם מאוד, פותחים אותו וממלאים את השקעים. סוגרים את המכשיר למשך 7-8 דקות. פותחים בזהירות את המכשיר, מוצאים את הוופל ומניחים על צלחת.</li>
+          </ol>
+        </div>
+        <div class="tips-section">
+          <h4 class="tips-title">💡 <span id="tips-title">טיפים</span></h4>
+          <p id="waffle-tips">מומלץ להזליף מעל סירופ שוקולד/מייפל ו/או להגיש עם קצפת, פירות, גלידה וכו'. אין להניח וופל אחד על השני מאחר וזה יגרום לוופלים להתרכך.</p>
+        </div>
+      </div>
+
+      <!-- קוקילידה -->
+      <div class="recipe-card">
+        <div class="difficulty-badge" id="advanced-badge">מתקדם</div>
+        <div class="recipe-category" id="frozen-category">קפוא</div>
+        <h2 class="recipe-title">
+          <span class="recipe-icon">🍨</span>
+          <span id="cookielida-title">קוקילידה</span>
+        </h2>
+        <div class="prep-time">
+          <div class="time-item">
+            <div class="time-value">30</div>
+            <div class="time-label" id="prep-time-label-3">דקות הכנה</div>
+          </div>
+          <div class="time-item">
+            <div class="time-value">2+</div>
+            <div class="time-label" id="freeze-time-label">שעות הקפאה</div>
+          </div>
+        </div>
+        <div class="ingredients">
+          <h3 class="section-title">📝 רכיבים</h3>
+          <div style="margin-bottom: 15px;">
+            <strong>לעוגיות:</strong>
+            <ul id="cookie-ingredients">
+              <li>400 גרם ביסקוויטים מסוג פתי בר בטעם שוקולד מפוררים דק</li>
+              <li>מיכל שמנת מתוקה/ קצפת צמחית (250 מ"ל)</li>
+              <li>100 גרם שוקולד מריר</li>
+            </ul>
+          </div>
+          <div>
+            <strong>לקרם הגלידה:</strong>
+            <ul id="cream-ingredients">
+              <li>מיכל שמנת מתוקה/ קצפת צמחית (250 מ"ל)</li>
+              <li>חבילת אינסטנט פודינג וניל (80 גרם)</li>
+              <li>חצי כוס חלב ממותק מרוכז/ חלב קוקוס</li>
+            </ul>
+          </div>
+        </div>
+        <div class="instructions">
+          <h3 class="section-title">👨‍🍳 אופן ההכנה</h3>
+          <ol id="cookielida-instructions">
+            <li>מניחים בקערה חצי כוס שמנת עם 50 גרם שוקולד מריר וממיסים במיקרוגל. מערבבים עד לתערובת שוקולד חלקה. מוסיפים לקערה 200 גרם פירורי ביסקוויטים ומערבבים היטב עד לקבלת תערובת אחידה.</li>
+            <li>חוזרים על הפעולה עם מחצית מהחומרים בקערה נפרדת (50 גרם שוקולד, חצי כוס שמנת ו200 גרם ביסקוויטים מפוררים דק).</li>
+            <li>פורשים שתי יריעות ניילון נצמד על משטח עבודה ויוצקים מעל כל תערובת. מגלגלים את התערובת כאשר הניילון הנצמד עוטף את התערובת. יוצרים עם הידיים צורה של גליל בקוטר של כ- 4 ס"מ. מכניסים את שני הגלילים למקפיא לחצי שעה לפחות.</li>
+            <li>בינתיים מכינים את קרם הגלידה: מקציפים בקערה שמנת כדקה (מומלץ להכניס את השמנת למקפיא 10 דקות לפני ההקצפה). מוסיפים אינסטנט פודינג וניל וחלב וממשיכים להקציף עד לקצפת יציבה.</li>
+            <li>מוצאים את הגליל מהמקפיא ומסירים ממנו בעדינות את הניילון הנצמד. בעזרת סכין חותכים לפרוסות בעובי של כחצי ס"מ.</li>
+            <li>מעל כל עוגיה יוצקים משכבת הקרם (בעזרת כף או שקית זילוף) ומעל מניחים עוגיה נוספת (כמו סנדוויץ'). שומרים בקופסה סגורה במקפיא לפחות שעתיים לפני ההגשה.</li>
+          </ol>
+        </div>
+        <div class="tips-section">
+          <h4 class="tips-title">💡 טיפים</h4>
+          <p id="cookielida-tips">חשוב לפורר את הביסקוויטים לפירורים קטנים כדי שזה לא יתפרק בחיתוך. לרגישים לגלוטן ניתן להשתמש בביסקוויטים ללא גלוטן.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // טעינת התאמות אישיות
+    function loadUICustomization() {
+      const theme = localStorage.getItem('theme') || 'light';
+      const themeToggle = document.getElementById('theme-toggle');
+      const languageToggle = document.getElementById('language-toggle');
+      if (theme === 'dark') {
+        document.body.classList.add('dark-theme');
+        themeToggle.textContent = '☀️ מצב בהיר';
+      } else {
+        document.body.classList.remove('dark-theme');
+        themeToggle.textContent = '🌙 מצב כהה';
+      }
+      const currentLanguage = localStorage.getItem('language') || 'he';
+      if (currentLanguage === 'en') {
+        languageToggle.textContent = '🌐 עברית';
+        switchToEnglish();
+      } else {
+        languageToggle.textContent = '🌐 English';
+        switchToHebrew();
+      }
+    }
+
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      const isDark = document.body.classList.contains('dark-theme');
+      localStorage.setItem('theme', isDark ? 'light' : 'dark');
+      loadUICustomization();
+    });
+
+    document.getElementById('language-toggle').addEventListener('click', () => {
+      const current = localStorage.getItem('language') || 'he';
+      const next = current === 'he' ? 'en' : 'he';
+      localStorage.setItem('language', next);
+      loadUICustomization();
+    });
+
+    function switchToEnglish() {
+      document.documentElement.lang = 'en';
+      document.documentElement.dir = 'ltr';
+      document.getElementById('nav-store').textContent = 'Store';
+      document.getElementById('nav-cart').textContent = 'Shopping Cart';
+      document.getElementById('nav-checkout').textContent = 'Checkout';
+      document.getElementById('nav-myitems').textContent = 'My Purchases';
+      document.getElementById('login-link').textContent = 'Login';
+      document.getElementById('logout').textContent = 'Logout';
+      if (document.getElementById('nav-admin')) document.getElementById('nav-admin').textContent = 'Admin';
+      document.getElementById('nav-diy-text').textContent = 'DIY Recipes';
+      document.getElementById('page-title').textContent = '🍪 DIY Recipes';
+      document.getElementById('page-subtitle').textContent = 'Simple and delicious recipes for home cooking';
+      document.getElementById('easy-badge').textContent = 'Easy';
+      document.getElementById('medium-badge').textContent = 'Medium';
+      document.getElementById('advanced-badge').textContent = 'Advanced';
+      document.getElementById('no-bake-category').textContent = 'No Bake';
+      document.getElementById('dessert-category').textContent = 'Cup Dessert';
+      document.getElementById('breakfast-category').textContent = 'Breakfast';
+      document.getElementById('frozen-category').textContent = 'Frozen';
+      document.getElementById('chocolate-balls-title').textContent = 'Chocolate Balls';
+      document.getElementById('berry-dessert-title').textContent = 'Berry, Cheese & Crumble Dessert';
+      document.getElementById('waffle-title').textContent = 'Belgian Waffle';
+      document.getElementById('cookielida-title').textContent = 'Cookie Ice Cream Sandwich';
+      document.getElementById('prep-time-label').textContent = 'Prep Time';
+      document.getElementById('chill-time-label').textContent = 'Chill Time';
+      document.getElementById('prep-time-label-2').textContent = 'Prep Time';
+      document.getElementById('bake-time-label').textContent = 'Bake Time';
+      document.getElementById('total-time-label').textContent = 'Total Time';
+      document.getElementById('cook-time-label').textContent = 'Cook Time';
+      document.getElementById('prep-time-label-3').textContent = 'Prep Time';
+      document.getElementById('freeze-time-label').textContent = 'Freeze Time';
+      document.querySelectorAll('#ingredients-title').forEach(el => el.textContent = 'Ingredients');
+      document.querySelectorAll('#instructions-title').forEach(el => el.textContent = 'Instructions');
+      document.querySelectorAll('#tips-title').forEach(el => el.textContent = 'Tips');
+
+      document.getElementById('chocolate-balls-ingredients').innerHTML = `
+        <li>300g "Petit Beurre" biscuits, crushed</li>
+        <li>8 cubes dark chocolate (30g)</li>
+        <li>50g butter</li>
+        <li>3 tablespoons cocoa powder</li>
+        <li>3-4 heaped tablespoons sugar</li>
+        <li>Half cup milk (for dairy-free use water)</li>
+        <li>Coconut for coating</li>
+      `;
+      document.getElementById('chocolate-balls-instructions').innerHTML = `
+        <li>Place butter and chocolate cubes in a glass bowl and melt in microwave for several seconds. Remove and mix until you get a smooth chocolate mixture.</li>
+        <li>Mix half cup milk (or water) with cocoa powder and sugar. It's recommended to mix the sugar and cocoa with a few tablespoons of hot water first, then add milk/water to make half cup. Once sugar dissolves, pour into chocolate bowl.</li>
+        <li>Add crushed biscuits to the bowl and mix well. If the mixture is too dry or crumbly, add water or milk as needed.</li>
+        <li>Using your hands, form balls and dip in a small plate with coconut.</li>
+        <li>Wrap in plastic wrap and store in refrigerator for at least 3 hours before serving.</li>
+      `;
+      document.getElementById('berry-base-ingredients').innerHTML = `
+        <li>2 cups (230g) frozen mixed berries</li>
+        <li>Half cup (120ml) water</li>
+        <li>2 heaped tablespoons (35g) sugar</li>
+      `;
+      document.getElementById('cheese-cream-ingredients').innerHTML = `
+        <li>2 containers sweet cream/whipping cream (500ml)</li>
+        <li>Half cup (100g) sugar</li>
+        <li>4 full tablespoons (50g) instant vanilla pudding powder</li>
+        <li>Half cup (120ml) cold milk</li>
+        <li>250g white cheese 5% or 9%</li>
+      `;
+      document.getElementById('crumble-ingredients').innerHTML = `
+        <li>1 cup (140g) white flour</li>
+        <li>2 heaped tablespoons (35g) sugar</li>
+        <li>50g butter or soft margarine at room temperature</li>
+        <li>2 tablespoons (16g) oil</li>
+        <li>1 egg yolk or 1-2 tablespoons water (as needed)</li>
+      `;
+      document.getElementById('berry-dessert-instructions').innerHTML = `
+        <li><strong>Berry base preparation:</strong> Blend the ingredients (berries, water and sugar) with a hand blender until smooth puree is obtained.</li>
+        <li><strong>Cheese cream preparation:</strong> Whip cream for about half minute with sugar. Add milk and instant vanilla pudding and continue whipping until stable whipped cream. Add white cheese and mix with spoon/spatula in folding motions.</li>
+        <li><strong>Crumble preparation:</strong> Preheat oven to 180°C. Mix all ingredients with a spoon in the order listed, until slightly crumbly dough mixture is obtained. Line baking paper in pan and spread mixture on baking paper. Bake in hot oven for 10-12 minutes until lightly golden. Remove from oven and let cool, then crumble into small pieces.</li>
+        <li><strong>Cup assembly:</strong> Place a spoonful of berry puree at bottom of each cup. Pipe cheese cream on top (recommended to use piping bag or cut food bag). Sprinkle crumbles on top.</li>
+      `;
+      document.getElementById('waffle-ingredients').innerHTML = `
+        <li>1 cup regular flour</li>
+        <li>1 level teaspoon dry yeast</li>
+        <li>3 tablespoons white sugar</li>
+        <li>Half cup warm milk (not boiling)</li>
+        <li>1 teaspoon vanilla extract</li>
+        <li>1 egg</li>
+        <li>1/3 cup oil</li>
+        <li>Pinch of salt</li>
+      `;
+      document.getElementById('waffle-instructions').innerHTML = `
+        <li>Mix flour with yeast well in a bowl. Add sugar, milk, vanilla extract and egg and mix well.</li>
+        <li>Finally add oil and pinch of salt and mix until uniform mixture is obtained (don't overmix or texture will become hard and heavy).</li>
+        <li>Cover mixture and set aside for about 10 minutes (optional).</li>
+        <li>Oil the waffle maker well and heat it while closed. When very hot, open and fill the cavities. Close for 7-8 minutes. Carefully open, remove waffle and place on plate (don't stack them as they will soften).</li>
+      `;
+      document.getElementById('waffle-tips').textContent = 'Recommended to drizzle with chocolate/maple syrup and/or serve with whipped cream, fruits, ice cream etc. Don\'t stack waffles as they will soften.';
+      document.getElementById('cookie-ingredients').innerHTML = `
+        <li>400g chocolate "Petit Beurre" biscuits, finely crushed</li>
+        <li>1 container sweet cream/plant-based whipping cream (250ml)</li>
+        <li>100g dark chocolate</li>
+      `;
+      document.getElementById('cream-ingredients').innerHTML = `
+        <li>1 container sweet cream/plant-based whipping cream (250ml)</li>
+        <li>1 package instant vanilla pudding (80g)</li>
+        <li>Half cup sweetened condensed milk/coconut milk</li>
+      `;
+      document.getElementById('cookielida-instructions').innerHTML = `
+        <li>Place half cup cream with 50g dark chocolate in bowl and melt in microwave. Mix until smooth chocolate mixture. Add 200g crushed biscuits to bowl and mix well until uniform mixture.</li>
+        <li>Repeat with remaining half of ingredients in separate bowl (50g chocolate, half cup cream and 200g finely crushed biscuits).</li>
+        <li>Spread two sheets of plastic wrap on work surface and pour each mixture on top. Roll the mixture while plastic wrap covers it. Create cylinder shape with hands about 4cm diameter. Put both cylinders in freezer for at least half hour.</li>
+        <li>Meanwhile prepare ice cream cream: Whip cream in bowl for a minute (recommended to put cream in freezer 10 minutes before whipping). Add instant vanilla pudding and milk and continue whipping until stable whipped cream.</li>
+        <li>Remove cylinder from freezer and gently remove plastic wrap. Using knife, cut into slices about half cm thick.</li>
+        <li>Pour cream layer over each cookie (using spoon or piping bag) and place another cookie on top (like sandwich). Store in closed container in freezer for at least two hours before serving.</li>
+      `;
+      document.getElementById('cookielida-tips').textContent = 'Important to crush biscuits into small crumbs so it won\'t break when cutting. For gluten-sensitive people, you can use gluten-free biscuits.';
+    }
+
+    function switchToHebrew() {
+      document.documentElement.lang = 'he';
+      document.documentElement.dir = 'rtl';
+      document.getElementById('nav-store').textContent = 'חנות';
+      document.getElementById('nav-cart').textContent = 'סל הקניות';
+      document.getElementById('nav-checkout').textContent = 'תשלום';
+      document.getElementById('nav-myitems').textContent = 'הרכישות שלי';
+      document.getElementById('login-link').textContent = 'התחברות';
+      document.getElementById('logout').textContent = 'התנתקות';
+      if (document.getElementById('nav-admin')) document.getElementById('nav-admin').textContent = 'ניהול';
+      document.getElementById('nav-diy-text').textContent = 'עשה זאת בעצמך';
+      document.getElementById('page-title').textContent = '🍪 עשה זאת בעצמך';
+      document.getElementById('page-subtitle').textContent = 'מתכונים פשוטים וטעימים להכנה ביתית';
+      document.getElementById('easy-badge').textContent = 'קל';
+      document.getElementById('medium-badge').textContent = 'בינוני';
+      document.getElementById('advanced-badge').textContent = 'מתקדם';
+      document.getElementById('no-bake-category').textContent = 'ללא אפייה';
+      document.getElementById('dessert-category').textContent = 'קינוח בכוס';
+      document.getElementById('breakfast-category').textContent = 'ארוחת בוקר';
+      document.getElementById('frozen-category').textContent = 'קפוא';
+      document.getElementById('chocolate-balls-title').textContent = 'כדורי שוקולד';
+      document.getElementById('berry-dessert-title').textContent = 'קינוח פירות יער, גבינה ופירורים';
+      document.getElementById('waffle-title').textContent = 'וופל בלגי';
+      document.getElementById('cookielida-title').textContent = 'קוקילידה';
+      document.getElementById('prep-time-label').textContent = 'דקות הכנה';
+      document.getElementById('chill-time-label').textContent = 'שעות קירור';
+      document.getElementById('prep-time-label-2').textContent = 'דקות הכנה';
+      document.getElementById('bake-time-label').textContent = 'דקות אפייה';
+      document.getElementById('total-time-label').textContent = 'דקות סה"כ';
+      document.getElementById('cook-time-label').textContent = 'דקות בישול';
+      document.getElementById('prep-time-label-3').textContent = 'דקות הכנה';
+      document.getElementById('freeze-time-label').textContent = 'שעות הקפאה';
+      document.querySelectorAll('#ingredients-title').forEach(el => el.textContent = 'רכיבים');
+      document.querySelectorAll('#instructions-title').forEach(el => el.textContent = 'אופן ההכנה');
+      document.querySelectorAll('#tips-title').forEach(el => el.textContent = 'טיפים');
+
+      document.getElementById('chocolate-balls-ingredients').innerHTML = `
+        <li>300 גרם ביסקוויטים מסוג "פתי בר" מפוררים</li>
+        <li>8 קוביות שוקולד מריר (30 גרם)</li>
+        <li>50 גרם חמאה</li>
+        <li>3 כפות אבקת קקאו</li>
+        <li>3-4 כפות סוכר גדושות</li>
+        <li>חצי כוס חלב (לפרווה – מים)</li>
+        <li>קוקוס לציפוי</li>
+      `;
+      document.getElementById('chocolate-balls-instructions').innerHTML = `
+        <li>מניחים בקערת זכוכית את החמאה וקוביות השוקולד וממיסים במיקרוגל מספר שניות. מוציאים ומערבבים עד שמתקבלת תערובת שוקולד חלקה.</li>
+        <li>מערבבים חצי כוס חלב (או מים) עם אבקת הקקאו והסוכר. מומלץ לערבב את הסוכר והקקאו בכמה כפות מים רותחים ולאחר מכן להוסיף חלב/מים עד חצי כוס. לאחר שהסוכר נמס שופכים לקערת השוקולד.</li>
+        <li>מוסיפים לקערה את פירורי הביסקוויטים ומערבבים היטב. אם במקרה התערובת יוצאת קצת יבשה או מתפוררת יש להוסיף מים או חלב לפי הצורך.</li>
+        <li>בעזרת הידיים יוצרים כדורים וטובלים בתוך צלחת קטנה עם קוקוס.</li>
+        <li>עוטפים בניילון נצמד ומאחסנים במקרר 3 שעות לפחות לפני ההגשה.</li>
+      `;
+      document.getElementById('berry-base-ingredients').innerHTML = `
+        <li>2 כוסות (230 ג') תערובת פירות יער מוקפאים</li>
+        <li>חצי כוס (120 מ"ל) מים</li>
+        <li>2 כפות גדושות (35 ג') סוכר</li>
+      `;
+      document.getElementById('cheese-cream-ingredients').innerHTML = `
+        <li>2 מיכלי שמנת מתוקה/להקצפה (500 מ"ל)</li>
+        <li>חצי כוס (100 ג') סוכר</li>
+        <li>4 כפות מלאות (50 ג') אבקת אינסטנט פודינג וניל</li>
+        <li>חצי כוס (120 מ"ל) חלב קר</li>
+        <li>250 גרם גבינה לבנה 5% או 9%</li>
+      `;
+      document.getElementById('crumble-ingredients').innerHTML = `
+        <li>כוס (140 גרם) קמח לבן</li>
+        <li>2 כפות גדושות (35 ג') סוכר</li>
+        <li>50 גרם חמאה או מרגרינה רכה בטמפ' החדר</li>
+        <li>2 כפות (16 ג') שמן</li>
+        <li>חלמון ביצה או 1-2 כפות מים (לפי הצורך)</li>
+      `;
+      document.getElementById('berry-dessert-instructions').innerHTML = `
+        <li><strong>הכנת תחתית פירות יער:</strong> טוחנים בעזרת מוט בלנדר ידני את החומרים (פירות יער, מים וסוכר) עד לקבלת מחית אחידה.</li>
+        <li><strong>הכנת קרם גבינה:</strong> מקציפים את השמנת במשך כחצי דקה עם הסוכר. מוסיפים חלב ואינסטנט פודינג וניל וממשיכים להקציף עד לקבלת קצפת יציבה. מוסיפים את הגבינה הלבנה ומערבבים בעזרת כף/לקקן בתנועות קיפול.</li>
+        <li><strong>הכנת פירורים קראמבל:</strong> מחממים תנור מראש ל-180 מעלות. מערבבים בעזרת כף את כל החומרים לפי הסדר הרשום, עד לקבלת תערובת בצקית מעט פירורית. פורשים נייר אפיה בתבנית ומשטחים את התערובת על נייר האפיה. מכניסים לתנור החם ואופים במשך 10-12 דקות, עד להזהבה קלה. מוציאים מהתנור ומניחים לבצק להתקרר ומפוררים לפירורים קטנים.</li>
+        <li><strong>עיצוב הכוסות:</strong> מניחים בתחתית כל כוס כף ממחית פירות היער. מעל מזלפים קרם גבינה (מומלץ להשתמש בשקית זילוף או שקית אוכל גזורה בקצה). מפזרים מעל פירורים.</li>
+      `;
+      document.getElementById('waffle-ingredients').innerHTML = `
+        <li>כוס קמח רגיל</li>
+        <li>כפית שטוחה שמרים יבשים</li>
+        <li>3 כפות סוכר לבן</li>
+        <li>חצי כוס חלב חמים (לא רותח)</li>
+        <li>1 כפית תמצית וניל</li>
+        <li>1 ביצה</li>
+        <li>שליש כוס שמן</li>
+        <li>קמצוץ מלח</li>
+      `;
+      document.getElementById('cookie-ingredients').innerHTML = `
+        <li>400 גרם ביסקוויטים מסוג פתי בר בטעם שוקולד מפוררים דק</li>
+        <li>מיכל שמנת מתוקה/ קצפת צמחית (250 מ"ל)</li>
+        <li>100 גרם שוקולד מריר</li>
+      `;
+      document.getElementById('cream-ingredients').innerHTML = `
+        <li>מיכל שמנת מתוקה/ קצפת צמחית (250 מ"ל)</li>
+        <li>חבילת אינסטנט פודינג וניל (80 גרם)</li>
+        <li>חצי כוס חלב ממותק מרוכז/ חלב קוקוס</li>
+      `;
+      document.getElementById('waffle-instructions').innerHTML = `
+        <li>מערבבים היטב בקערה את הקמח עם השמרים. מוסיפים סוכר, חלב, תמצית וניל וביצה ומערבבים היטב.</li>
+        <li>בסוף מוסיפים שמן וקמצוץ מלח ומערבבים עד לקבלת תערובת אחידה (אין לערבב יותר מידי אחרת המרקם יהפוך לקשה וכבד).</li>
+        <li>מכסים את התערובת ומניחים בצד למשך כ10 דקות (לא חובה).</li>
+        <li>משמנים היטב את המכשיר ומחממים אותו כשהוא סגור. כשהוא חם מאוד, פותחים אותו וממלאים את השקעים. סוגרים את המכשיר למשך 7-8 דקות. פותחים בזהירות את המכשיר, מוצאים את הוופל ומניחים על צלחת.</li>
+      `;
+      document.getElementById('cookielida-instructions').innerHTML = `
+        <li>מניחים בקערה חצי כוס שמנת עם 50 גרם שוקולד מריר וממיסים במיקרוגל. מערבבים עד לתערובת שוקולד חלקה. מוסיפים לקערה 200 גרם פירורי ביסקוויטים ומערבבים היטב עד לקבלת תערובת אחידה.</li>
+        <li>חוזרים על הפעולה עם מחצית מהחומרים בקערה נפרדת (50 גרם שוקולד, חצי כוס שמנת ו200 גרם ביסקוויטים מפוררים דק).</li>
+        <li>פורשים שתי יריעות ניילון נצמד על משטח עבודה ויוצקים מעל כל תערובת. מגלגלים את התערובת כאשר הניילון הנצמד עוטף את התערובת. יוצרים עם הידיים צורה של גליל בקוטר של כ- 4 ס"מ. מכניסים את שני הגלילים למקפיא לחצי שעה לפחות.</li>
+        <li>בינתיים מכינים את קרם הגלידה: מקציפים בקערה שמנת כדקה (מומלץ להכניס את השמנת למקפיא 10 דקות לפני ההקצפה). מוסיפים אינסטנט פודינג וניל וחלב וממשיכים להקציף עד לקצפת יציבה.</li>
+        <li>מוצאים את הגליל מהמקפיא ומסירים ממנו בעדינות את הניילון הנצמד. בעזרת סכין חותכים לפרוסות בעובי של כחצי ס"מ.</li>
+        <li>מעל כל עוגיה יוצקים משכבת הקרם (בעזרת כף או שקית זילוף) ומעל מניחים עוגיה נוספת (כמו סנדוויץ'). שומרים בקופסה סגורה במקפיא לפחות שעתיים לפני ההגשה.</li>
+      `;
+      document.getElementById('waffle-tips').textContent = 'מומלץ להזליף מעל סירופ שוקולד/מייפל ו/או להגיש עם קצפת, פירות, גלידה וכו\'. אין להניח וופל אחד על השני מאחר וזה יגרום לוופלים להתרכך.';
+      document.getElementById('cookielida-tips').textContent = 'חשוב לפורר את הביסקוויטים לפירורים קטנים כדי שזה לא יתפרק בחיתוך. לרגישים לגלוטן ניתן להשתמש בביסקוויטים ללא גלוטן.';
+    }
+
+    async function setupAuth() {
+      try {
+        const r = await fetch('/api/session');
+        if (r.ok) {
+          const data = await r.json();
+          document.getElementById('login-link').style.display = 'none';
+          document.getElementById('logout').style.display = '';
+          if (data.username === 'admin') document.getElementById('nav-admin').style.display = '';
+        }
+      } catch {}
+    }
+
+    document.getElementById('logout').onclick = async () => {
+      try { await fetch('/api/logout', { method: 'POST' }); }
+      finally { location.href = 'login.html'; }
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        loadUICustomization();
+        setupAuth();
+      }, 100);
+    });
+  </script>
+</body>
+</html>
