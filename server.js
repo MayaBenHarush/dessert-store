@@ -61,6 +61,7 @@ require('./modules/admin-server')(app);
 require('./modules/pending-server')(app);
 require('./modules/cart-server')(app);
 require('./modules/recipes-server')(app);
+require('./modules/dessert-finder-server')(app);
 
 /* ===== Custom cake ===== */
 try {

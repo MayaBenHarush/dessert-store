@@ -4,26 +4,227 @@
   <meta charset="UTF-8" />
   <title>עיצוב עוגה מותאמת אישית</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="/assets/styles.css" />
   <script src="/assets/translations.js"></script>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #ffffff;
+      color: #1a1a1a;
+      line-height: 1.6;
+    }
+
+    /* Header */
+    .header {
+      background: #ffffcc;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .menu-btn {
+      background: none;
+      border: none;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .menu-btn::before {
+      content: "☰";
+      font-size: 1.2rem;
+    }
+
+    .logo {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #1a1a1a;
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .header-btn {
+      background: none;
+      border: 2px solid #1a1a1a;
+      color: #1a1a1a;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .header-btn:hover {
+      background: #1a1a1a;
+      color: white;
+    }
+
+    .header-btn.primary {
+      background: #1a1a1a;
+      color: white;
+    }
+
+    .header-btn.primary:hover {
+      background: #333;
+    }
+
+    .cart-btn::before {
+      content: "🛒";
+    }
+
+    .home-btn::before {
+      content: "🏠";
+    }
+
+    .login-btn::before {
+      content: "👤";
+    }
+
+    /* Navigation Menu */
+    .nav-menu {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 300px;
+      height: 100vh;
+      background: white;
+      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+      transition: right 0.3s ease;
+      padding: 2rem;
+      z-index: 2000;
+    }
+
+    .nav-menu.active {
+      right: 0;
+    }
+
+    .nav-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      float: left;
+      margin-bottom: 2rem;
+    }
+
+    .nav-item,
+    .nav-menu a,
+    .nav-menu button {
+      display: block;
+      padding: 0.75rem 0;
+      color: #1a1a1a;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid #f0f0f0;
+      transition: color 0.2s ease;
+      background: none;
+      border: none;
+      text-align: right;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .nav-item:hover,
+    .nav-menu a:hover,
+    .nav-menu button:hover {
+      color: #ffffcc;
+    }
+
+    /* Overlay */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1500;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Main Content */
+    .main-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    #main-title {
+      font-size: 3rem;
+      font-weight: 900;
+      color: #1a1a1a;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+
+    #subtitle {
+      color: #666;
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+    }
+
+    /* Designer Container */
     .designer-container {
       display: grid;
       grid-template-columns: 1fr 400px;
-      gap: 40px;
-      margin-top: 30px;
+      gap: 2rem;
+      margin-top: 2rem;
     }
     
     .cake-preview {
-      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-      border-radius: 20px;
-      padding: 20px;
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       min-height: 600px;
-      box-shadow: var(--shadow-lg);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
       position: relative;
     }
     
@@ -42,12 +243,10 @@
       height: 100%;
       min-height: 500px;
       object-fit: cover;
-      border-radius: 20px;
-      box-shadow: 
-        0 20px 40px rgba(0,0,0,0.15),
-        0 0 0 8px rgba(255,255,255,0.8);
+      border-radius: 15px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
       transition: all 0.3s ease;
-      background: #f8f9fa;
+      background: #f8f8f8;
     }
     
     .cake-image.bento {
@@ -100,18 +299,18 @@
     }
     
     .design-panel {
-      background: var(--bg-card);
-      border-radius: 20px;
-      padding: 30px;
-      box-shadow: var(--shadow-lg);
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
       max-height: 700px;
       overflow-y: auto;
     }
     
     .design-section {
-      margin-bottom: 30px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid #eee;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #f0f0f0;
     }
     
     .design-section:last-child {
@@ -119,25 +318,25 @@
     }
     
     .section-title {
-      font-size: 18px;
+      font-size: 1.2rem;
       font-weight: 700;
-      color: var(--primary-color);
-      margin-bottom: 15px;
+      color: #1a1a1a;
+      margin-bottom: 1rem;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 0.5rem;
     }
     
     .size-options {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 1rem;
     }
     
     .size-option {
-      padding: 15px;
-      border: 2px solid #e9ecef;
-      border-radius: 12px;
+      padding: 1rem;
+      border: 2px solid #f0f0f0;
+      border-radius: 15px;
       text-align: center;
       cursor: pointer;
       transition: all 0.3s ease;
@@ -145,42 +344,42 @@
     }
     
     .size-option:hover {
-      border-color: var(--primary-color);
+      border-color: #1a1a1a;
       transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
     }
     
     .size-option.selected {
-      border-color: var(--primary-color);
-      background: var(--primary-light);
+      border-color: #1a1a1a;
+      background: #1a1a1a;
       color: white;
     }
     
     .size-title {
       font-weight: bold;
-      margin-bottom: 5px;
+      margin-bottom: 0.5rem;
     }
     
     .size-subtitle {
-      font-size: 12px;
+      font-size: 0.9rem;
       opacity: 0.8;
     }
     
     .color-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-top: 15px;
+      gap: 1rem;
+      margin-top: 1rem;
     }
     
     .color-option {
       aspect-ratio: 1;
-      border-radius: 12px;
+      border-radius: 15px;
       cursor: pointer;
       border: 3px solid transparent;
       transition: all 0.3s ease;
       position: relative;
-      box-shadow: var(--shadow-sm);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
       overflow: hidden;
       background-size: cover;
       background-position: center;
@@ -188,14 +387,14 @@
     }
     
     .color-option:hover {
-      transform: scale(1.1);
-      box-shadow: var(--shadow-md);
+      transform: scale(1.05);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
     }
     
     .color-option.selected {
-      border-color: #333;
-      transform: scale(1.15);
-      box-shadow: var(--shadow-lg);
+      border-color: #1a1a1a;
+      transform: scale(1.1);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
     }
     
     .color-option::after {
@@ -204,14 +403,14 @@
       bottom: -30px;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 11px;
+      font-size: 0.8rem;
       font-weight: 600;
       white-space: nowrap;
       opacity: 0;
       transition: opacity 0.3s ease;
       background: #333;
       color: white;
-      padding: 4px 8px;
+      padding: 0.3rem 0.6rem;
       border-radius: 6px;
       pointer-events: none;
     }
@@ -222,25 +421,26 @@
     
     .text-input {
       width: 100%;
-      padding: 12px;
-      border: 2px solid #e9ecef;
-      border-radius: 12px;
-      font-size: 16px;
-      transition: border-color 0.3s ease;
+      padding: 1rem 1.5rem;
+      border: 2px solid #f0f0f0;
+      border-radius: 15px;
+      font-size: 1rem;
+      transition: all 0.2s ease;
       font-family: inherit;
+      background: white;
     }
     
     .text-input:focus {
       outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1);
+      border-color: #1a1a1a;
+      box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.1);
     }
     
     .text-color-grid {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
-      gap: 10px;
-      margin-top: 15px;
+      gap: 0.8rem;
+      margin-top: 1rem;
     }
     
     .text-color-option {
@@ -250,18 +450,18 @@
       border: 3px solid transparent;
       transition: all 0.3s ease;
       position: relative;
-      box-shadow: var(--shadow-sm);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
     }
     
     .text-color-option:hover {
-      transform: scale(1.15);
-      box-shadow: var(--shadow-md);
+      transform: scale(1.1);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
     }
     
     .text-color-option.selected {
-      border-color: #333;
-      transform: scale(1.2);
-      box-shadow: var(--shadow-lg);
+      border-color: #1a1a1a;
+      transform: scale(1.15);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
     }
     
     .text-color-option::after {
@@ -270,14 +470,14 @@
       bottom: -30px;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 10px;
+      font-size: 0.7rem;
       font-weight: 600;
       white-space: nowrap;
       opacity: 0;
       transition: opacity 0.3s ease;
       background: #333;
       color: white;
-      padding: 4px 8px;
+      padding: 0.3rem 0.6rem;
       border-radius: 6px;
       pointer-events: none;
       z-index: 100;
@@ -288,62 +488,135 @@
     }
     
     .price-summary {
-      background: var(--gradient-primary);
+      background: #1a1a1a;
       color: white;
-      padding: 20px;
-      border-radius: 12px;
+      padding: 1.5rem;
+      border-radius: 15px;
       text-align: center;
-      margin-top: 20px;
+      margin-top: 1.5rem;
     }
     
     .total-price {
-      font-size: 28px;
+      font-size: 2rem;
       font-weight: bold;
-      margin-bottom: 10px;
+      margin-bottom: 0.5rem;
     }
     
     .add-to-cart-btn {
-      background: var(--gradient-secondary);
-      color: white;
+      background: white;
+      color: #1a1a1a;
       border: none;
-      padding: 15px 30px;
-      border-radius: 12px;
+      padding: 1rem 2rem;
+      border-radius: 15px;
       font-weight: bold;
-      font-size: 16px;
+      font-size: 1rem;
       cursor: pointer;
       transition: all 0.3s ease;
       width: 100%;
-      margin-top: 15px;
+      margin-top: 1rem;
     }
     
     .add-to-cart-btn:hover {
       transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
+      box-shadow: 0 5px 20px rgba(255, 255, 255, 0.3);
     }
     
     .add-to-cart-btn:disabled {
       opacity: 0.6;
       cursor: not-allowed;
     }
-    
-    @media (max-width: 1024px) {
-      .designer-container {
-        grid-template-columns: 1fr;
-        gap: 20px;
-      }
-      
-      .cake-preview {
-        order: -1;
-        min-height: 400px;
-        padding: 15px;
-      }
-      
-      .cake-image {
-        min-height: 350px;
-      }
+
+    /* Toast */
+    #toast {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      z-index: 9999;
+      display: none;
+      padding: 10px 14px;
+      background: #333;
+      color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .2);
+      font-size: 14px;
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: opacity .2s, transform .2s;
+    }
+
+    #toast.show {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Dark Theme */
+    .dark-theme {
+      background: #1a1a1a;
+      color: white;
+    }
+
+    .dark-theme .header {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .nav-menu {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .nav-menu a,
+    .dark-theme .nav-menu button {
+      color: white;
+      border-bottom-color: #444;
+    }
+
+    .dark-theme .cake-preview,
+    .dark-theme .design-panel {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .section-title,
+    .dark-theme #main-title {
+      color: white;
+    }
+
+    .dark-theme .text-input {
+      background: #3d3d3d;
+      border-color: #555;
+      color: white;
+    }
+
+    .dark-theme .text-input:focus {
+      border-color: #ffffcc;
+    }
+
+    .dark-theme .size-option {
+      background: #3d3d3d;
+      border-color: #555;
+      color: white;
+    }
+
+    .dark-theme .size-option:hover {
+      border-color: #ffffcc;
+    }
+
+    .dark-theme .size-option.selected {
+      background: #ffffcc;
+      border-color: #ffffcc;
+      color: #1a1a1a;
+    }
+
+    .dark-theme .price-summary {
+      background: #ffffcc;
+      color: #1a1a1a;
+    }
+
+    .dark-theme .add-to-cart-btn {
+      background: #1a1a1a;
+      color: white;
     }
     
-    /* אפקטי הנפשה */
+    /* Animation Effects */
     @keyframes cakeSwitch {
       0% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.7; transform: scale(0.95); }
@@ -368,160 +641,286 @@
       0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
       50% { opacity: 1; transform: scale(1) rotate(180deg); }
     }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .designer-container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      
+      .cake-preview {
+        order: -1;
+        min-height: 400px;
+        padding: 1rem;
+      }
+      
+      .cake-image {
+        min-height: 350px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        padding: 1rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .header-left {
+        order: 1;
+      }
+
+      .logo {
+        font-size: 1.8rem;
+        order: 2;
+      }
+
+      .header-nav {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .header-btn {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.75rem;
+      }
+
+      .main-content {
+        padding: 1rem;
+      }
+
+      #main-title {
+        font-size: 2rem;
+      }
+
+      .color-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .text-color-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header-btn {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.7rem;
+      }
+
+      .header-btn::before {
+        display: none;
+      }
+
+      .size-options {
+        grid-template-columns: 1fr;
+      }
+
+      .color-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .text-color-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
   </style>
 </head>
 <body>
-  <nav>
-    <a href="index.html" id="nav-home" class="nav-item" data-key="nav.home"> בית</a>
-    <a href="store.html" id="nav-store" data-key="nav.store">חנות</a>
-    <a href="cart.html" id="nav-cart" data-key="nav.cart">סל הקניות</a>
+  <div class="overlay" id="overlay"></div>
+  
+  <header class="header">
+    <div class="header-left">
+      <button class="menu-btn" id="menuBtn">Menu</button>
+      <a href="/" class="logo">dessert</a>
+    </div>
+    
+    <nav class="header-nav">
+      <a href="index.html" class="header-btn home-btn">בית</a>
+      <a href="cart.html" class="header-btn cart-btn">סל קניות</a>
+      <a href="login.html" class="header-btn login-btn" id="header-login">התחברות</a>
+    </nav>
+  </header>
+
+  <nav class="nav-menu" id="navMenu">
+    <button class="nav-close" id="navClose">×</button>
+
     <a href="checkout.html" id="nav-checkout" data-key="nav.checkout">תשלום</a>
     <a href="myitems.html" id="nav-myitems" data-key="nav.myPurchases">הרכישות שלי</a>
-    <a id="login-link" href="login.html" data-key="nav.login">התחברות</a>
-    <button id="logout" style="display:none" data-key="nav.logout">התנתקות</button>
     <a href="admin.html" id="nav-admin" data-key="nav.admin" style="display:none">ניהול</a>
+    <a href="dessert-finder.html" data-key="nav.dessertFinder">מציאת הקינוח המושלם</a>
+    <a href="wheel.html" data-key="nav.wheel">גלגל מזל</a>
     <a href="cake-designer.html" data-key="nav.cakeDesigner">עיצוב עוגה</a>
-    <a href="dessert-finder.html" data-key="nav.dessertFinder"> מציאת קינוח מושלם</a>
-    <a href="wheel.html" data-key="nav.wheel"> גלגל מזל</a>
-    <a href="recipes.html" id="nav-recipes" data-key="nav.recipes"> מתכונים</a>
+    <a href="recipes.html" id="nav-recipes" data-key="nav.recipes">מתכונים</a>
+    <a href="store.html" id="nav-store" data-key="nav.store">חנות</a>
+    <button id="logout" style="display:none" data-key="nav.logout">התנתקות</button>
     <button id="theme-toggle">🌙 מצב כהה</button>
     <button id="language-toggle">🌐 English</button>
   </nav>
-  
-  <h1 id="main-title">🎨 <span data-key="cakeDesigner.title">עיצוב עוגה מותאמת אישית</span></h1>
-  <p id="subtitle" data-key="cakeDesigner.subtitle" style="text-align: right; color: var(--text-secondary); font-size: 18px; margin-right: 20px;">
-    עצב את העוגה המושלמת עבורך
-  </p>
 
-  <div class="designer-container">
-    <div class="cake-preview">
-      <div class="cake-display" id="cakeDisplay">
-        <img 
-          id="cakeImage" 
-          class="cake-image" 
-          src="/images/cakes/cake-pink.png" 
-          alt="עוגה מותאמת"
-        />
-        <div class="cake-text-overlay empty" id="cakeTextOverlay"></div>
-      </div>
+  <div id="toast"></div>
+
+  <main class="main-content">
+    <div class="page-header">
+      <h1 id="main-title">🎨 <span data-key="cakeDesigner.title">עיצוב עוגה מותאמת אישית</span></h1>
+      <p id="subtitle" data-key="cakeDesigner.subtitle">עצב את העוגה המושלמת עבורך</p>
     </div>
 
-    <div class="design-panel">
-      <!-- בחירת גודל -->
-      <div class="design-section">
-        <div class="section-title" data-key="cakeDesigner.sizeSelection">
-          🔍 בחירת גודל העוגה
+    <div class="designer-container">
+      <div class="cake-preview">
+        <div class="cake-display" id="cakeDisplay">
+          <img 
+            id="cakeImage" 
+            class="cake-image" 
+            src="/images/cakes/cake-pink.png" 
+            alt="עוגה מותאמת"
+          />
+          <div class="cake-text-overlay empty" id="cakeTextOverlay"></div>
         </div>
-        <div class="size-options">
-          <div class="size-option selected" data-size="bento">
-            <div class="size-title" data-key="cakeDesigner.bento">בנטו</div>
-            <div class="size-subtitle" data-key="cakeDesigner.bentoSize">קוטר 10 ס"מ</div>
-            <div class="size-subtitle">₪140</div>
+      </div>
+
+      <div class="design-panel">
+        <!-- בחירת גודל -->
+        <div class="design-section">
+          <div class="section-title" data-key="cakeDesigner.sizeSelection">
+            🍰 בחירת גודל העוגה
           </div>
-          <div class="size-option" data-size="large">
-            <div class="size-title" data-key="cakeDesigner.large">גדולה</div>
-            <div class="size-subtitle" data-key="cakeDesigner.largeSize">קוטר 22 ס"מ</div>
-            <div class="size-subtitle">₪300</div>
+          <div class="size-options">
+            <div class="size-option selected" data-size="bento">
+              <div class="size-title" data-key="cakeDesigner.bento">בנטו</div>
+              <div class="size-subtitle" data-key="cakeDesigner.bentoSize">קוטר 10 ס"מ</div>
+              <div class="size-subtitle">₪140</div>
+            </div>
+            <div class="size-option" data-size="large">
+              <div class="size-title" data-key="cakeDesigner.large">גדולה</div>
+              <div class="size-subtitle" data-key="cakeDesigner.largeSize">קוטר 22 ס"מ</div>
+              <div class="size-subtitle">₪300</div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- בחירת צבע עוגה -->
-      <div class="design-section">
-        <div class="section-title" data-key="cakeDesigner.colorSelection">
-          🎨 בחירת צבע העוגה
+        <!-- בחירת צבע עוגה -->
+        <div class="design-section">
+          <div class="section-title" data-key="cakeDesigner.colorSelection">
+            🎨 בחירת צבע העוגה
+          </div>
+          <div class="color-grid">
+            <div class="color-option selected" 
+                 data-color="pink" 
+                 data-name-key="cakeDesigner.colors.pink"
+                 data-name="ורוד" 
+                 style="background-image: url('/images/cakes/cake-pink.png')"></div>
+            <div class="color-option" 
+                 data-color="white" 
+                 data-name-key="cakeDesigner.colors.white"
+                 data-name="לבן" 
+                 style="background-image: url('/images/cakes/cake-white.png')"></div>
+            <div class="color-option" 
+                 data-color="green" 
+                 data-name-key="cakeDesigner.colors.green"
+                 data-name="ירוק" 
+                 style="background-image: url('/images/cakes/cake-green.png')"></div>
+            <div class="color-option" 
+                 data-color="red" 
+                 data-name-key="cakeDesigner.colors.red"
+                 data-name="אדום" 
+                 style="background-image: url('/images/cakes/cake-red.png')"></div>
+            <div class="color-option" 
+                 data-color="purple" 
+                 data-name-key="cakeDesigner.colors.purple"
+                 data-name="סגול" 
+                 style="background-image: url('/images/cakes/cake-purple.png')"></div>
+            <div class="color-option" 
+                 data-color="light-blue" 
+                 data-name-key="cakeDesigner.colors.lightBlue"
+                 data-name="כחול בהיר" 
+                 style="background-image: url('/images/cakes/cake-light-blue.png')"></div>
+            <div class="color-option" 
+                 data-color="orange" 
+                 data-name-key="cakeDesigner.colors.orange"
+                 data-name="כתום" 
+                 style="background-image: url('/images/cakes/cake-orange.png')"></div>
+          </div>
         </div>
-        <div class="color-grid">
-          <div class="color-option selected" 
-               data-color="pink" 
-               data-name-key="cakeDesigner.colors.pink"
-               data-name="ורוד" 
-               style="background-image: url('/images/cakes/cake-pink.png')"></div>
-          <div class="color-option" 
-               data-color="white" 
-               data-name-key="cakeDesigner.colors.white"
-               data-name="לבן" 
-               style="background-image: url('/images/cakes/cake-white.png')"></div>
-          <div class="color-option" 
-               data-color="green" 
-               data-name-key="cakeDesigner.colors.green"
-               data-name="ירוק" 
-               style="background-image: url('/images/cakes/cake-green.png')"></div>
-          <div class="color-option" 
-               data-color="red" 
-               data-name-key="cakeDesigner.colors.red"
-               data-name="אדום" 
-               style="background-image: url('/images/cakes/cake-red.png')"></div>
-          <div class="color-option" 
-               data-color="purple" 
-               data-name-key="cakeDesigner.colors.purple"
-               data-name="סגול" 
-               style="background-image: url('/images/cakes/cake-purple.png')"></div>
-          <div class="color-option" 
-               data-color="light-blue" 
-               data-name-key="cakeDesigner.colors.lightBlue"
-               data-name="כחול בהיר" 
-               style="background-image: url('/images/cakes/cake-light-blue.png')"></div>
-          <div class="color-option" 
-               data-color="orange" 
-               data-name-key="cakeDesigner.colors.orange"
-               data-name="כתום" 
-               style="background-image: url('/images/cakes/cake-orange.png')"></div>
-        </div>
-      </div>
 
-      <!-- הוספת כיתוב -->
-      <div class="design-section">
-        <div class="section-title" data-key="cakeDesigner.textSection">
-          ✏️ כיתוב על העוגה
+        <!-- הוספת כיתוב -->
+        <div class="design-section">
+          <div class="section-title" data-key="cakeDesigner.textSection">
+            ✏️ כיתוב על העוגה
+          </div>
+          <input 
+            type="text" 
+            class="text-input" 
+            id="cakeTextInput" 
+            data-key-placeholder="cakeDesigner.textPlaceholder"
+            placeholder="הכנס כיתוב (עד 20 תווים)"
+            maxlength="20"
+            value=""
+          />
+          <div class="char-counter">
+            <span id="charCount">0</span><span data-key="cakeDesigner.charLimit">/20 תווים</span>
+          </div>
         </div>
-        <input 
-          type="text" 
-          class="text-input" 
-          id="cakeTextInput" 
-          data-key-placeholder="cakeDesigner.textPlaceholder"
-          placeholder="הכנס כיתוב (עד 20 תווים)"
-          maxlength="20"
-          value=""
-        />
-        <div class="char-counter">
-          <span id="charCount">0</span><span data-key="cakeDesigner.charLimit">/20 תווים</span>
-        </div>
-      </div>
 
-      <!-- בחירת צבע כיתוב -->
-      <div class="design-section">
-        <div class="section-title" data-key="cakeDesigner.textColorSelection">
-          🌈 צבע הכיתוב
+        <!-- בחירת צבע כיתוב -->
+        <div class="design-section">
+          <div class="section-title" data-key="cakeDesigner.textColorSelection">
+            🌈 צבע הכיתוב
+          </div>
+          <div class="text-color-grid">
+            <div class="text-color-option selected" data-text-color="#333333" data-name-key="cakeDesigner.textColors.black" data-name="שחור" style="background: #333333;"></div>
+            <div class="text-color-option" data-text-color="#ffffff" data-name-key="cakeDesigner.textColors.white" data-name="לבן" style="background: #ffffff; border: 2px solid #ddd;"></div>
+            <div class="text-color-option" data-text-color="#ff1744" data-name-key="cakeDesigner.textColors.red" data-name="אדום" style="background: #ff1744;"></div>
+            <div class="text-color-option" data-text-color="#e91e63" data-name-key="cakeDesigner.textColors.pink" data-name="ורוד" style="background: #e91e63;"></div>
+            <div class="text-color-option" data-text-color="#9c27b0" data-name-key="cakeDesigner.textColors.purple" data-name="סגול" style="background: #9c27b0;"></div>
+            <div class="text-color-option" data-text-color="#3f51b5" data-name-key="cakeDesigner.textColors.blue" data-name="כחול" style="background: #3f51b5;"></div>
+            <div class="text-color-option" data-text-color="#00bcd4" data-name-key="cakeDesigner.textColors.turquoise" data-name="טורקיז" style="background: #00bcd4;"></div>
+            <div class="text-color-option" data-text-color="#4caf50" data-name-key="cakeDesigner.textColors.green" data-name="ירוק" style="background: #4caf50;"></div>
+            <div class="text-color-option" data-text-color="#ff9800" data-name-key="cakeDesigner.textColors.orange" data-name="כתום" style="background: #ff9800;"></div>
+            <div class="text-color-option" data-text-color="#ffc107" data-name-key="cakeDesigner.textColors.yellow" data-name="צהוב" style="background: #ffc107;"></div>
+            <div class="text-color-option" data-text-color="#795548" data-name-key="cakeDesigner.textColors.brown" data-name="חום" style="background: #795548;"></div>
+            <div class="text-color-option" data-text-color="#607d8b" data-name-key="cakeDesigner.textColors.gray" data-name="אפור" style="background: #607d8b;"></div>
+          </div>
         </div>
-        <div class="text-color-grid">
-          <div class="text-color-option selected" data-text-color="#333333" data-name-key="cakeDesigner.textColors.black" data-name="שחור" style="background: #333333;"></div>
-          <div class="text-color-option" data-text-color="#ffffff" data-name-key="cakeDesigner.textColors.white" data-name="לבן" style="background: #ffffff; border: 2px solid #ddd;"></div>
-          <div class="text-color-option" data-text-color="#ff1744" data-name-key="cakeDesigner.textColors.red" data-name="אדום" style="background: #ff1744;"></div>
-          <div class="text-color-option" data-text-color="#e91e63" data-name-key="cakeDesigner.textColors.pink" data-name="ורוד" style="background: #e91e63;"></div>
-          <div class="text-color-option" data-text-color="#9c27b0" data-name-key="cakeDesigner.textColors.purple" data-name="סגול" style="background: #9c27b0;"></div>
-          <div class="text-color-option" data-text-color="#3f51b5" data-name-key="cakeDesigner.textColors.blue" data-name="כחול" style="background: #3f51b5;"></div>
-          <div class="text-color-option" data-text-color="#00bcd4" data-name-key="cakeDesigner.textColors.turquoise" data-name="טורקיז" style="background: #00bcd4;"></div>
-          <div class="text-color-option" data-text-color="#4caf50" data-name-key="cakeDesigner.textColors.green" data-name="ירוק" style="background: #4caf50;"></div>
-          <div class="text-color-option" data-text-color="#ff9800" data-name-key="cakeDesigner.textColors.orange" data-name="כתום" style="background: #ff9800;"></div>
-          <div class="text-color-option" data-text-color="#ffc107" data-name-key="cakeDesigner.textColors.yellow" data-name="צהוב" style="background: #ffc107;"></div>
-          <div class="text-color-option" data-text-color="#795548" data-name-key="cakeDesigner.textColors.brown" data-name="חום" style="background: #795548;"></div>
-          <div class="text-color-option" data-text-color="#607d8b" data-name-key="cakeDesigner.textColors.gray" data-name="אפור" style="background: #607d8b;"></div>
-        </div>
-      </div>
 
-      <!-- סיכום מחיר -->
-      <div class="price-summary">
-        <div class="total-price" id="totalPrice">₪140</div>
-        <div data-key="cakeDesigner.customCake">עוגה מותאמת אישית</div>
-        <button class="add-to-cart-btn" id="addToCartBtn" data-key="cakeDesigner.addToCart">
-          🛒 הוסף לסל הקניות
-        </button>
+        <!-- סיכום מחיר -->
+        <div class="price-summary">
+          <div class="total-price" id="totalPrice">₪140</div>
+          <div data-key="cakeDesigner.customCake">עוגה מותאמת אישית</div>
+          <button class="add-to-cart-btn" id="addToCartBtn" data-key="cakeDesigner.addToCart">
+            🛒 הוסף לסל הקניות
+          </button>
+        </div>
       </div>
     </div>
-  </div>
+  </main>
 
   <script>
+    // Menu functionality
+    const menuBtn = document.getElementById('menuBtn');
+    const navMenu = document.getElementById('navMenu');
+    const navClose = document.getElementById('navClose');
+    const overlay = document.getElementById('overlay');
+
+    function openMenu() {
+      navMenu.classList.add('active');
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+      navMenu.classList.remove('active');
+      overlay.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    menuBtn.addEventListener('click', openMenu);
+    navClose.addEventListener('click', closeMenu);
+    overlay.addEventListener('click', closeMenu);
+
     // טעינת התאמות אישיות מ-localStorage
     function loadUICustomization() {
       const theme = localStorage.getItem('theme') || 'light';
@@ -545,133 +944,38 @@
         languageToggle.textContent = '🌐 English';
       }
       
-      // עדכון כיוון הדף
-      document.documentElement.lang = currentLanguage;
-      document.documentElement.dir = currentLanguage === 'en' ? 'ltr' : 'rtl';
-      
-      // עדכון תרגומים
-      updateTexts(currentLanguage);
+      updateInterfaceLanguage(currentLanguage);
       updateColorNames(currentLanguage);
     }
 
-    // פונקציה לעדכון כל הטקסטים בדף
-    function updateTexts(lang) {
-      const texts = {
-        he: {
-          'nav.store': 'חנות',
-          'nav.cart': 'סל הקניות',
-          'nav.checkout': 'תשלום',
-          'nav.myPurchases': 'הרכישות שלי',
-          'nav.login': 'התחברות',
-          'nav.logout': 'התנתקות',
-          'nav.admin': 'ניהול',
-          'nav.cakeDesigner': 'עיצוב עוגה',
-          'nav.dessertFinder': '🔍 מציאת קינוח מושלם',
-          'nav.wheel': 'גלגל מזל',
-          'cakeDesigner.title': 'עיצוב עוגה מותאמת אישית',
-          'cakeDesigner.subtitle': 'עצב את העוגה המושלמת עבורך',
-          'cakeDesigner.sizeSelection': '🔍 בחירת גודל העוגה',
-          'cakeDesigner.bento': 'בנטו',
-          'cakeDesigner.bentoSize': 'קוטר 10 ס"מ',
-          'cakeDesigner.large': 'גדולה',
-          'cakeDesigner.largeSize': 'קוטר 22 ס"מ',
-          'cakeDesigner.colorSelection': '🎨 בחירת צבע העוגה',
-          'cakeDesigner.textSection': '✏️ כיתוב על העוגה',
-          'cakeDesigner.textPlaceholder': 'הכנס כיתוב (עד 20 תווים)',
-          'cakeDesigner.charLimit': '/20 תווים',
-          'cakeDesigner.textColorSelection': '🌈 צבע הכיתוב',
-          'cakeDesigner.customCake': 'עוגה מותאמת אישית',
-          'cakeDesigner.addToCart': '🛒 הוסף לסל הקניות',
-          'cakeDesigner.colors.pink': 'ורוד',
-          'cakeDesigner.colors.white': 'לבן',
-          'cakeDesigner.colors.green': 'ירוק',
-          'cakeDesigner.colors.red': 'אדום',
-          'cakeDesigner.colors.purple': 'סגול',
-          'cakeDesigner.colors.lightBlue': 'כחול בהיר',
-          'cakeDesigner.colors.orange': 'כתום',
-          'cakeDesigner.textColors.black': 'שחור',
-          'cakeDesigner.textColors.white': 'לבן',
-          'cakeDesigner.textColors.red': 'אדום',
-          'cakeDesigner.textColors.pink': 'ורוד',
-          'cakeDesigner.textColors.purple': 'סגול',
-          'cakeDesigner.textColors.blue': 'כחול',
-          'cakeDesigner.textColors.turquoise': 'טורקיז',
-          'cakeDesigner.textColors.green': 'ירוק',
-          'cakeDesigner.textColors.orange': 'כתום',
-          'cakeDesigner.textColors.yellow': 'צהוב',
-          'cakeDesigner.textColors.brown': 'חום',
-          'cakeDesigner.textColors.gray': 'אפור',
-          'themeToggleDark': 'מצב כהה',
-          'themeToggleLight': 'מצב בהיר'
-        },
-        en: {
-          'nav.store': 'Store',
-          'nav.cart': 'Shopping Cart',
-          'nav.checkout': 'Checkout',
-          'nav.myPurchases': 'My Purchases',
-          'nav.login': 'Login',
-          'nav.logout': 'Logout',
-          'nav.admin': 'Admin',
-          'nav.cakeDesigner': 'Cake Designer',
-          'nav.dessertFinder': '🔍 Find Perfect Dessert',
-          'nav.wheel': 'Lucky Wheel',
-          'cakeDesigner.title': 'Custom Cake Designer',
-          'cakeDesigner.subtitle': 'Design the perfect cake for you',
-          'cakeDesigner.sizeSelection': '🔍 Cake Size Selection',
-          'cakeDesigner.bento': 'Bento',
-          'cakeDesigner.bentoSize': 'Diameter 10cm',
-          'cakeDesigner.large': 'Large',
-          'cakeDesigner.largeSize': 'Diameter 22cm',
-          'cakeDesigner.colorSelection': '🎨 Cake Color Selection',
-          'cakeDesigner.textSection': '✏️ Text on Cake',
-          'cakeDesigner.textPlaceholder': 'Enter text (up to 20 characters)',
-          'cakeDesigner.charLimit': '/20 characters',
-          'cakeDesigner.textColorSelection': '🌈 Text Color',
-          'cakeDesigner.customCake': 'Custom Cake',
-          'cakeDesigner.addToCart': '🛒 Add to Cart',
-          'cakeDesigner.colors.pink': 'Pink',
-          'cakeDesigner.colors.white': 'White',
-          'cakeDesigner.colors.green': 'Green',
-          'cakeDesigner.colors.red': 'Red',
-          'cakeDesigner.colors.purple': 'Purple',
-          'cakeDesigner.colors.lightBlue': 'Light Blue',
-          'cakeDesigner.colors.orange': 'Orange',
-          'cakeDesigner.textColors.black': 'Black',
-          'cakeDesigner.textColors.white': 'White',
-          'cakeDesigner.textColors.red': 'Red',
-          'cakeDesigner.textColors.pink': 'Pink',
-          'cakeDesigner.textColors.purple': 'Purple',
-          'cakeDesigner.textColors.blue': 'Blue',
-          'cakeDesigner.textColors.turquoise': 'Turquoise',
-          'cakeDesigner.textColors.green': 'Green',
-          'cakeDesigner.textColors.orange': 'Orange',
-          'cakeDesigner.textColors.yellow': 'Yellow',
-          'cakeDesigner.textColors.brown': 'Brown',
-          'cakeDesigner.textColors.gray': 'Gray',
-          'themeToggleDark': 'Dark Mode',
-          'themeToggleLight': 'Light Mode'
-        }
-      };
-
-      const t = texts[lang];
-      if (!t) return;
-
-      // עדכון תרגומים בכל האלמנטים שיש להם data-key
-      document.querySelectorAll('[data-key]').forEach(element => {
-        const key = element.getAttribute('data-key');
-        if (t[key]) {
-          if (element.tagName === 'INPUT' && element.type === 'text') {
-            element.placeholder = t[key];
-          } else {
-            element.textContent = t[key];
-          }
-        }
-      });
-
-      // עדכון placeholder נפרד
-      const textInput = document.getElementById('cakeTextInput');
-      if (textInput && t['cakeDesigner.textPlaceholder']) {
-        textInput.placeholder = t['cakeDesigner.textPlaceholder'];
+    function updateInterfaceLanguage(lang) {
+      const t = {
+        he:{'nav-store':'חנות','nav-cart':'סל קניות','nav-checkout':'תשלום','nav-myitems':'הרכישות שלי','nav-login':'התחברות','nav-logout':'התנתקות','nav-admin':'ניהול','theme-dark':'🌙 מצב כהה','theme-light':'☀️ מצב בהיר'},
+        en:{'nav-store':'Store','nav-cart':'Shopping Cart','nav-checkout':'Checkout','nav-myitems':'My Purchases','nav-login':'Login','nav-logout':'Logout','nav-admin':'Admin','theme-dark':'🌙 Dark Mode','theme-light':'☀️ Light Mode'}
+      }[lang];
+      if(!t) return;
+      
+      const navCheckout = document.getElementById('nav-checkout');
+      const navMyitems = document.getElementById('nav-myitems');
+      const loginLink = document.getElementById('header-login');
+      const logoutBtn = document.getElementById('logout');
+      const navAdmin = document.getElementById('nav-admin');
+      const themeToggle = document.getElementById('theme-toggle');
+      
+      if(navCheckout) navCheckout.textContent = t['nav-checkout'];
+      if(navMyitems) navMyitems.textContent = t['nav-myitems']; 
+      if(loginLink) loginLink.textContent = t['nav-login']; 
+      if(logoutBtn) logoutBtn.textContent = t['nav-logout'];
+      if(navAdmin) navAdmin.textContent = t['nav-admin']; 
+      if(themeToggle) themeToggle.textContent = (localStorage.getItem('theme')||'light')==='dark' ? t['theme-light'] : t['theme-dark'];
+      
+      if(lang==='en'){
+        document.documentElement.dir='ltr';
+        document.documentElement.lang='en';
+      }
+      else{
+        document.documentElement.dir='rtl';
+        document.documentElement.lang='he';
       }
     }
 
@@ -867,6 +1171,16 @@
       updateCakePreview();
     });
 
+    // טוסט קטן
+    const toastEl=document.getElementById('toast'); 
+    let toastTimer;
+    function showToast(msg){ 
+      toastEl.textContent=msg; 
+      toastEl.classList.add('show'); 
+      clearTimeout(toastTimer); 
+      toastTimer=setTimeout(()=>toastEl.classList.remove('show'),1500); 
+    }
+
     // הוספה לסל
     document.getElementById('addToCartBtn').addEventListener('click', async () => {
       const button = document.getElementById('addToCartBtn');
@@ -892,7 +1206,7 @@
         });
 
         if (response.status === 401) {
-          location.href = '/screens/login.html';
+          location.href = 'login.html';
           return;
         }
 
@@ -948,7 +1262,7 @@
         const r = await fetch('/api/session');
         if (r.ok) {
           const data = await r.json();
-          document.getElementById('login-link').style.display = 'none';
+          document.getElementById('header-login').style.display = 'none';
           document.getElementById('logout').style.display = '';
           if (data.username === 'admin') {
             document.getElementById('nav-admin').style.display = '';
@@ -959,7 +1273,7 @@
 
     document.getElementById('logout').onclick = async () => {
       try { await fetch('/api/logout', { method: 'POST' }); }
-      finally { location.href = '/screens/login.html'; }
+      finally { location.href = 'login.html'; }
     };
 
     // טעינה ראשונית

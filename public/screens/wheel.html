@@ -2,126 +2,591 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>גלגל מזל מתוק</title>
+  <title data-page="wheel">גלגל מזל מתוק</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="/assets/styles.css">
+  <script src="/assets/translations.js" defer></script>
   <style>
-    .wheel-wrap{display:flex;flex-direction:column;align-items:center;gap:16px}
-    .wheel-card{background:var(--bg-card);border-radius:20px;box-shadow:var(--shadow-lg);padding:24px;max-width:560px;width:100%;text-align:center}
-    .wheel{width:320px;height:320px;border-radius:50%;border:10px solid #fff;box-shadow:var(--shadow-md);position:relative;transition:transform 5s cubic-bezier(.2,.7,.1,1)}
-    /* חץ כלפי מטה */
-    .needle{width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:18px solid var(--primary-dark);margin-bottom:4px}
-    .segments{position:absolute;inset:0;border-radius:50%;
-      /* 9 פלחים – אפורים מפוזרים לסירוגין (NONE בכל אינדקס זוגי) */
-      background:conic-gradient(
-        #bdbdbd 0deg 40deg,      /* NONE idx0 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #ffffff;
+      color: #1a1a1a;
+      line-height: 1.6;
+    }
+
+    /* Header */
+    .header {
+      background: #ffffcc;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .menu-btn {
+      background: none;
+      border: none;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .menu-btn::before {
+      content: "☰";
+      font-size: 1.2rem;
+    }
+
+    .logo {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #1a1a1a;
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .header-btn {
+      background: none;
+      border: 2px solid #1a1a1a;
+      color: #1a1a1a;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .header-btn:hover {
+      background: #1a1a1a;
+      color: white;
+    }
+
+    .header-btn.primary {
+      background: #1a1a1a;
+      color: white;
+    }
+
+    .header-btn.primary:hover {
+      background: #333;
+    }
+
+    .cart-btn::before {
+      content: "🛒";
+    }
+
+    .home-btn::before {
+      content: "🏠";
+    }
+
+    .login-btn::before {
+      content: "👤";
+    }
+
+    .store-btn::before {
+      content: "🍰";
+    }
+
+    /* Navigation Menu */
+    .nav-menu {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 300px;
+      height: 100vh;
+      background: white;
+      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+      transition: right 0.3s ease;
+      padding: 2rem;
+      z-index: 2000;
+    }
+
+    .nav-menu.active {
+      right: 0;
+    }
+
+    .nav-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      float: left;
+      margin-bottom: 2rem;
+    }
+
+    .nav-item,
+    .nav-menu a,
+    .nav-menu button {
+      display: block;
+      padding: 0.75rem 0;
+      color: #1a1a1a;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid #f0f0f0;
+      transition: color 0.2s ease;
+      background: none;
+      border: none;
+      text-align: right;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .nav-item:hover,
+    .nav-menu a:hover,
+    .nav-menu button:hover {
+      color: #ffffcc;
+    }
+
+    /* Overlay */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1500;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Main Content */
+    .main-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    #main-title {
+      font-size: 3rem;
+      font-weight: 900;
+      color: #1a1a1a;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+
+    /* Wheel Container */
+    .wheel-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .wheel-card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+      padding: 2rem;
+      max-width: 560px;
+      width: 100%;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .wheel-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    .wheel {
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      border: 10px solid #fff;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      position: relative;
+      transition: transform 5s cubic-bezier(.2,.7,.1,1);
+      margin: 0 auto;
+    }
+
+    /* Arrow pointing down */
+    .needle {
+      width: 0;
+      height: 0;
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-top: 18px solid #1a1a1a;
+      margin-bottom: 4px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .segments {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: conic-gradient(
+        #bdbdbd 0deg 40deg,      /* NONE */
         #ff6b9d 40deg 80deg,     /* 10% */
-        #bdbdbd 80deg 120deg,    /* NONE idx2 */
+        #bdbdbd 80deg 120deg,    /* NONE */
         #ffd93d 120deg 160deg,   /* קינוח */
-        #bdbdbd 160deg 200deg,   /* NONE idx4 */
+        #bdbdbd 160deg 200deg,   /* NONE */
         #4ecdc4 200deg 240deg,   /* משלוח */
-        #bdbdbd 240deg 280deg,   /* NONE idx6 */
+        #bdbdbd 240deg 280deg,   /* NONE */
         #ff9a9e 280deg 320deg,   /* 50 ₪ */
-        #bdbdbd 320deg 360deg    /* NONE idx8 */
+        #bdbdbd 320deg 360deg    /* NONE */
       );
     }
-    .labels{position:absolute;inset:0;border-radius:50%}
-    .labels span{position:absolute;left:50%;top:50%;transform-origin:0 0;font-weight:800;color:#333}
-    .labels span small{display:block;font-weight:600;font-size:12px;color:#444;opacity:.8}
-    .spin-btn{margin-top:8px}
-    .note{color:var(--text-muted);font-size:12px}
-    .prize{font-size:20px;font-weight:800;margin-top:10px}
-    .coupon{font-family:ui-monospace, Menlo, Consolas, monospace;background:#111;color:#fff;display:inline-block;padding:6px 10px;border-radius:8px;margin-top:8px;letter-spacing:1px}
-    .disabled{opacity:.6;pointer-events:none}
+
+    .labels {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+    }
+
+    .labels span {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform-origin: 0 0;
+      font-weight: 800;
+      color: #333;
+    }
+
+    .labels span small {
+      display: block;
+      font-weight: 600;
+      font-size: 12px;
+      color: #444;
+      opacity: .8;
+    }
+
+    .spin-btn {
+      background: #1a1a1a;
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 25px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-top: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .spin-btn:hover {
+      background: #333;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .spin-btn:active {
+      transform: translateY(0);
+    }
+
+    .note {
+      color: #666;
+      font-size: 14px;
+      margin-top: 1rem;
+      font-style: italic;
+    }
+
+    .prize {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-top: 1.5rem;
+      color: #1a1a1a;
+      min-height: 1.5rem;
+    }
+
+    .coupon {
+      font-family: ui-monospace, Menlo, Consolas, monospace;
+      background: #1a1a1a;
+      color: white;
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin-top: 1rem;
+      letter-spacing: 1px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .disabled {
+      opacity: 0.6;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+
+    /* Toast */
+    #toast {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      z-index: 9999;
+      display: none;
+      padding: 10px 14px;
+      background: #333;
+      color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .2);
+      font-size: 14px;
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: opacity .2s, transform .2s;
+    }
+
+    #toast.show {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Dark Theme */
+    .dark-theme {
+      background: #1a1a1a;
+      color: white;
+    }
+
+    .dark-theme .header {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .nav-menu {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .nav-menu a,
+    .dark-theme .nav-menu button {
+      color: white;
+      border-bottom-color: #444;
+    }
+
+    .dark-theme .wheel-card {
+      background: #2d2d2d;
+    }
+
+    .dark-theme #main-title {
+      color: white;
+    }
+
+    .dark-theme .prize {
+      color: white;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 968px) {
+      .header-nav {
+        gap: 0.5rem;
+      }
+
+      .header-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+      }
+
+      #main-title {
+        font-size: 2.5rem;
+      }
+
+      .wheel {
+        width: 280px;
+        height: 280px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        padding: 1rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .header-left {
+        order: 1;
+      }
+
+      .logo {
+        font-size: 1.8rem;
+        order: 2;
+      }
+
+      .header-nav {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .header-btn {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.75rem;
+      }
+
+      .main-content {
+        padding: 1rem;
+      }
+
+      #main-title {
+        font-size: 2rem;
+      }
+
+      .wheel {
+        width: 250px;
+        height: 250px;
+      }
+
+      .wheel-card {
+        padding: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header-btn {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.7rem;
+      }
+
+      .header-btn::before {
+        display: none;
+      }
+
+      .wheel {
+        width: 220px;
+        height: 220px;
+      }
+    }
   </style>
 </head>
 <body>
-  <nav>
-    <a href="index.html" id="nav-home" class="nav-item" data-key="nav.home"> בית</a>
-    <a href="store.html" id="nav-store" data-key="nav.store">חנות</a>
-    <a href="cart.html" id="nav-cart" data-key="nav.cart">סל הקניות</a>
+  <div class="overlay" id="overlay"></div>
+  
+  <header class="header">
+    <div class="header-left">
+      <button class="menu-btn" id="menuBtn">Menu</button>
+      <a href="/" class="logo">dessert</a>
+    </div>
+    
+    <nav class="header-nav">
+      <a href="index.html" class="header-btn home-btn">בית</a>
+      <a href="store.html" class="header-btn store-btn">חנות</a>
+      <a href="cart.html" class="header-btn cart-btn">סל קניות</a>
+      <a href="login.html" class="header-btn login-btn" id="header-login">התחברות</a>
+    </nav>
+  </header>
+
+  <nav class="nav-menu" id="navMenu">
+    <button class="nav-close" id="navClose">×</button>
+
     <a href="checkout.html" id="nav-checkout" data-key="nav.checkout">תשלום</a>
     <a href="myitems.html" id="nav-myitems" data-key="nav.myPurchases">הרכישות שלי</a>
-    <a id="login-link" href="login.html" data-key="nav.login">התחברות</a>
-    <button id="logout" style="display:none" data-key="nav.logout">התנתקות</button>
     <a href="admin.html" id="nav-admin" data-key="nav.admin" style="display:none">ניהול</a>
+    <a href="dessert-finder.html" data-key="nav.dessertFinder">מציאת הקינוח המושלם</a>
+    <a href="wheel.html" data-key="nav.wheel">גלגל מזל</a>
     <a href="cake-designer.html" data-key="nav.cakeDesigner">עיצוב עוגה</a>
-    <a href="dessert-finder.html" data-key="nav.dessertFinder"> מציאת קינוח מושלם</a>
-    <a href="wheel.html" data-key="nav.wheel"> גלגל מזל</a>
-    <a href="recipes.html" id="nav-recipes" data-key="nav.recipes"> מתכונים</a>
+    <a href="recipes.html" id="nav-recipes" data-key="nav.recipes">מתכונים</a>
+    <button id="logout" style="display:none" data-key="nav.logout">התנתקות</button>
     <button id="theme-toggle">🌙 מצב כהה</button>
     <button id="language-toggle">🌐 English</button>
   </nav>
 
-  <h1 id="main-title">גלגל מזל מתוק 🭐</h1>
+  <div id="toast"></div>
 
-  <div class="wheel-wrap">
-    <div class="needle"></div>
-    <div class="wheel-card">
-      <div style="display:flex;justify-content:center">
-        <div id="wheel" class="wheel">
-          <div class="segments"></div>
-          <div class="labels" id="wheel-labels">
-            <!-- התוויות יווצרו דינמית ב-JavaScript -->
+  <main class="main-content">
+    <div class="page-header">
+      <h1 id="main-title">גלגל מזל מתוק 🎲</h1>
+    </div>
+
+    <div class="wheel-wrap">
+      <div class="needle"></div>
+      <div class="wheel-card">
+        <div style="display:flex;justify-content:center">
+          <div id="wheel" class="wheel">
+            <div class="segments"></div>
+            <div class="labels" id="wheel-labels">
+              <!-- התוויות יווצרו דינמית ב-JavaScript -->
+            </div>
           </div>
         </div>
+
+        <button id="spin" class="spin-btn">סובב את הגלגל</button>
+        <div class="note" id="note-text">אפשרות אחת ליום לכל משתמש.</div>
+
+        <div id="result" class="prize" aria-live="polite"></div>
+        <div id="coupon" class="coupon" style="display:none"></div>
       </div>
-
-      <button id="spin" class="btn spin-btn">סובב את הגלגל</button>
-      <div class="note" id="note-text">אפשרות אחת ליום לכל משתמש.</div>
-
-      <div id="result" class="prize" aria-live="polite"></div>
-      <div id="coupon" class="coupon" style="display:none"></div>
     </div>
-  </div>
+  </main>
 
   <script>
     // מערכת תרגום עצמאית
     const TRANSLATIONS = {
       he: {
-        // כותרות וטקסטים עיקריים
-        title: 'גלגל מזל מתוק 🭐',
+        title: 'גלגל מזל מתוק 🎲',
         spinButton: 'סובב את הגלגל',
         oncePerDay: 'אפשרות אחת ליום לכל משתמש.',
         limitOncePerDay: 'אפשר להגריל רק פעם ביום. נסו שוב מחר',
-
-        // תפריט ניווט
         navStore: 'חנות',
-        navCart: 'סל הקניות',
+        navCart: 'סל קניות',
         navCheckout: 'תשלום',
         navMyitems: 'הרכישות שלי',
         navLogin: 'התחברות',
         navLogout: 'התנתקות',
         navAdmin: 'ניהול',
         navCakeDesigner: 'עיצוב עוגה',
-        navDessertFinder: '🔍 מציאת קינוח מושלם',
+        navDessertFinder: 'מציאת הקינוח המושלם',
         navWheel: 'גלגל מזל',
-
-        // תוויות הגלגל
+        navRecipes: 'מתכונים',
         noWin: 'לא זכיתי',
         discount: 'הנחה',
         dessert: 'קינוח',
         delivery: 'משלוח',
         voucher: 'שובר',
-
-        // הודעות משחק
         spinning: 'מגריל...',
         cannotSpin: 'לא ניתן להגריל כרגע',
         networkError: 'בעיה ברשת. נסה/י שוב.',
         until: 'עד',
-
-        // כפתורי ממשק
         themeToggleDark: 'מצב כהה',
         themeToggleLight: 'מצב בהיר'
       },
       en: {
-        // Titles
-        title: 'Sweet Lucky Wheel 🭐',
+        title: 'Sweet Lucky Wheel 🎲',
         spinButton: 'Spin the Wheel',
         oncePerDay: 'One chance per day for each user.',
         limitOncePerDay: 'You can spin only once per day. Try again tomorrow.',
-
-        // Nav
         navStore: 'Store',
         navCart: 'Shopping Cart',
         navCheckout: 'Checkout',
@@ -130,47 +595,38 @@
         navLogout: 'Logout',
         navAdmin: 'Admin',
         navCakeDesigner: 'Cake Designer',
-        navDessertFinder: '🔍 Find Perfect Dessert',
+        navDessertFinder: 'Find Perfect Dessert',
         navWheel: 'Lucky Wheel',
-
-        // Wheel labels
+        navRecipes: 'Recipes',
         noWin: "Didn't Win",
         discount: 'Discount',
         dessert: 'Dessert',
         delivery: 'Delivery',
         voucher: 'Voucher',
-
-        // Game messages
         spinning: 'Spinning...',
         cannotSpin: 'Cannot spin right now',
         networkError: 'Network error. Please try again.',
         until: 'until',
-
-        // UI
         themeToggleDark: 'Dark Mode',
         themeToggleLight: 'Light Mode'
       }
     };
 
-    // פונקציה לקבלת טקסט בשפה הנוכחית
     function getText(key) {
       const currentLang = localStorage.getItem('language') || 'he';
       return TRANSLATIONS[currentLang][key] || TRANSLATIONS.he[key] || key;
     }
 
-    // ✅ נרמול הודעות שמגיעות מהשרת (למשל בעברית כששפת הממשק EN)
     function normalizeServerMessage(msg){
       const lang = localStorage.getItem('language') || 'he';
       if (!msg) return '';
       const hasHebrew = /[\u0590-\u05FF]/.test(msg);
       if (lang === 'en' && hasHebrew) {
-        // תרגום כללי למגבלת פעם ביום
         return getText('limitOncePerDay');
       }
       return msg;
     }
 
-    // עדכון תוויות הגלגל
     function updateWheelLabels() {
       const wheelLabels = [
         { rotation: -90, distance: 90, symbol: '—',   text: getText('noWin')     },
@@ -212,32 +668,52 @@
       });
     }
 
-    // עדכון כל הטקסטים בדף
     function updateAllTexts() {
       document.getElementById('main-title').textContent = getText('title');
       document.getElementById('spin').textContent = getText('spinButton');
       document.getElementById('note-text').textContent = getText('oncePerDay');
 
-      // תפריט
-      document.getElementById('nav-store').textContent = getText('navStore');
-      document.getElementById('nav-cart').textContent = getText('navCart');
-      document.getElementById('nav-checkout').textContent = getText('navCheckout');
-      document.getElementById('nav-myitems').textContent = getText('navMyitems');
-      document.getElementById('login-link').textContent = getText('navLogin');
-      document.getElementById('logout').textContent = getText('navLogout');
-      document.getElementById('nav-admin').textContent = getText('navAdmin');
+      // Navigation texts
+      const checkoutBtn = document.getElementById('nav-checkout');
+      const myitemsBtn = document.getElementById('nav-myitems');
+      const loginLink = document.getElementById('header-login');
+      const logoutBtn = document.getElementById('logout');
+      const adminBtn = document.getElementById('nav-admin');
+      const recipesBtn = document.getElementById('nav-recipes');
 
-      const ncd = document.getElementById('nav-cake-designer');
-      if (ncd) ncd.textContent = getText('navCakeDesigner');
-      const ndf = document.getElementById('nav-dessert-finder');
-      if (ndf) ndf.textContent = getText('navDessertFinder');
-      const nwt = document.getElementById('nav-wheel-text');
-      if (nwt) nwt.textContent = getText('navWheel');
+      const L = localStorage.getItem('language') || 'he';
+      if (checkoutBtn) checkoutBtn.textContent = getText('navCheckout');
+      if (myitemsBtn) myitemsBtn.textContent = getText('navMyitems');
+      if (loginLink) loginLink.textContent = getText('navLogin');
+      if (logoutBtn) logoutBtn.textContent = getText('navLogout');
+      if (adminBtn) adminBtn.textContent = getText('navAdmin');
+      if (recipesBtn) recipesBtn.textContent = getText('navRecipes');
 
       updateWheelLabels();
     }
 
-    // טעינת התאמות אישיות
+    // Menu functionality
+    const menuBtn = document.getElementById('menuBtn');
+    const navMenu = document.getElementById('navMenu');
+    const navClose = document.getElementById('navClose');
+    const overlay = document.getElementById('overlay');
+
+    function openMenu() {
+      navMenu.classList.add('active');
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+      navMenu.classList.remove('active');
+      overlay.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    menuBtn.addEventListener('click', openMenu);
+    navClose.addEventListener('click', closeMenu);
+    overlay.addEventListener('click', closeMenu);
+
     function loadUICustomization() {
       const currentLang = localStorage.getItem('language') || 'he';
       const theme = localStorage.getItem('theme') || 'light';
@@ -264,14 +740,12 @@
       updateAllTexts();
     }
 
-    // החלפת נושא
     document.getElementById('theme-toggle').addEventListener('click', () => {
       const isDark = document.body.classList.contains('dark-theme');
       localStorage.setItem('theme', isDark ? 'light' : 'dark');
       loadUICustomization();
     });
 
-    // החלפת שפה
     document.getElementById('language-toggle').addEventListener('click', () => {
       const currentLang = localStorage.getItem('language') || 'he';
       const nextLang = currentLang === 'he' ? 'en' : 'he';
@@ -279,19 +753,27 @@
 
       loadUICustomization();
 
-      // נקה תוצאות קודמות
       const resultBox = document.getElementById('result');
       const couponBox = document.getElementById('coupon');
       resultBox.textContent = '';
       couponBox.style.display = 'none';
     });
 
-    // הגדרת אימות
+    // Toast
+    const toastEl = document.getElementById('toast');
+    let toastTimer;
+    function showToast(msg) {
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1500);
+    }
+
     (async function(){
       try{
         const r = await fetch('/api/session');
         if(r.ok){
-          document.getElementById('login-link').style.display = 'none';
+          document.getElementById('header-login').style.display = 'none';
           document.getElementById('logout').style.display = '';
 
           const data = await r.json();
@@ -307,13 +789,11 @@
       finally { location.href = 'login.html'; }
     };
 
-    // אלמנטים של המשחק
     const wheel  = document.getElementById('wheel');
     const spinBtn = document.getElementById('spin');
     const resultBox = document.getElementById('result');
     const couponBox = document.getElementById('coupon');
 
-    // אנימציית סיבוב הגלגל
     function spinVisual(targetAngle){
       wheel.style.transition = 'none';
       const current = wheel._angle || 0;
@@ -326,7 +806,6 @@
       });
     }
 
-    // פונקציית הסיבוב
     async function spin(){
       spinBtn.classList.add('disabled');
       resultBox.textContent = getText('spinning');
@@ -365,10 +844,8 @@
       }
     }
 
-    // הוספת event listener לכפתור הסיבוב
     spinBtn.addEventListener('click', spin);
 
-    // טעינה ראשונית
     document.addEventListener('DOMContentLoaded', () => {
       if (!localStorage.getItem('language')) {
         localStorage.setItem('language', 'he');

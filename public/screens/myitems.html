@@ -2,67 +2,666 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>הרכישות שלי</title>
+  <title data-page="myitems">הרכישות שלי</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="/assets/styles.css">
-  <script src="/assets/translations"></script>
-  <style>.price{font-weight:800}</style>
+  <script src="/assets/translations.js" defer></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #ffffff;
+      color: #1a1a1a;
+      line-height: 1.6;
+    }
+
+    /* Header */
+    .header {
+      background: #ffffcc;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .menu-btn {
+      background: none;
+      border: none;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .menu-btn::before {
+      content: "☰";
+      font-size: 1.2rem;
+    }
+
+    .logo {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #1a1a1a;
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .header-btn {
+      background: none;
+      border: 2px solid #1a1a1a;
+      color: #1a1a1a;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .header-btn:hover {
+      background: #1a1a1a;
+      color: white;
+    }
+
+    .header-btn.primary {
+      background: #1a1a1a;
+      color: white;
+    }
+
+    .header-btn.primary:hover {
+      background: #333;
+    }
+
+    .cart-btn::before {
+      content: "🛒";
+    }
+
+    .home-btn::before {
+      content: "🏠";
+    }
+
+    .login-btn::before {
+      content: "👤";
+    }
+
+    .store-btn::before {
+      content: "🍰";
+    }
+
+    /* Navigation Menu */
+    .nav-menu {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 300px;
+      height: 100vh;
+      background: white;
+      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+      transition: right 0.3s ease;
+      padding: 2rem;
+      z-index: 2000;
+    }
+
+    .nav-menu.active {
+      right: 0;
+    }
+
+    .nav-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      float: left;
+      margin-bottom: 2rem;
+    }
+
+    .nav-item,
+    .nav-menu a,
+    .nav-menu button {
+      display: block;
+      padding: 0.75rem 0;
+      color: #1a1a1a;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid #f0f0f0;
+      transition: color 0.2s ease;
+      background: none;
+      border: none;
+      text-align: right;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .nav-item:hover,
+    .nav-menu a:hover,
+    .nav-menu button:hover {
+      color: #ffffcc;
+    }
+
+    /* Overlay */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1500;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Main Content */
+    .main-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    #page-title {
+      font-size: 3rem;
+      font-weight: 900;
+      color: #1a1a1a;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+
+    /* Items Grid */
+    #list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .item {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    .item img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .item > div {
+      padding: 1.5rem;
+    }
+
+    .item h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #1a1a1a;
+    }
+
+    .price {
+      font-weight: 800;
+      color: #1a1a1a;
+    }
+
+    .meta {
+      color: #666;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .item p {
+      color: #666;
+      line-height: 1.5;
+      margin-top: 0.5rem;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #666;
+      background: #f8f8f8;
+      border-radius: 15px;
+      margin-top: 2rem;
+    }
+
+    .empty-state h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #1a1a1a;
+    }
+
+    .empty-state p {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+    }
+
+    .empty-state a {
+      background: #1a1a1a;
+      color: white;
+      padding: 0.8rem 2rem;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .empty-state a:hover {
+      background: #333;
+      transform: translateY(-2px);
+    }
+
+    /* Error State */
+    .error-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #c62828;
+      background: #ffffcc;
+      border-radius: 15px;
+      margin-top: 2rem;
+    }
+
+    /* Loading State */
+    .loading-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #666;
+      background: #f8f8f8;
+      border-radius: 15px;
+      margin-top: 2rem;
+    }
+
+    /* Toast */
+    #toast {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      z-index: 9999;
+      display: none;
+      padding: 10px 14px;
+      background: #333;
+      color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .2);
+      font-size: 14px;
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: opacity .2s, transform .2s;
+    }
+
+    #toast.show {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Dark Theme */
+    .dark-theme {
+      background: #1a1a1a;
+      color: white;
+    }
+
+    .dark-theme .header {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .nav-menu {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .nav-menu a,
+    .dark-theme .nav-menu button {
+      color: white;
+      border-bottom-color: #444;
+    }
+
+    .dark-theme .item {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .item h3 {
+      color: white;
+    }
+
+    .dark-theme .price {
+      color: white;
+    }
+
+    .dark-theme #page-title {
+      color: white;
+    }
+
+    .dark-theme .empty-state,
+    .dark-theme .loading-state {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .empty-state h2 {
+      color: white;
+    }
+
+    .dark-theme .error-state {
+      background: #444;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 968px) {
+      .header-nav {
+        gap: 0.5rem;
+      }
+
+      .header-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+      }
+
+      #page-title {
+        font-size: 2.5rem;
+      }
+
+      #list {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        padding: 1rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .header-left {
+        order: 1;
+      }
+
+      .logo {
+        font-size: 1.8rem;
+        order: 2;
+      }
+
+      .header-nav {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .header-btn {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.75rem;
+      }
+
+      .main-content {
+        padding: 1rem;
+      }
+
+      #page-title {
+        font-size: 2rem;
+      }
+
+      #list {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header-btn {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.7rem;
+      }
+
+      .header-btn::before {
+        display: none;
+      }
+    }
+  </style>
 </head>
-<body class="myitems-page">
-  <nav>
-    <a href="index.html" id="nav-home" class="nav-item" data-key="nav.home"> בית</a>
-    <a href="store.html" id="nav-store" data-key="nav.store">חנות</a>
-    <a href="cart.html" id="nav-cart" data-key="nav.cart">סל הקניות</a>
+<body>
+  <div class="overlay" id="overlay"></div>
+  
+  <header class="header">
+    <div class="header-left">
+      <button class="menu-btn" id="menuBtn">Menu</button>
+      <a href="/" class="logo">dessert</a>
+    </div>
+    
+    <nav class="header-nav">
+      <a href="index.html" class="header-btn home-btn">בית</a>
+      <a href="store.html" class="header-btn store-btn">חנות</a>
+      <a href="cart.html" class="header-btn cart-btn">סל קניות</a>
+      <a href="login.html" class="header-btn login-btn" id="header-login">התחברות</a>
+    </nav>
+  </header>
+
+  <nav class="nav-menu" id="navMenu">
+    <button class="nav-close" id="navClose">×</button>
+
     <a href="checkout.html" id="nav-checkout" data-key="nav.checkout">תשלום</a>
     <a href="myitems.html" id="nav-myitems" data-key="nav.myPurchases">הרכישות שלי</a>
-    <a id="login-link" href="login.html" data-key="nav.login">התחברות</a>
-    <button id="logout" style="display:none" data-key="nav.logout">התנתקות</button>
     <a href="admin.html" id="nav-admin" data-key="nav.admin" style="display:none">ניהול</a>
+    <a href="dessert-finder.html" data-key="nav.dessertFinder">מציאת הקינוח המושלם</a>
+    <a href="wheel.html" data-key="nav.wheel">גלגל מזל</a>
     <a href="cake-designer.html" data-key="nav.cakeDesigner">עיצוב עוגה</a>
-    <a href="dessert-finder.html" data-key="nav.dessertFinder"> מציאת קינוח מושלם</a>
-    <a href="wheel.html" data-key="nav.wheel"> גלגל מזל</a>
-    <a href="recipes.html" id="nav-recipes" data-key="nav.recipes"> מתכונים</a>
+    <a href="recipes.html" id="nav-recipes" data-key="nav.recipes">מתכונים</a>
+    <button id="logout" style="display:none" data-key="nav.logout">התנתקות</button>
     <button id="theme-toggle">🌙 מצב כהה</button>
     <button id="language-toggle">🌐 English</button>
   </nav>
-  <h1 id="page-title">הרכישות שלי</h1>
-  <div id="list"></div>
+
+  <div id="toast"></div>
+
+  <main class="main-content">
+    <div class="page-header">
+      <h1 id="page-title">הרכישות שלי</h1>
+    </div>
+
+    <div id="list"></div>
+  </main>
 
   <script>
-    // טעינת התאמות אישיות מ-localStorage
+    // Menu functionality
+    const menuBtn = document.getElementById('menuBtn');
+    const navMenu = document.getElementById('navMenu');
+    const navClose = document.getElementById('navClose');
+    const overlay = document.getElementById('overlay');
+
+    function openMenu() {
+      navMenu.classList.add('active');
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+      navMenu.classList.remove('active');
+      overlay.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    menuBtn.addEventListener('click', openMenu);
+    navClose.addEventListener('click', closeMenu);
+    overlay.addEventListener('click', closeMenu);
+
+    // Toast
+    const toastEl = document.getElementById('toast');
+    let toastTimer;
+    function showToast(msg) {
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1500);
+    }
+
+    // Helper functions
+    const slugify = s => String(s||'').trim().toLowerCase().replace(/[^\p{L}\p{N} ]/gu,'').replace(/\s+/g,'-');
+    const nis = n => `₪${n}`;
+    
+    const PRICE_MAP = {
+      'chocolate-cake': 150, '8-cookies-box': 125, 'cupcakes': 160, 'minnie-mous-cake': 300,
+      'nutella-box': 70, 'chocolate-pizza-xl': 120, 'bento-design-cake': 140, 'chocolate-design-cake': 180,
+      'orange-cake': 70, 'white-design-cake': 140, 'pizza-cookie': 120, 'pizza cookie': 120
+    };
+    
+    const NAMES = {
+      he: {
+        'chocolate-cake': 'עוגת שוקולד מעוצבת', '8-cookies-box': 'מארז 8 עוגיות', 'cupcakes': 'קאפקייקס',
+        'minnie-mous-cake': 'עוגת מיני מאוס', 'nutella-box': 'מארז מגולגלות נוטלה', 'chocolate-pizza-xl': 'פיצת שוקולד גדולה',
+        'bento-design-cake': 'עוגת בנטו מעוצבת', 'chocolate-design-cake': 'עוגת שוקולד מעוצבת', 'orange-cake': 'עוגת תפוזים',
+        'bagle-cookie': 'עוגיית בייגל', 'caramel-cookie': 'עוגיית קרמל', 'kinder-cookie': 'עוגיית קינדר',
+        'lotus-cookie': 'עוגיית לוטוס', 'nutella-cookie': 'עוגיית נוטלה', 'white-chocolate-cookie': 'עוגיית שוקולד לבן',
+        'white-design-cake': 'עוגת בנטו מעוצבת', 'pizza-cookie': 'פיצת שוקולד גדולה', 'pizza cookie': 'פיצת שוקולד גדולה'
+      },
+      en: {
+        'chocolate-cake': 'Chocolate Design Cake', '8-cookies-box': '8 Cookies Box', 'cupcakes': 'Cupcakes',
+        'minnie-mous-cake': 'Minnie Mouse Cake', 'nutella-box': 'Nutella Box', 'chocolate-pizza-xl': 'Chocolate Pizza XL',
+        'bento-design-cake': 'Bento Design Cake', 'chocolate-design-cake': 'Chocolate Design Cake', 'orange-cake': 'Orange Cake',
+        'bagle-cookie': 'Bagel Cookie', 'caramel-cookie': 'Caramel Cookie', 'kinder-cookie': 'Kinder Cookie',
+        'lotus-cookie': 'Lotus Cookie', 'nutella-cookie': 'Nutella Cookie', 'white-chocolate-cookie': 'White Chocolate Cookie',
+        'white-design-cake': 'Bento Design Cake', 'pizza-cookie': 'Chocolate Pizza XL', 'pizza cookie': 'Chocolate Pizza XL'
+      }
+    };
+
+    const priceOf = (prod) => {
+      const id = String(prod.id ?? '');
+      const title = String(prod.title ?? '');
+      const keys = [id, slugify(id), title, slugify(title)];
+      const hit = keys.find(k => k in PRICE_MAP);
+      return hit ? PRICE_MAP[hit] : (/(cookie)/i.test(id + title) ? 17 : 0);
+    };
+
+    const nameOf = (prod, lang) => {
+      const id = String(prod.id ?? '');
+      const title = String(prod.title ?? '');
+      const dict = NAMES[lang] || {};
+      const keys = [id, slugify(id), title, slugify(title)];
+      const hit = keys.find(k => dict[k]);
+      return hit ? dict[hit] : (title || id);
+    };
+
+    function updateInterfaceLanguage(lang) {
+      const texts = {
+        he: {
+          'nav-store': 'חנות', 'nav-cart': 'סל קניות', 'nav-checkout': 'תשלום', 'nav-myitems': 'הרכישות שלי',
+          'nav-login': 'התחברות', 'nav-logout': 'התנתקות', 'nav-admin': 'ניהול', 'nav-recipes': 'מתכונים',
+          'page-title': 'הרכישות שלי', 'theme-dark': '🌙 מצב כהה', 'theme-light': '☀️ מצב בהיר',
+          'no-purchases': 'אין רכישות עדיין', 'no-purchases-desc': 'לא ביצעת עדיין רכישות. בקר בחנות שלנו למגוון מוצרים טעימים!',
+          'go-to-store': 'לחנות', 'loading': 'טוען רכישות...', 'error': 'שגיאה בטעינת הרכישות'
+        },
+        en: {
+          'nav-store': 'Store', 'nav-cart': 'Shopping Cart', 'nav-checkout': 'Checkout', 'nav-myitems': 'My Purchases',
+          'nav-login': 'Login', 'nav-logout': 'Logout', 'nav-admin': 'Admin', 'nav-recipes': 'Recipes',
+          'page-title': 'My Purchases', 'theme-dark': '🌙 Dark Mode', 'theme-light': '☀️ Light Mode',
+          'no-purchases': 'No purchases yet', 'no-purchases-desc': 'You haven\'t made any purchases yet. Visit our store for delicious products!',
+          'go-to-store': 'Go to Store', 'loading': 'Loading purchases...', 'error': 'Error loading purchases'
+        }
+      }[lang];
+
+      if (!texts) return;
+
+      // Navigation updates
+      const checkoutBtn = document.getElementById('nav-checkout');
+      const myitemsBtn = document.getElementById('nav-myitems');
+      const loginLink = document.getElementById('header-login');
+      const logoutBtn = document.getElementById('logout');
+      const adminBtn = document.getElementById('nav-admin');
+      const recipesBtn = document.getElementById('nav-recipes');
+
+      if (checkoutBtn) checkoutBtn.textContent = texts['nav-checkout'];
+      if (myitemsBtn) myitemsBtn.textContent = texts['nav-myitems'];
+      if (loginLink) loginLink.textContent = texts['nav-login'];
+      if (logoutBtn) logoutBtn.textContent = texts['nav-logout'];
+      if (adminBtn) adminBtn.textContent = texts['nav-admin'];
+      if (recipesBtn) recipesBtn.textContent = texts['nav-recipes'];
+
+      document.getElementById('page-title').textContent = texts['page-title'];
+
+      const theme = localStorage.getItem('theme') || 'light';
+      document.getElementById('theme-toggle').textContent = theme === 'dark' ? texts['theme-light'] : texts['theme-dark'];
+
+      if (lang === 'en') {
+        document.documentElement.dir = 'ltr';
+        document.documentElement.lang = 'en';
+      } else {
+        document.documentElement.dir = 'rtl';
+        document.documentElement.lang = 'he';
+      }
+    }
+
     function loadUICustomization() {
       const theme = localStorage.getItem('theme') || 'light';
       const themeToggle = document.getElementById('theme-toggle');
       const languageToggle = document.getElementById('language-toggle');
-      
-      // עדכון נושא
+
       if (theme === 'dark') {
         document.body.classList.add('dark-theme');
-        themeToggle.textContent = '☀️ מצב בהיר';
       } else {
         document.body.classList.remove('dark-theme');
-        themeToggle.textContent = '🌙 מצב כהה';
       }
-      
-      // עדכון כפתור שפה
+
       const currentLanguage = localStorage.getItem('language') || 'he';
       if (currentLanguage === 'en') {
         languageToggle.textContent = '🌐 עברית';
       } else {
         languageToggle.textContent = '🌐 English';
       }
-      
+
       updateInterfaceLanguage(currentLanguage);
     }
 
-    // החלפת נושא
     document.getElementById('theme-toggle').addEventListener('click', () => {
       const isDark = document.body.classList.contains('dark-theme');
       localStorage.setItem('theme', isDark ? 'light' : 'dark');
       loadUICustomization();
     });
 
-    // החלפת שפה
     document.getElementById('language-toggle').addEventListener('click', () => {
       const current = localStorage.getItem('language') || 'he';
       const next = current === 'he' ? 'en' : 'he';
@@ -72,82 +671,67 @@
       loadMyItems();
     });
 
-    const slugify = s => String(s||'').trim().toLowerCase().replace(/[^\p{L}\p{N} ]/gu,'').replace(/\s+/g,'-');
-    const nis=n=>`₪${n}`;
-    const PRICE_MAP={'chocolate-cake':150,'8-cookies-box':125,'cupcakes':160,'minnie-mous-cake':300,'nutella-box':70,'chocolate-pizza-xl':120,'bento-design-cake':140,'chocolate-design-cake':180,'orange-cake':70,'white-design-cake':140,'pizza-cookie':120,'pizza cookie':120};
-    const NAMES={
-      he:{'chocolate-cake':'עוגת שוקולד מעוצבת','8-cookies-box':'מארז 8 עוגיות','cupcakes':'קאפקייקס','minnie-mous-cake':'עוגת מיני מאוס','nutella-box':'מארז מגולגלות נוטלה','chocolate-pizza-xl':'פיצת שוקולד גדולה','bento-design-cake':'עוגת בנטו מעוצבת','chocolate-design-cake':'עוגת שוקולד מעוצבת','orange-cake':'עוגת תפוזים','bagle-cookie':'עוגיית בייגל','caramel-cookie':'עוגיית קרמל','kinder-cookie':'עוגיית קינדר','lotus-cookie':'עוגיית לוטוס','nutella-cookie':'עוגיית נוטלה','white-chocolate-cookie':'עוגיית שוקולד לבן','white-design-cake':'עוגת בנטו מעוצבת','pizza-cookie':'פיצת שוקולד גדולה','pizza cookie':'פיצת שוקולד גדולה'},
-      en:{'chocolate-cake':'Chocolate Design Cake','8-cookies-box':'8 Cookies Box','cupcakes':'Cupcakes','minnie-mous-cake':'Minnie Mouse Cake','nutella-box':'Nutella Box','chocolate-pizza-xl':'Chocolate Pizza XL','bento-design-cake':'Bento Design Cake','chocolate-design-cake':'Chocolate Design Cake','orange-cake':'Orange Cake','bagle-cookie':'Bagel Cookie','caramel-cookie':'Caramel Cookie','kinder-cookie':'Kinder Cookie','lotus-cookie':'Lotus Cookie','nutella-cookie':'Nutella Cookie','white-chocolate-cookie':'White Chocolate Cookie','white-design-cake':'Bento Design Cake','pizza-cookie':'Chocolate Pizza XL','pizza cookie':'Chocolate Pizza XL'}
-    };
-    const priceOf = (prod)=>{const id=String(prod.id??''); const title=String(prod.title??''); const k=[id,slugify(id),title,slugify(title)].find(x=>x in PRICE_MAP); return k?PRICE_MAP[k]:(/(cookie)/i.test(id+title)?17:0);};
-    const nameOf = (prod,lang)=>{const id=String(prod.id??''); const title=String(prod.title??''); const dict=NAMES[lang]||{}; const k=[id,slugify(id),title,slugify(title)].find(x=>dict[k]); return k?dict[k]:(title||id);};
-
-    function updateInterfaceLanguage(lang) {
-      const texts = {
-        he:{'nav-store':'חנות','nav-cart':'סל הקניות','nav-checkout':'תשלום','nav-myitems':'הרכישות שלי','nav-login':'התחברות','nav-logout':'התנתקות','nav-admin':'ניהול','page-title':'הרכישות שלי','theme-dark':'🌙 מצב כהה','theme-light':'☀️ מצב בהיר'},
-        en:{'nav-store':'Store','nav-cart':'Shopping Cart','nav-checkout':'Checkout','nav-myitems':'My Purchases','nav-login':'Login','nav-logout':'Logout','nav-admin':'Admin','page-title':'My Purchases','theme-dark':'🌙 Dark Mode','theme-light':'☀️ Light Mode'}
-      }[lang];
-      if (!texts) return;
-      document.getElementById('nav-store').textContent = texts['nav-store'];
-      document.getElementById('nav-cart').textContent = texts['nav-cart'];
-      document.getElementById('nav-checkout').textContent = texts['nav-checkout'];
-      document.getElementById('nav-myitems').textContent = texts['nav-myitems'];
-      document.getElementById('login-link').textContent = texts['nav-login'];
-      document.getElementById('logout').textContent = texts['nav-logout'];
-      // תיקון: כפתור הניהול יופיע רק למנהל
-      const adminLink = document.getElementById('nav-admin');
-      if (adminLink) adminLink.textContent = texts['nav-admin'];
-      document.getElementById('page-title').textContent = texts['page-title'];
-      const theme = localStorage.getItem('theme') || 'light';
-      document.getElementById('theme-toggle').textContent = theme === 'dark' ? texts['theme-light'] : texts['theme-dark'];
-      if (lang === 'en') { document.documentElement.dir='ltr'; document.documentElement.lang='en'; }
-      else { document.documentElement.dir='rtl'; document.documentElement.lang='he'; }
-    }
-
     async function setupAuthButtons() {
-      const loginLink = document.getElementById('login-link');
+      const loginLink = document.getElementById('header-login');
       const logoutBtn = document.getElementById('logout');
       const adminLink = document.getElementById('nav-admin');
-      
+
       let loggedIn = false;
       let username = '';
-      
-      try { 
-        const r = await fetch('/api/session'); 
-        if (r.ok) { 
-          loggedIn = true; 
-          const data = await r.json(); 
-          username = data.username; 
-        } 
+
+      try {
+        const r = await fetch('/api/session');
+        if (r.ok) {
+          loggedIn = true;
+          const data = await r.json();
+          username = data.username;
+        }
       } catch {}
-      
-      // הצגת/הסתרת כפתורי התחברות והתנתקות
+
       loginLink.style.display = loggedIn ? 'none' : '';
       logoutBtn.style.display = loggedIn ? '' : 'none';
-      
-      // כפתור הניהול יופיע רק אם המשתמש מחובר וזה admin
+
       if (adminLink) {
         adminLink.style.display = (loggedIn && username === 'admin') ? '' : 'none';
       }
     }
-    
+
     setupAuthButtons();
-    document.getElementById('logout').onclick = async () => { try { await fetch('/api/logout', { method: 'POST' }); } finally { location.href = '/screens/login.html'; } };
+    document.getElementById('logout').onclick = async () => {
+      try { await fetch('/api/logout', { method: 'POST' }); }
+      finally { location.href = 'login.html'; }
+    };
 
     const list = document.getElementById('list');
+
     async function loadMyItems() {
+      const lang = localStorage.getItem('language') || 'he';
+      const texts = {
+        he: { loading: 'טוען רכישות...', error: 'שגיאה בטעינת הרכישות', noPurchases: 'אין רכישות עדיין', noPurchasesDesc: 'לא ביצעת עדיין רכישות. בקר בחנות שלנו למגוון מוצרים טעימים!', goToStore: 'לחנות' },
+        en: { loading: 'Loading purchases...', error: 'Error loading purchases', noPurchases: 'No purchases yet', noPurchasesDesc: 'You haven\'t made any purchases yet. Visit our store for delicious products!', goToStore: 'Go to Store' }
+      }[lang];
+
+      list.innerHTML = `<div class="loading-state"><h2>${texts.loading}</h2></div>`;
+
       try {
         const res = await fetch('/api/my-items');
-        if (res.status === 401) { location.href='/screens/login.html'; return; }
+        if (res.status === 401) {
+          location.href = 'login.html';
+          return;
+        }
         const items = await res.json();
 
         list.innerHTML = '';
         if (!Array.isArray(items) || items.length === 0) {
-          list.innerHTML = '<p>אין רכישות עדיין.</p>';
+          list.innerHTML = `
+            <div class="empty-state">
+              <h2>${texts.noPurchases}</h2>
+              <p>${texts.noPurchasesDesc}</p>
+              <a href="store.html">${texts.goToStore}</a>
+            </div>
+          `;
           return;
         }
-
-        const lang = localStorage.getItem('language') || 'he';
 
         for (const it of items) {
           const p = { id: it.id, title: it.title, image: it.image };
@@ -160,20 +744,22 @@
             <img src="/images/${it.image}" alt="${productName}">
             <div>
               <h3>${productName} · <span class="price">${nis(price)}</span></h3>
-              <div class="meta">${new Date(it.date).toLocaleDateString()}</div>
+              <div class="meta">${new Date(it.date).toLocaleDateString(lang === 'he' ? 'he-IL' : 'en-US')}</div>
               <p>${it.description || ''}</p>
             </div>
           `;
           list.appendChild(card);
         }
       } catch {
-        list.innerHTML = '<p>שגיאה בטעינה</p>';
+        list.innerHTML = `<div class="error-state"><h2>${texts.error}</h2></div>`;
       }
     }
 
-    // טעינה ראשונית
-    loadUICustomization(); 
-    loadMyItems();
+    // Initial load
+    document.addEventListener('DOMContentLoaded', () => {
+      loadUICustomization();
+      loadMyItems();
+    });
   </script>
 </body>
 </html>

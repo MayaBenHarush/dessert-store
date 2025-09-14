@@ -20,7 +20,7 @@
 
         /* Header */
         .header {
-            background: #f8c8dc;
+            background: #ffffcc;
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
@@ -29,6 +29,12 @@
             top: 0;
             z-index: 1000;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
         .menu-btn {
@@ -54,6 +60,54 @@
             color: #1a1a1a;
             text-decoration: none;
             letter-spacing: -0.02em;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-btn {
+            background: none;
+            border: 2px solid #1a1a1a;
+            color: #1a1a1a;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .header-btn:hover {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .header-btn.primary {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .header-btn.primary:hover {
+            background: #333;
+        }
+
+        .cart-btn::before {
+            content: "🛒";
+        }
+
+        .home-btn::before {
+            content: "🏠";
+        }
+
+        .login-btn::before {
+            content: "👤";
         }
 
         .order-btn {
@@ -207,6 +261,31 @@
             letter-spacing: -0.02em;
         }
 
+        .bakery-title {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-size: 5rem;
+            font-weight: 900;
+            color: #1a1a1a;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            letter-spacing: 0.1em;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            position: relative;
+            text-transform: uppercase;
+        }
+
+        .bakery-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #1a1a1a;
+            border-radius: 2px;
+            opacity: 0.6;
+        }
+
         .featured-product {
             font-size: 1.8rem;
             font-weight: 600;
@@ -264,7 +343,7 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
         }
 
-        .product-image {
+        .product-video {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -305,11 +384,27 @@
             color: #1a1a1a;
             transition: all 0.3s ease;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 4px;
+            background: #ffffcc;
         }
 
         .category-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .category-card:hover::before {
+            background: linear-gradient(180deg, #ff6b9d 0%, #ffffcc 100%);
         }
 
         .category-card h3 {
@@ -353,6 +448,50 @@
             line-height: 1.6;
         }
 
+        /* Dark Theme */
+        .dark-theme {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .dark-theme .header {
+            background: #2d2d2d;
+        }
+
+        .dark-theme .nav-menu {
+            background: #2d2d2d;
+        }
+
+        .dark-theme .nav-menu a,
+        .dark-theme .nav-menu button {
+            color: white;
+            border-bottom-color: #444;
+        }
+
+        .dark-theme .categories-section {
+            background: #2d2d2d;
+        }
+
+        .dark-theme .category-card {
+            background: #444;
+        }
+
+        .dark-theme .category-card h3 {
+            color: white;
+        }
+
+        .dark-theme .feature-card h3 {
+            color: white;
+        }
+
+        .dark-theme .bakery-title {
+            color: white;
+        }
+
+        .dark-theme .section-title {
+            color: white;
+        }
+
         /* Responsive Design */
         @media (max-width: 968px) {
             .hero-container {
@@ -361,8 +500,8 @@
                 text-align: center;
             }
 
-            .hero-content h1 {
-                font-size: 3rem;
+            .bakery-title {
+                font-size: 4rem;
             }
 
             .section-title {
@@ -372,19 +511,47 @@
             .product-showcase {
                 height: 400px;
             }
+
+            .header-nav {
+                gap: 0.5rem;
+            }
+
+            .header-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
         }
 
         @media (max-width: 768px) {
             .header {
                 padding: 1rem;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .header-left {
+                order: 1;
             }
 
             .logo {
                 font-size: 1.8rem;
+                order: 2;
             }
 
-            .hero-content h1 {
-                font-size: 2.5rem;
+            .header-nav {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                gap: 0.5rem;
+            }
+
+            .header-btn {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.75rem;
+            }
+
+            .bakery-title {
+                font-size: 3rem;
             }
 
             .featured-product {
@@ -413,53 +580,76 @@
                 text-align: center;
             }
         }
+
+        @media (max-width: 480px) {
+            .bakery-title {
+                font-size: 2.2rem;
+                letter-spacing: 0.05em;
+            }
+
+            .header-btn {
+                padding: 0.3rem 0.5rem;
+                font-size: 0.7rem;
+            }
+
+            .header-btn::before {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="overlay" id="overlay"></div>
     
     <header class="header">
-        <button class="menu-btn" id="menuBtn">Menu</button>
-        <a href="/" class="logo">dessert</a>
-        <a href="/store.html" class="order-btn">הזמנה עכשיו</a>
+        <div class="header-left">
+            <button class="menu-btn" id="menuBtn">Menu</button>
+            <a href="/" class="logo">dessert</a>
+        </div>
+        
+        <nav class="header-nav">
+            <a href="/screens/index.html" class="header-btn home-btn primary">בית</a>
+            <a href="/screens/cart.html" class="header-btn cart-btn">סל קניות</a>
+            <a href="/screens/login.html" class="header-btn login-btn" id="header-login">התחברות</a>
+            <a href="/screens/store.html" class="order-btn">הזמנה עכשיו</a>
+        </nav>
     </header>
 
     <nav class="nav-menu" id="navMenu">
         <button class="nav-close" id="navClose">×</button>
 
-        <!-- ✅ הניווט שביקשת — הוכנס בדיוק כפי שנתת -->
-        <a href="index.html" id="nav-home" class="nav-item" data-key="nav.home">בית</a>
-        <a href="store.html" id="nav-store" class="nav-item" data-key="nav.store">חנות</a>
-        <a href="cart.html" id="nav-cart" class="nav-item" data-key="nav.cart">סל הקניות</a>
-        <a href="checkout.html" id="nav-checkout" class="nav-item" data-key="nav.checkout">תשלום</a>
-        <a href="myitems.html" id="nav-myitems" class="nav-item" data-key="nav.myPurchases">הרכישות שלי</a>
-        <a id="login-link" href="login.html" class="nav-item" data-key="nav.login">התחברות</a>
-        <button id="logout" class="nav-item" style="display:none" data-key="nav.logout">התנתקות</button>
-        <a href="admin.html" id="nav-admin" class="nav-item" data-key="nav.admin" style="display:none">ניהול</a>
-        <a href="cake-designer.html" class="nav-item" data-key="nav.cakeDesigner">עיצוב עוגה</a>
-        <a href="dessert-finder.html" class="nav-item" data-key="nav.dessertFinder">מציאת קינוח מושלם</a>
-        <a href="wheel.html" class="nav-item" data-key="nav.wheel">גלגל מזל</a>
-        <a href="recipes.html" id="nav-recipes" class="nav-item" data-key="nav.recipes">מתכונים</a>
-        <button id="theme-toggle" class="nav-item">🌙 מצב כהה</button>
-        <button id="language-toggle" class="nav-item">🌐 English</button>
+        <a href="/screens/store.html" id="nav-store">חנות</a>
+        <a href="/screens/cart.html" id="nav-cart">סל הקניות</a>
+        <a href="/screens/checkout.html" id="nav-checkout">תשלום</a>
+        <a href="/screens/myitems.html" id="nav-myitems">הרכישות שלי</a>
+        <a href="/screens/admin.html" id="nav-admin" style="display:none">ניהול</a>
+        <a href="/screens/dessert-finder.html">מציאת הקינוח המושלם</a>
+        <a href="/screens/wheel.html">גלגל מזל</a>
+        <a href="/screens/cake-designer.html">עיצוב עוגה</a>
+        <a href="/screens/recipes.html" id="nav-recipes">מתכונים</a>
+        <button id="logout" style="display:none">התנתקות</button>
+        <button id="theme-toggle">🌙 מצב כהה</button>
+        <button id="language-toggle">🌍 English</button>
     </nav>
 
     <section class="hero-section">
         <div class="hero-container">
             <div class="hero-content">
-                <h1>טעמים מקומיים</h1>
-                <div class="featured-product">עוגיית שוקולד חלב פרימיום</div>
-                <p class="product-description">הקלאסית - לא יכול להשתבש. עגה, רכה ומלאה בשבבי שוקולד חלב איכותיים.</p>
+                <h1 class="bakery-title">MOKA BAKERY</h1>
+                <div class="featured-product">מאפייה בוטיק מעולה</div>
+                <p class="product-description">חווית טעם מושלמת עם מאפים ועוגות בעבודת יד מחומרי הגלם הטובים ביותר.</p>
                 <div class="hero-actions">
-                    <a href="/store.html" class="learn-more-btn">למה עוד</a>
-                    <a href="/store.html" class="order-btn">הזמנה עכשיו</a>
+                    <a href="/screens/store.html" class="learn-more-btn">גלה עוד</a>
+                    <a href="/screens/store.html" class="order-btn">הזמנה עכשיו</a>
                 </div>
             </div>
             <div class="hero-image">
                 <div class="product-showcase">
-                    <div class="product-image">
-                        תמונת מוצר
-                    </div>
+                    <video class="product-video" autoplay muted loop>
+                        <source src="/images/video-for-homepage.mov" type="video/mp4">
+                        <source src="/images/video-for-homepage.mov" type="video/quicktime">
+                        הדפדפן שלך לא תומך בהצגת וידאו
+                    </video>
                 </div>
             </div>
         </div>
@@ -469,27 +659,27 @@
         <div class="section-container">
             <h2 class="section-title">הקטגוריות שלנו</h2>
             <div class="categories-grid">
-                <a href="/store.html?category=cookies" class="category-card">
+                <a href="/screens/store.html?filter=cookie" class="category-card">
                     <h3>עוגיות פרימיום</h3>
                     <p>עוגיות טריות ואיכותיות בטעמים מגוונים עם מרכיבים טבעיים</p>
                 </a>
                 
-                <a href="/store.html?category=cakes" class="category-card">
+                <a href="/screens/store.html?filter=cake" class="category-card">
                     <h3>עוגות מעוצבות</h3>
                     <p>עוגות יום הולדת, חתונות ואירועים מיוחדים בעיצוב מקצועי</p>
                 </a>
                 
-                <a href="/store.html?category=cupcakes" class="category-card">
+                <a href="/screens/store.html?filter=cupcakes" class="category-card">
                     <h3>קאפקייקס</h3>
                     <p>קאפקייקס מיניאטוריים ומקסימים לכל אירוע ורגע מתוק</p>
                 </a>
                 
-                <a href="/cake-designer.html" class="category-card">
+                <a href="/screens/cake-designer.html" class="category-card">
                     <h3>עיצוב אישי</h3>
                     <p>צרו את העוגה המושלמת בדיוק לפי הטעם והעיצוב שלכם</p>
                 </a>
                 
-                <a href="/store.html?category=boxes" class="category-card">
+                <a href="/screens/store.html?filter=box" class="category-card">
                     <h3>מארזי מתנה</h3>
                     <p>מארזים מעוצבים למתנות מיוחדות עם אריזה מהודרת</p>
                 </a>
@@ -524,56 +714,115 @@
         </div>
     </section>
 
-    <script src="/assets/universal-navigation.js"></script>
     <script>
         // Menu functionality
-        const menuBtn = document.getElementById('menuBtn');
-        const navMenu = document.getElementById('navMenu');
-        const navClose = document.getElementById('navClose');
-        const overlay = document.getElementById('overlay');
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuBtn = document.getElementById('menuBtn');
+            const navMenu = document.getElementById('navMenu');
+            const navClose = document.getElementById('navClose');
+            const overlay = document.getElementById('overlay');
 
-        function openMenu() {
-            navMenu.classList.add('active');
-            overlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeMenu() {
-            navMenu.classList.remove('active');
-            overlay.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-
-        menuBtn.addEventListener('click', openMenu);
-        navClose.addEventListener('click', closeMenu);
-        overlay.addEventListener('click', closeMenu);
-
-        // Smooth scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Add scroll effect to header
-        let lastScroll = 0;
-        window.addEventListener('scroll', () => {
-            const currentScroll = window.pageYOffset;
-            const header = document.querySelector('.header');
-            
-            if (currentScroll > lastScroll && currentScroll > 100) {
-                header.style.transform = 'translateY(-100%)';
-            } else {
-                header.style.transform = 'translateY(0)';
+            function openMenu() {
+                navMenu.classList.add('active');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
             }
-            lastScroll = currentScroll;
+
+            function closeMenu() {
+                navMenu.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+
+            menuBtn.addEventListener('click', openMenu);
+            navClose.addEventListener('click', closeMenu);
+            overlay.addEventListener('click', closeMenu);
+
+            // Theme toggle
+            const themeToggle = document.getElementById('theme-toggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', () => {
+                    const isDark = document.body.classList.contains('dark-theme');
+                    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+                    loadUICustomization();
+                });
+            }
+
+            // Load UI customization
+            function loadUICustomization() {
+                const theme = localStorage.getItem('theme') || 'light';
+                const themeToggle = document.getElementById('theme-toggle');
+                
+                if (theme === 'dark') {
+                    document.body.classList.add('dark-theme');
+                    if (themeToggle) themeToggle.textContent = '☀️ מצב בהיר';
+                } else {
+                    document.body.classList.remove('dark-theme');
+                    if (themeToggle) themeToggle.textContent = '🌙 מצב כהה';
+                }
+            }
+
+            // Auth setup
+            async function setupAuth() {
+                try {
+                    const r = await fetch('/api/session');
+                    if (r.ok) {
+                        const data = await r.json();
+                        const headerLogin = document.getElementById('header-login');
+                        const logoutBtn = document.getElementById('logout');
+                        const navAdmin = document.getElementById('nav-admin');
+                        
+                        if (headerLogin) headerLogin.style.display = 'none';
+                        if (logoutBtn) logoutBtn.style.display = '';
+                        if (navAdmin && data.username === 'admin') {
+                            navAdmin.style.display = '';
+                        }
+                    }
+                } catch {}
+            }
+
+            const logoutBtn = document.getElementById('logout');
+            if (logoutBtn) {
+                logoutBtn.onclick = async () => {
+                    try { 
+                        await fetch('/api/logout', { method: 'POST' }); 
+                    } finally { 
+                        location.href = '/screens/login.html'; 
+                    }
+                };
+            }
+
+            // Smooth scrolling
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Add scroll effect to header
+            let lastScroll = 0;
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.pageYOffset;
+                const header = document.querySelector('.header');
+                
+                if (currentScroll > lastScroll && currentScroll > 100) {
+                    header.style.transform = 'translateY(-100%)';
+                } else {
+                    header.style.transform = 'translateY(0)';
+                }
+                lastScroll = currentScroll;
+            });
+
+            // Initialize
+            loadUICustomization();
+            setupAuth();
         });
     </script>
 </body>

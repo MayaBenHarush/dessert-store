@@ -4,39 +4,564 @@
   <meta charset="UTF-8" />
   <title data-page="store">חנות קינוחים 🍰</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="/assets/styles.css" />
   <script src="/assets/translations"></script>
   <style>
-    #toast{position:fixed;top:12px;right:12px;z-index:9999;display:none;padding:10px 14px;background:#333;color:#fff;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.2);font-size:14px;opacity:0;transform:translateY(-6px);transition:opacity .2s,transform .2s}
-    #toast.show{display:block;opacity:1;transform:translateY(0)}
-    .price{font-weight:800}
-    .empty, .error-box, .loading{display:flex;justify-content:center;align-items:center;padding:40px;color:#667}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #ffffff;
+      color: #1a1a1a;
+      line-height: 1.6;
+    }
+
+    /* Header */
+    .header {
+      background: #ffffcc;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .menu-btn {
+      background: none;
+      border: none;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .menu-btn::before {
+      content: "☰";
+      font-size: 1.2rem;
+    }
+
+    .logo {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #1a1a1a;
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .header-btn {
+      background: none;
+      border: 2px solid #1a1a1a;
+      color: #1a1a1a;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .header-btn:hover {
+      background: #1a1a1a;
+      color: white;
+    }
+
+    .header-btn.primary {
+      background: #1a1a1a;
+      color: white;
+    }
+
+    .header-btn.primary:hover {
+      background: #333;
+    }
+
+    .cart-btn::before {
+      content: "🛒";
+    }
+
+    .home-btn::before {
+      content: "🏠";
+    }
+
+    .login-btn::before {
+      content: "👤";
+    }
+
+    .store-btn::before {
+      content: "🏪";
+    }
+
+    /* Navigation Menu */
+    .nav-menu {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 300px;
+      height: 100vh;
+      background: white;
+      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+      transition: right 0.3s ease;
+      padding: 2rem;
+      z-index: 2000;
+    }
+
+    .nav-menu.active {
+      right: 0;
+    }
+
+    .nav-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      float: left;
+      margin-bottom: 2rem;
+    }
+
+    .nav-item,
+    .nav-menu a,
+    .nav-menu button {
+      display: block;
+      padding: 0.75rem 0;
+      color: #1a1a1a;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid #f0f0f0;
+      transition: color 0.2s ease;
+      background: none;
+      border: none;
+      text-align: right;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .nav-item:hover,
+    .nav-menu a:hover,
+    .nav-menu button:hover {
+      color: #ffffcc;
+    }
+
+    /* Overlay */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1500;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Main Content */
+    .main-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    #page-title {
+      font-size: 3rem;
+      font-weight: 900;
+      color: #1a1a1a;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+
+    /* Filter Buttons */
+    .filter-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      background: none;
+      border: 2px solid #f0f0f0;
+      color: #666;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .filter-btn:hover {
+      border-color: #1a1a1a;
+      color: #1a1a1a;
+    }
+
+    .filter-btn.active {
+      background: #1a1a1a;
+      color: white;
+      border-color: #1a1a1a;
+    }
+
+    #search {
+      width: 100%;
+      max-width: 500px;
+      padding: 1rem 1.5rem;
+      border: 2px solid #f0f0f0;
+      border-radius: 25px;
+      font-size: 1rem;
+      text-align: center;
+      transition: all 0.2s ease;
+      background: white;
+    }
+
+    #search:focus {
+      outline: none;
+      border-color: #f8c8dc;
+      box-shadow: 0 0 0 3px rgba(248, 200, 220, 0.1);
+    }
+
+    /* Products Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .product {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+    }
+
+    .product:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    .product img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .product h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin: 1rem;
+      color: #1a1a1a;
+    }
+
+    .product .meta {
+      color: #666;
+      padding: 0 1rem;
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+
+    .product button {
+      width: 100%;
+      background: #1a1a1a;
+      color: white;
+      border: none;
+      padding: 1rem;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .product button:hover {
+      background: #333;
+    }
+
+    .price {
+      font-weight: 800;
+      color: #1a1a1a;
+    }
+
+    .empty, .error-box, .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 4rem 2rem;
+      color: #666;
+      text-align: center;
+      font-size: 1.1rem;
+      background: #f8f8f8;
+      border-radius: 15px;
+      margin-top: 2rem;
+    }
+
+    .error-box {
+      background: #ffffcc;
+      color: #c62828;
+    }
+
+    /* Toast */
+    #toast {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      z-index: 9999;
+      display: none;
+      padding: 10px 14px;
+      background: #333;
+      color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .2);
+      font-size: 14px;
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: opacity .2s, transform .2s;
+    }
+
+    #toast.show {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Dark Theme */
+    .dark-theme {
+      background: #1a1a1a;
+      color: white;
+    }
+
+    .dark-theme .header {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .nav-menu {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .nav-menu a,
+    .dark-theme .nav-menu button {
+      color: white;
+      border-bottom-color: #444;
+    }
+
+    .dark-theme .product {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .product h3 {
+      color: white;
+    }
+
+    .dark-theme #search {
+      background: #2d2d2d;
+      border-color: #444;
+      color: white;
+    }
+
+    .dark-theme .empty,
+    .dark-theme .loading {
+      background: #2d2d2d;
+      color: #ccc;
+    }
+
+    .dark-theme .filter-btn {
+      border-color: #444;
+      color: #ccc;
+    }
+
+    .dark-theme .filter-btn:hover {
+      border-color: #ffffcc;
+      color: #ffffcc;
+    }
+
+    .dark-theme .filter-btn.active {
+      background: #ffffcc;
+      color: #1a1a1a;
+      border-color: #ffffcc;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 968px) {
+      .header-nav {
+        gap: 0.5rem;
+      }
+
+      .header-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+      }
+
+      #page-title {
+        font-size: 2.5rem;
+      }
+
+      .grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      }
+
+      .filter-buttons {
+        gap: 0.5rem;
+      }
+
+      .filter-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        padding: 1rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .header-left {
+        order: 1;
+      }
+
+      .logo {
+        font-size: 1.8rem;
+        order: 2;
+      }
+
+      .header-nav {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .header-btn {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.75rem;
+      }
+
+      .main-content {
+        padding: 1rem;
+      }
+
+      #page-title {
+        font-size: 2rem;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .filter-buttons {
+        justify-content: center;
+        gap: 0.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header-btn {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.7rem;
+      }
+
+      .header-btn::before {
+        display: none;
+      }
+
+      .filter-btn {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.75rem;
+      }
+    }
   </style>
 </head>
 <body>
-  <nav>
-    <a href="index.html" id="nav-home" class="nav-item" data-key="nav.home"> בית</a>
-    <a href="store.html" id="nav-store" data-key="nav.store">חנות</a>
-    <a href="cart.html" id="nav-cart" data-key="nav.cart">סל הקניות</a>
-    <a href="checkout.html" id="nav-checkout" data-key="nav.checkout">תשלום</a>
-    <a href="myitems.html" id="nav-myitems" data-key="nav.myPurchases">הרכישות שלי</a>
-    <a id="login-link" href="login.html" data-key="nav.login">התחברות</a>
-    <button id="logout" style="display:none" data-key="nav.logout">התנתקות</button>
-    <a href="admin.html" id="nav-admin" data-key="nav.admin" style="display:none">ניהול</a>
-    <a href="cake-designer.html" data-key="nav.cakeDesigner">עיצוב עוגה</a>
-    <a href="dessert-finder.html" data-key="nav.dessertFinder"> מציאת קינוח מושלם</a>
-    <a href="wheel.html" data-key="nav.wheel"> גלגל מזל</a>
-    <a href="recipes.html" id="nav-recipes" data-key="nav.recipes"> מתכונים</a>
-    <button id="theme-toggle">🌙 מצב כהה</button>
-    <button id="language-toggle">🌐 English</button>
-  </nav>
+  <div class="overlay" id="overlay"></div>
+  
+  <header class="header">
+    <div class="header-left">
+      <button class="menu-btn" id="menuBtn">Menu</button>
+      <a href="/" class="logo">dessert</a>
+    </div>
+    
+    <nav class="header-nav">
+      <a href="/screens/index.html" class="header-btn home-btn">בית</a>
+      <a href="/screens/cart.html" class="header-btn cart-btn">סל קניות</a>
+      <a href="/screens/store.html" class="header-btn store-btn primary">חנות</a>
+      <a href="/screens/login.html" class="header-btn login-btn" id="header-login">התחברות</a>
+    </nav>
+  </header>
 
+  <nav class="nav-menu" id="navMenu">
+    <button class="nav-close" id="navClose">×</button>
+
+    <a href="/screens/store.html" id="nav-store">חנות</a>
+    <a href="/screens/cart.html" id="nav-cart">סל הקניות</a>
+    <a href="/screens/checkout.html" id="nav-checkout">תשלום</a>
+    <a href="/screens/myitems.html" id="nav-myitems">הרכישות שלי</a>
+    <a href="/screens/admin.html" id="nav-admin" style="display:none">ניהול</a>
+    <a href="/screens/dessert-finder.html">מציאת הקינוח המושלם</a>
+    <a href="/screens/wheel.html">גלגל מזל</a>
+    <a href="/screens/cake-designer.html">עיצוב עוגה</a>
+    <a href="/screens/recipes.html" id="nav-recipes">מתכונים</a>
+    <button id="logout" style="display:none">התנתקות</button>
+    <button id="theme-toggle">🌙 מצב כהה</button>
+    <button id="language-toggle">🌍 English</button>
+  </nav>
 
   <div id="toast"></div>
 
-  <h1 id="page-title">חנות קינוחים 🍰</h1>
-  <input type="text" id="search" placeholder="חפש קינוח..." />
-  <div id="products" class="grid"></div>
+  <main class="main-content">
+    <div class="page-header">
+      <h1 id="page-title">MOKA BAKERY</h1>
+      
+      <!-- Filter Buttons -->
+      <div class="filter-buttons">
+        <button class="filter-btn" data-filter="">הכל</button>
+        <button class="filter-btn" data-filter="cookie">עוגיות</button>
+        <button class="filter-btn" data-filter="cake">עוגות</button>
+        <button class="filter-btn" data-filter="cupcakes">קאפקייקס</button>
+        <button class="filter-btn" data-filter="box">מארזים</button>
+      </div>
+      
+      <input type="text" id="search" placeholder="חפש קינוח..." />
+    </div>
+    <div id="products" class="grid"></div>
+  </main>
 
   <script>
     // -------- helpers --------
@@ -46,9 +571,9 @@
       .replace(/\s+/g, '-');
     const nis = n => `₪${n}`;
 
-    // === מחירון מעודכן + עליָסים נפוצים שמגיעים מהשרת ===
+    // === מחירון מעודכן + עליֹסים נפוצים שמגיעים מהשרת ===
     const PRICE_MAP = {
-      'chocolate-cake': 150, // יוצג "עוגת שוקולד מעוצבת" לפי המיפוי
+      'chocolate-cake': 150,
       '8-cookies-box': 125,
       'cupcakes': 160,
       'minnie-mous-cake': 300,
@@ -57,15 +582,13 @@
       'bento-design-cake': 140,
       'chocolate-design-cake': 180,
       'orange-cake': 70,
-      // aliases by title/id
       'white-design-cake': 140,
       'pizza-cookie': 120,
       'pizza cookie': 120
     };
 
-    // === תרגום שמות מוצרים (he/en) כולל עליָסים וכל סוגי העוגיות ===
+    // === תרגום שמות מוצרים ===
     const productTranslations = {
-      // IDs “רשמיים”
       'chocolate-cake': { he: 'עוגת שוקולד מעוצבת', en: 'Chocolate Design Cake' },
       '8-cookies-box': { he: 'מארז 8 עוגיות', en: '8 Cookies Box' },
       'cupcakes': { he: 'קאפקייקס', en: 'Cupcakes' },
@@ -75,15 +598,12 @@
       'bento-design-cake': { he: 'עוגת בנטו מעוצבת', en: 'Bento Design Cake' },
       'chocolate-design-cake': { he: 'עוגת שוקולד מעוצבת', en: 'Chocolate Design Cake' },
       'orange-cake': { he: 'עוגת תפוזים', en: 'Orange Cake' },
-      // כל סוגי ה"cookie"
       'bagle-cookie': { he: 'עוגיית בייגל', en: 'Bagel Cookie' },
       'caramel-cookie': { he: 'עוגיית קרמל', en: 'Caramel Cookie' },
       'kinder-cookie': { he: 'עוגיית קינדר', en: 'Kinder Cookie' },
       'lotus-cookie': { he: 'עוגיית לוטוס', en: 'Lotus Cookie' },
       'nutella-cookie': { he: 'עוגיית נוטלה', en: 'Nutella Cookie' },
       'white-chocolate-cookie': { he: 'עוגיית שוקולד לבן', en: 'White Chocolate Cookie' },
-
-      // aliases (כש־API מחזיר טקסטים אחרים)
       'white-design-cake': { he: 'עוגת בנטו מעוצבת', en: 'Bento Design Cake' },
       'pizza-cookie': { he: 'פיצת שוקולד גדולה', en: 'Chocolate Pizza XL' },
       'pizza cookie': { he: 'פיצת שוקולד גדולה', en: 'Chocolate Pizza XL' }
@@ -106,7 +626,6 @@
         const tr = productTranslations[k];
         if (tr && tr[lang]) return tr[lang];
       }
-      // פוֹלבק ל־translations.js אם מוגדר
       if (window.Translations?.getProduct) {
         const fromTs = window.Translations.getProduct(id, null);
         if (fromTs) return fromTs;
@@ -114,63 +633,263 @@
       return title || id;
     };
 
+    // Menu functionality
+    const menuBtn = document.getElementById('menuBtn');
+    const navMenu = document.getElementById('navMenu');
+    const navClose = document.getElementById('navClose');
+    const overlay = document.getElementById('overlay');
+
+    function openMenu() {
+      navMenu.classList.add('active');
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+      navMenu.classList.remove('active');
+      overlay.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    menuBtn.addEventListener('click', openMenu);
+    navClose.addEventListener('click', closeMenu);
+    overlay.addEventListener('click', closeMenu);
+
+    // Current filter state
+    let currentFilter = '';
+
+    // פונקציה לקריאת פרמטר מה-URL
+    function getURLParameter(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    // פונקציה לעדכון URL עם פילטר
+    function updateURL(filter) {
+      const url = new URL(window.location);
+      if (filter) {
+        url.searchParams.set('filter', filter);
+      } else {
+        url.searchParams.delete('filter');
+      }
+      window.history.pushState({}, '', url);
+    }
+
+    // פונקציה לפילטר מוצרים לפי קטגוריה
+    function filterProductsByCategory(products, filter) {
+      if (!filter) return products;
+      
+      return products.filter(p => {
+        const id = String(p.id || '').toLowerCase();
+        const title = String(p.title || '').toLowerCase();
+        const description = String(p.description || '').toLowerCase();
+        
+        switch(filter.toLowerCase()) {
+          case 'cookie':
+          case 'cookies':
+            return /(cookie|עוגי)/i.test(id + ' ' + title + ' ' + description);
+          
+          case 'cake':
+          case 'cakes':
+            return /(cake|עוג)/i.test(id + ' ' + title + ' ' + description) && 
+                   !/(cookie|עוגי|cupcake|קאפקייק)/i.test(id + ' ' + title + ' ' + description);
+          
+          case 'cupcakes':
+          case 'cupcake':
+            return /(cupcake|קאפקייק)/i.test(id + ' ' + title + ' ' + description);
+          
+          case 'box':
+          case 'boxes':
+            return /(box|מארז|nutella-box)/i.test(id + ' ' + title + ' ' + description);
+          
+          default:
+            return true;
+        }
+      });
+    }
+
+    // עדכון כפתורי הפילטר
+    function updateFilterButtons(activeFilter) {
+      const filterBtns = document.querySelectorAll('.filter-btn');
+      filterBtns.forEach(btn => {
+        const btnFilter = btn.getAttribute('data-filter');
+        if (btnFilter === activeFilter) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    // עדכון כותרת הדף לפי הפילטר
+    function updatePageTitle(filter, lang) {
+      const pageTitle = document.getElementById('page-title');
+      if (!filter) {
+        pageTitle.textContent = lang === 'en' ? 'MOKA BAKERY' : 'MOKA BAKERY';
+        return;
+      }
+      
+      const titles = {
+        he: {
+          cookie: 'עוגיות פרימיום',
+          cake: 'עוגות מעוצבות', 
+          cupcakes: 'קאפקייקס',
+          box: 'מארזי מתנה'
+        },
+        en: {
+          cookie: 'Premium Cookies',
+          cake: 'Design Cakes',
+          cupcakes: 'Cupcakes', 
+          box: 'Gift Boxes'
+        }
+      };
+      
+      const categoryTitle = titles[lang][filter.toLowerCase()] || 
+                           (lang === 'en' ? 'MOKA BAKERY' : 'MOKA BAKERY');
+      pageTitle.textContent = categoryTitle;
+    }
+
+    // Filter button handlers
+    document.querySelector('.filter-buttons').addEventListener('click', (e) => {
+      if (e.target.classList.contains('filter-btn')) {
+        const filter = e.target.getAttribute('data-filter');
+        currentFilter = filter;
+        updateURL(filter);
+        updateFilterButtons(filter);
+        render();
+      }
+    });
+
     // ====== UI prefs ======
     function loadUICustomization() {
       const theme = localStorage.getItem('theme') || 'light';
       const themeToggle = document.getElementById('theme-toggle');
       const languageToggle = document.getElementById('language-toggle');
-      if (theme === 'dark') { document.body.classList.add('dark-theme'); themeToggle.textContent = '☀️ מצב בהיר'; }
-      else { document.body.classList.remove('dark-theme'); themeToggle.textContent = '🌙 מצב כהה'; }
+      if (theme === 'dark') { 
+        document.body.classList.add('dark-theme'); 
+        themeToggle.textContent = '☀️ מצב בהיר'; 
+      }
+      else { 
+        document.body.classList.remove('dark-theme'); 
+        themeToggle.textContent = '🌙 מצב כהה'; 
+      }
       const currentLanguage = localStorage.getItem('language') || 'he';
-      languageToggle.textContent = currentLanguage === 'en' ? '🌐 עברית' : '🌐 English';
+      languageToggle.textContent = currentLanguage === 'en' ? '🌍 עברית' : '🌍 English';
       updateInterfaceLanguage(currentLanguage);
     }
 
     function updateInterfaceLanguage(lang) {
       const t = {
-        he:{'nav-store':'חנות','nav-cart':'סל הקניות','nav-checkout':'תשלום','nav-myitems':'הרכישות שלי','nav-login':'התחברות','nav-logout':'התנתקות','nav-admin':'ניהול','page-title':'חנות קינוחים 🍰','search-placeholder':'חפש קינוח...','theme-dark':'🌙 מצב כהה','theme-light':'☀️ מצב בהיר'},
-        en:{'nav-store':'Store','nav-cart':'Shopping Cart','nav-checkout':'Checkout','nav-myitems':'My Purchases','nav-login':'Login','nav-logout':'Logout','nav-admin':'Admin','page-title':'Desserts Store 🍰','search-placeholder':'Search dessert...','theme-dark':'🌙 Dark Mode','theme-light':'☀️ Light Mode'}
+        he:{'nav-store':'חנות','nav-cart':'סל קניות','nav-checkout':'תשלום','nav-myitems':'הרכישות שלי','nav-login':'התחברות','nav-logout':'התנתקות','nav-admin':'ניהול','page-title':'MOKA BAKERY','search-placeholder':'חפש קינוח...','theme-dark':'🌙 מצב כהה','theme-light':'☀️ מצב בהיר'},
+        en:{'nav-store':'Store','nav-cart':'Shopping Cart','nav-checkout':'Checkout','nav-myitems':'My Purchases','nav-login':'Login','nav-logout':'Logout','nav-admin':'Admin','page-title':'MOKA BAKERY','search-placeholder':'Search dessert...','theme-dark':'🌙 Dark Mode','theme-light':'☀️ Light Mode'}
       }[lang];
       if(!t) return;
-      navStore.textContent=t['nav-store']; navCart.textContent=t['nav-cart']; navCheckout.textContent=t['nav-checkout'];
-      navMyitems.textContent=t['nav-myitems']; loginLink.textContent=t['nav-login']; logoutBtn.textContent=t['nav-logout'];
-      navAdmin.textContent=t['nav-admin']; pageTitle.textContent=t['page-title']; search.placeholder=t['search-placeholder'];
-      themeToggle.textContent=(localStorage.getItem('theme')||'light')==='dark'?t['theme-light']:t['theme-dark'];
-      if(lang==='en'){document.documentElement.dir='ltr';document.documentElement.lang='en';}
-      else{document.documentElement.dir='rtl';document.documentElement.lang='he';}
+      
+      const navStore = document.getElementById('nav-store');
+      const navCart = document.getElementById('nav-cart');
+      const navCheckout = document.getElementById('nav-checkout');
+      const navMyitems = document.getElementById('nav-myitems');
+      const loginLink = document.getElementById('header-login');
+      const logoutBtn = document.getElementById('logout');
+      const navAdmin = document.getElementById('nav-admin');
+      const search = document.getElementById('search');
+      const themeToggle = document.getElementById('theme-toggle');
+      
+      if(navStore) navStore.textContent = t['nav-store'];
+      if(navCart) navCart.textContent = t['nav-cart'];
+      if(navCheckout) navCheckout.textContent = t['nav-checkout'];
+      if(navMyitems) navMyitems.textContent = t['nav-myitems']; 
+      if(loginLink) loginLink.textContent = t['nav-login']; 
+      if(logoutBtn) logoutBtn.textContent = t['nav-logout'];
+      if(navAdmin) navAdmin.textContent = t['nav-admin']; 
+      if(search) search.placeholder = t['search-placeholder'];
+      if(themeToggle) themeToggle.textContent = (localStorage.getItem('theme')||'light')==='dark' ? t['theme-light'] : t['theme-dark'];
+      
+      // Update filter buttons
+      const filterBtns = document.querySelectorAll('.filter-btn');
+      const filterTexts = {
+        he: { '': 'הכל', 'cookie': 'עוגיות', 'cake': 'עוגות', 'cupcakes': 'קאפקייקס', 'box': 'מארזים' },
+        en: { '': 'All', 'cookie': 'Cookies', 'cake': 'Cakes', 'cupcakes': 'Cupcakes', 'box': 'Boxes' }
+      };
+      
+      filterBtns.forEach(btn => {
+        const filter = btn.getAttribute('data-filter');
+        btn.textContent = filterTexts[lang][filter] || btn.textContent;
+      });
+      
+      if(lang==='en'){
+        document.documentElement.dir='ltr';
+        document.documentElement.lang='en';
+      }
+      else{
+        document.documentElement.dir='rtl';
+        document.documentElement.lang='he';
+      }
+      
+      updatePageTitle(currentFilter, lang);
     }
-
-    const navStore=document.getElementById('nav-store'), navCart=document.getElementById('nav-cart'),
-          navCheckout=document.getElementById('nav-checkout'), navMyitems=document.getElementById('nav-myitems'),
-          loginLink=document.getElementById('login-link'), logoutBtn=document.getElementById('logout'), navAdmin=document.getElementById('nav-admin'),
-          pageTitle=document.getElementById('page-title'), search=document.getElementById('search'), themeToggle=document.getElementById('theme-toggle');
 
     document.getElementById('theme-toggle').addEventListener('click', () => {
       const isDark = document.body.classList.contains('dark-theme');
-      localStorage.setItem('theme', isDark ? 'light' : 'dark'); loadUICustomization();
+      localStorage.setItem('theme', isDark ? 'light' : 'dark'); 
+      loadUICustomization();
     });
+    
     document.getElementById('language-toggle').addEventListener('click', () => {
       const cur = localStorage.getItem('language') || 'he';
       const next = cur === 'he' ? 'en' : 'he';
       localStorage.setItem('language', next);
-      document.getElementById('language-toggle').textContent = next === 'en' ? '🌐 עברית' : '🌐 English';
+      document.getElementById('language-toggle').textContent = next === 'en' ? '🌍 עברית' : '🌍 English';
       updateInterfaceLanguage(next);
-      render(); // החיפוש והתצוגה יתעדכנו לפי השפה החדשה
+      render();
     });
 
     // הרשאות/ניווט
     async function setupAuthButtons() {
       let loggedIn=false, username='';
-      try{ const r=await fetch('/api/session'); if(r.ok){ loggedIn=true; const data=await r.json(); username=data.username; } }catch{}
-      loginLink.style.display = loggedIn ? 'none' : '';
-      logoutBtn.style.display = loggedIn ? '' : 'none';
-      navAdmin.style.display = (loggedIn && username==='admin') ? '' : 'none';
+      try{ 
+        const r=await fetch('/api/session'); 
+        if(r.ok){ 
+          loggedIn=true; 
+          const data=await r.json(); 
+          username=data.username; 
+        } 
+      }catch{}
+      
+      const loginLink = document.getElementById('header-login');
+      const logoutBtn = document.getElementById('logout');
+      const navAdmin = document.getElementById('nav-admin');
+      
+      if(loginLink) loginLink.style.display = loggedIn ? 'none' : '';
+      if(logoutBtn) logoutBtn.style.display = loggedIn ? '' : 'none';
+      if(navAdmin) navAdmin.style.display = (loggedIn && username==='admin') ? '' : 'none';
+      
+      if(loggedIn && loginLink) {
+        loginLink.textContent = 'החשבון שלי';
+        loginLink.href = 'account.html';
+      }
     }
-    document.getElementById('logout').onclick = async ()=>{ try{ await fetch('/api/logout',{method:'POST'});} finally{ location.href='login.html'; } };
+    
+    const logoutBtn = document.getElementById('logout');
+    if(logoutBtn) {
+      logoutBtn.onclick = async ()=>{ 
+        try{ 
+          await fetch('/api/logout',{method:'POST'});
+        } finally{ 
+          location.href='/screens/login.html'; 
+        } 
+      };
+    }
 
     // טוסט קטן
-    const toastEl=document.getElementById('toast'); let toastTimer;
-    function showToast(msg){ toastEl.textContent=msg; toastEl.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>toastEl.classList.remove('show'),1500); }
+    const toastEl=document.getElementById('toast'); 
+    let toastTimer;
+    function showToast(msg){ 
+      toastEl.textContent=msg; 
+      toastEl.classList.add('show'); 
+      clearTimeout(toastTimer); 
+      toastTimer=setTimeout(()=>toastEl.classList.remove('show'),1500); 
+    }
 
     let allProducts = [];
 
@@ -183,18 +902,27 @@
         allProducts=await r.json();
       }catch(err){
         console.error(err);
-        box.innerHTML = '<div class="error-box">שגיאה בטעינת המוצרים. נסי לרענן את העמוד.</div>';
+        box.innerHTML = '<div class="error-box">שגיאה בטעינת המוצרים. נסה לרענן את העמוד.</div>';
         allProducts = [];
       }
     }
 
     function paint(list, lang){
-      const container=document.getElementById('products'); container.innerHTML='';
-      if(!list.length){ container.innerHTML = '<div class="empty">אין מוצרים להצגה.</div>'; return; }
+      const container=document.getElementById('products'); 
+      container.innerHTML='';
+      
+      if(!list.length){ 
+        const lang = localStorage.getItem('language') || 'he';
+        const emptyText = lang === 'en' ? 'No products to display.' : 'אין מוצרים להצגה.';
+        container.innerHTML = `<div class="empty">${emptyText}</div>`; 
+        return; 
+      }
+      
       for(const p of list){
         const displayName = nameOf(p, lang);
         const unit = priceOf(p);
-        const card=document.createElement('div'); card.className='product';
+        const card=document.createElement('div'); 
+        card.className='product';
         card.innerHTML=`
           <img src="/images/${p.image}" alt="${displayName}">
           <h3>${displayName} · <span class="price">${nis(unit)}</span></h3>
@@ -208,24 +936,67 @@
     async function render(){
       if(!allProducts.length) await fetchAll();
       const lang = localStorage.getItem('language') || 'he';
-      const term = (search.value||'').trim().toLowerCase();
-      const list = term
-        ? allProducts.filter(p => nameOf(p, lang).toLowerCase().includes(term))
-        : allProducts.slice();
+      const term = (document.getElementById('search').value||'').trim().toLowerCase();
+      
+      let list = allProducts.slice();
+      
+      // פילטר לפי קטגוריה
+      if (currentFilter) {
+        list = filterProductsByCategory(list, currentFilter);
+      }
+      
+      // פילטר לפי חיפוש טקסט
+      if (term) {
+        list = list.filter(p => nameOf(p, lang).toLowerCase().includes(term));
+      }
+      
+      // מיון: עוגיות קודם, ואז השאר
+      list.sort((a, b) => {
+        const aIsCookie = /(cookie)/i.test(a.id + ' ' + (a.title || ''));
+        const bIsCookie = /(cookie)/i.test(b.id + ' ' + (b.title || ''));
+        
+        if (aIsCookie && !bIsCookie) return -1;
+        if (!aIsCookie && bIsCookie) return 1;
+        return 0;
+      });
+      
       paint(list, lang);
+      updatePageTitle(currentFilter, lang);
     }
 
     document.getElementById('products').addEventListener('click', async (e)=>{
-      const btn=e.target.closest('button[data-id]'); if(!btn) return;
-      const id=btn.getAttribute('data-id'); const title=btn.getAttribute('data-title');
-      const r=await fetch('/api/cart',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({productId:id})});
-      if(r.status===401){ location.href='login.html'; return; }
-      if(r.ok){ const lang=localStorage.getItem('language')||'he'; showToast(lang==='en'?`${title} added to cart`:`${title} נוסף לסל`); }
+      const btn=e.target.closest('button[data-id]'); 
+      if(!btn) return;
+      
+      const id=btn.getAttribute('data-id'); 
+      const title=btn.getAttribute('data-title');
+      const r=await fetch('/api/cart',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({productId:id})
+      });
+      
+      if(r.status===401){ 
+        location.href='/screens/login.html'; 
+        return; 
+      }
+      
+      if(r.ok){ 
+        const lang=localStorage.getItem('language')||'he'; 
+        showToast(lang==='en'?`${title} added to cart`:`${title} נוסף לסל`); 
+      }
     });
 
-    search.addEventListener('input', render);
+    document.getElementById('search').addEventListener('input', render);
 
     document.addEventListener('DOMContentLoaded', async () => {
+      // קריאת פילטר מה-URL בטעינה ראשונית
+      const urlFilter = getURLParameter('filter');
+      if (urlFilter) {
+        currentFilter = urlFilter;
+        updateFilterButtons(urlFilter);
+      }
+      
       loadUICustomization();
       await setupAuthButtons();
       await fetchAll();
