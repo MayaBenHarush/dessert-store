@@ -9,8 +9,8 @@
 </head>
 <body>
   <nav>
-    <a href="store.html" data-key="store">חנות</a>
-    <a href="register.html" data-key="register">הרשמה</a>
+    <a href="/screens/store.html" data-key="store">חנות</a>
+    <a href="/screens/register.html" data-key="register">הרשמה</a>
     <button id="theme-toggle">🌙 מצב כהה</button>
     <button id="language-toggle">🌐 English</button>
   </nav>
@@ -125,7 +125,7 @@
       try { j = await res.json(); } catch {}
       
       if (res.ok) {
-        location.href = 'store.html';
+        location.href = '/screens/store.html';
       } else {
         alert(j.error || 'Login failed');
       }

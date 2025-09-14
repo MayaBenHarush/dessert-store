@@ -404,6 +404,7 @@
 </head>
 <body>
   <nav>
+    <a href="index.html" id="nav-home" class="nav-item" data-key="nav.home"> בית</a>
     <a href="store.html" id="nav-store" data-key="nav.store">חנות</a>
     <a href="cart.html" id="nav-cart" data-key="nav.cart">סל הקניות</a>
     <a href="checkout.html" id="nav-checkout" data-key="nav.checkout">תשלום</a>
@@ -411,10 +412,10 @@
     <a id="login-link" href="login.html" data-key="nav.login">התחברות</a>
     <button id="logout" style="display:none" data-key="nav.logout">התנתקות</button>
     <a href="admin.html" id="nav-admin" data-key="nav.admin" style="display:none">ניהול</a>
-    <a href="cake-designer.html">🎨 עיצוב עוגה</a>
-    <a href="dessert-finder.html" data-key="nav.dessertFinder">🔍 מציאת קינוח מושלם</a>
-    <a href="wheel.html">🎡 גלגל מזל</a>
-    <a href="recipes.html" id="nav-recipes" data-key="nav.recipes">🍪 מתכונים</a>
+    <a href="cake-designer.html" data-key="nav.cakeDesigner">עיצוב עוגה</a>
+    <a href="dessert-finder.html" data-key="nav.dessertFinder"> מציאת קינוח מושלם</a>
+    <a href="wheel.html" data-key="nav.wheel"> גלגל מזל</a>
+    <a href="recipes.html" id="nav-recipes" data-key="nav.recipes"> מתכונים</a>
     <button id="theme-toggle">🌙 מצב כהה</button>
     <button id="language-toggle">🌐 English</button>
   </nav>
@@ -871,7 +872,6 @@
     // פונקציה לעדכון טקסטים של השאלות
     function updateQuestionTexts(lang) {
       const currentLang = lang || localStorage.getItem('language') || 'he';
-      
       // עדכון מונה השאלות
       if (questionCounter) {
         const counterTexts = {
@@ -1097,7 +1097,7 @@
         reasons.push(texts['high_score']);
       }
       
-      return reasons.slice(0, 3); // מקסימום 3 סיבות
+      return reasons.slice(0, 3);
     }
 
     // הצגת תוצאות
@@ -1195,7 +1195,7 @@
           en: 'Please login to add products to cart'
         };
         alert(loginTexts[currentLang]);
-        window.location.href = 'login.html';
+        window.location.href = '/screens/login.html';
         return;
       }
       
@@ -1289,7 +1289,7 @@
 
     document.getElementById('logout').onclick = async () => {
       try { await fetch('/api/logout', { method: 'POST' }); }
-      finally { location.href = 'login.html'; }
+      finally { location.href = '/screens/login.html'; }
     };
 
     // הפעלת האפליקציה

@@ -372,6 +372,7 @@
 </head>
 <body>
   <nav>
+    <a href="index.html" id="nav-home" class="nav-item" data-key="nav.home"> בית</a>
     <a href="store.html" id="nav-store" data-key="nav.store">חנות</a>
     <a href="cart.html" id="nav-cart" data-key="nav.cart">סל הקניות</a>
     <a href="checkout.html" id="nav-checkout" data-key="nav.checkout">תשלום</a>
@@ -379,10 +380,10 @@
     <a id="login-link" href="login.html" data-key="nav.login">התחברות</a>
     <button id="logout" style="display:none" data-key="nav.logout">התנתקות</button>
     <a href="admin.html" id="nav-admin" data-key="nav.admin" style="display:none">ניהול</a>
-    <a href="cake-designer.html">🎨 עיצוב עוגה</a>
-    <a href="dessert-finder.html" data-key="nav.dessertFinder">🔍 מציאת קינוח מושלם</a>
-    <a href="wheel.html">🎡 גלגל מזל</a>
-    <a href="recipes.html" id="nav-recipes" data-key="nav.recipes">🍪 מתכונים</a>
+    <a href="cake-designer.html" data-key="nav.cakeDesigner">עיצוב עוגה</a>
+    <a href="dessert-finder.html" data-key="nav.dessertFinder"> מציאת קינוח מושלם</a>
+    <a href="wheel.html" data-key="nav.wheel"> גלגל מזל</a>
+    <a href="recipes.html" id="nav-recipes" data-key="nav.recipes"> מתכונים</a>
     <button id="theme-toggle">🌙 מצב כהה</button>
     <button id="language-toggle">🌐 English</button>
   </nav>
@@ -891,7 +892,7 @@
         });
 
         if (response.status === 401) {
-          location.href = 'login.html';
+          location.href = '/screens/login.html';
           return;
         }
 
@@ -958,7 +959,7 @@
 
     document.getElementById('logout').onclick = async () => {
       try { await fetch('/api/logout', { method: 'POST' }); }
-      finally { location.href = 'login.html'; }
+      finally { location.href = '/screens/login.html'; }
     };
 
     // טעינה ראשונית

@@ -23,16 +23,16 @@
 </head>
 <body>
   <nav>
-    <a href="cart.html" data-key="cart">סל הקניות</a>
-    <a href="checkout.html" data-key="checkout">תשלום</a>
-    <a href="myitems.html" data-key="myPurchases">הרכישות שלי</a>
-    <a id="login-link" href="login.html" data-key="login">התחברות</a>
+    <a href="/screens/cart.html" data-key="cart">סל הקניות</a>
+    <a href="/screens/checkout.html" data-key="checkout">תשלום</a>
+    <a href="/screens/myitems.html" data-key="myPurchases">הרכישות שלי</a>
+    <a id="login-link" href="/screens/login.html" data-key="login">התחברות</a>
     <button id="logout" style="display:none" data-key="logout">התנתקות</button>
-    <a href="admin.html" data-key="admin">ניהול</a>
-    <a href="cake-designer.html">🎨 עיצוב עוגה</a>
-    <a href="dessert-finder.html">🔍 מציאת קינוח מושלם</a>
-    <a href="wheel.html">🎡 גלגל מזל</a>
-    <a href="diy.html">🍪 <span data-key="nav.diy">עשה זאת בעצמך</span></a>
+    <a href="/screens/admin.html" data-key="admin">ניהול</a>
+    <a href="/screens/cake-designer.html">🎨 עיצוב עוגה</a>
+    <a href="/screens/dessert-finder.html">🔍 מציאת קינוח מושלם</a>
+    <a href="/screens/wheel.html">🎡 גלגל מזל</a>
+    <a href="/screens/diy.html">🍪 <span data-key="nav.diy">עשה זאת בעצמך</span></a>
   </nav>
 
   <h1 data-key="pageTitle.admin">מסך ניהול</h1>
@@ -121,14 +121,14 @@
     setupAuthButtons();
     document.getElementById('logout').onclick = async () => {
       try { await fetch('/api/logout', { method: 'POST' }); }
-      finally { location.href = 'login.html'; }
+      finally { location.href = '/screens/login.html'; }
     };
 
     const productsBox = document.getElementById('products');
     async function loadProducts(){
       productsBox.innerHTML = 'טוען...';
       const res = await fetch('/api/admin/products');
-      if (res.status === 401) return location.href = 'login.html';
+      if (res.status === 401) return location.href = '/screens/login.html';
       if (res.status === 403) { productsBox.textContent = 'Admin only'; return; }
       const items = await res.json();
       const currentLanguage = localStorage.getItem('language') || 'he';
@@ -182,7 +182,7 @@
       const res = await fetch('/api/admin/products', {
         method:'POST', headers: { 'Content-Type':'application/json' }, body: JSON.stringify(payload)
       });
-      if (res.status === 401) return location.href = 'login.html';
+      if (res.status === 401) return location.href = '/screens/login.html';
       if (res.status === 403) return alert('Admin only');
       const j = await res.json().catch(() => ({}));
       if (!res.ok || !j.ok) return alert(j.error || 'הוספה נכשלה');
