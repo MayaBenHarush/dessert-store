@@ -196,7 +196,6 @@
     
     <nav class="header-nav">
       <a href="index.html" class="header-btn home-btn">בית</a>
-      
       <a href="store.html" class="header-btn">חנות</a>
       <a href="cart.html" class="header-btn cart-btn">סל קניות</a>
       <a href="login.html" class="header-btn login-btn" id="header-login">התחברות</a>
@@ -205,15 +204,15 @@
 
   <nav class="nav-menu" id="navMenu">
     <button class="nav-close" id="navClose">×</button>
-    <a href="checkout.html" id="nav-checkout" data-key="nav.checkout">תשלום</a>
-    <a href="myitems.html" id="nav-myitems" data-key="nav.myPurchases">הרכישות שלי</a>
-    <a href="admin.html" id="nav-admin" data-key="nav.admin" style="display:none">ניהול</a>
-    <a href="dessert-finder.html" data-key="nav.dessertFinder">מציאת הקינוח המושלם</a>
-    <a href="wheel.html" data-key="nav.wheel">גלגל מזל</a>
-    <a href="cake-designer.html" data-key="nav.cakeDesigner">עיצוב עוגה</a>
-    <a href="recipes.html" id="nav-recipes" data-key="nav.recipes">מתכונים</a>
-    <a href="store.html" id="nav-store" data-key="nav.store">חנות</a>
-    <button id="logout" style="display:none" data-key="nav.logout">התנתקות</button>
+    <a href="checkout.html" id="nav-checkout">תשלום</a>
+    <a href="myitems.html" id="nav-myitems">הרכישות שלי</a>
+    <a href="admin.html" id="nav-admin" style="display:none">ניהול</a>
+    <a href="dessert-finder.html">מציאת קינוח מושלם</a>
+    <a href="wheel.html">גלגל מזל</a>
+    <a href="cake-designer.html">עיצוב עוגה</a>
+    <a href="recipes.html" id="nav-recipes">מתכונים</a>
+    <a href="store.html" id="nav-store">חנות</a>
+    <button id="logout" style="display:none">התנתקות</button>
     <button id="theme-toggle">🌙 מצב כהה</button>
     <button id="language-toggle">🌐 English</button>
   </nav>
@@ -222,8 +221,8 @@
 
   <main class="main-content">
     <div class="page-header">
-      <h1 id="main-title">🎨 <span data-key="cakeDesigner.title">עיצוב עוגה מותאמת אישית</span></h1>
-      <p id="subtitle" data-key="cakeDesigner.subtitle">עצב את העוגה המושלמת עבורך</p>
+      <h1 id="main-title">🎨 <span id="title-text">עיצוב עוגה מותאמת אישית</span></h1>
+      <p id="subtitle">עצב את העוגה המושלמת עבורך</p>
     </div>
 
     <div class="designer-container">
@@ -237,16 +236,16 @@
       <div class="design-panel">
         <!-- בחירת גודל -->
         <div class="design-section">
-          <div class="section-title" data-key="cakeDesigner.sizeSelection">🍰 בחירת גודל העוגה</div>
+          <div class="section-title" id="size-section-title">🔍 בחירת גודל העוגה</div>
           <div class="size-options">
             <div class="size-option selected" data-size="bento">
-              <div class="size-title" data-key="cakeDesigner.bento">בנטו</div>
-              <div class="size-subtitle" data-key="cakeDesigner.bentoSize">קוטר 10 ס"מ</div>
+              <div class="size-title" id="bento-title">בנטו</div>
+              <div class="size-subtitle" id="bento-size">קוטר 10 ס"מ</div>
               <div class="size-subtitle">₪140</div>
             </div>
             <div class="size-option" data-size="large">
-              <div class="size-title" data-key="cakeDesigner.large">גדולה</div>
-              <div class="size-subtitle" data-key="cakeDesigner.largeSize">קוטר 22 ס"מ</div>
+              <div class="size-title" id="large-title">גדולה</div>
+              <div class="size-subtitle" id="large-size">קוטר 22 ס"מ</div>
               <div class="size-subtitle">₪300</div>
             </div>
           </div>
@@ -254,49 +253,49 @@
 
         <!-- בחירת צבע עוגה -->
         <div class="design-section">
-          <div class="section-title" data-key="cakeDesigner.colorSelection">🎨 בחירת צבע העוגה</div>
+          <div class="section-title" id="color-section-title">🎨 בחירת צבע העוגה</div>
           <div class="color-grid">
-            <div class="color-option selected" data-color="pink" data-name-key="cakeDesigner.colors.pink" data-name="ורוד" style="background-image:url('/images/cakes/cake-pink.png')"></div>
-            <div class="color-option" data-color="white" data-name-key="cakeDesigner.colors.white" data-name="לבן" style="background-image:url('/images/cakes/cake-white.png')"></div>
-            <div class="color-option" data-color="green" data-name-key="cakeDesigner.colors.green" data-name="ירוק" style="background-image:url('/images/cakes/cake-green.png')"></div>
-            <div class="color-option" data-color="red" data-name-key="cakeDesigner.colors.red" data-name="אדום" style="background-image:url('/images/cakes/cake-red.png')"></div>
-            <div class="color-option" data-color="purple" data-name-key="cakeDesigner.colors.purple" data-name="סגול" style="background-image:url('/images/cakes/cake-purple.png')"></div>
-            <div class="color-option" data-color="light-blue" data-name-key="cakeDesigner.colors.lightBlue" data-name="כחול בהיר" style="background-image:url('/images/cakes/cake-light-blue.png')"></div>
-            <div class="color-option" data-color="orange" data-name-key="cakeDesigner.colors.orange" data-name="כתום" style="background-image:url('/images/cakes/cake-orange.png')"></div>
+            <div class="color-option selected" data-color="pink" data-name="ורוד" style="background-image:url('/images/cakes/cake-pink.png')"></div>
+            <div class="color-option" data-color="white" data-name="לבן" style="background-image:url('/images/cakes/cake-white.png')"></div>
+            <div class="color-option" data-color="green" data-name="ירוק" style="background-image:url('/images/cakes/cake-green.png')"></div>
+            <div class="color-option" data-color="red" data-name="אדום" style="background-image:url('/images/cakes/cake-red.png')"></div>
+            <div class="color-option" data-color="purple" data-name="סגול" style="background-image:url('/images/cakes/cake-purple.png')"></div>
+            <div class="color-option" data-color="light-blue" data-name="כחול בהיר" style="background-image:url('/images/cakes/cake-light-blue.png')"></div>
+            <div class="color-option" data-color="orange" data-name="כתום" style="background-image:url('/images/cakes/cake-orange.png')"></div>
           </div>
         </div>
 
         <!-- הוספת כיתוב -->
         <div class="design-section">
-          <div class="section-title" data-key="cakeDesigner.textSection">✏️ כיתוב על העוגה</div>
-          <input type="text" class="text-input" id="cakeTextInput" data-key-placeholder="cakeDesigner.textPlaceholder" placeholder="הכנס כיתוב (עד 20 תווים)" maxlength="20" value="" />
-          <div class="char-counter"><span id="charCount">0</span><span data-key="cakeDesigner.charLimit">/20 תווים</span></div>
+          <div class="section-title" id="text-section-title">✏️ כיתוב על העוגה</div>
+          <input type="text" class="text-input" id="cakeTextInput" placeholder="הכנס כיתוב (עד 20 תווים)" maxlength="20" value="" />
+          <div class="char-counter"><span id="charCount">0</span><span id="char-limit">/20 תווים</span></div>
         </div>
 
         <!-- בחירת צבע כיתוב -->
         <div class="design-section">
-          <div class="section-title" data-key="cakeDesigner.textColorSelection">🌈 צבע הכיתוב</div>
+          <div class="section-title" id="text-color-section-title">🌈 צבע הכיתוב</div>
           <div class="text-color-grid">
-            <div class="text-color-option selected" data-text-color="#333333" data-name-key="cakeDesigner.textColors.black" data-name="שחור" style="background:#333333;"></div>
-            <div class="text-color-option" data-text-color="#ffffff" data-name-key="cakeDesigner.textColors.white" data-name="לבן" style="background:#ffffff; border:2px solid #ddd;"></div>
-            <div class="text-color-option" data-text-color="#ff1744" data-name-key="cakeDesigner.textColors.red" data-name="אדום" style="background:#ff1744;"></div>
-            <div class="text-color-option" data-text-color="#e91e63" data-name-key="cakeDesigner.textColors.pink" data-name="ורוד" style="background:#e91e63;"></div>
-            <div class="text-color-option" data-text-color="#9c27b0" data-name-key="cakeDesigner.textColors.purple" data-name="סגול" style="background:#9c27b0;"></div>
-            <div class="text-color-option" data-text-color="#3f51b5" data-name-key="cakeDesigner.textColors.blue" data-name="כחול" style="background:#3f51b5;"></div>
-            <div class="text-color-option" data-text-color="#00bcd4" data-name-key="cakeDesigner.textColors.turquoise" data-name="טורקיז" style="background:#00bcd4;"></div>
-            <div class="text-color-option" data-text-color="#4caf50" data-name-key="cakeDesigner.textColors.green" data-name="ירוק" style="background:#4caf50;"></div>
-            <div class="text-color-option" data-text-color="#ff9800" data-name-key="cakeDesigner.textColors.orange" data-name="כתום" style="background:#ff9800;"></div>
-            <div class="text-color-option" data-text-color="#ffc107" data-name-key="cakeDesigner.textColors.yellow" data-name="צהוב" style="background:#ffc107;"></div>
-            <div class="text-color-option" data-text-color="#795548" data-name-key="cakeDesigner.textColors.brown" data-name="חום" style="background:#795548;"></div>
-            <div class="text-color-option" data-text-color="#607d8b" data-name-key="cakeDesigner.textColors.gray" data-name="אפור" style="background:#607d8b;"></div>
+            <div class="text-color-option selected" data-text-color="#333333" data-name="שחור" style="background:#333333;"></div>
+            <div class="text-color-option" data-text-color="#ffffff" data-name="לבן" style="background:#ffffff; border:2px solid #ddd;"></div>
+            <div class="text-color-option" data-text-color="#ff1744" data-name="אדום" style="background:#ff1744;"></div>
+            <div class="text-color-option" data-text-color="#e91e63" data-name="ורוד" style="background:#e91e63;"></div>
+            <div class="text-color-option" data-text-color="#9c27b0" data-name="סגול" style="background:#9c27b0;"></div>
+            <div class="text-color-option" data-text-color="#3f51b5" data-name="כחול" style="background:#3f51b5;"></div>
+            <div class="text-color-option" data-text-color="#00bcd4" data-name="טורקיז" style="background:#00bcd4;"></div>
+            <div class="text-color-option" data-text-color="#4caf50" data-name="ירוק" style="background:#4caf50;"></div>
+            <div class="text-color-option" data-text-color="#ff9800" data-name="כתום" style="background:#ff9800;"></div>
+            <div class="text-color-option" data-text-color="#ffc107" data-name="צהוב" style="background:#ffc107;"></div>
+            <div class="text-color-option" data-text-color="#795548" data-name="חום" style="background:#795548;"></div>
+            <div class="text-color-option" data-text-color="#607d8b" data-name="אפור" style="background:#607d8b;"></div>
           </div>
         </div>
 
         <!-- סיכום מחיר -->
         <div class="price-summary">
           <div class="total-price" id="totalPrice">₪140</div>
-          <div data-key="cakeDesigner.customCake">עוגה מותאמת אישית</div>
-          <button class="add-to-cart-btn" id="addToCartBtn" data-key="cakeDesigner.addToCart">🛒 הוסף לסל הקניות</button>
+          <div id="custom-cake-text">עוגה מותאמת אישית</div>
+          <button class="add-to-cart-btn" id="addToCartBtn">🛒 הוסף לסל הקניות</button>
         </div>
       </div>
     </div>
@@ -314,155 +313,394 @@
     navClose.addEventListener('click', closeMenu);
     overlay.addEventListener('click', closeMenu);
 
-    // UI prefs
+    // Translation system
+    const TRANSLATIONS = {
+      he: {
+        'title-text': 'עיצוב עוגה מותאמת אישית',
+        'subtitle': 'עצב את העוגה המושלמת עבורך',
+        'size-section-title': '🔍 בחירת גודל העוגה',
+        'bento-title': 'בנטו',
+        'bento-size': 'קוטר 10 ס"מ',
+        'large-title': 'גדולה',
+        'large-size': 'קוטר 22 ס"מ',
+        'color-section-title': '🎨 בחירת צבע העוגה',
+        'text-section-title': '✏️ כיתוב על העוגה',
+        'text-input-placeholder': 'הכנס כיתוב (עד 20 תווים)',
+        'char-limit': '/20 תווים',
+        'text-color-section-title': '🌈 צבע הכיתוב',
+        'custom-cake-text': 'עוגה מותאמת אישית',
+        'add-to-cart-btn': '🛒 הוסף לסל הקניות',
+        'nav-checkout': 'תשלום',
+        'nav-myitems': 'הרכישות שלי',
+        'nav-admin': 'ניהול',
+        'nav-recipes': 'מתכונים',
+        'nav-store': 'חנות',
+        'logout': 'התנתקות',
+        'theme-toggle-dark': '🌙 מצב כהה',
+        'theme-toggle-light': '☀️ מצב בהיר',
+        'colors': {
+          'pink': 'ורוד',
+          'white': 'לבן',
+          'green': 'ירוק',
+          'red': 'אדום',
+          'purple': 'סגול',
+          'light-blue': 'כחול בהיר',
+          'orange': 'כתום'
+        },
+        'text-colors': {
+          'black': 'שחור',
+          'white': 'לבן',
+          'red': 'אדום',
+          'pink': 'ורוד',
+          'purple': 'סגול',
+          'blue': 'כחול',
+          'turquoise': 'טורקיז',
+          'green': 'ירוק',
+          'orange': 'כתום',
+          'yellow': 'צהוב',
+          'brown': 'חום',
+          'gray': 'אפור'
+        }
+      },
+      en: {
+        'title-text': 'Custom Cake Designer',
+        'subtitle': 'Design the perfect cake for you',
+        'size-section-title': '🔍 Cake Size Selection',
+        'bento-title': 'Bento',
+        'bento-size': 'Diameter 10cm',
+        'large-title': 'Large',
+        'large-size': 'Diameter 22cm',
+        'color-section-title': '🎨 Cake Color Selection',
+        'text-section-title': '✏️ Text on Cake',
+        'text-input-placeholder': 'Enter text (up to 20 characters)',
+        'char-limit': '/20 characters',
+        'text-color-section-title': '🌈 Text Color',
+        'custom-cake-text': 'Custom Cake',
+        'add-to-cart-btn': '🛒 Add to Cart',
+        'nav-checkout': 'Checkout',
+        'nav-myitems': 'My Purchases',
+        'nav-admin': 'Admin',
+        'nav-recipes': 'Recipes',
+        'nav-store': 'Store',
+        'logout': 'Logout',
+        'theme-toggle-dark': '🌙 Dark Mode',
+        'theme-toggle-light': '☀️ Light Mode',
+        'colors': {
+          'pink': 'Pink',
+          'white': 'White',
+          'green': 'Green',
+          'red': 'Red',
+          'purple': 'Purple',
+          'light-blue': 'Light Blue',
+          'orange': 'Orange'
+        },
+        'text-colors': {
+          'black': 'Black',
+          'white': 'White',
+          'red': 'Red',
+          'pink': 'Pink',
+          'purple': 'Purple',
+          'blue': 'Blue',
+          'turquoise': 'Turquoise',
+          'green': 'Green',
+          'orange': 'Orange',
+          'yellow': 'Yellow',
+          'brown': 'Brown',
+          'gray': 'Gray'
+        }
+      }
+    };
+
+    // UI customization
     function loadUICustomization() {
       const theme = localStorage.getItem('theme') || 'light';
+      const lang = localStorage.getItem('language') || 'he';
+      
+      // Apply theme
       const themeToggle = document.getElementById('theme-toggle');
+      if (theme === 'dark') {
+        document.body.classList.add('dark-theme');
+        themeToggle.textContent = TRANSLATIONS[lang]['theme-toggle-light'];
+      } else {
+        document.body.classList.remove('dark-theme');
+        themeToggle.textContent = TRANSLATIONS[lang]['theme-toggle-dark'];
+      }
+      
+      // Apply language but DON'T change direction - keep RTL always
+      document.documentElement.lang = lang;
+      // Always keep RTL direction regardless of language
+      document.documentElement.dir = 'rtl';
+      
+      // Update language toggle button
       const languageToggle = document.getElementById('language-toggle');
-      if (theme === 'dark') { document.body.classList.add('dark-theme'); themeToggle.textContent = '☀️ ' + (window.Translations ? window.Translations.get('themeToggleLight') : 'מצב בהיר'); }
-      else { document.body.classList.remove('dark-theme'); themeToggle.textContent = '🌙 ' + (window.Translations ? window.Translations.get('themeToggleDark') : 'מצב כהה'); }
-      const currentLanguage = localStorage.getItem('language') || 'he';
-      languageToggle.textContent = currentLanguage === 'en' ? '🌐 עברית' : '🌐 English';
-      updateInterfaceLanguage(currentLanguage);
-      updateColorNames(currentLanguage);
+      languageToggle.textContent = lang === 'en' ? '🌐 עברית' : '🌐 English';
+      
+      // Update all text content
+      updateAllTexts(lang);
     }
 
-    function updateInterfaceLanguage(lang) {
-      const t = {
-        he:{'nav-store':'חנות','nav-cart':'סל קניות','nav-checkout':'תשלום','nav-myitems':'הרכישות שלי','nav-login':'התחברות','nav-logout':'התנתקות','nav-admin':'ניהול','theme-dark':'🌙 מצב כהה','theme-light':'☀️ מצב בהיר'},
-        en:{'nav-store':'Store','nav-cart':'Shopping Cart','nav-checkout':'Checkout','nav-myitems':'My Purchases','nav-login':'Login','nav-logout':'Logout','nav-admin':'Admin','theme-dark':'🌙 Dark Mode','theme-light':'☀️ Light Mode'}
-      }[lang];
-      if(!t) return;
-
-      const navCheckout=document.getElementById('nav-checkout');
-      const navMyitems=document.getElementById('nav-myitems');
-      const loginLink=document.getElementById('header-login');
-      const logoutBtn=document.getElementById('logout');
-      const navAdmin=document.getElementById('nav-admin');
-      const themeToggle=document.getElementById('theme-toggle');
-      const navStore=document.getElementById('nav-store');
-
-      if(navCheckout) navCheckout.textContent=t['nav-checkout'];
-      if(navMyitems) navMyitems.textContent=t['nav-myitems'];
-      if(loginLink) loginLink.textContent=t['nav-login'];
-      if(logoutBtn) logoutBtn.textContent=t['nav-logout'];
-      if(navAdmin) navAdmin.textContent=t['nav-admin'];
-      if(themeToggle) themeToggle.textContent=(localStorage.getItem('theme')||'light')==='dark'?t['theme-light']:t['theme-dark'];
-      if(navStore) navStore.textContent=t['nav-store'];
-
-      if(lang==='en'){ document.documentElement.dir='ltr'; document.documentElement.lang='en'; }
-      else { document.documentElement.dir='rtl'; document.documentElement.lang='he'; }
+    function updateAllTexts(lang) {
+      const texts = TRANSLATIONS[lang];
+      
+      // Update main text elements
+      Object.keys(texts).forEach(key => {
+        if (typeof texts[key] === 'string') {
+          const element = document.getElementById(key);
+          if (element) {
+            if (element.tagName === 'INPUT') {
+              element.placeholder = texts[key];
+            } else {
+              element.textContent = texts[key];
+            }
+          }
+        }
+      });
+      
+      // Update navigation
+      const navElements = ['nav-checkout', 'nav-myitems', 'nav-admin', 'nav-recipes', 'nav-store', 'logout'];
+      navElements.forEach(id => {
+        const element = document.getElementById(id);
+        if (element && texts[id]) {
+          element.textContent = texts[id];
+        }
+      });
+      
+      // Update header navigation
+      const headerBtns = document.querySelectorAll('.header-btn');
+      if (lang === 'en') {
+        headerBtns[0].textContent = 'Home';
+        headerBtns[1].textContent = 'Store';
+        headerBtns[2].textContent = 'Cart';
+        if (headerBtns[3]) headerBtns[3].textContent = 'Login';
+      } else {
+        headerBtns[0].textContent = 'בית';
+        headerBtns[1].textContent = 'חנות';
+        headerBtns[2].textContent = 'סל קניות';
+        if (headerBtns[3]) headerBtns[3].textContent = 'התחברות';
+      }
+      
+      // Update color names
+      updateColorNames(lang);
+      
+      // Update text input placeholder
+      const textInput = document.getElementById('cakeTextInput');
+      if (textInput) {
+        textInput.placeholder = texts['text-input-placeholder'];
+      }
     }
 
     function updateColorNames(lang) {
-      const colorOptions=document.querySelectorAll('.color-option[data-name-key]');
-      const textColorOptions=document.querySelectorAll('.text-color-option[data-name-key]');
-      const texts={
-        he:{'cakeDesigner.colors.pink':'ורוד','cakeDesigner.colors.white':'לבן','cakeDesigner.colors.green':'ירוק','cakeDesigner.colors.red':'אדום','cakeDesigner.colors.purple':'סגול','cakeDesigner.colors.lightBlue':'כחול בהיר','cakeDesigner.colors.orange':'כתום','cakeDesigner.textColors.black':'שחור','cakeDesigner.textColors.white':'לבן','cakeDesigner.textColors.red':'אדום','cakeDesigner.textColors.pink':'ורוד','cakeDesigner.textColors.purple':'סגול','cakeDesigner.textColors.blue':'כחול','cakeDesigner.textColors.turquoise':'טורקיז','cakeDesigner.textColors.green':'ירוק','cakeDesigner.textColors.orange':'כתום','cakeDesigner.textColors.yellow':'צהוב','cakeDesigner.textColors.brown':'חום','cakeDesigner.textColors.gray':'אפור'},
-        en:{'cakeDesigner.colors.pink':'Pink','cakeDesigner.colors.white':'White','cakeDesigner.colors.green':'Green','cakeDesigner.colors.red':'Red','cakeDesigner.colors.purple':'Purple','cakeDesigner.colors.lightBlue':'Light Blue','cakeDesigner.colors.orange':'Orange','cakeDesigner.textColors.black':'Black','cakeDesigner.textColors.white':'White','cakeDesigner.textColors.red':'Red','cakeDesigner.textColors.pink':'Pink','cakeDesigner.textColors.purple':'Purple','cakeDesigner.textColors.blue':'Blue','cakeDesigner.textColors.turquoise':'Turquoise','cakeDesigner.textColors.green':'Green','cakeDesigner.textColors.orange':'Orange','cakeDesigner.textColors.yellow':'Yellow','cakeDesigner.textColors.brown':'Brown','cakeDesigner.textColors.gray':'Gray'}
-      }[lang];
-      if (!texts) return;
-      colorOptions.forEach(o=>{ const k=o.getAttribute('data-name-key'); if(texts[k]) o.setAttribute('data-name',texts[k]); });
-      textColorOptions.forEach(o=>{ const k=o.getAttribute('data-name-key'); if(texts[k]) o.setAttribute('data-name',texts[k]); });
+      const colorOptions = document.querySelectorAll('.color-option');
+      const textColorOptions = document.querySelectorAll('.text-color-option');
+      
+      const colorTranslations = TRANSLATIONS[lang]['colors'];
+      const textColorTranslations = TRANSLATIONS[lang]['text-colors'];
+      
+      colorOptions.forEach(option => {
+        const color = option.getAttribute('data-color');
+        if (colorTranslations[color]) {
+          option.setAttribute('data-name', colorTranslations[color]);
+        }
+      });
+      
+      textColorOptions.forEach(option => {
+        const colorName = option.getAttribute('data-name');
+        const englishName = Object.keys(TRANSLATIONS.en['text-colors']).find(
+          key => TRANSLATIONS.en['text-colors'][key] === colorName || 
+                 TRANSLATIONS.he['text-colors'][key] === colorName
+        );
+        if (englishName && textColorTranslations[englishName]) {
+          option.setAttribute('data-name', textColorTranslations[englishName]);
+        }
+      });
     }
 
     document.getElementById('theme-toggle').addEventListener('click', () => {
-      const isDark=document.body.classList.contains('dark-theme');
-      localStorage.setItem('theme', isDark?'light':'dark');
+      const isDark = document.body.classList.contains('dark-theme');
+      localStorage.setItem('theme', isDark ? 'light' : 'dark');
       loadUICustomization();
     });
 
     document.getElementById('language-toggle').addEventListener('click', () => {
-      const current=localStorage.getItem('language')||'he';
-      const next=current==='he'?'en':'he';
+      const current = localStorage.getItem('language') || 'he';
+      const next = current === 'he' ? 'en' : 'he';
       localStorage.setItem('language', next);
-      document.getElementById('language-toggle').textContent = next==='en'?'🌐 עברית':'🌐 English';
       loadUICustomization();
     });
 
     // Current design
-    let currentDesign={ size:'bento', color:'pink', text:'', textColor:'#333333' };
-    const prices={ bento:140, large:300 };
-    const colorFiles={ pink:'cake-pink.png', white:'cake-white.png', green:'cake-green.png', red:'cake-red.png', purple:'cake-purple.png', 'light-blue':'cake-light-blue.png', orange:'cake-orange.png' };
+    let currentDesign = { size: 'bento', color: 'pink', text: '', textColor: '#333333' };
+    const prices = { bento: 140, large: 300 };
+    const colorFiles = { 
+      pink: 'cake-pink.png', 
+      white: 'cake-white.png', 
+      green: 'cake-green.png', 
+      red: 'cake-red.png', 
+      purple: 'cake-purple.png', 
+      'light-blue': 'cake-light-blue.png', 
+      orange: 'cake-orange.png' 
+    };
 
-    const cakeImage=document.getElementById('cakeImage');
-    const cakeTextOverlay=document.getElementById('cakeTextOverlay');
-    const cakeTextInput=document.getElementById('cakeTextInput');
-    const charCount=document.getElementById('charCount');
-    const totalPrice=document.getElementById('totalPrice');
+    const cakeImage = document.getElementById('cakeImage');
+    const cakeTextOverlay = document.getElementById('cakeTextOverlay');
+    const cakeTextInput = document.getElementById('cakeTextInput');
+    const charCount = document.getElementById('charCount');
+    const totalPrice = document.getElementById('totalPrice');
 
-    function updateCakePreview(){
-      cakeImage.className=`cake-image ${currentDesign.size}`;
-      cakeTextOverlay.className=`cake-text-overlay ${currentDesign.size}`;
-      const newSrc=`/images/cakes/${colorFiles[currentDesign.color]}`;
-      if (cakeImage.src !== location.origin + newSrc){
+    function updateCakePreview() {
+      cakeImage.className = `cake-image ${currentDesign.size}`;
+      cakeTextOverlay.className = `cake-text-overlay ${currentDesign.size}`;
+      const newSrc = `/images/cakes/${colorFiles[currentDesign.color]}`;
+      if (cakeImage.src !== location.origin + newSrc) {
         cakeImage.classList.add('cake-switching');
-        setTimeout(()=>{ cakeImage.src=newSrc; cakeImage.classList.remove('cake-switching'); },250);
+        setTimeout(() => {
+          cakeImage.src = newSrc;
+          cakeImage.classList.remove('cake-switching');
+        }, 250);
       }
-      if (currentDesign.text.trim()){ cakeTextOverlay.textContent=currentDesign.text; cakeTextOverlay.classList.remove('empty'); }
-      else { cakeTextOverlay.classList.add('empty'); }
-      cakeTextOverlay.style.color=currentDesign.textColor;
-      totalPrice.textContent=`₪${prices[currentDesign.size]}`;
+      if (currentDesign.text.trim()) {
+        cakeTextOverlay.textContent = currentDesign.text;
+        cakeTextOverlay.classList.remove('empty');
+      } else {
+        cakeTextOverlay.classList.add('empty');
+      }
+      cakeTextOverlay.style.color = currentDesign.textColor;
+      totalPrice.textContent = `₪${prices[currentDesign.size]}`;
     }
 
-    document.querySelectorAll('.size-option').forEach(option=>{
-      option.addEventListener('click',()=>{ document.querySelectorAll('.size-option').forEach(o=>o.classList.remove('selected')); option.classList.add('selected'); currentDesign.size=option.dataset.size; updateCakePreview(); addSparkles(); });
+    document.querySelectorAll('.size-option').forEach(option => {
+      option.addEventListener('click', () => {
+        document.querySelectorAll('.size-option').forEach(o => o.classList.remove('selected'));
+        option.classList.add('selected');
+        currentDesign.size = option.dataset.size;
+        updateCakePreview();
+        addSparkles();
+      });
     });
-    document.querySelectorAll('.color-option').forEach(opt=>{
-      opt.addEventListener('click',()=>{ document.querySelectorAll('.color-option').forEach(o=>o.classList.remove('selected')); opt.classList.add('selected'); currentDesign.color=opt.dataset.color; updateCakePreview(); addSparkles(); });
-    });
-    document.querySelectorAll('.text-color-option').forEach(opt=>{
-      opt.addEventListener('click',()=>{ document.querySelectorAll('.text-color-option').forEach(o=>o.classList.remove('selected')); opt.classList.add('selected'); currentDesign.textColor=opt.dataset.textColor; updateCakePreview(); addSparkles(); });
-    });
-    cakeTextInput.addEventListener('input', e=>{ const t=e.target.value; currentDesign.text=t; charCount.textContent=t.length; updateCakePreview(); });
 
-    const toastEl=document.getElementById('toast'); let toastTimer;
-    function showToast(msg){ toastEl.textContent=msg; toastEl.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>toastEl.classList.remove('show'),1500); }
+    document.querySelectorAll('.color-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        document.querySelectorAll('.color-option').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        currentDesign.color = opt.dataset.color;
+        updateCakePreview();
+        addSparkles();
+      });
+    });
 
-    document.getElementById('addToCartBtn').addEventListener('click', async ()=>{
-      const button=document.getElementById('addToCartBtn'); button.disabled=true;
-      const designDetails={ size:currentDesign.size, color:currentDesign.color, text:currentDesign.text, textColor:currentDesign.textColor, price:prices[currentDesign.size], imageFile:colorFiles[currentDesign.color] };
-      try{
-        const response=await fetch('/api/cart',{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ productId:'custom-cake', customDesign:designDetails }) });
-        if (response.status===401){ location.href='login.html'; return; }
-        if (response.ok){
-          const originalText=button.textContent; const lang=localStorage.getItem('language')||'he';
-          button.textContent=lang==='en'?'✅ Added to Cart!':'✅ נוסף לסל!'; button.style.background='#28a745';
-          for (let i=0;i<5;i++) setTimeout(()=>addSparkles(), i*300);
-          setTimeout(()=>{ button.textContent=originalText; button.style.background=''; button.disabled=false; },3000);
-        } else {
-          const error=await response.json(); const lang=localStorage.getItem('language')||'he';
-          alert(error.error || (lang==='en'?'Error adding to cart':'שגיאה בהוספה לסל')); button.disabled=false;
+    document.querySelectorAll('.text-color-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        document.querySelectorAll('.text-color-option').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        currentDesign.textColor = opt.dataset.textColor;
+        updateCakePreview();
+        addSparkles();
+      });
+    });
+
+    cakeTextInput.addEventListener('input', e => {
+      const t = e.target.value;
+      currentDesign.text = t;
+      charCount.textContent = t.length;
+      updateCakePreview();
+    });
+
+    const toastEl = document.getElementById('toast');
+    let toastTimer;
+    function showToast(msg) {
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1500);
+    }
+
+    document.getElementById('addToCartBtn').addEventListener('click', async () => {
+      const button = document.getElementById('addToCartBtn');
+      button.disabled = true;
+      const designDetails = {
+        size: currentDesign.size,
+        color: currentDesign.color,
+        text: currentDesign.text,
+        textColor: currentDesign.textColor,
+        price: prices[currentDesign.size],
+        imageFile: colorFiles[currentDesign.color]
+      };
+      try {
+        const response = await fetch('/api/cart', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ productId: 'custom-cake', customDesign: designDetails })
+        });
+        if (response.status === 401) {
+          location.href = 'login.html';
+          return;
         }
-      } catch(err){
+        if (response.ok) {
+          const originalText = button.textContent;
+          const lang = localStorage.getItem('language') || 'he';
+          button.textContent = lang === 'en' ? '✅ Added to Cart!' : '✅ נוסף לסל!';
+          button.style.background = '#28a745';
+          for (let i = 0; i < 5; i++) setTimeout(() => addSparkles(), i * 300);
+          setTimeout(() => {
+            button.textContent = originalText;
+            button.style.background = '';
+            button.disabled = false;
+          }, 3000);
+        } else {
+          const error = await response.json();
+          const lang = localStorage.getItem('language') || 'he';
+          alert(error.error || (lang === 'en' ? 'Error adding to cart' : 'שגיאה בהוספה לסל'));
+          button.disabled = false;
+        }
+      } catch (err) {
         console.error('Error adding to cart:', err);
-        const lang=localStorage.getItem('language')||'he';
-        alert(lang==='en'?'Error adding to cart. Please try again.':'שגיאה בהוספה לסל. נסה שוב.');
-        button.disabled=false;
+        const lang = localStorage.getItem('language') || 'he';
+        alert(lang === 'en' ? 'Error adding to cart. Please try again.' : 'שגיאה בהוספה לסל. נסה שוב.');
+        button.disabled = false;
       }
     });
 
-    function addSparkles(){
-      const preview=document.querySelector('.cake-preview');
-      for (let i=0;i<8;i++){
-        setTimeout(()=>{
-          const s=document.createElement('div'); s.className='sparkle';
-          s.style.left=(20+Math.random()*60)+'%'; s.style.top=(20+Math.random()*60)+'%';
-          preview.appendChild(s); setTimeout(()=>s.remove(),2000);
-        }, i*100);
+    function addSparkles() {
+      const preview = document.querySelector('.cake-preview');
+      for (let i = 0; i < 8; i++) {
+        setTimeout(() => {
+          const s = document.createElement('div');
+          s.className = 'sparkle';
+          s.style.left = (20 + Math.random() * 60) + '%';
+          s.style.top = (20 + Math.random() * 60) + '%';
+          preview.appendChild(s);
+          setTimeout(() => s.remove(), 2000);
+        }, i * 100);
       }
     }
 
-    async function setupAuth(){
-      try{
-        const r=await fetch('/api/session');
-        if (r.ok){ const data=await r.json(); document.getElementById('header-login').style.display='none'; document.getElementById('logout').style.display=''; if (data.username==='admin') document.getElementById('nav-admin').style.display=''; }
-      }catch{}
+    async function setupAuth() {
+      try {
+        const r = await fetch('/api/session');
+        if (r.ok) {
+          const data = await r.json();
+          document.getElementById('header-login').style.display = 'none';
+          document.getElementById('logout').style.display = '';
+          if (data.username === 'admin') document.getElementById('nav-admin').style.display = '';
+        }
+      } catch {}
     }
-    document.getElementById('logout').onclick = async ()=>{ try{ await fetch('/api/logout',{method:'POST'}); } finally{ location.href='login.html'; } };
 
-    document.addEventListener('DOMContentLoaded', ()=>{
-      setTimeout(()=>{ loadUICustomization(); setupAuth(); updateCakePreview(); setTimeout(addSparkles,1000); },100);
+    document.getElementById('logout').onclick = async () => {
+      try {
+        await fetch('/api/logout', { method: 'POST' });
+      } finally {
+        location.href = 'login.html';
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        loadUICustomization();
+        setupAuth();
+        updateCakePreview();
+        setTimeout(addSparkles, 1000);
+      }, 100);
     });
   </script>
 </body>
