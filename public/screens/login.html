@@ -4,395 +4,83 @@
   <meta charset="UTF-8" />
   <title data-page="login">התחברות</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script src="/assets/translations"></script>
+  <script src="/assets/translations.js"></script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      background: #ffffff;
-      color: #1a1a1a;
-      line-height: 1.6;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      background: #ffffff; color: #1a1a1a; line-height: 1.6;
+      min-height: 100vh; display: flex; flex-direction: column;
     }
 
     /* Header */
-    .header {
-      background: #ffffcc;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
+    .header { background: #ffffcc; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,.1); }
+    .header-left { display: flex; align-items: center; gap: 1rem; }
+    .menu-btn { background: none; border: none; font-size: 1.1rem; font-weight: 600; color: #1a1a1a; cursor: pointer; display: flex; align-items: center; gap: .5rem; }
+    .menu-btn::before { content: "☰"; font-size: 1.2rem; }
+    .logo { font-size: 2.2rem; font-weight: 900; color: #1a1a1a; text-decoration: none; letter-spacing: -0.02em; }
+    .header-nav { display: flex; align-items: center; gap: 1rem; }
+    .header-btn { background: none; border: 2px solid #1a1a1a; color: #1a1a1a; padding: .5rem 1rem; border-radius: 20px; font-weight: 600; font-size: .9rem; cursor: pointer; transition: all .2s ease; text-decoration: none; display: flex; align-items: center; gap: .3rem; }
+    .header-btn:hover { background: #1a1a1a; color: #fff; }
 
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .menu-btn {
-      background: none;
-      border: none;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #1a1a1a;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .menu-btn::before {
-      content: "☰";
-      font-size: 1.2rem;
-    }
-
-    .logo {
-      font-size: 2.2rem;
-      font-weight: 900;
-      color: #1a1a1a;
-      text-decoration: none;
-      letter-spacing: -0.02em;
-    }
-
-    .header-nav {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .header-btn {
-      background: none;
-      border: 2px solid #1a1a1a;
-      color: #1a1a1a;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-    }
-
-    .header-btn:hover {
-      background: #1a1a1a;
-      color: white;
-    }
-
-    /* Navigation Menu */
-    .nav-menu {
-      position: fixed;
-      top: 0;
-      right: -300px;
-      width: 300px;
-      height: 100vh;
-      background: white;
-      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
-      transition: right 0.3s ease;
-      padding: 2rem;
-      z-index: 2000;
-    }
-
-    .nav-menu.active {
-      right: 0;
-    }
-
-    .nav-close {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      float: left;
-      margin-bottom: 2rem;
-    }
-
-    .nav-item,
-    .nav-menu a,
-    .nav-menu button {
-      display: block;
-      padding: 0.75rem 0;
-      color: #1a1a1a;
-      text-decoration: none;
-      font-weight: 500;
-      border-bottom: 1px solid #f0f0f0;
-      transition: color 0.2s ease;
-      background: none;
-      border: none;
-      text-align: right;
-      width: 100%;
-      cursor: pointer;
-    }
-
-    .nav-item:hover,
-    .nav-menu a:hover,
-    .nav-menu button:hover {
-      color: #ffffcc;
-    }
+    /* Navigation Menu (side) */
+    .nav-menu { position: fixed; top: 0; right: -300px; width: 300px; height: 100vh; background: #fff; box-shadow: -5px 0 15px rgba(0,0,0,.1); transition: right .3s ease; padding: 2rem; z-index: 2000; }
+    .nav-menu.active { right: 0; }
+    .nav-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; float: left; margin-bottom: 2rem; }
+    .nav-item, .nav-menu a, .nav-menu button { display: block; padding: .75rem 0; color: #1a1a1a; text-decoration: none; font-weight: 500; border-bottom: 1px solid #f0f0f0; transition: color .2s ease; background: none; border: none; text-align: right; width: 100%; cursor: pointer; }
+    .nav-item:hover, .nav-menu a:hover, .nav-menu button:hover { color: #ffffcc; }
 
     /* Overlay */
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 1500;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-    }
+    .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,.5); z-index: 1500; opacity: 0; visibility: hidden; transition: all .3s ease; }
+    .overlay.active { opacity: 1; visibility: visible; }
 
-    .overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    /* Main Content */
-    .main-content {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 2rem;
-    }
-
-    .auth-container {
-      background: white;
-      border-radius: 24px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-      padding: 3rem;
-      max-width: 500px;
-      width: 100%;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .auth-container::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 6px;
-      background: #ffffcc;
-    }
-
-    .auth-title {
-      font-size: 2.5rem;
-      font-weight: 900;
-      color: #1a1a1a;
-      text-align: center;
-      margin-bottom: 2rem;
-      letter-spacing: -0.02em;
-      text-transform: uppercase;
-    }
-
-    .auth-form {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .auth-form label {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      text-align: right;
-      font-weight: 600;
-      color: #1a1a1a;
-    }
-
-    .auth-form input[type="text"],
-    .auth-form input[type="password"] {
-      padding: 1rem 1.5rem;
-      border: 2px solid #f0f0f0;
-      border-radius: 12px;
-      font-size: 1rem;
-      transition: all 0.2s ease;
-      background: #fafafa;
-      text-align: right;
-    }
-
-    .auth-form input:focus {
-      outline: none;
-      border-color: #ffffcc;
-      box-shadow: 0 0 0 3px rgba(255, 255, 204, 0.2);
-      background: white;
-    }
-
-    .extras {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-weight: 500;
-      color: #666;
-    }
-
-    .extras input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      accent-color: #1a1a1a;
-    }
-
-    .actions {
-      margin-top: 1rem;
-    }
-
-    .auth-form button {
-      width: 100%;
-      background: #1a1a1a;
-      color: white;
-      border: none;
-      padding: 1rem 2rem;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .auth-form button:hover {
-      background: #333;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    }
-
-    .auth-form button:active {
-      transform: translateY(0);
-    }
+    /* Main */
+    .main-content { flex: 1; display: flex; justify-content: center; align-items: center; padding: 2rem; }
+    .auth-container { background: #fff; border-radius: 24px; box-shadow: 0 20px 60px rgba(0,0,0,.1); padding: 3rem; max-width: 500px; width: 100%; position: relative; overflow: hidden; }
+    .auth-container::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px; background: #ffffcc; }
+    .auth-title { font-size: 2.5rem; font-weight: 900; color: #1a1a1a; text-align: center; margin-bottom: 2rem; letter-spacing: -0.02em; text-transform: uppercase; }
+    .auth-form { display: flex; flex-direction: column; gap: 1.5rem; }
+    .auth-form label { display: flex; flex-direction: column; gap: .5rem; text-align: right; font-weight: 600; color: #1a1a1a; }
+    .auth-form input[type="text"], .auth-form input[type="password"] { padding: 1rem 1.5rem; border: 2px solid #f0f0f0; border-radius: 12px; font-size: 1rem; transition: all .2s ease; background: #fafafa; text-align: right; }
+    .auth-form input:focus { outline: none; border-color: #ffffcc; box-shadow: 0 0 0 3px rgba(255,255,204,.2); background: #fff; }
+    .extras { display: flex; align-items: center; gap: .5rem; font-weight: 500; color: #666; }
+    .extras input[type="checkbox"] { width: 18px; height: 18px; accent-color: #1a1a1a; }
+    .actions { margin-top: 1rem; }
+    .auth-form button { width: 100%; background: #1a1a1a; color: #fff; border: none; padding: 1rem 2rem; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all .2s ease; text-transform: uppercase; letter-spacing: .5px; }
+    .auth-form button:hover { background: #333; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,.15); }
+    .auth-form button:active { transform: translateY(0); }
 
     /* Dark Theme */
-    .dark-theme {
-      background: #1a1a1a;
-      color: white;
-    }
+    .dark-theme { background: #1a1a1a; color: #fff; }
+    .dark-theme .header { background: #2d2d2d; }
+    .dark-theme .nav-menu { background: #2d2d2d; }
+    .dark-theme .nav-menu a, .dark-theme .nav-menu button { color: #fff; border-bottom-color: #444; }
+    .dark-theme .auth-container { background: #2d2d2d; }
+    .dark-theme .auth-container::before { background: #ffffcc; }
+    .dark-theme .auth-title { color: #fff; }
+    .dark-theme .auth-form label { color: #fff; }
+    .dark-theme .auth-form input { background: #3d3d3d; border-color: #555; color: #fff; }
+    .dark-theme .auth-form input:focus { background: #4d4d4d; border-color: #ffffcc; }
+    .dark-theme .extras { color: #ccc; }
+    .dark-theme .auth-form button { background: #ffffcc; color: #1a1a1a; }
+    .dark-theme .auth-form button:hover { background: #ffff99; }
 
-    .dark-theme .header {
-      background: #2d2d2d;
-    }
-
-    .dark-theme .nav-menu {
-      background: #2d2d2d;
-    }
-
-    .dark-theme .nav-menu a,
-    .dark-theme .nav-menu button {
-      color: white;
-      border-bottom-color: #444;
-    }
-
-    .dark-theme .auth-container {
-      background: #2d2d2d;
-    }
-
-    .dark-theme .auth-container::before {
-      background: #ffffcc;
-    }
-
-    .dark-theme .auth-title {
-      color: white;
-    }
-
-    .dark-theme .auth-form label {
-      color: white;
-    }
-
-    .dark-theme .auth-form input {
-      background: #3d3d3d;
-      border-color: #555;
-      color: white;
-    }
-
-    .dark-theme .auth-form input:focus {
-      background: #4d4d4d;
-      border-color: #ffffcc;
-    }
-
-    .dark-theme .extras {
-      color: #ccc;
-    }
-
-    .dark-theme .auth-form button {
-      background: #ffffcc;
-      color: #1a1a1a;
-    }
-
-    .dark-theme .auth-form button:hover {
-      background: #ffff99;
-    }
-
-    /* Responsive Design */
+    /* Responsive */
     @media (max-width: 768px) {
-      .header {
-        padding: 1rem;
-        flex-wrap: wrap;
-        gap: 1rem;
-      }
-
-      .header-left {
-        order: 1;
-      }
-
-      .logo {
-        font-size: 1.8rem;
-        order: 2;
-      }
-
-      .header-nav {
-        order: 3;
-        width: 100%;
-        justify-content: center;
-        gap: 0.5rem;
-      }
-
-      .header-btn {
-        padding: 0.4rem 0.6rem;
-        font-size: 0.75rem;
-      }
-
-      .main-content {
-        padding: 1rem;
-      }
-
-      .auth-container {
-        padding: 2rem;
-      }
-
-      .auth-title {
-        font-size: 2rem;
-      }
+      .header { padding: 1rem; flex-wrap: wrap; gap: 1rem; }
+      .header-left { order: 1; }
+      .logo { font-size: 1.8rem; order: 2; }
+      .header-nav { order: 3; width: 100%; justify-content: center; gap: 1rem; }
+      .header-btn { padding: .4rem .6rem; font-size: .75rem; }
+      .main-content { padding: 1rem; }
+      .auth-container { padding: 2rem; }
+      .auth-title { font-size: 2rem; }
     }
-
     @media (max-width: 480px) {
-      .header-btn {
-        padding: 0.3rem 0.5rem;
-        font-size: 0.7rem;
-      }
-
-      .auth-container {
-        padding: 1.5rem;
-      }
-
-      .auth-title {
-        font-size: 1.5rem;
-      }
+      .header-btn { padding: .3rem .5rem; font-size: .7rem; }
+      .auth-container { padding: 1.5rem; }
+      .auth-title { font-size: 1.5rem; }
     }
   </style>
 </head>
@@ -401,54 +89,62 @@
   
   <header class="header">
     <div class="header-left">
-      <button class="menu-btn" id="menuBtn">Menu</button>
+      <button class="menu-btn" id="menuBtn">תפריט</button>
       <a href="/" class="logo">dessert</a>
     </div>
     
     <nav class="header-nav">
-      <a href="/screens/store.html" class="header-btn" data-key="store">חנות</a>
-      <a href="/screens/register.html" class="header-btn" data-key="register">הרשמה</a>
-      <button id="theme-toggle" class="header-btn">🌙 מצב כהה</button>
-      <button id="language-toggle" class="header-btn">🌐 English</button>
+      <a href="/screens/index.html" class="header-btn" id="home-link">בית</a>
+      <a href="/screens/store.html" class="header-btn" id="store-link">חנות</a>
+      <a href="/screens/register.html" class="header-btn" id="register-link">הרשמה</a>
+      <!-- (אין כפתורי שפה/תאורה בכותרת; נשארים בתפריט הצד) -->
     </nav>
   </header>
 
   <nav class="nav-menu" id="navMenu">
     <button class="nav-close" id="navClose">×</button>
-    <a href="/screens/store.html" data-key="store">חנות</a>
-    <a href="/screens/register.html" data-key="register">הרשמה</a>
+    <a href="/screens/store.html" id="nav-store">חנות</a>
+    <a href="/screens/register.html" id="nav-register">הרשמה</a>
+    <!-- הכפתורים נשארים כאן בלבד -->
     <button id="theme-toggle-menu">🌙 מצב כהה</button>
     <button id="language-toggle-menu">🌐 English</button>
   </nav>
 
   <main class="main-content">
     <div class="auth-container">
-      <h1 class="auth-title" data-key="pageTitle.login">התחברות</h1>
+      <h1 class="auth-title" id="page-title">התחברות</h1>
       
       <form id="login-form" class="auth-form" autocomplete="off">
         <label class="field-username">
-          <span data-key="username">שם משתמש</span>:
+          <span id="username-label">שם משתמש</span>:
           <input type="text" name="username" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly');" required />
         </label>
         
         <label class="field-password">
-          <span data-key="password">סיסמה</span>:
+          <span id="password-label">סיסמה</span>:
           <input type="password" name="password" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly');" required />
         </label>
         
         <div class="extras">
           <input type="checkbox" name="rememberMe" id="rememberMe">
-          <label for="rememberMe"><span data-key="rememberMe">זכור אותי</span></label>
+          <label for="rememberMe"><span id="remember-label">זכור אותי</span></label>
         </div>
         
         <div class="actions">
-          <button type="submit" data-key="login">Login</button>
+          <button type="submit" id="login-button">התחברות</button>
         </div>
       </form>
     </div>
   </main>
 
   <script>
+    // --- helpers (חדש: טקסט מצב תאורה לפי שפה) ---
+    function themeLabel(theme, lang){
+      const isDark = theme === 'dark';
+      if (lang === 'en') return isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+      return isDark ? '☀️ מצב בהיר' : '🌙 מצב כהה';
+    }
+
     // Menu functionality
     const menuBtn = document.getElementById('menuBtn');
     const navMenu = document.getElementById('navMenu');
@@ -460,122 +156,127 @@
       overlay.classList.add('active');
       document.body.style.overflow = 'hidden';
     }
-
     function closeMenu() {
       navMenu.classList.remove('active');
       overlay.classList.remove('active');
       document.body.style.overflow = 'auto';
     }
-
     menuBtn.addEventListener('click', openMenu);
     navClose.addEventListener('click', closeMenu);
     overlay.addEventListener('click', closeMenu);
 
-    // טעינת התאמה אישית מ-localStorage (לפי הוראות המטלה)
+    // טעינת התאמות
     function loadUICustomization() {
       const theme = localStorage.getItem('theme') || 'light';
-      const themeToggle = document.getElementById('theme-toggle');
+      const lang  = localStorage.getItem('language') || 'he';
+      const themeToggle = document.getElementById('theme-toggle'); // ייתכן ולא קיים (הוסר מהכותרת)
       const themeToggleMenu = document.getElementById('theme-toggle-menu');
-      const languageToggle = document.getElementById('language-toggle');
-      const languageToggleMenu = document.getElementById('language-toggle-menu');
-      
-      // עדכון נושא
+
       if (theme === 'dark') {
         document.body.classList.add('dark-theme');
-        themeToggle.textContent = '☀️ מצב בהיר';
-        themeToggleMenu.textContent = '☀️ מצב בהיר';
       } else {
         document.body.classList.remove('dark-theme');
-        themeToggle.textContent = '🌙 מצב כהה';
-        themeToggleMenu.textContent = '🌙 מצב כהה';
       }
-      
-      // עדכון כפתור שפה
+      // עדכון טקסט כפתורי תאורה לפי שפה
+      if (themeToggle) themeToggle.textContent = themeLabel(theme, lang);
+      if (themeToggleMenu) themeToggleMenu.textContent = themeLabel(theme, lang);
+
+      updateLanguageDisplay();
+    }
+
+    function updateLanguageDisplay() {
       const currentLanguage = localStorage.getItem('language') || 'he';
+      const languageToggle = document.getElementById('language-toggle'); // לא קיים בכותרת, בדיקה ליתר בטחון
+      const languageToggleMenu = document.getElementById('language-toggle-menu');
+      const themeToggle = document.getElementById('theme-toggle'); // לא קיים בכותרת
+      const themeToggleMenu = document.getElementById('theme-toggle-menu');
+      const theme = localStorage.getItem('theme') || 'light';
+
       if (currentLanguage === 'en') {
-        languageToggle.textContent = '🌐 עברית';
-        languageToggleMenu.textContent = '🌐 עברית';
-        
-        // עדכון טקסטים באנגלית
+        if (languageToggle) languageToggle.textContent = '🌐 עברית';
+        if (languageToggleMenu) languageToggleMenu.textContent = '🌐 עברית';
+
+        // טקסטים באנגלית
         document.getElementById('page-title').textContent = 'LOGIN';
-        document.querySelector('.field-username span').textContent = 'Username';
-        document.querySelector('.field-password span').textContent = 'Password';
-        document.querySelector('.extras label span').textContent = 'Remember me';
-        document.querySelector('button[type="submit"]').textContent = 'LOGIN';
-        
-        // עדכון כיוון הדף
-        document.documentElement.dir = 'ltr';
+        document.getElementById('username-label').textContent = 'Username';
+        document.getElementById('password-label').textContent = 'Password';
+        document.getElementById('remember-label').textContent = 'Remember me';
+        document.getElementById('login-button').textContent = 'LOGIN';
+        document.getElementById('home-link').textContent = 'Home';     // ✅ חדש
+        document.getElementById('store-link').textContent = 'Store';
+        document.getElementById('register-link').textContent = 'Register';
+        document.getElementById('nav-store').textContent = 'Store';
+        document.getElementById('nav-register').textContent = 'Register';
+        document.getElementById('menuBtn').textContent = 'Menu';
+
+        // השארת כיוון RTL באנגלית
+        document.documentElement.dir = 'rtl';
         document.documentElement.lang = 'en';
       } else {
-        languageToggle.textContent = '🌐 English';
-        languageToggleMenu.textContent = '🌐 English';
-        
-        // עדכון טקסטים בעברית
+        if (languageToggle) languageToggle.textContent = '🌐 English';
+        if (languageToggleMenu) languageToggleMenu.textContent = '🌐 English';
+
+        // טקסטים בעברית
         document.getElementById('page-title').textContent = 'התחברות';
-        document.querySelector('.field-username span').textContent = 'שם משתמש';
-        document.querySelector('.field-password span').textContent = 'סיסמה';
-        document.querySelector('.extras label span').textContent = 'זכור אותי';
-        document.querySelector('button[type="submit"]').textContent = 'התחברות';
-        
-        // עדכון כיוון הדף
+        document.getElementById('username-label').textContent = 'שם משתמש';
+        document.getElementById('password-label').textContent = 'סיסמה';
+        document.getElementById('remember-label').textContent = 'זכור אותי';
+        document.getElementById('login-button').textContent = 'התחברות';
+        document.getElementById('home-link').textContent = 'בית';      // ✅ חדש
+        document.getElementById('store-link').textContent = 'חנות';
+        document.getElementById('register-link').textContent = 'הרשמה';
+        document.getElementById('nav-store').textContent = 'חנות';
+        document.getElementById('nav-register').textContent = 'הרשמה';
+        document.getElementById('menuBtn').textContent = 'תפריט';
+
         document.documentElement.dir = 'rtl';
         document.documentElement.lang = 'he';
       }
-      
-      // עדכון תרגומים אם הפונקציה קיימת
-      if (typeof window.updateLanguage === 'function') {
-        window.updateLanguage();
-      }
+
+      // ✅ עדכון טקסט כפתורי התאורה בהתאם לשפה והמצב
+      if (themeToggle) themeToggle.textContent = themeLabel(theme, currentLanguage);
+      if (themeToggleMenu) themeToggleMenu.textContent = themeLabel(theme, currentLanguage);
     }
 
-    // החלפת מצב כהה/בהיר
+    // Theme toggle
     function toggleTheme() {
       const isDark = document.body.classList.contains('dark-theme');
       const newTheme = isDark ? 'light' : 'dark';
       localStorage.setItem('theme', newTheme);
       loadUICustomization();
     }
-
-    document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+    const themeToggleHeader = document.getElementById('theme-toggle'); // לא קיים בכותרת (בדיקה ליתר בטחון)
+    if (themeToggleHeader) themeToggleHeader.addEventListener('click', toggleTheme);
     document.getElementById('theme-toggle-menu').addEventListener('click', toggleTheme);
 
-    // החלפת שפה
-    function toggleLanguageFunc() {
-      if (typeof window.toggleLanguage === 'function') {
-        window.toggleLanguage();
-      }
+    // Language toggle
+    function toggleLanguage() {
+      const currentLanguage = localStorage.getItem('language') || 'he';
+      const newLanguage = currentLanguage === 'he' ? 'en' : 'he';
+      localStorage.setItem('language', newLanguage);
       loadUICustomization();
     }
+    const languageToggleHeader = document.getElementById('language-toggle'); // לא קיים בכותרת (בדיקה ליתר בטחון)
+    if (languageToggleHeader) languageToggleHeader.addEventListener('click', toggleLanguage);
+    document.getElementById('language-toggle-menu').addEventListener('click', toggleLanguage);
 
-    document.getElementById('language-toggle').addEventListener('click', toggleLanguageFunc);
-    document.getElementById('language-toggle-menu').addEventListener('click', toggleLanguageFunc);
-
-    // ניקוי שדות התחברות בכמה דרכים
+    // ניקוי שדות התחברות
     window.addEventListener('load', () => {
-      // השהיה קצרה כדי לוודא שהדפדפן סיים לטעון
       setTimeout(() => {
         const form = document.getElementById('login-form');
         form.username.value = '';
         form.password.value = '';
         form.rememberMe.checked = false;
-        
-        // ניקוי נוסף
         form.reset();
-        
-        // מניעת auto-fill נוספת
         form.username.setAttribute('value', '');
         form.password.setAttribute('value', '');
       }, 100);
     });
-
-    // מניעת auto-fill בפוקוס
     document.getElementById('login-form').addEventListener('focusin', (e) => {
-      if (e.target.tagName === 'INPUT') {
-        e.target.setAttribute('autocomplete', 'off');
-      }
+      if (e.target.tagName === 'INPUT') e.target.setAttribute('autocomplete', 'off');
     });
 
-    // טופס התחברות (ללא localStorage לפרטים אישיים)
+    // שליחת טופס
     document.getElementById('login-form').addEventListener('submit', async e => {
       e.preventDefault();
       const form = e.target;
@@ -584,27 +285,18 @@
         password: form.password.value,
         rememberMe: form.rememberMe.checked
       };
-
       const res = await fetch('/api/login', {
-        method: 'POST', 
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
-      
-      let j = {}; 
-      try { j = await res.json(); } catch {}
-      
-      if (res.ok) {
-        location.href = '/screens/store.html';
-      } else {
-        alert(j.error || 'Login failed');
-      }
+      let j = {}; try { j = await res.json(); } catch {}
+      if (res.ok) location.href = '/screens/store.html';
+      else alert(j.error || 'Login failed');
     });
 
-    // טעינה ראשונית - עם השהיה קטנה כדי לוודא שtranslations.js נטען
-    setTimeout(() => {
-      loadUICustomization();
-    }, 100);
+    // טעינה ראשונית
+    setTimeout(() => { loadUICustomization(); }, 100);
   </script>
 </body>
 </html>
