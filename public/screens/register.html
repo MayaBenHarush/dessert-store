@@ -6,375 +6,78 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script src="/assets/translations.js"></script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      background: #ffffff;
-      color: #1a1a1a;
-      line-height: 1.6;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      background: #ffffff; color: #1a1a1a; line-height: 1.6;
+      min-height: 100vh; display: flex; flex-direction: column;
     }
 
     /* Header */
-    .header {
-      background: #ffffcc;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .menu-btn {
-      background: none;
-      border: none;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #1a1a1a;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .menu-btn::before {
-      content: "☰";
-      font-size: 1.2rem;
-    }
-
-    .logo {
-      font-size: 2.2rem;
-      font-weight: 900;
-      color: #1a1a1a;
-      text-decoration: none;
-      letter-spacing: -0.02em;
-    }
-
-    .header-nav {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .header-btn {
-      background: none;
-      border: 2px solid #1a1a1a;
-      color: #1a1a1a;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-    }
-
-    .header-btn:hover {
-      background: #1a1a1a;
-      color: white;
-    }
+    .header { background: #ffffcc; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); }
+    .header-left { display: flex; align-items: center; gap: 1rem; }
+    .menu-btn { background: none; border: none; font-size: 1.1rem; font-weight: 600; color: #1a1a1a; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; }
+    .menu-btn::before { content: "☰"; font-size: 1.2rem; }
+    .logo { font-size: 2.2rem; font-weight: 900; color: #1a1a1a; text-decoration: none; letter-spacing: -0.02em; }
+    .header-nav { display: flex; align-items: center; gap: 1rem; }
+    .header-btn { background: none; border: 2px solid #1a1a1a; color: #1a1a1a; padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s ease; text-decoration: none; display: flex; align-items: center; gap: 0.3rem; }
+    .header-btn:hover { background: #1a1a1a; color: white; }
 
     /* Navigation Menu */
-    .nav-menu {
-      position: fixed;
-      top: 0;
-      right: -300px;
-      width: 300px;
-      height: 100vh;
-      background: white;
-      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
-      transition: right 0.3s ease;
-      padding: 2rem;
-      z-index: 2000;
-    }
-
-    .nav-menu.active {
-      right: 0;
-    }
-
-    .nav-close {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      float: left;
-      margin-bottom: 2rem;
-    }
-
-    .nav-item,
-    .nav-menu a,
-    .nav-menu button {
-      display: block;
-      padding: 0.75rem 0;
-      color: #1a1a1a;
-      text-decoration: none;
-      font-weight: 500;
-      border-bottom: 1px solid #f0f0f0;
-      transition: color 0.2s ease;
-      background: none;
-      border: none;
-      text-align: right;
-      width: 100%;
-      cursor: pointer;
-    }
-
-    .nav-item:hover,
-    .nav-menu a:hover,
-    .nav-menu button:hover {
-      color: #ffffcc;
-    }
+    .nav-menu { position: fixed; top: 0; right: -300px; width: 300px; height: 100vh; background: white; box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1); transition: right 0.3s ease; padding: 2rem; z-index: 2000; }
+    .nav-menu.active { right: 0; }
+    .nav-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; float: left; margin-bottom: 2rem; }
+    .nav-item, .nav-menu a, .nav-menu button { display: block; padding: 0.75rem 0; color: #1a1a1a; text-decoration: none; font-weight: 500; border-bottom: 1px solid #f0f0f0; transition: color 0.2s ease; background: none; border: none; text-align: right; width: 100%; cursor: pointer; }
+    .nav-item:hover, .nav-menu a:hover, .nav-menu button:hover { color: #ffffcc; }
 
     /* Overlay */
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 1500;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-    }
-
-    .overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
+    .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1500; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+    .overlay.active { opacity: 1; visibility: visible; }
 
     /* Main Content */
-    .main-content {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 2rem;
-    }
-
-    .auth-container {
-      background: white;
-      border-radius: 24px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-      padding: 3rem;
-      max-width: 500px;
-      width: 100%;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .auth-container::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 6px;
-      background: #ffffcc;
-    }
-
-    .auth-title {
-      font-size: 2.5rem;
-      font-weight: 900;
-      color: #1a1a1a;
-      text-align: center;
-      margin-bottom: 2rem;
-      letter-spacing: -0.02em;
-      text-transform: uppercase;
-    }
-
-    .auth-form {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .auth-form label {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      text-align: right;
-      font-weight: 600;
-      color: #1a1a1a;
-    }
-
-    .auth-form input[type="text"],
-    .auth-form input[type="password"] {
-      padding: 1rem 1.5rem;
-      border: 2px solid #f0f0f0;
-      border-radius: 12px;
-      font-size: 1rem;
-      transition: all 0.2s ease;
-      background: #fafafa;
-      text-align: right;
-    }
-
-    .auth-form input:focus {
-      outline: none;
-      border-color: #ffffcc;
-      box-shadow: 0 0 0 3px rgba(255, 255, 204, 0.2);
-      background: white;
-    }
-
-    .actions {
-      margin-top: 1rem;
-    }
-
-    .auth-form button {
-      width: 100%;
-      background: #1a1a1a;
-      color: white;
-      border: none;
-      padding: 1rem 2rem;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .auth-form button:hover {
-      background: #333;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    }
-
-    .auth-form button:active {
-      transform: translateY(0);
-    }
+    .main-content { flex: 1; display: flex; justify-content: center; align-items: center; padding: 2rem; }
+    .auth-container { background: white; border-radius: 24px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1); padding: 3rem; max-width: 500px; width: 100%; position: relative; overflow: hidden; }
+    .auth-container::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px; background: #ffffcc; }
+    .auth-title { font-size: 2.5rem; font-weight: 900; color: #1a1a1a; text-align: center; margin-bottom: 2rem; letter-spacing: -0.02em; text-transform: uppercase; }
+    .auth-form { display: flex; flex-direction: column; gap: 1.5rem; }
+    .auth-form label { display: flex; flex-direction: column; gap: 0.5rem; text-align: right; font-weight: 600; color: #1a1a1a; }
+    .auth-form input[type="text"], .auth-form input[type="password"] { padding: 1rem 1.5rem; border: 2px solid #f0f0f0; border-radius: 12px; font-size: 1rem; transition: all 0.2s ease; background: #fafafa; text-align: right; }
+    .auth-form input:focus { outline: none; border-color: #ffffcc; box-shadow: 0 0 0 3px rgba(255, 255, 204, 0.2); background: white; }
+    .actions { margin-top: 1rem; }
+    .auth-form button { width: 100%; background: #1a1a1a; color: white; border: none; padding: 1rem 2rem; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.2s ease; text-transform: uppercase; letter-spacing: 0.5px; }
+    .auth-form button:hover { background: #333; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); }
+    .auth-form button:active { transform: translateY(0); }
 
     /* Dark Theme */
-    .dark-theme {
-      background: #1a1a1a;
-      color: white;
-    }
+    .dark-theme { background: #1a1a1a; color: white; }
+    .dark-theme .header { background: #2d2d2d; }
+    .dark-theme .nav-menu { background: #2d2d2d; }
+    .dark-theme .nav-menu a, .dark-theme .nav-menu button { color: white; border-bottom-color: #444; }
+    .dark-theme .auth-container { background: #2d2d2d; }
+    .dark-theme .auth-container::before { background: #ffffcc; }
+    .dark-theme .auth-title { color: white; }
+    .dark-theme .auth-form label { color: white; }
+    .dark-theme .auth-form input { background: #3d3d3d; border-color: #555; color: white; }
+    .dark-theme .auth-form input:focus { background: #4d4d4d; border-color: #ffffcc; }
+    .dark-theme .auth-form button { background: #ffffcc; color: #1a1a1a; }
+    .dark-theme .auth-form button:hover { background: #ffff99; }
 
-    .dark-theme .header {
-      background: #2d2d2d;
-    }
-
-    .dark-theme .nav-menu {
-      background: #2d2d2d;
-    }
-
-    .dark-theme .nav-menu a,
-    .dark-theme .nav-menu button {
-      color: white;
-      border-bottom-color: #444;
-    }
-
-    .dark-theme .auth-container {
-      background: #2d2d2d;
-    }
-
-    .dark-theme .auth-container::before {
-      background: #ffffcc;
-    }
-
-    .dark-theme .auth-title {
-      color: white;
-    }
-
-    .dark-theme .auth-form label {
-      color: white;
-    }
-
-    .dark-theme .auth-form input {
-      background: #3d3d3d;
-      border-color: #555;
-      color: white;
-    }
-
-    .dark-theme .auth-form input:focus {
-      background: #4d4d4d;
-      border-color: #ffffcc;
-    }
-
-    .dark-theme .auth-form button {
-      background: #ffffcc;
-      color: #1a1a1a;
-    }
-
-    .dark-theme .auth-form button:hover {
-      background: #ffff99;
-    }
-
-    /* Responsive Design */
+    /* Responsive */
     @media (max-width: 768px) {
-      .header {
-        padding: 1rem;
-        flex-wrap: wrap;
-        gap: 1rem;
-      }
-
-      .header-left {
-        order: 1;
-      }
-
-      .logo {
-        font-size: 1.8rem;
-        order: 2;
-      }
-
-      .header-nav {
-        order: 3;
-        width: 100%;
-        justify-content: center;
-        gap: 0.5rem;
-      }
-
-      .header-btn {
-        padding: 0.4rem 0.6rem;
-        font-size: 0.75rem;
-      }
-
-      .main-content {
-        padding: 1rem;
-      }
-
-      .auth-container {
-        padding: 2rem;
-      }
-
-      .auth-title {
-        font-size: 2rem;
-      }
+      .header { padding: 1rem; flex-wrap: wrap; gap: 1rem; }
+      .header-left { order: 1; }
+      .logo { font-size: 1.8rem; order: 2; }
+      .header-nav { order: 3; width: 100%; justify-content: center; gap: 0.5rem; }
+      .header-btn { padding: 0.4rem 0.6rem; font-size: 0.75rem; }
+      .main-content { padding: 1rem; }
+      .auth-container { padding: 2rem; }
+      .auth-title { font-size: 2rem; }
     }
-
     @media (max-width: 480px) {
-      .header-btn {
-        padding: 0.3rem 0.5rem;
-        font-size: 0.7rem;
-      }
-
-      .auth-container {
-        padding: 1.5rem;
-      }
-
-      .auth-title {
-        font-size: 1.5rem;
-      }
+      .header-btn { padding: 0.3rem 0.5rem; font-size: 0.7rem; }
+      .auth-container { padding: 1.5rem; }
+      .auth-title { font-size: 1.5rem; }
     }
   </style>
 </head>
@@ -386,168 +89,156 @@
       <button class="menu-btn" id="menuBtn">Menu</button>
       <a href="/" class="logo">dessert</a>
     </div>
-    
     <nav class="header-nav">
-      <a href="store.html" class="header-btn" data-key="store">חנות</a>
-      <a href="login.html" class="header-btn" data-key="login">התחברות</a>
-      <button id="theme-toggle" class="header-btn">🌙 מצב כהה</button>
-      <button id="language-toggle" class="header-btn">🌐 English</button>
+      <!-- כפתור בית לפני חנות -->
+      <a href="index.html" class="header-btn" id="link-home">בית</a>
+      <a href="store.html" class="header-btn" id="link-store">חנות</a>
+      <a href="login.html" class="header-btn" id="link-login">התחברות</a>
     </nav>
   </header>
 
   <nav class="nav-menu" id="navMenu">
     <button class="nav-close" id="navClose">×</button>
-    <a href="store.html" data-key="store">חנות</a>
-    <a href="login.html" data-key="login">התחברות</a>
+    <!-- כפתור בית לפני חנות -->
+    <a href="index.html" id="nav-home">בית</a>
+    <a href="store.html" id="nav-store">חנות</a>
+    <a href="login.html" id="nav-login">התחברות</a>
     <button id="theme-toggle-menu">🌙 מצב כהה</button>
     <button id="language-toggle-menu">🌐 English</button>
   </nav>
 
   <main class="main-content">
     <div class="auth-container">
-      <h1 class="auth-title" data-key="pageTitle.register">הרשמה</h1>
-      
+      <h1 class="auth-title" id="page-title">הרשמה</h1>
       <form id="register-form" class="auth-form" autocomplete="off">
         <label class="field-username">
-          <span data-key="username">שם משתמש</span>:
+          <span id="label-username">שם משתמש</span>:
           <input type="text" name="username" autocomplete="username" required />
         </label>
-        
         <label class="field-password">
-          <span data-key="password">סיסמה</span>:
+          <span id="label-password">סיסמה</span>:
           <input type="password" name="password" autocomplete="new-password" required />
         </label>
-        
         <div class="actions">
-          <button type="submit" data-key="register">Register</button>
+          <button type="submit" id="btn-submit">הרשמה</button>
         </div>
       </form>
     </div>
   </main>
 
   <script>
-    // Menu functionality
+    // ===== Side menu =====
     const menuBtn = document.getElementById('menuBtn');
     const navMenu = document.getElementById('navMenu');
     const navClose = document.getElementById('navClose');
     const overlay = document.getElementById('overlay');
 
-    function openMenu() {
-      navMenu.classList.add('active');
-      overlay.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeMenu() {
-      navMenu.classList.remove('active');
-      overlay.classList.remove('active');
-      document.body.style.overflow = 'auto';
-    }
-
+    function openMenu(){ navMenu.classList.add('active'); overlay.classList.add('active'); document.body.style.overflow='hidden'; }
+    function closeMenu(){ navMenu.classList.remove('active'); overlay.classList.remove('active'); document.body.style.overflow='auto'; }
     menuBtn.addEventListener('click', openMenu);
     navClose.addEventListener('click', closeMenu);
     overlay.addEventListener('click', closeMenu);
 
-    // טעינת התאמות אישיות מ-localStorage
-    function loadUICustomization() {
+    // ===== Local i18n for this page only (no dir flip) =====
+    const TXT = {
+      he: {
+        menu: 'תפריט',
+        home: 'בית',
+        store: 'חנות',
+        login: 'התחברות',
+        title: 'הרשמה',
+        username: 'שם משתמש',
+        password: 'סיסמה',
+        submit: 'הרשמה',
+        langBtn: '🌐 English',
+        themeDark: '🌙 מצב כהה',
+        themeLight: '☀️ מצב בהיר'
+      },
+      en: {
+        menu: 'Menu',
+        home: 'Home',
+        store: 'Store',
+        login: 'Login',
+        title: 'REGISTER',
+        username: 'Username',
+        password: 'Password',
+        submit: 'REGISTER',
+        langBtn: '🌐 עברית',
+        themeDark: '🌙 Dark Mode',
+        themeLight: '☀️ Light Mode'
+      }
+    };
+
+    function curLang(){ return localStorage.getItem('language') || 'he'; }
+
+    function applyLanguage(){
+      const L = curLang();
+      // Header + side menu links
+      document.getElementById('menuBtn').textContent = TXT[L].menu;
+      document.getElementById('link-home').textContent = TXT[L].home;
+      document.getElementById('link-store').textContent = TXT[L].store;
+      document.getElementById('link-login').textContent = TXT[L].login;
+      document.getElementById('nav-home').textContent = TXT[L].home;
+      document.getElementById('nav-store').textContent = TXT[L].store;
+      document.getElementById('nav-login').textContent = TXT[L].login;
+
+      // Form texts
+      document.getElementById('page-title').textContent = TXT[L].title;
+      document.getElementById('label-username').textContent = TXT[L].username;
+      document.getElementById('label-password').textContent = TXT[L].password;
+      document.getElementById('btn-submit').textContent = TXT[L].submit;
+
+      // Language button text
+      document.getElementById('language-toggle-menu').textContent = TXT[L].langBtn;
+
+      // Keep RTL; do NOT flip direction
       const theme = localStorage.getItem('theme') || 'light';
-      const themeToggle = document.getElementById('theme-toggle');
-      const themeToggleMenu = document.getElementById('theme-toggle-menu');
-      const languageToggle = document.getElementById('language-toggle');
-      const languageToggleMenu = document.getElementById('language-toggle-menu');
-      
-      // עדכון נושא
-      if (theme === 'dark') {
-        document.body.classList.add('dark-theme');
-        themeToggle.textContent = '☀️ מצב בהיר';
-        themeToggleMenu.textContent = '☀️ מצב בהיר';
-      } else {
-        document.body.classList.remove('dark-theme');
-        themeToggle.textContent = '🌙 מצב כהה';
-        themeToggleMenu.textContent = '🌙 מצב כהה';
-      }
-      
-      // עדכון כפתור שפה
-      const currentLanguage = localStorage.getItem('language') || 'he';
-      if (currentLanguage === 'en') {
-        languageToggle.textContent = '🌐 עברית';
-        languageToggleMenu.textContent = '🌐 עברית';
-        
-        // עדכון טקסטים באנגלית
-        document.getElementById('page-title').textContent = 'REGISTER';
-        document.querySelector('.field-username span').textContent = 'Username:';
-        document.querySelector('.field-password span').textContent = 'Password:';
-        document.querySelector('button[type="submit"]').textContent = 'REGISTER';
-        
-        // עדכון כיוון הדף
-        document.documentElement.dir = 'ltr';
-        document.documentElement.lang = 'en';
-      } else {
-        languageToggle.textContent = '🌐 English';
-        languageToggleMenu.textContent = '🌐 English';
-        
-        // עדכון טקסטים בעברית
-        document.getElementById('page-title').textContent = 'הרשמה';
-        document.querySelector('.field-username span').textContent = 'שם משתמש:';
-        document.querySelector('.field-password span').textContent = 'סיסמה:';
-        document.querySelector('button[type="submit"]').textContent = 'הרשמה';
-        
-        // עדכון כיוון הדף
-        document.documentElement.dir = 'rtl';
-        document.documentElement.lang = 'he';
-      }
-      
-      // עדכון תרגומים אם הפונקציה קיימת
-      if (typeof window.updateLanguage === 'function') {
-        window.updateLanguage();
-      }
+      document.getElementById('theme-toggle-menu').textContent =
+        (theme === 'dark') ? TXT[L].themeLight : TXT[L].themeDark;
     }
 
-    // החלפת נושא
-    function toggleTheme() {
+    // ===== Theme =====
+    function applyTheme(){
+      const theme = localStorage.getItem('theme') || 'light';
+      document.body.classList.toggle('dark-theme', theme === 'dark');
+      const L = curLang();
+      document.getElementById('theme-toggle-menu').textContent =
+        (theme === 'dark') ? TXT[L].themeLight : TXT[L].themeDark;
+    }
+
+    document.getElementById('theme-toggle-menu').addEventListener('click', () => {
       const isDark = document.body.classList.contains('dark-theme');
-      const newTheme = isDark ? 'light' : 'dark';
-      localStorage.setItem('theme', newTheme);
-      loadUICustomization();
-    }
+      localStorage.setItem('theme', isDark ? 'light' : 'dark');
+      applyTheme();
+    });
 
-    document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
-    document.getElementById('theme-toggle-menu').addEventListener('click', toggleTheme);
+    // ===== Language toggle (side menu only) =====
+    document.getElementById('language-toggle-menu').addEventListener('click', () => {
+      const next = (curLang() === 'he') ? 'en' : 'he';
+      localStorage.setItem('language', next);
+      applyLanguage();
+    });
 
-    // החלפת שפה
-    function toggleLanguageFunc() {
-      if (typeof window.toggleLanguage === 'function') {
-        window.toggleLanguage();
-      }
-      loadUICustomization();
-    }
-
-    document.getElementById('language-toggle').addEventListener('click', toggleLanguageFunc);
-    document.getElementById('language-toggle-menu').addEventListener('click', toggleLanguageFunc);
-
-    // טופס הרשמה
+    // ===== Register form =====
     document.getElementById('register-form').addEventListener('submit', async e => {
       e.preventDefault();
       const form = e.target;
-      const payload = {
-        username: form.username.value.trim(),
-        password: form.password.value
-      };
-      const res = await fetch('/api/register', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
+      const payload = { username: form.username.value.trim(), password: form.password.value };
+      const res = await fetch('/api/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       let j = {}; try { j = await res.json(); } catch {}
       if (res.ok) {
-        alert('נרשמת בהצלחה! עכשיו אפשר להתחבר.');
+        alert(curLang()==='he' ? 'נרשמת בהצלחה! עכשיו אפשר להתחבר.' : 'Registered successfully! You can now log in.');
         location.href = 'login.html';
       } else {
-        alert(j.error || 'Registration failed');
+        alert(j.error || (curLang()==='he' ? 'Registration failed' : 'Registration failed'));
       }
     });
 
-    // טעינה ראשונית
-    loadUICustomization();
+    // ===== Initial load =====
+    (function init(){
+      applyTheme();
+      applyLanguage();
+    })();
   </script>
 </body>
 </html>
