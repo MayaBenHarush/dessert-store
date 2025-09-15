@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title data-page="wheel">גלגל מזל מתוק</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="/assets/translations.js" defer></script>
   <style>
     * {
       margin: 0;
@@ -332,17 +331,130 @@
       min-height: 1.5rem;
     }
 
+    /* Coupon Display - Enhanced */
+    .coupon-container {
+      margin-top: 1.5rem;
+      display: none;
+    }
+
     .coupon {
-      font-family: ui-monospace, Menlo, Consolas, monospace;
-      background: #1a1a1a;
+      background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
       color: white;
-      display: inline-block;
-      padding: 8px 12px;
-      border-radius: 8px;
-      margin-top: 1rem;
-      letter-spacing: 1px;
-      font-size: 14px;
+      padding: 1.5rem;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      animation: couponAppear 0.6s ease-out;
+    }
+
+    .coupon::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, #ff6b9d, #4ecdc4, #ffd93d, #ff9a9e);
+      border-radius: 15px;
+      z-index: -1;
+      animation: borderGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes couponAppear {
+      0% {
+        opacity: 0;
+        transform: scale(0.8) translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    @keyframes borderGlow {
+      0%, 100% {
+        opacity: 0.7;
+      }
+      50% {
+        opacity: 1;
+      }
+    }
+
+    .coupon-header {
+      font-size: 1.1rem;
       font-weight: 600;
+      margin-bottom: 0.8rem;
+      color: #ffffcc;
+    }
+
+    .coupon-code {
+      font-family: ui-monospace, Menlo, Consolas, monospace;
+      font-size: 1.8rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      margin: 1rem 0;
+      padding: 0.8rem 1.2rem;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      border: 2px dashed rgba(255, 255, 255, 0.3);
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .coupon-description {
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      opacity: 0.9;
+    }
+
+    .coupon-expiry {
+      font-size: 0.8rem;
+      opacity: 0.7;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      padding-top: 0.8rem;
+      margin-top: 1rem;
+    }
+
+    .coupon-action {
+      margin-top: 1rem;
+    }
+
+    .copy-code-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin: 0 0.5rem;
+    }
+
+    .copy-code-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .use-now-btn {
+      background: #ffffcc;
+      color: #1a1a1a;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-block;
+      margin: 0 0.5rem;
+    }
+
+    .use-now-btn:hover {
+      background: #ffff99;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(255, 255, 204, 0.4);
     }
 
     .disabled {
@@ -407,6 +519,10 @@
       color: white;
     }
 
+    .dark-theme .coupon {
+      background: linear-gradient(135deg, #2d2d2d 0%, #4d4d4d 100%);
+    }
+
     /* Responsive Design */
     @media (max-width: 968px) {
       .header-nav {
@@ -425,6 +541,11 @@
       .wheel {
         width: 280px;
         height: 280px;
+      }
+
+      .coupon-code {
+        font-size: 1.5rem;
+        letter-spacing: 1px;
       }
     }
 
@@ -472,6 +593,25 @@
       .wheel-card {
         padding: 1.5rem;
       }
+
+      .coupon {
+        padding: 1.2rem;
+      }
+
+      .coupon-code {
+        font-size: 1.3rem;
+      }
+
+      .coupon-action {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .copy-code-btn,
+      .use-now-btn {
+        margin: 0;
+      }
     }
 
     @media (max-width: 480px) {
@@ -488,6 +628,11 @@
         width: 220px;
         height: 220px;
       }
+
+      .coupon-code {
+        font-size: 1.1rem;
+        letter-spacing: 1px;
+      }
     }
   </style>
 </head>
@@ -496,7 +641,7 @@
   
   <header class="header">
     <div class="header-left">
-      <button class="menu-btn" id="menuBtn">Menu</button>
+      <button class="menu-btn" id="menuBtn">תפריט</button>
       <a href="/" class="logo">dessert</a>
     </div>
     
@@ -527,7 +672,7 @@
 
   <main class="main-content">
     <div class="page-header">
-      <h1 id="main-title">גלגל מזל מתוק 🎲</h1>
+      <h1 id="main-title">גלגל מזל מתוק 🎭</h1>
     </div>
 
     <div class="wheel-wrap">
@@ -546,7 +691,20 @@
         <div class="note" id="note-text">אפשרות אחת ליום לכל משתמש.</div>
 
         <div id="result" class="prize" aria-live="polite"></div>
-        <div id="coupon" class="coupon" style="display:none"></div>
+        
+        <!-- Coupon Container - Enhanced -->
+        <div id="coupon-container" class="coupon-container">
+          <div class="coupon">
+            <div class="coupon-header" id="coupon-header">🎉 קוד הקופון שלך:</div>
+            <div class="coupon-code" id="coupon-code">COUPON123</div>
+            <div class="coupon-description" id="coupon-description">תיאור הקופון</div>
+            <div class="coupon-action">
+              <button class="copy-code-btn" id="copy-code-btn">העתק קוד</button>
+              <a href="store.html" class="use-now-btn" id="use-now-btn">השתמש עכשיו</a>
+            </div>
+            <div class="coupon-expiry" id="coupon-expiry">תוקף עד: DD/MM/YYYY</div>
+          </div>
+        </div>
       </div>
     </div>
   </main>
@@ -555,7 +713,7 @@
     // מערכת תרגום עצמאית
     const TRANSLATIONS = {
       he: {
-        title: 'גלגל מזל מתוק 🎲',
+        title: 'גלגל מזל מתוק 🎭',
         spinButton: 'סובב את הגלגל',
         oncePerDay: 'אפשרות אחת ליום לכל משתמש.',
         limitOncePerDay: 'אפשר להגריל רק פעם ביום. נסו שוב מחר',
@@ -570,7 +728,7 @@
         navDessertFinder: 'מציאת הקינוח המושלם',
         navWheel: 'גלגל מזל',
         navRecipes: 'מתכונים',
-        noWin: 'לא זכיתי',
+        noWin: 'לא זכית',
         discount: 'הנחה',
         dessert: 'קינוח',
         delivery: 'משלוח',
@@ -580,10 +738,15 @@
         networkError: 'בעיה ברשת. נסה/י שוב.',
         until: 'עד',
         themeToggleDark: 'מצב כהה',
-        themeToggleLight: 'מצב בהיר'
+        themeToggleLight: 'מצב בהיר',
+        couponHeader: '🎉 קוד הקופון שלך:',
+        copyCode: 'העתק קוד',
+        useNow: 'השתמש עכשיו',
+        validUntil: 'תוקף עד:',
+        codeCopied: 'הקוד הועתק!'
       },
       en: {
-        title: 'Sweet Lucky Wheel 🎲',
+        title: 'Sweet Lucky Wheel 🎭',
         spinButton: 'Spin the Wheel',
         oncePerDay: 'One chance per day for each user.',
         limitOncePerDay: 'You can spin only once per day. Try again tomorrow.',
@@ -608,7 +771,12 @@
         networkError: 'Network error. Please try again.',
         until: 'until',
         themeToggleDark: 'Dark Mode',
-        themeToggleLight: 'Light Mode'
+        themeToggleLight: 'Light Mode',
+        couponHeader: '🎉 Your Coupon Code:',
+        copyCode: 'Copy Code',
+        useNow: 'Use Now',
+        validUntil: 'Valid until:',
+        codeCopied: 'Code copied!'
       }
     };
 
@@ -681,7 +849,6 @@
       const adminBtn = document.getElementById('nav-admin');
       const recipesBtn = document.getElementById('nav-recipes');
 
-      const L = localStorage.getItem('language') || 'he';
       if (checkoutBtn) checkoutBtn.textContent = getText('navCheckout');
       if (myitemsBtn) myitemsBtn.textContent = getText('navMyitems');
       if (loginLink) loginLink.textContent = getText('navLogin');
@@ -689,7 +856,76 @@
       if (adminBtn) adminBtn.textContent = getText('navAdmin');
       if (recipesBtn) recipesBtn.textContent = getText('navRecipes');
 
+      // Update coupon texts
+      document.getElementById('coupon-header').textContent = getText('couponHeader');
+      document.getElementById('copy-code-btn').textContent = getText('copyCode');
+      document.getElementById('use-now-btn').textContent = getText('useNow');
+
       updateWheelLabels();
+    }
+
+    // Display coupon with enhanced visual
+    function displayCoupon(coupon) {
+      if (!coupon) return;
+
+      const container = document.getElementById('coupon-container');
+      const codeElement = document.getElementById('coupon-code');
+      const descElement = document.getElementById('coupon-description');
+      const expiryElement = document.getElementById('coupon-expiry');
+
+      // Set coupon code
+      codeElement.textContent = coupon.code;
+      
+      // Set description
+      descElement.textContent = coupon.description || '';
+      
+      // Set expiry date
+      if (coupon.expiresAt) {
+        const currentLang = localStorage.getItem('language') || 'he';
+        const expiryDate = new Date(coupon.expiresAt);
+        const formattedDate = expiryDate.toLocaleDateString(currentLang === 'he' ? 'he-IL' : 'en-US');
+        expiryElement.textContent = `${getText('validUntil')} ${formattedDate}`;
+      }
+
+      // Show the coupon
+      container.style.display = 'block';
+    }
+
+    // Copy coupon code to clipboard
+    function copyCouponCode() {
+      const codeElement = document.getElementById('coupon-code');
+      const code = codeElement.textContent;
+      
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(code).then(() => {
+          showToast(getText('codeCopied'));
+        }).catch(() => {
+          // Fallback for older browsers
+          fallbackCopyText(code);
+        });
+      } else {
+        fallbackCopyText(code);
+      }
+    }
+
+    function fallbackCopyText(text) {
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      textArea.style.top = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        document.execCommand('copy');
+        showToast(getText('codeCopied'));
+      } catch (err) {
+        console.error('Failed to copy text: ', err);
+      }
+      
+      document.body.removeChild(textArea);
     }
 
     // Menu functionality
@@ -754,9 +990,9 @@
       loadUICustomization();
 
       const resultBox = document.getElementById('result');
-      const couponBox = document.getElementById('coupon');
+      const couponContainer = document.getElementById('coupon-container');
       resultBox.textContent = '';
-      couponBox.style.display = 'none';
+      couponContainer.style.display = 'none';
     });
 
     // Toast
@@ -769,6 +1005,7 @@
       toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1500);
     }
 
+    // Authentication setup
     (async function(){
       try{
         const r = await fetch('/api/session');
@@ -789,10 +1026,11 @@
       finally { location.href = 'login.html'; }
     };
 
+    // Wheel functionality
     const wheel  = document.getElementById('wheel');
     const spinBtn = document.getElementById('spin');
     const resultBox = document.getElementById('result');
-    const couponBox = document.getElementById('coupon');
+    const couponContainer = document.getElementById('coupon-container');
 
     function spinVisual(targetAngle){
       wheel.style.transition = 'none';
@@ -809,7 +1047,7 @@
     async function spin(){
       spinBtn.classList.add('disabled');
       resultBox.textContent = getText('spinning');
-      couponBox.style.display = 'none';
+      couponContainer.style.display = 'none';
 
       try{
         const r = await fetch('/api/wheel/spin', { method:'POST' });
@@ -828,13 +1066,10 @@
         setTimeout(() => {
           const safeMsg = normalizeServerMessage(message);
           resultBox.textContent = safeMsg || '';
-          if (coupon?.code){
-            const currentLang = localStorage.getItem('language') || 'he';
-            const expiryText = coupon.expiresAt
-              ? ` • ${getText('until')} ${new Date(coupon.expiresAt).toLocaleDateString(currentLang === 'he' ? 'he-IL' : 'en-US')}`
-              : '';
-            couponBox.textContent = coupon.code + expiryText;
-            couponBox.style.display = 'inline-block';
+          
+          // Display coupon if won
+          if (coupon && coupon.code) {
+            displayCoupon(coupon);
           }
         }, 5200);
 
@@ -846,6 +1081,10 @@
 
     spinBtn.addEventListener('click', spin);
 
+    // Copy coupon code event listener
+    document.getElementById('copy-code-btn').addEventListener('click', copyCouponCode);
+
+    // Initialize
     document.addEventListener('DOMContentLoaded', () => {
       if (!localStorage.getItem('language')) {
         localStorage.setItem('language', 'he');

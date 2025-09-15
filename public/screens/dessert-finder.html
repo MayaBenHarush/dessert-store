@@ -657,9 +657,9 @@
       background: #fff;
     }
 
-    /* Hide old nav */
-    body > nav {
-      display: none;
+    /* Hide old nav but NOT the slide-out menu */
+    body > nav:not(.nav-menu) {
+    display: none;
     }
 
     /* Responsive Design */
@@ -885,7 +885,8 @@
     // ----- אתחול -----
     async function initApp() {
       loadUICustomization();
-      await checkAuth();
+      await checkAuth();      // מגדיר isAuthenticated
+      await setupAuth();      //  טוען את התפריט לפי מצב ההתחברות
       showQuestion(0);
     }
 

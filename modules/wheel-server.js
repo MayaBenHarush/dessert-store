@@ -19,12 +19,48 @@ function rand(min, max) { return Math.random() * (max - min) + min; }
 // [0]NONE, [1]10%, [2]NONE, [3]DESSERT, [4]NONE, [5]SHIP, [6]NONE, [7]NIS50, [8]NONE
 const ORDER = ['NONE','PCT10','NONE','DESSERT','NONE','SHIP','NONE','NIS50','NONE'];
 
+// מטא-נתונים עם קודי קופון חדשים
 const PRIZE_META = {
-  PCT10:  { message: '🎉 זכית ב‑10% הנחה!', coupon: { code: 'WHEEL10', type: 'percent', value: 10 } },
-  DESSERT:{ message: '🍪 קינוח במתנה!',     coupon: { code: 'FREE-DESSERT', type: 'freeItem', item: 'dessert' } },
-  SHIP:   { message: '🚚 משלוח חינם!',      coupon: { code: 'FREE-SHIPPING', type: 'shipping', value: 0 } },
-  NIS50:  { message: '💸 שובר ₪50 לקנייה!',  coupon: { code: 'GIFT50', type: 'credit', value: 50 } },
-  NONE:   { message: '😅 לא זכית הפעם... נסו שוב מחר', coupon: null }
+  PCT10:  { 
+    message: '🎉 זכית ב‑10% הנחה!', 
+    coupon: { 
+      code: 'WHEEL10', 
+      type: 'percent', 
+      value: 10,
+      description: 'הנחה של 10% על כל הקנייה'
+    } 
+  },
+  DESSERT:{ 
+    message: '🍪 קינוח במתנה!',     
+    coupon: { 
+      code: 'עוגיה', 
+      type: 'free-cookie', 
+      value: 17,
+      description: 'עוגיה אחת חינם'
+    } 
+  },
+  SHIP:   { 
+    message: '🚚 משלוח חינם!',      
+    coupon: { 
+      code: 'משלוח', 
+      type: 'free-shipping', 
+      value: 29,
+      description: 'משלוח חינם'
+    } 
+  },
+  NIS50:  { 
+    message: '💸 שובר ₪50 לקנייה!',  
+    coupon: { 
+      code: 'שובר', 
+      type: 'fixed-discount', 
+      value: 50,
+      description: 'שובר הנחה של 50 ₪'
+    } 
+  },
+  NONE:   { 
+    message: '😅 לא זכית הפעם... נסו שוב מחר', 
+    coupon: null 
+  }
 };
 
 // הסתברויות – יותר סיכוי ל-NONE
@@ -50,7 +86,7 @@ module.exports = function registerWheelRoutes(app) {
   ensureDataFile();
 
   function getIdentity(req, res) {
-    const user = req.session?.username || req.user?.username;
+    const user = req.session?.username || req.user?.username || req.cookies?.session;
     if (user) return { type: 'user', id: user };
     let gid = req.cookies?.guestId;
     if (!gid) {
@@ -83,7 +119,11 @@ module.exports = function registerWheelRoutes(app) {
 
     let coupon = null;
     if (meta.coupon) {
-      coupon = { ...meta.coupon, issuedAt: now.toISOString(), expiresAt: new Date(now.getTime() + 1000*60*60*24*7).toISOString() };
+      coupon = { 
+        ...meta.coupon, 
+        issuedAt: now.toISOString(), 
+        expiresAt: new Date(now.getTime() + 1000*60*60*24*7).toISOString() // תוקף שבוע
+      };
     }
 
     store[id.id] = { last: now.toISOString(), prizeId, coupon };

@@ -14,6 +14,21 @@
       "username": "מאיה1",
       "password": "123",
       "role": "user"
+    },
+    "מאיה בן הרוש": {
+      "username": "מאיה בן הרוש",
+      "password": "123",
+      "role": "user"
+    },
+    "טל": {
+      "username": "טל",
+      "password": "123",
+      "role": "user"
+    },
+    "לירן": {
+      "username": "לירן",
+      "password": "123",
+      "role": "user"
     }
   },
   "carts": [
@@ -46,7 +61,15 @@
       "items": [
         "custom-cake-1757366779206-bqrmlkx4u",
         "custom-cake-1757772326282-h33j9i4ct",
-        "custom-cake-1757864036475-dlgaizkf7"
+        "custom-cake-1757864036475-dlgaizkf7",
+        "nutella-cookie",
+        "kinder-cookie"
+      ]
+    },
+    {
+      "username": "לירן",
+      "items": [
+        "kinder-cookie"
       ]
     }
   ],
@@ -197,6 +220,35 @@
         "date": "2025-09-15T14:16:44.680Z",
         "type": "regular",
         "purchaseDate": "2025-09-15T14:16:44.706Z"
+      }
+    ],
+    "לירן": [
+      {
+        "id": "cookies-box",
+        "title": "cookies box",
+        "image": "cookies-box.jpeg",
+        "price": 17,
+        "date": "2025-09-15T17:58:23.613Z",
+        "type": "regular",
+        "purchaseDate": "2025-09-15T17:58:23.646Z"
+      },
+      {
+        "id": "nutella-cookie",
+        "title": "nutella cookie",
+        "image": "nutella-cookie.jpeg",
+        "price": 17,
+        "date": "2025-09-15T17:58:23.613Z",
+        "type": "regular",
+        "purchaseDate": "2025-09-15T17:58:23.646Z"
+      },
+      {
+        "id": "nutella-cookie",
+        "title": "nutella cookie",
+        "image": "nutella-cookie.jpeg",
+        "price": 17,
+        "date": "2025-09-15T17:58:23.613Z",
+        "type": "regular",
+        "purchaseDate": "2025-09-15T17:58:23.646Z"
       }
     ]
   },
@@ -891,6 +943,127 @@
       "username": "מאיה1",
       "type": "purchase",
       "itemCount": 3
+    },
+    {
+      "datetime": "2025-09-15T14:23:29.714Z",
+      "username": "מאיה1",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-09-15T15:15:01.806Z",
+      "username": "מאיה1",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-09-15T17:55:06.305Z",
+      "username": "מאיה1",
+      "type": "logout"
+    },
+    {
+      "datetime": "2025-09-15T17:55:31.923Z",
+      "username": "מאיה בן הרוש",
+      "type": "register"
+    },
+    {
+      "datetime": "2025-09-15T17:55:42.087Z",
+      "username": "מאיה בן הרוש",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-09-15T17:56:01.412Z",
+      "username": "מאיה בן הרוש",
+      "type": "logout"
+    },
+    {
+      "datetime": "2025-09-15T17:56:07.955Z",
+      "username": "טל",
+      "type": "register"
+    },
+    {
+      "datetime": "2025-09-15T17:56:15.577Z",
+      "username": "טל",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-09-15T17:56:30.766Z",
+      "username": "טל",
+      "type": "logout"
+    },
+    {
+      "datetime": "2025-09-15T17:56:40.098Z",
+      "username": "לירן",
+      "type": "register"
+    },
+    {
+      "datetime": "2025-09-15T17:56:48.387Z",
+      "username": "לירן",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-09-15T17:57:10.838Z",
+      "username": "לירן",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-09-15T17:57:13.631Z",
+      "username": "לירן",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-09-15T17:57:16.896Z",
+      "username": "לירן",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-09-15T17:58:23.652Z",
+      "username": "לירן",
+      "type": "purchase",
+      "itemCount": 3
+    },
+    {
+      "datetime": "2025-09-15T18:01:17.673Z",
+      "username": "לירן",
+      "type": "logout"
+    },
+    {
+      "datetime": "2025-09-15T18:13:11.014Z",
+      "username": "מאיה",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-09-15T18:27:25.392Z",
+      "username": "מאיה",
+      "type": "logout"
+    },
+    {
+      "datetime": "2025-09-15T18:37:16.045Z",
+      "username": "מאיה",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-09-15T18:38:25.098Z",
+      "username": "מאיה",
+      "type": "logout"
+    },
+    {
+      "datetime": "2025-09-15T18:38:31.044Z",
+      "username": "לירן",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-09-15T18:42:48.282Z",
+      "username": "לירן",
+      "type": "logout"
+    },
+    {
+      "datetime": "2025-09-15T18:43:00.781Z",
+      "username": "לירן",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-09-15T18:45:42.860Z",
+      "username": "לירן",
+      "type": "add-to-cart"
     }
   ],
   "products": [

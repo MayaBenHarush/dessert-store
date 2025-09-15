@@ -312,6 +312,76 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
 
+    /* Coupon Section */
+    .coupon-section {
+      background: #f0f8ff;
+      padding: 1.5rem;
+      border-radius: 15px;
+      border: 2px solid #e0f0ff;
+    }
+
+    .coupon-input-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .coupon-input {
+      padding: 0.8rem;
+      border-radius: 10px;
+      border: 2px solid #f0f0f0;
+      font-size: 1rem;
+      background: white;
+      transition: all 0.2s ease;
+    }
+
+    .coupon-input:focus {
+      outline: none;
+      border-color: #1a1a1a;
+    }
+
+    .coupon-btn {
+      background: #1a1a1a;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .coupon-btn:hover:not(:disabled) {
+      background: #333;
+    }
+
+    .coupon-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .coupon-message {
+      padding: 0.8rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+      font-weight: 500;
+      display: none;
+    }
+
+    .coupon-success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .coupon-error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
     /* Summary Section */
     .summary-section {
       background: white;
@@ -510,7 +580,8 @@
     .dark-theme .payment-container,
     .dark-theme .selected-items-section,
     .dark-theme .summary-section,
-    .dark-theme .payment-form {
+    .dark-theme .payment-form,
+    .dark-theme .coupon-section {
       background: #2d2d2d;
       border-color: #444;
     }
@@ -524,24 +595,28 @@
       color: white;
     }
 
-    .dark-theme .input {
+    .dark-theme .input,
+    .dark-theme .coupon-input {
       background: #3d3d3d;
       border-color: #555;
       color: white;
     }
 
-    .dark-theme .input:focus {
+    .dark-theme .input:focus,
+    .dark-theme .coupon-input:focus {
       border-color: #ffffcc;
       background: #444;
     }
 
-    .dark-theme .btn {
+    .dark-theme .btn,
+    .dark-theme .coupon-btn {
       background: #ffffcc;
       color: #1a1a1a;
       border-color: #ffffcc;
     }
 
-    .dark-theme .btn:hover:not(:disabled) {
+    .dark-theme .btn:hover:not(:disabled),
+    .dark-theme .coupon-btn:hover:not(:disabled) {
       background: #ffff99;
     }
 
@@ -571,6 +646,11 @@
 
     .dark-theme .empty .btn:hover {
       background: #ffff99;
+    }
+
+    .dark-theme .coupon-section {
+      background: #2d3d4d;
+      border-color: #4d5d6d;
     }
 
     /* Responsive Design */
@@ -629,6 +709,10 @@
       .form-row {
         grid-template-columns: 1fr;
       }
+
+      .coupon-input-row {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 480px) {
@@ -639,7 +723,8 @@
       .payment-container,
       .selected-items-section,
       .summary-section,
-      .payment-form {
+      .payment-form,
+      .coupon-section {
         padding: 1rem;
       }
     }
@@ -674,7 +759,7 @@
     <a href="store.html" id="nav-store">חנות</a>
     <button id="logout" style="display:none">התנתקות</button>
     <button id="theme-toggle">🌙 מצב כהה</button>
-    <button id="language-toggle">🌍 English</button>
+    <button id="language-toggle">🌐 English</button>
   </nav>
 
   <main class="main-content">
@@ -692,6 +777,16 @@
         <div id="selected-items-list" class="selected-items-list"></div>
       </div>
 
+      <!-- Coupon Section -->
+      <div class="coupon-section">
+        <h3 class="section-title" id="coupon-title">קוד קופון</h3>
+        <div class="coupon-input-row">
+          <input type="text" id="coupon-input" class="coupon-input" placeholder="הכנס קוד קופון">
+          <button id="apply-coupon-btn" class="coupon-btn">החל</button>
+        </div>
+        <div id="coupon-message" class="coupon-message"></div>
+      </div>
+
       <!-- Summary Section -->
       <div class="summary-section">
         <h3 class="section-title" id="summary-title">סיכום הזמנה</h3>
@@ -701,7 +796,7 @@
         </div>
         <div class="summary-row">
           <span id="shipping-cost-label">עלות משלוח:</span>
-          <span id="shipping-cost">₪0</span>
+          <span id="shipping-cost">₪29</span>
         </div>
         <div class="summary-row discount-row" id="discount-row" style="display:none;">
           <span id="discount-text">הנחה:</span>
@@ -769,6 +864,13 @@
     navClose.addEventListener('click', closeMenu);
     overlay.addEventListener('click', closeMenu);
 
+    // Global variables
+    let appliedCoupon = null;
+    let originalShippingCost = 29;
+    let itemsCost = 0;
+    let shippingCost = originalShippingCost;
+    let discountAmount = 0;
+
     // טעינת התאמות אישיות
     function loadUICustomization() {
       const theme = localStorage.getItem('theme') || 'light';
@@ -784,7 +886,7 @@
       }
       
       const currentLanguage = localStorage.getItem('language') || 'he';
-      languageToggle.textContent = currentLanguage === 'en' ? '🌍 עברית' : '🌍 English';
+      languageToggle.textContent = currentLanguage === 'en' ? '🌐 עברית' : '🌐 English';
       updateInterfaceLanguage(currentLanguage);
     }
 
@@ -794,6 +896,7 @@
           'page-title': 'תשלום',
           'demo-notice': 'זהו תשלום דמו לצורכי תרגול בלבד - אין שמירה של פרטי כרטיס',
           'selected-items-title': 'פריטים שנבחרו',
+          'coupon-title': 'קוד קופון',
           'summary-title': 'סיכום הזמנה',
           'payment-details-title': 'פרטי תשלום',
           'items-cost-label': 'עלות הפריטים:',
@@ -805,16 +908,12 @@
           'expiry-label': 'תוקף (MM/YY)',
           'cvv-label': 'CVV',
           'pay-btn': 'שלם עכשיו',
-          'theme-dark': '🌙 מצב כהה',
-          'theme-light': '☀️ מצב בהיר',
-          'card-name-placeholder': 'שם מלא',
-          'custom-cake': '🎨 מותאמת',
-          'cake': 'עוגה',
-          'color': 'צבע:',
-          'text': 'כיתוב:',
-          'no-text': 'ללא כיתוב',
-          'empty-cart': 'לא נבחרו פריטים לתשלום',
-          'back-to-checkout': 'חזור לצ\'ק-אאוט',
+          'coupon-placeholder': 'הכנס קוד קופון',
+          'apply-coupon': 'החל',
+          'coupon-applied': 'הקופון הוחל בהצלחה!',
+          'coupon-invalid': 'קוד קופון לא תקין',
+          'coupon-expired': 'הקופון פג תוקף',
+          'coupon-error': 'שגיאה בבדיקת הקופון',
           'processing': 'מעבד...',
           'payment-success': 'התשלום הושלם בהצלחה!',
         },
@@ -822,6 +921,7 @@
           'page-title': 'Payment',
           'demo-notice': 'This is a demo payment for practice only - no credit card details are saved',
           'selected-items-title': 'Selected Items',
+          'coupon-title': 'Coupon Code',
           'summary-title': 'Order Summary',
           'payment-details-title': 'Payment Details',
           'items-cost-label': 'Items Cost:',
@@ -833,16 +933,12 @@
           'expiry-label': 'Expiry (MM/YY)',
           'cvv-label': 'CVV',
           'pay-btn': 'Pay Now',
-          'theme-dark': '🌙 Dark Mode',
-          'theme-light': '☀️ Light Mode',
-          'card-name-placeholder': 'Full name',
-          'custom-cake': '🎨 Custom',
-          'cake': 'Cake',
-          'color': 'Color:',
-          'text': 'Text:',
-          'no-text': 'No text',
-          'empty-cart': 'No items selected for payment',
-          'back-to-checkout': 'Back to Checkout',
+          'coupon-placeholder': 'Enter coupon code',
+          'apply-coupon': 'Apply',
+          'coupon-applied': 'Coupon applied successfully!',
+          'coupon-invalid': 'Invalid coupon code',
+          'coupon-expired': 'Coupon has expired',
+          'coupon-error': 'Error validating coupon',
           'processing': 'Processing...',
           'payment-success': 'Payment completed successfully!',
         }
@@ -851,7 +947,7 @@
       if (!t) return;
       
       Object.keys(t).forEach(key => {
-        const element = document.getElementById(key) || document.querySelector(`[data-key="${key}"]`);
+        const element = document.getElementById(key);
         if (element) {
           if (element.tagName === 'INPUT' && element.type !== 'submit') {
             element.placeholder = t[key];
@@ -924,17 +1020,18 @@
       'chocolate-cake': 150, '8-cookies-box': 125, 'cupcakes': 160, 'minnie-mous-cake': 300,
       'nutella-box': 70, 'chocolate-pizza-xl': 120, 'bento-design-cake': 140,
       'chocolate-design-cake': 180, 'orange-cake': 70, 'white-design-cake': 140,
-      'pizza-cookie': 120, 'pizza cookie': 120
+      'pizza-cookie': 120, 'pizza cookie': 120, 'kinder-cookie': 17
     };
 
     const NAMES = {
       he: {
         'chocolate-cake': 'עוגת שוקולד מעוצבת', '8-cookies-box': 'מארז 8 עוגיות',
         'cupcakes': 'קאפקייקס', 'minnie-mous-cake': 'עוגת מיני מאוס',
-        'nutella-box': 'מארז מבולבלות נוטלה', 'chocolate-pizza-xl': 'פיצת שוקולד גדולה',
+        'nutella-box': 'מארז מגולגלות נוטלה', 'chocolate-pizza-xl': 'פיצת שוקולד גדולה',
         'bento-design-cake': 'עוגת בנטו מעוצבת', 'chocolate-design-cake': 'עוגת שוקולד מעוצבת',
         'orange-cake': 'עוגת תפוזים', 'white-design-cake': 'עוגת בנטו מעוצבת',
-        'pizza-cookie': 'פיצת שוקולד גדולה', 'pizza cookie': 'פיצת שוקולד גדולה'
+        'pizza-cookie': 'פיצת שוקולד גדולה', 'pizza cookie': 'פיצת שוקולד גדולה',
+        'kinder-cookie': 'עוגיית קינדר'
       },
       en: {
         'chocolate-cake': 'Chocolate Design Cake', '8-cookies-box': '8 Cookies Box',
@@ -942,7 +1039,8 @@
         'nutella-box': 'Nutella Box', 'chocolate-pizza-xl': 'Chocolate Pizza XL',
         'bento-design-cake': 'Bento Design Cake', 'chocolate-design-cake': 'Chocolate Design Cake',
         'orange-cake': 'Orange Cake', 'white-design-cake': 'Bento Design Cake',
-        'pizza-cookie': 'Chocolate Pizza XL', 'pizza cookie': 'Chocolate Pizza XL'
+        'pizza-cookie': 'Chocolate Pizza XL', 'pizza cookie': 'Chocolate Pizza XL',
+        'kinder-cookie': 'Kinder Cookie'
       }
     };
 
@@ -1035,9 +1133,6 @@
     // משתנים גלובליים
     let cartData = {};
     let customCakes = [];
-    let itemsCost = 0;
-    let shippingCost = 0;
-    let discountAmount = 0;
 
     // קבלת הפריטים שנבחרו לתשלום
     function getSelectedItemsFromStorage() {
@@ -1049,7 +1144,225 @@
       }
     }
 
-    // שמירת רכישה להיסטוריה - הפונקציה המתוקנת הראשית
+    // פונקציה לחישוב הנחת עוגיה
+    function calculateCookieDiscount() {
+      const selectedData = getSelectedItemsFromStorage();
+      if (!selectedData || !selectedData.regularItems) return 0;
+
+      // חיפוש העוגיה הזולה ביותר בפריטים שנבחרו
+      let cheapestPrice = Infinity;
+      
+      selectedData.regularItems.forEach(id => {
+        const p = PRODUCTS.find(x => String(x.id) === String(id));
+        if (p) {
+          const price = priceOf(p);
+          // בדיקה אם זה עוגיה (מחיר נמוך או שם מכיל cookie/עוגיה)
+          if (price <= 25 || /(cookie|עוגיה)/i.test(p.title || p.id)) {
+            cheapestPrice = Math.min(cheapestPrice, price);
+          }
+        }
+      });
+
+      return cheapestPrice === Infinity ? 17 : cheapestPrice; // ברירת מחדל לעוגיה
+    }
+
+    // עדכון סיכום התשלום
+    function updateSummary() {
+      document.getElementById('items-cost').textContent = nis(itemsCost);
+      document.getElementById('shipping-cost').textContent = nis(shippingCost);
+      
+      const finalTotal = Math.max(0, itemsCost + shippingCost - discountAmount);
+      document.getElementById('total').textContent = nis(finalTotal);
+      
+      // הצגת הנחה אם קיימת
+      const discountRow = document.getElementById('discount-row');
+      if (discountAmount > 0) {
+        discountRow.style.display = '';
+        document.getElementById('discount-amount').textContent = '-' + nis(discountAmount);
+      } else {
+        discountRow.style.display = 'none';
+      }
+    }
+
+    // הפעלת קופון
+    async function applyCoupon() {
+      const couponInput = document.getElementById('coupon-input');
+      const applyBtn = document.getElementById('apply-coupon-btn');
+      const messageDiv = document.getElementById('coupon-message');
+      const lang = localStorage.getItem('language') || 'he';
+      
+      const couponCode = couponInput.value.trim();
+      if (!couponCode) return;
+
+      applyBtn.disabled = true;
+      applyBtn.textContent = lang === 'en' ? 'Checking...' : 'בודק...';
+
+      try {
+        const response = await fetch(`/api/validate-coupon/${encodeURIComponent(couponCode)}`);
+        const data = await response.json();
+
+        if (response.ok && data.valid) {
+          appliedCoupon = { code: couponCode, ...data.coupon };
+          
+          // חישוב הנחה
+          if (data.coupon.type === 'percent') {
+            discountAmount = Math.round(itemsCost * data.coupon.discount / 100);
+          } else if (data.coupon.type === 'fixed') {
+            discountAmount = Math.min(data.coupon.discount, itemsCost);
+          } else if (data.coupon.type === 'shipping') {
+            shippingCost = 0;
+            discountAmount = 0; // ההנחה תוצג כמשלוח 0
+          } else if (data.coupon.type === 'free-cookie') {
+            discountAmount = calculateCookieDiscount();
+          }
+
+          messageDiv.className = 'coupon-message coupon-success';
+          messageDiv.textContent = lang === 'en' ? 'Coupon applied successfully!' : 'הקופון הוחל בהצלחה!';
+          messageDiv.style.display = 'block';
+          
+          couponInput.disabled = true;
+          applyBtn.textContent = '✓';
+          
+        } else {
+          throw new Error(data.error || 'Invalid coupon');
+        }
+      } catch (error) {
+        console.error('Coupon validation error:', error);
+        messageDiv.className = 'coupon-message coupon-error';
+        messageDiv.textContent = lang === 'en' ? 'Invalid coupon code' : 'קוד קופון לא תקין';
+        messageDiv.style.display = 'block';
+        appliedCoupon = null;
+        discountAmount = 0;
+        shippingCost = originalShippingCost;
+      }
+
+      updateSummary();
+      
+      applyBtn.disabled = false;
+      if (!appliedCoupon) {
+        applyBtn.textContent = lang === 'en' ? 'Apply' : 'החל';
+      }
+    }
+
+    // טעינת הפריטים שנבחרו לתשלום
+    async function loadSelectedItems() {
+      const selectedData = getSelectedItemsFromStorage();
+      
+      const selectedItemsList = document.getElementById('selected-items-list');
+      selectedItemsList.innerHTML = '';
+      
+      const lang = localStorage.getItem('language') || 'he';
+      itemsCost = 0;
+      
+      // אם אין פריטים נבחרים, חזור לדף הצ'ק-אאוט
+      if (!selectedData || (!selectedData.regularItems.length && !selectedData.customItems.length)) {
+        const emptyText = lang === 'en' ? 'No items selected for payment. Please go back to checkout.' : 'לא נבחרו פריטים לתשלום. אנא חזור לדף הצ\'ק-אאוט.';
+        const backButtonText = lang === 'en' ? 'Back to Checkout' : 'חזור לצ\'ק-אאוט';
+        selectedItemsList.innerHTML = `
+          <div class="empty">
+            ${emptyText}
+            <a href="checkout.html" class="btn">${backButtonText}</a>
+          </div>
+        `;
+        updateSummary();
+        return;
+      }
+      
+      // טעינת נתוני עגלה כדי לקבל פרטי עוגות מותאמות
+      cartData = await getCartMap();
+      customCakes = cartData.customCakes || [];
+      
+      // הצגת מוצרים רגילים שנבחרו
+      if (selectedData.regularItems && selectedData.regularItems.length > 0) {
+        // ספירת כמויות של מוצרים רגילים
+        const regularItemCounts = {};
+        selectedData.regularItems.forEach(id => {
+          regularItemCounts[id] = (regularItemCounts[id] || 0) + 1;
+        });
+
+        for (const [id, qty] of Object.entries(regularItemCounts)) {
+          const p = PRODUCTS.find(x => String(x.id) === String(id)) || { id, title: id, image: '' };
+          const productName = nameOf(p, lang);
+          const unit = priceOf(p);
+          const total = unit * qty;
+          itemsCost += total;
+
+          const itemDiv = document.createElement('div');
+          itemDiv.className = 'selected-item';
+          itemDiv.innerHTML = `
+            <img src="/images/${p.image || 'placeholder.png'}" alt="${productName}">
+            <div class="item-details">
+              <h4>${productName}</h4>
+              <div class="item-price">${nis(unit)} × ${qty}</div>
+            </div>
+            <div class="item-total">${nis(total)}</div>
+          `;
+          selectedItemsList.appendChild(itemDiv);
+        }
+      }
+
+      // הצגת עוגות מותאמות שנבחרו
+      if (selectedData.customItems && selectedData.customItems.length > 0) {
+        const selectedCustomCakes = customCakes.filter(cake => 
+          selectedData.customItems.includes(cake.id)
+        );
+
+        // קיבוץ עוגות מותאמות זהות
+        const groupedCustomCakes = {};
+        selectedCustomCakes.forEach(cake => {
+          const key = `${cake.design.size}-${cake.design.color}-${cake.design.text || ''}-${cake.design.textColor}`;
+          if (!groupedCustomCakes[key]) {
+            groupedCustomCakes[key] = {
+              cake: cake,
+              quantity: 0,
+              ids: []
+            };
+          }
+          groupedCustomCakes[key].quantity++;
+          groupedCustomCakes[key].ids.push(cake.id);
+        });
+
+        Object.values(groupedCustomCakes).forEach(group => {
+          const design = group.cake.design;
+          const total = design.price * group.quantity;
+          itemsCost += total;
+
+          const sizeText = lang === 'en'
+            ? (design.size === 'bento' ? 'Bento (10cm)' : 'Large (22cm)')
+            : (design.size === 'bento' ? 'בנטו (10 ס"מ)' : 'גדולה (22 ס"מ)');
+          
+          const colorName = getColorName(design.color);
+          const customBadge = lang === 'en' ? '🎨 Custom' : '🎨 מותאמת';
+          const cakeText = lang === 'en' ? 'Cake' : 'עוגה';
+          const colorText = lang === 'en' ? 'Color:' : 'צבע:';
+          const textText = lang === 'en' ? 'Text:' : 'כיתוב:';
+          const noTextText = lang === 'en' ? 'No text' : 'ללא כיתוב';
+
+          const itemDiv = document.createElement('div');
+          itemDiv.className = 'selected-item';
+          itemDiv.innerHTML = `
+            <img src="/images/cakes/${design.imageFile || `cake-${design.color}.png`}" alt="עוגה מותאמת">
+            <div class="item-details">
+              <h4>
+                <span class="custom-cake-badge">${customBadge}</span>
+                ${cakeText} ${sizeText}
+              </h4>
+              <div class="design-details-mini">
+                <span class="design-detail-mini"><strong>${colorText}</strong> ${colorName}</span>
+                ${design.text ? `<span class="design-detail-mini"><strong>${textText}</strong> <span class="custom-text-preview-mini" style="color: ${design.textColor}">"${design.text}"</span></span>` : `<span class="design-detail-mini">${noTextText}</span>`}
+              </div>
+              <div class="item-price">${nis(design.price)} × ${group.quantity}</div>
+            </div>
+            <div class="item-total">${nis(total)}</div>
+          `;
+          selectedItemsList.appendChild(itemDiv);
+        });
+      }
+
+      updateSummary();
+    }
+
+    // שמירת רכישה להיסטוריה
     async function savePurchaseToHistory() {
       try {
         console.log('Starting to save purchase to history...');
@@ -1148,7 +1461,7 @@
       }
     }
 
-    // ניקוי עגלת קניות - הפונקציה המתוקנת הראשית
+    // ניקוי עגלת קניות
     async function clearCart() {
       try {
         console.log('Starting to clear cart...');
@@ -1204,146 +1517,7 @@
       }
     }
 
-    // טעינת הפריטים שנבחרו לתשלום
-    async function loadSelectedItems() {
-      const selectedData = getSelectedItemsFromStorage();
-      
-      const selectedItemsList = document.getElementById('selected-items-list');
-      selectedItemsList.innerHTML = '';
-      
-      const lang = localStorage.getItem('language') || 'he';
-      itemsCost = 0;
-      
-      // אם אין פריטים נבחרים, חזור לדף הצ'ק-אאוט
-      if (!selectedData || (!selectedData.regularItems.length && !selectedData.customItems.length)) {
-        const emptyText = lang === 'en' ? 'No items selected for payment. Please go back to checkout.' : 'לא נבחרו פריטים לתשלום. אנא חזור לדף הצ\'ק-אאוט.';
-        const backButtonText = lang === 'en' ? 'Back to Checkout' : 'חזור לצ\'ק-אאוט';
-        selectedItemsList.innerHTML = `
-          <div class="empty">
-            ${emptyText}
-            <a href="checkout.html" class="btn">${backButtonText}</a>
-          </div>
-        `;
-        updateSummary();
-        return;
-      }
-      
-      // טעינת נתוני עגלה כדי לקבל פרטי עוגות מותאמות
-      cartData = await getCartMap();
-      customCakes = cartData.customCakes || [];
-      
-      // הצגת מוצרים רגילים שנבחרו
-      if (selectedData.regularItems && selectedData.regularItems.length > 0) {
-        // ספירת כמויות של מוצרים רגילים
-        const regularItemCounts = {};
-        selectedData.regularItems.forEach(id => {
-          regularItemCounts[id] = (regularItemCounts[id] || 0) + 1;
-        });
-
-        for (const [id, qty] of Object.entries(regularItemCounts)) {
-          const p = PRODUCTS.find(x => String(x.id) === String(id)) || { id, title: id, image: '' };
-          const productName = nameOf(p, lang);
-          const unit = priceOf(p);
-          const total = unit * qty;
-          itemsCost += total;
-
-          const itemDiv = document.createElement('div');
-          itemDiv.className = 'selected-item';
-          itemDiv.innerHTML = `
-            <img src="/images/${p.image || 'placeholder.png'}" alt="${productName}">
-            <div class="item-details">
-              <h4>${productName}</h4>
-              <div class="item-price">${nis(unit)} × ${qty}</div>
-            </div>
-            <div class="item-total">${nis(total)}</div>
-          `;
-          selectedItemsList.appendChild(itemDiv);
-        }
-      }
-
-      // הצגת עוגות מותאמות שנבחרו
-      if (selectedData.customItems && selectedData.customItems.length > 0) {
-        // מציאת עוגות מותאמות שנבחרו
-        const selectedCustomCakes = customCakes.filter(cake => 
-          selectedData.customItems.includes(cake.id)
-        );
-
-        // קיבוץ עוגות מותאמות זהות
-        const groupedCustomCakes = {};
-        selectedCustomCakes.forEach(cake => {
-          const key = `${cake.design.size}-${cake.design.color}-${cake.design.text || ''}-${cake.design.textColor}`;
-          if (!groupedCustomCakes[key]) {
-            groupedCustomCakes[key] = {
-              cake: cake,
-              quantity: 0,
-              ids: []
-            };
-          }
-          groupedCustomCakes[key].quantity++;
-          groupedCustomCakes[key].ids.push(cake.id);
-        });
-
-        Object.values(groupedCustomCakes).forEach(group => {
-          const design = group.cake.design;
-          const total = design.price * group.quantity;
-          itemsCost += total;
-
-          const sizeText = lang === 'en'
-            ? (design.size === 'bento' ? 'Bento (10cm)' : 'Large (22cm)')
-            : (design.size === 'bento' ? 'בנטו (10 ס"מ)' : 'גדולה (22 ס"מ)');
-          
-          const colorName = getColorName(design.color);
-          const customBadge = lang === 'en' ? '🎨 Custom' : '🎨 מותאמת';
-          const cakeText = lang === 'en' ? 'Cake' : 'עוגה';
-          const colorText = lang === 'en' ? 'Color:' : 'צבע:';
-          const textText = lang === 'en' ? 'Text:' : 'כיתוב:';
-          const noTextText = lang === 'en' ? 'No text' : 'ללא כיתוב';
-
-          const itemDiv = document.createElement('div');
-          itemDiv.className = 'selected-item';
-          itemDiv.innerHTML = `
-            <img src="/images/cakes/${design.imageFile || `cake-${design.color}.png`}" alt="עוגה מותאמת">
-            <div class="item-details">
-              <h4>
-                <span class="custom-cake-badge">${customBadge}</span>
-                ${cakeText} ${sizeText}
-              </h4>
-              <div class="design-details-mini">
-                <span class="design-detail-mini"><strong>${colorText}</strong> ${colorName}</span>
-                ${design.text ? `<span class="design-detail-mini"><strong>${textText}</strong> <span class="custom-text-preview-mini" style="color: ${design.textColor}">"${design.text}"</span></span>` : `<span class="design-detail-mini">${noTextText}</span>`}
-              </div>
-              <div class="item-price">${nis(design.price)} × ${group.quantity}</div>
-            </div>
-            <div class="item-total">${nis(total)}</div>
-          `;
-          selectedItemsList.appendChild(itemDiv);
-        });
-      }
-
-      updateSummary();
-    }
-
-    // עדכון סיכום התשלום
-    function updateSummary() {
-      shippingCost = 29; // משלוח קבוע של 29 ש"ח
-      
-      document.getElementById('items-cost').textContent = nis(itemsCost);
-      document.getElementById('shipping-cost').textContent = nis(shippingCost);
-      
-      const finalTotal = itemsCost + shippingCost - discountAmount;
-      document.getElementById('total').textContent = nis(Math.max(0, finalTotal));
-      
-      // הצגת הנחה אם קיימת
-      const discountRow = document.getElementById('discount-row');
-      if (discountAmount > 0) {
-        discountRow.style.display = '';
-        document.getElementById('discount-amount').textContent = '-' + nis(discountAmount);
-      } else {
-        discountRow.style.display = 'none';
-      }
-    }
-
-    // טיפול בטופס תשלום - הפונקציה המתוקנת הראשית
+    // טיפול בטופס תשלום
     function handlePayment(e) {
       e.preventDefault();
       
@@ -1438,11 +1612,20 @@
       }, 2000);
     }
 
-    // הוספת event listeners לטופס תשלום
+    // הוספת event listeners
     document.getElementById('payment-form').addEventListener('submit', handlePayment);
     document.getElementById('pay-btn').addEventListener('click', (e) => {
       e.preventDefault();
       handlePayment(e);
+    });
+
+    // הוספת event listener לקופון
+    document.getElementById('apply-coupon-btn').addEventListener('click', applyCoupon);
+    document.getElementById('coupon-input').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        applyCoupon();
+      }
     });
 
     // פורמוט אוטומטי למספר כרטיס

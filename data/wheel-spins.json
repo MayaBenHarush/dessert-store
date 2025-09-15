@@ -1,5 +1,33 @@
 {
-  "users": {},
+  "users": {
+    "מאיה1": {
+      "last": "2025-09-15T16:11:09.137Z",
+      "prizeId": "NONE",
+      "coupon": null
+    },
+    "מאיה בן הרוש": {
+      "last": "2025-09-15T17:55:49.200Z",
+      "prizeId": "NONE",
+      "coupon": null
+    },
+    "טל": {
+      "last": "2025-09-15T17:56:21.803Z",
+      "prizeId": "NONE",
+      "coupon": null
+    },
+    "לירן": {
+      "last": "2025-09-15T17:56:52.262Z",
+      "prizeId": "PCT10",
+      "coupon": {
+        "code": "WHEEL10",
+        "type": "percent",
+        "value": 10,
+        "description": "הנחה של 10% על כל הקנייה",
+        "issuedAt": "2025-09-15T17:56:52.262Z",
+        "expiresAt": "2025-09-22T17:56:52.262Z"
+      }
+    }
+  },
   "guests": {
     "l7f1bbme": {
       "last": "2025-09-13T21:24:39.329Z",

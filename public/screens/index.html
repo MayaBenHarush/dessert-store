@@ -89,22 +89,14 @@
             color: white;
         }
 
-        .header-btn.primary {
-            background: #1a1a1a;
-            color: white;
-        }
+        
 
         .header-btn.primary:hover {
             background: #333;
         }
 
-        .cart-btn::before {
-            content: "🛒";
-        }
-
-        .home-btn::before {
-            content: "🏠";
-        }
+        
+        
 
         .login-btn::before {
             content: "👤";
@@ -179,42 +171,6 @@
             color: #f8c8dc;
         }
 
-        .auth-section {
-            margin-top: 2rem;
-            padding-top: 1rem;
-            border-top: 1px solid #f0f0f0;
-        }
-
-        .auth-btn {
-            display: block;
-            width: 100%;
-            padding: 0.75rem;
-            margin-bottom: 0.5rem;
-            border: 2px solid #1a1a1a;
-            background: white;
-            color: #1a1a1a;
-            text-decoration: none;
-            text-align: center;
-            font-weight: 600;
-            border-radius: 25px;
-            transition: all 0.2s ease;
-            cursor: pointer;
-        }
-
-        .auth-btn:hover {
-            background: #1a1a1a;
-            color: white;
-        }
-
-        .auth-btn.register {
-            background: #1a1a1a;
-            color: white;
-        }
-
-        .auth-btn.register:hover {
-            background: #333;
-        }
-
         /* Overlay */
         .overlay {
             position: fixed;
@@ -250,15 +206,6 @@
             grid-template-columns: 1fr 1fr;
             gap: 4rem;
             align-items: center;
-        }
-
-        .hero-content h1 {
-            font-size: 4rem;
-            font-weight: 900;
-            color: #1a1a1a;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            letter-spacing: -0.02em;
         }
 
         .bakery-title {
@@ -348,6 +295,171 @@
             height: 100%;
             object-fit: cover;
             border-radius: 15px;
+        }
+
+        /* Kinder Cookie Hero Section */
+        .kinder-hero-section {
+            margin: 4rem 0;
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+            position: relative;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            max-width: 1200px;
+            margin: 4rem auto;
+        }
+
+        .kinder-hero-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(135deg, #884c20 0%, #884c20 100%);
+        }
+
+        .kinder-hero-content {
+            flex: 1;
+            padding: 4rem;
+            color: #1a1a1a;
+            z-index: 2;
+            transition: color 0.4s ease;
+        }
+
+        .kinder-hero-section:hover .kinder-hero-content {
+            color: white;
+        }
+
+        .kinder-hero-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+            transition: text-shadow 0.4s ease;
+        }
+
+        .kinder-hero-section:hover .kinder-hero-title {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .kinder-hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+            line-height: 1.4;
+            transition: opacity 0.4s ease;
+        }
+
+        .kinder-hero-section:hover .kinder-hero-subtitle {
+            opacity: 0.95;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .kinder-hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .kinder-hero-btn {
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .kinder-hero-btn.primary {
+            background: #1a1a1a;
+            color: white;
+            box-shadow: 0 10px 30px rgba(26, 26, 26, 0.3);
+        }
+
+        .kinder-hero-btn.primary:hover {
+            background: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(26, 26, 26, 0.4);
+        }
+
+        .kinder-hero-section:hover .kinder-hero-btn.primary {
+            background: white;
+            color: #D2691E;
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
+        }
+
+        .kinder-hero-section:hover .kinder-hero-btn.primary:hover {
+            background: #f5f5f5;
+            color: #D2691E;
+        }
+
+        .kinder-hero-btn.secondary {
+            background: transparent;
+            color: #1a1a1a;
+            border: 2px solid #1a1a1a;
+        }
+
+        .kinder-hero-btn.secondary:hover {
+            background: #1a1a1a;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .kinder-hero-section:hover .kinder-hero-btn.secondary {
+            color: white;
+            border-color: white;
+        }
+
+        .kinder-hero-section:hover .kinder-hero-btn.secondary:hover {
+            background: white;
+            color: #D2691E;
+        }
+
+        .kinder-hero-image {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .kinder-hero-image img {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            transform: rotate(-5deg);
+            transition: all 0.4s ease;
+        }
+
+        .kinder-hero-section:hover .kinder-hero-image img {
+            transform: rotate(0deg) scale(1.05);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid currentColor;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         /* Categories Section */
@@ -492,6 +604,18 @@
             color: white;
         }
 
+        .dark-theme .kinder-hero-section {
+            background: #2d2d2d;
+        }
+
+        .dark-theme .kinder-hero-section:hover {
+            background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+        }
+
+        .dark-theme .kinder-hero-content {
+            color: white;
+        }
+
         /* Responsive Design */
         @media (max-width: 968px) {
             .hero-container {
@@ -519,6 +643,37 @@
             .header-btn {
                 padding: 0.4rem 0.8rem;
                 font-size: 0.8rem;
+            }
+
+            .kinder-hero-section {
+                flex-direction: column;
+                text-align: center;
+                min-height: auto;
+                margin: 2rem auto;
+            }
+
+            .kinder-hero-content {
+                padding: 2rem;
+            }
+
+            .kinder-hero-title {
+                font-size: 2.5rem;
+            }
+
+            .kinder-hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .kinder-hero-image {
+                padding: 1rem 2rem 2rem;
+            }
+
+            .kinder-hero-image img {
+                max-width: 300px;
+            }
+
+            .kinder-hero-buttons {
+                justify-content: center;
             }
         }
 
@@ -579,6 +734,19 @@
                 width: 200px;
                 text-align: center;
             }
+
+            .kinder-hero-title {
+                font-size: 2rem;
+            }
+
+            .kinder-hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .kinder-hero-btn {
+                padding: 0.8rem 2rem;
+                font-size: 1rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -595,6 +763,28 @@
             .header-btn::before {
                 display: none;
             }
+
+            .kinder-hero-content {
+                padding: 1.5rem;
+            }
+
+            .kinder-hero-title {
+                font-size: 1.8rem;
+            }
+
+            .kinder-hero-subtitle {
+                font-size: 0.9rem;
+            }
+
+            .kinder-hero-btn {
+                padding: 0.7rem 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .kinder-hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
         }
     </style>
 </head>
@@ -603,15 +793,15 @@
     
     <header class="header">
         <div class="header-left">
-            <button class="menu-btn" id="menuBtn">Menu</button>
+            <button class="menu-btn" id="menuBtn">תפריט</button>
             <a href="/" class="logo">dessert</a>
         </div>
         
         <nav class="header-nav">
-            <a href="/screens/index.html" class="header-btn home-btn primary">בית</a>
-            <a href="/screens/cart.html" class="header-btn cart-btn">סל קניות</a>
+            <a href="/screens/index.html" class="header-btn home-btn primary" id="home-btn">בית</a>
+            <a href="/screens/cart.html" class="header-btn cart-btn" id="cart-btn">סל קניות</a>
             <a href="/screens/login.html" class="header-btn login-btn" id="header-login">התחברות</a>
-            <a href="/screens/store.html" class="order-btn">הזמנה עכשיו</a>
+            <a href="/screens/store.html" class="order-btn" id="order-btn">הזמנה עכשיו</a>
         </nav>
     </header>
 
@@ -629,18 +819,18 @@
         <a href="/screens/recipes.html" id="nav-recipes">מתכונים</a>
         <button id="logout" style="display:none">התנתקות</button>
         <button id="theme-toggle">🌙 מצב כהה</button>
-        <button id="language-toggle">🌍 English</button>
+        <button id="language-toggle">🌐 English</button>
     </nav>
 
     <section class="hero-section">
         <div class="hero-container">
             <div class="hero-content">
-                <h1 class="bakery-title">MOKA BAKERY</h1>
-                <div class="featured-product">מאפייה בוטיק מעולה</div>
-                <p class="product-description">חווית טעם מושלמת עם מאפים ועוגות בעבודת יד מחומרי הגלם הטובים ביותר.</p>
+                <h1 class="bakery-title" id="bakery-title">MOKA BAKERY</h1>
+                <div class="featured-product" id="featured-product">מאפייה בוטיק מעולה</div>
+                <p class="product-description" id="product-description">חוויית טעם מושלמת עם מאפים ועוגות בעבודת יד מחומרי הגלם הטובים ביותר.</p>
                 <div class="hero-actions">
-                    <a href="/screens/store.html" class="learn-more-btn">גלה עוד</a>
-                    <a href="/screens/store.html" class="order-btn">הזמנה עכשיו</a>
+                    <a href="/screens/store.html" class="learn-more-btn" id="learn-more-link">גלה עוד</a>
+                    <a href="/screens/store.html" class="order-btn" id="order-now-link">הזמנה עכשיו</a>
                 </div>
             </div>
             <div class="hero-image">
@@ -655,33 +845,55 @@
         </div>
     </section>
 
+    <!-- Kinder Cookie Hero Section -->
+    <section class="kinder-hero-section" id="kinder-hero-section">
+        <div class="kinder-hero-content">
+            <h1 class="kinder-hero-title" id="kinder-hero-title">עוגיית קינדר</h1>
+            <p class="kinder-hero-subtitle" id="kinder-hero-subtitle">
+                עוגייה רכה ומתוקה עם פיסות שוקולד קינדר וקרם לבן קרמי. 
+                חוויה של מתיקות וטעם בלתי נשכח בכל ביס.
+            </p>
+            <div class="kinder-hero-buttons">
+                <button class="kinder-hero-btn primary" id="add-to-cart-btn">
+                    🛒 הוסף לסל
+                </button>
+                <a href="/screens/store.html" class="kinder-hero-btn secondary" id="learn-more-btn">
+                    למד עוד
+                </a>
+            </div>
+        </div>
+        <div class="kinder-hero-image">
+            <img src="/images/kinder-hero-cookie.jpg" alt="עוגיית קינדר" id="kinder-hero-image">
+        </div>
+    </section>
+
     <section class="categories-section">
         <div class="section-container">
-            <h2 class="section-title">הקטגוריות שלנו</h2>
+            <h2 class="section-title" id="categories-title">הקטגוריות שלנו</h2>
             <div class="categories-grid">
                 <a href="/screens/store.html?filter=cookie" class="category-card">
-                    <h3>עוגיות פרימיום</h3>
-                    <p>עוגיות טריות ואיכותיות בטעמים מגוונים עם מרכיבים טבעיים</p>
+                    <h3 id="cat-1-title">עוגיות פרימיום</h3>
+                    <p id="cat-1-desc">עוגיות טריות ואיכותיות בטעמים מגוונים עם מרכיבים טבעיים</p>
                 </a>
                 
                 <a href="/screens/store.html?filter=cake" class="category-card">
-                    <h3>עוגות מעוצבות</h3>
-                    <p>עוגות יום הולדת, חתונות ואירועים מיוחדים בעיצוב מקצועי</p>
+                    <h3 id="cat-2-title">עוגות מעוצבות</h3>
+                    <p id="cat-2-desc">עוגות יום הולדת, חתונות ואירועים מיוחדים בעיצוב מקצועי</p>
                 </a>
                 
                 <a href="/screens/store.html?filter=cupcakes" class="category-card">
-                    <h3>קאפקייקס</h3>
-                    <p>קאפקייקס מיניאטוריים ומקסימים לכל אירוע ורגע מתוק</p>
+                    <h3 id="cat-3-title">קאפקייקס</h3>
+                    <p id="cat-3-desc">קאפקייקס מיניאטוריים ומקסימים לכל אירוע ורגע מתוק</p>
                 </a>
                 
                 <a href="/screens/cake-designer.html" class="category-card">
-                    <h3>עיצוב אישי</h3>
-                    <p>צרו את העוגה המושלמת בדיוק לפי הטעם והעיצוב שלכם</p>
+                    <h3 id="cat-4-title">עיצוב אישי</h3>
+                    <p id="cat-4-desc">צרו את העוגה המושלמת בדיוק לפי הטעם והעיצוב שלכם</p>
                 </a>
                 
                 <a href="/screens/store.html?filter=box" class="category-card">
-                    <h3>מארזי מתנה</h3>
-                    <p>מארזים מעוצבים למתנות מיוחדות עם אריזה מהודרת</p>
+                    <h3 id="cat-5-title">מארזי מתנה</h3>
+                    <p id="cat-5-desc">מארזים מעוצבים למתנות מיוחדות עם אריזה מהודרת</p>
                 </a>
             </div>
         </div>
@@ -689,32 +901,203 @@
 
     <section class="features-section">
         <div class="section-container">
-            <h2 class="section-title">למה לבחור בנו</h2>
+            <h2 class="section-title" id="features-title">למה לבחור בנו</h2>
             <div class="features-grid">
                 <div class="feature-card">
-                    <h3>איכות פרימיום</h3>
-                    <p>רק חומרי גלם איכותיים ומרכיבים טריים מהמעלה הראשונה</p>
+                    <h3 id="feat-1-title">איכות פרימיום</h3>
+                    <p id="feat-1-desc">רק חומרי גלם איכותיים ומרכיבים טריים מהמעלה הראשונה</p>
                 </div>
                 
                 <div class="feature-card">
-                    <h3>משלוחים מהירים</h3>
-                    <p>משלוח מהיר ובטוח עד הבית בקירור מתאים</p>
+                    <h3 id="feat-2-title">משלוחים מהירים</h3>
+                    <p id="feat-2-desc">משלוח מהיר ובטוח עד הבית בקירור מתאים</p>
                 </div>
                 
                 <div class="feature-card">
-                    <h3>עיצוב אישי</h3>
-                    <p>אפשרות לעצב קינוחים מותאמים אישית לכל אירוע</p>
+                    <h3 id="feat-3-title">עיצוב אישי</h3>
+                    <p id="feat-3-desc">אפשרות לעצב קינוחים מותאמים אישית לכל אירוע</p>
                 </div>
                 
                 <div class="feature-card">
-                    <h3>שירות מעולה</h3>
-                    <p>צוות מקצועי ואדיב לשירותכם עם מענה מהיר</p>
+                    <h3 id="feat-4-title">שירות מעולה</h3>
+                    <p id="feat-4-desc">צוות מקצועי ואדיב לשירותכם עם מענה מהיר</p>
                 </div>
             </div>
         </div>
     </section>
 
     <script>
+        // Translations object
+        const translations = {
+            he: {
+                // Navigation
+                'menuBtn': 'תפריט',
+                'home-btn': 'בית',
+                'cart-btn': 'סל קניות',
+                'header-login': 'התחברות',
+                'order-btn': 'הזמנה עכשיו',
+                'nav-store': 'חנות',
+                'nav-cart': 'סל הקניות',
+                'nav-checkout': 'תשלום',
+                'nav-myitems': 'הרכישות שלי',
+                'nav-admin': 'ניהול',
+                'nav-recipes': 'מתכונים',
+                'logout': 'התנתקות',
+                'theme-toggle-dark': '🌙 מצב כהה',
+                'theme-toggle-light': '☀️ מצב בהיר',
+                'language-toggle': '🌐 English',
+                
+                // Homepage content
+                'bakery-title': 'MOKA BAKERY',
+                'featured-product': 'מאפייה בוטיק מעולה',
+                'product-description': 'חוויית טעם מושלמת עם מאפים ועוגות בעבודת יד מחומרי הגלם הטובים ביותר.',
+                'learn-more-link': 'גלה עוד',
+                'order-now-link': 'הזמנה עכשיו',
+                'kinder-hero-title': 'עוגיית קינדר',
+                'kinder-hero-subtitle': 'עוגייה רכה ומתוקה עם פיסות שוקולד קינדר וקרם לבן קרמי. חוויה של מתיקות וטעם בלתי נשכח בכל ביס.',
+                'add-to-cart-btn': '🛒 הוסף לסל',
+                'learn-more-btn': 'למד עוד',
+                'categories-title': 'הקטגוריות שלנו',
+                'features-title': 'למה לבחור בנו',
+                
+                // Categories
+                'cat-1-title': 'עוגיות פרימיום',
+                'cat-1-desc': 'עוגיות טריות ואיכותיות בטעמים מגוונים עם מרכיבים טבעיים',
+                'cat-2-title': 'עוגות מעוצבות',
+                'cat-2-desc': 'עוגות יום הולדת, חתונות ואירועים מיוחדים בעיצוב מקצועי',
+                'cat-3-title': 'קאפקייקס',
+                'cat-3-desc': 'קאפקייקס מיניאטוריים ומקסימים לכל אירוע ורגע מתוק',
+                'cat-4-title': 'עיצוב אישי',
+                'cat-4-desc': 'צרו את העוגה המושלמת בדיוק לפי הטעם והעיצוב שלכם',
+                'cat-5-title': 'מארזי מתנה',
+                'cat-5-desc': 'מארזים מעוצבים למתנות מיוחדות עם אריזה מהודרת',
+                
+                // Features
+                'feat-1-title': 'איכות פרימיום',
+                'feat-1-desc': 'רק חומרי גלם איכותיים ומרכיבים טריים מהמעלה הראשונה',
+                'feat-2-title': 'משלוחים מהירים',
+                'feat-2-desc': 'משלוח מהיר ובטוח עד הבית בקירור מתאים',
+                'feat-3-title': 'עיצוב אישי',
+                'feat-3-desc': 'אפשרות לעצב קינוחים מותאמים אישית לכל אירוע',
+                'feat-4-title': 'שירות מעולה',
+                'feat-4-desc': 'צוות מקצועי ואדיב לשירותכם עם מענה מהיר',
+                
+                // Cart actions
+                'adding': 'מוסיף...',
+                'added': 'נוסף לסל!',
+                'error': 'שגיאה - נסה שוב'
+            },
+            en: {
+                // Navigation
+                'menuBtn': 'Menu',
+                'home-btn': 'Home',
+                'cart-btn': 'Shopping Cart',
+                'header-login': 'Login',
+                'order-btn': 'Order Now',
+                'nav-store': 'Store',
+                'nav-cart': 'Shopping Cart',
+                'nav-checkout': 'Checkout',
+                'nav-myitems': 'My Purchases',
+                'nav-admin': 'Admin',
+                'nav-recipes': 'Recipes',
+                'logout': 'Logout',
+                'theme-toggle-dark': '🌙 Dark Mode',
+                'theme-toggle-light': '☀️ Light Mode',
+                'language-toggle': '🌐 עברית',
+                
+                // Homepage content
+                'bakery-title': 'MOKA BAKERY',
+                'featured-product': 'Premium Boutique Bakery',
+                'product-description': 'Perfect taste experience with handmade pastries and cakes from the finest ingredients.',
+                'learn-more-link': 'Learn More',
+                'order-now-link': 'Order Now',
+                'kinder-hero-title': 'Kinder Cookie',
+                'kinder-hero-subtitle': 'Soft and sweet cookie with Kinder chocolate pieces and creamy white cream. An unforgettable experience of sweetness and taste in every bite.',
+                'add-to-cart-btn': '🛒 Add to Cart',
+                'learn-more-btn': 'Learn More',
+                'categories-title': 'Our Categories',
+                'features-title': 'Why Choose Us',
+                
+                // Categories
+                'cat-1-title': 'Premium Cookies',
+                'cat-1-desc': 'Fresh and quality cookies in various flavors with natural ingredients',
+                'cat-2-title': 'Designer Cakes',
+                'cat-2-desc': 'Birthday, wedding and special event cakes with professional design',
+                'cat-3-title': 'Cupcakes',
+                'cat-3-desc': 'Miniature and charming cupcakes for every occasion and sweet moment',
+                'cat-4-title': 'Personal Design',
+                'cat-4-desc': 'Create the perfect cake exactly according to your taste and design',
+                'cat-5-title': 'Gift Boxes',
+                'cat-5-desc': 'Designed packages for special gifts with elegant packaging',
+                
+                // Features
+                'feat-1-title': 'Premium Quality',
+                'feat-1-desc': 'Only quality raw materials and fresh ingredients of the highest grade',
+                'feat-2-title': 'Fast Delivery',
+                'feat-2-desc': 'Fast and secure delivery to your home with appropriate cooling',
+                'feat-3-title': 'Personal Design',
+                'feat-3-desc': 'Option to design custom desserts for any occasion',
+                'feat-4-title': 'Excellent Service',
+                'feat-4-desc': 'Professional and courteous team at your service with quick response',
+                
+                // Cart actions
+                'adding': 'Adding...',
+                'added': 'Added to Cart!',
+                'error': 'Error - Try Again'
+            }
+        };
+
+        // Get current language
+        function getCurrentLanguage() {
+            return localStorage.getItem('language') || 'he';
+        }
+
+        // Set language and update page
+        function setLanguage(lang) {
+            localStorage.setItem('language', lang);
+            document.documentElement.lang = lang;
+            document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
+            updatePageTexts();
+        }
+
+        // Update all texts on the page
+        function updatePageTexts() {
+            const lang = getCurrentLanguage();
+            const texts = translations[lang];
+            
+            // Update all elements with IDs
+            Object.keys(texts).forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    if (id === 'add-to-cart-btn') {
+                        element.innerHTML = texts[id]; // Keep emoji
+                    } else {
+                        element.textContent = texts[id];
+                    }
+                }
+            });
+
+            // Update theme toggle button
+            const themeToggle = document.getElementById('theme-toggle');
+            if (themeToggle) {
+                const isDark = document.body.classList.contains('dark-theme');
+                themeToggle.textContent = isDark ? texts['theme-toggle-light'] : texts['theme-toggle-dark'];
+            }
+
+            // Update language toggle button
+            const langToggle = document.getElementById('language-toggle');
+            if (langToggle) {
+                langToggle.textContent = texts['language-toggle'];
+            }
+        }
+
+        // Toggle language
+        function toggleLanguage() {
+            const currentLang = getCurrentLanguage();
+            const newLang = currentLang === 'he' ? 'en' : 'he';
+            setLanguage(newLang);
+        }
+
         // Menu functionality
         document.addEventListener('DOMContentLoaded', function() {
             const menuBtn = document.getElementById('menuBtn');
@@ -748,18 +1131,23 @@
                 });
             }
 
+            // Language toggle
+            const languageToggle = document.getElementById('language-toggle');
+            if (languageToggle) {
+                languageToggle.addEventListener('click', toggleLanguage);
+            }
+
             // Load UI customization
             function loadUICustomization() {
                 const theme = localStorage.getItem('theme') || 'light';
-                const themeToggle = document.getElementById('theme-toggle');
                 
                 if (theme === 'dark') {
                     document.body.classList.add('dark-theme');
-                    if (themeToggle) themeToggle.textContent = '☀️ מצב בהיר';
                 } else {
                     document.body.classList.remove('dark-theme');
-                    if (themeToggle) themeToggle.textContent = '🌙 מצב כהה';
                 }
+                
+                updatePageTexts();
             }
 
             // Auth setup
@@ -792,33 +1180,74 @@
                 };
             }
 
-            // Smooth scrolling
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
+            // Kinder Cookie Add to Cart functionality
+            const addToCartBtn = document.getElementById('add-to-cart-btn');
+            if (addToCartBtn) {
+                addToCartBtn.addEventListener('click', async () => {
+                    const btn = addToCartBtn;
+                    const heroSection = document.getElementById('kinder-hero-section');
+                    const lang = getCurrentLanguage();
+                    
+                    // Check if user is logged in
+                    try {
+                        const sessionRes = await fetch('/api/session');
+                        if (!sessionRes.ok) {
+                            location.href = '/screens/login.html';
+                            return;
+                        }
+                    } catch {
+                        location.href = '/screens/login.html';
+                        return;
+                    }
+
+                    // Save original text
+                    const originalText = btn.innerHTML;
+                    
+                    // Update button to loading state
+                    const loadingText = `<span class="loading-spinner"></span>${translations[lang]['adding']}`;
+                    btn.innerHTML = loadingText;
+                    btn.disabled = true;
+
+                    try {
+                        // Send add to cart request
+                        const response = await fetch('/api/cart', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                productId: 'kinder-cookie'
+                            })
                         });
+
+                        if (response.ok) {
+                            // Success - animation and button update
+                            const successText = `✅ ${translations[lang]['added']}`;
+                            btn.innerHTML = successText;
+                            btn.style.background = '#28a745';
+                            
+                            setTimeout(() => {
+                                btn.innerHTML = originalText;
+                                btn.style.background = '';
+                                btn.disabled = false;
+                            }, 2000);
+                        } else {
+                            throw new Error('Failed to add to cart');
+                        }
+                    } catch (error) {
+                        console.error('Error adding to cart:', error);
+                        const errorText = translations[lang]['error'];
+                        btn.innerHTML = errorText;
+                        btn.style.background = '#dc3545';
+                        
+                        setTimeout(() => {
+                            btn.innerHTML = originalText;
+                            btn.style.background = '';
+                            btn.disabled = false;
+                        }, 2000);
                     }
                 });
-            });
-
-            // Add scroll effect to header
-            let lastScroll = 0;
-            window.addEventListener('scroll', () => {
-                const currentScroll = window.pageYOffset;
-                const header = document.querySelector('.header');
-                
-                if (currentScroll > lastScroll && currentScroll > 100) {
-                    header.style.transform = 'translateY(-100%)';
-                } else {
-                    header.style.transform = 'translateY(0)';
-                }
-                lastScroll = currentScroll;
-            });
+            }
 
             // Initialize
             loadUICustomization();
