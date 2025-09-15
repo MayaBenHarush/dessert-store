@@ -1201,7 +1201,7 @@
 
     // עדכון סיכום התשלום
     function updateSummary() {
-      shippingCost = itemsCost > 200 ? 0 : 25; // משלוח חינם מעל 200 ש"ח
+      shippingCost = 29; // משלוח קבוע של 29 ש"ח
       
       document.getElementById('items-cost').textContent = nis(itemsCost);
       document.getElementById('shipping-cost').textContent = nis(shippingCost);
