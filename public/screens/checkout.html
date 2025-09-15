@@ -6,503 +6,139 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script src="/assets/translations.js"></script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      background: #ffffff;
-      color: #1a1a1a;
-      line-height: 1.6;
+      background: #ffffff; color: #1a1a1a; line-height: 1.6;
     }
 
     /* Header */
     .header {
-      background: #ffffcc;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      background: #ffffcc; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center;
+      position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
-
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .menu-btn {
-      background: none;
-      border: none;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #1a1a1a;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .menu-btn::before {
-      content: "☰";
-      font-size: 1.2rem;
-    }
-
-    .logo {
-      font-size: 2.2rem;
-      font-weight: 900;
-      color: #1a1a1a;
-      text-decoration: none;
-      letter-spacing: -0.02em;
-    }
-
-    .header-nav {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
+    .header-left { display: flex; align-items: center; gap: 1rem; }
+    .menu-btn { background: none; border: none; font-size: 1.1rem; font-weight: 600; color: #1a1a1a; cursor: pointer; display: flex; align-items: center; gap: .5rem; }
+    .menu-btn::before { content: "☰"; font-size: 1.2rem; }
+    .logo { font-size: 2.2rem; font-weight: 900; color: #1a1a1a; text-decoration: none; letter-spacing: -0.02em; }
+    .header-nav { display: flex; align-items: center; gap: 1rem; }
     .header-btn {
-      background: none;
-      border: 2px solid #1a1a1a;
-      color: #1a1a1a;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
+      background: none; border: 2px solid #1a1a1a; color: #1a1a1a; padding: .5rem 1rem; border-radius: 20px;
+      font-weight: 600; font-size: .9rem; cursor: pointer; transition: all .2s ease; text-decoration: none; display: flex; align-items: center; gap: .3rem;
     }
+    .header-btn:hover { background: #1a1a1a; color: white; }
+    .header-btn.primary { background: #1a1a1a; color: white; }
+    .header-btn.primary:hover { background: #333; }
 
-    .header-btn:hover {
-      background: #1a1a1a;
-      color: white;
-    }
-
-    .header-btn.primary {
-      background: #1a1a1a;
-      color: white;
-    }
-
-    .header-btn.primary:hover {
-      background: #333;
-    }
-
-   
-
-    .login-btn::before {
-      content: "👤";
-    }
+    /* היה אייקון רק להתחברות – משאירים. בית/סל טקסט בלבד */
+    .login-btn::before { content: "👤"; }
+    .home-btn::before, .cart-btn::before { content: none !important; display: none !important; }
 
     /* Navigation Menu */
     .nav-menu {
-      position: fixed;
-      top: 0;
-      right: -300px;
-      width: 300px;
-      height: 100vh;
-      background: white;
-      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
-      transition: right 0.3s ease;
-      padding: 2rem;
-      z-index: 2000;
+      position: fixed; top: 0; right: -300px; width: 300px; height: 100vh; background: white;
+      box-shadow: -5px 0 15px rgba(0,0,0,0.1); transition: right .3s ease; padding: 2rem; z-index: 2000;
     }
-
-    .nav-menu.active {
-      right: 0;
+    .nav-menu.active { right: 0; }
+    .nav-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; float: left; margin-bottom: 2rem; }
+    .nav-item, .nav-menu a, .nav-menu button {
+      display: block; padding: .75rem 0; color: #1a1a1a; text-decoration: none; font-weight: 500;
+      border-bottom: 1px solid #f0f0f0; transition: color .2s ease; background: none; border: none; text-align: right; width: 100%; cursor: pointer;
     }
-
-    .nav-close {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      float: left;
-      margin-bottom: 2rem;
-    }
-
-    .nav-item,
-    .nav-menu a,
-    .nav-menu button {
-      display: block;
-      padding: 0.75rem 0;
-      color: #1a1a1a;
-      text-decoration: none;
-      font-weight: 500;
-      border-bottom: 1px solid #f0f0f0;
-      transition: color 0.2s ease;
-      background: none;
-      border: none;
-      text-align: right;
-      width: 100%;
-      cursor: pointer;
-    }
-
-    .nav-item:hover,
-    .nav-menu a:hover,
-    .nav-menu button:hover {
-      color: #ffffcc;
-    }
+    .nav-item:hover, .nav-menu a:hover, .nav-menu button:hover { color: #ffffcc; }
 
     /* Overlay */
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 1500;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-    }
-
-    .overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
+    .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1500; opacity: 0; visibility: hidden; transition: all .3s ease; }
+    .overlay.active { opacity: 1; visibility: visible; }
 
     /* Main Content */
-    .main-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
-
-    .page-header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-
+    .main-content { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+    .page-header { text-align: center; margin-bottom: 2rem; }
     #page-title {
-      font-size: 3rem;
-      font-weight: 900;
-      color: #1a1a1a;
-      margin-bottom: 1rem;
-      letter-spacing: -0.02em;
-      text-transform: uppercase;
+      font-size: 3rem; font-weight: 900; color: #1a1a1a; margin-bottom: 1rem; letter-spacing: -0.02em; text-transform: uppercase;
     }
 
     /* Checkout List */
-    .ck-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      margin: 2rem 0;
-    }
-
+    .ck-list { display: flex; flex-direction: column; gap: 1.5rem; margin: 2rem 0; }
     .ck-row {
-      display: grid;
-      grid-template-columns: auto 90px 1fr;
-      align-items: center;
-      gap: 1rem;
-      padding: 1.5rem;
-      border: none;
-      border-radius: 15px;
-      background: white;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+      display: grid; grid-template-columns: auto 90px 1fr; align-items: center; gap: 1rem; padding: 1.5rem;
+      border: none; border-radius: 15px; background: white; cursor: pointer; transition: all .3s ease; box-shadow: 0 5px 20px rgba(0,0,0,0.08);
     }
-
-    .ck-row:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
-    }
-
-    .ck-row input[type="checkbox"] {
-      width: 20px;
-      height: 20px;
-      accent-color: #1a1a1a;
-      cursor: pointer;
-    }
-
-    .ck-row img {
-      width: 90px;
-      height: 90px;
-      object-fit: cover;
-      border-radius: 10px;
-    }
+    .ck-row:hover { transform: translateY(-2px); box-shadow: 0 15px 40px rgba(0,0,0,0.12); }
+    .ck-row input[type="checkbox"] { width: 20px; height: 20px; accent-color: #1a1a1a; cursor: pointer; }
+    .ck-row img { width: 90px; height: 90px; object-fit: cover; border-radius: 10px; }
 
     .quantity-info {
-      background: #1a1a1a;
-      color: white;
-      padding: 0.4rem 0.8rem;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      font-weight: bold;
-      min-width: 50px;
-      text-align: center;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+      background: #1a1a1a; color: white; padding: .4rem .8rem; border-radius: 20px; font-size: .9rem; font-weight: bold; min-width: 50px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.08);
     }
-
-    .price-line {
-      margin-top: 0.5rem;
-      font-weight: 700;
-      color: #1a1a1a;
-      font-size: 1.1rem;
-    }
+    .price-line { margin-top: .5rem; font-weight: 700; color: #1a1a1a; font-size: 1.1rem; }
 
     /* Custom Cake Styling */
     .custom-cake-badge {
-      background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
-      color: white;
-      padding: 0.3rem 0.8rem;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: bold;
-      margin-left: 0.5rem;
-      display: inline-block;
+      background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%); color: white; padding: .3rem .8rem; border-radius: 20px; font-size: .8rem; font-weight: bold; margin-left: .5rem; display: inline-block;
     }
-
-    .design-details-mini {
-      background: rgba(255, 107, 157, 0.1);
-      border-radius: 8px;
-      padding: 0.5rem;
-      margin-top: 0.5rem;
-      font-size: 0.85rem;
-      line-height: 1.4;
-      border-right: 3px solid #ff6b9d;
-    }
-
-    .design-detail-mini {
-      display: inline-block;
-      margin-left: 0.5rem;
-      color: #666;
-      font-weight: 500;
-    }
-
-    .design-detail-mini:first-child {
-      margin-left: 0;
-    }
-
+    .design-details-mini { background: rgba(255,107,157,.1); border-radius: 8px; padding: .5rem; margin-top: .5rem; font-size: .85rem; line-height: 1.4; border-right: 3px solid #ff6b9d; }
+    .design-detail-mini { display: inline-block; margin-left: .5rem; color: #666; font-weight: 500; }
+    .design-detail-mini:first-child { margin-left: 0; }
     .custom-text-preview-mini {
-      background: white;
-      border: 1px solid #ff6b9d;
-      border-radius: 4px;
-      padding: 0.2rem 0.4rem;
-      font-weight: bold;
-      display: inline-block;
-      margin-left: 0.3rem;
-      font-size: 0.75rem;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      background: white; border: 1px solid #ff6b9d; border-radius: 4px; padding: .2rem .4rem; font-weight: bold; display: inline-block; margin-left: .3rem; font-size: .75rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
     /* Summary and Total */
-    #sum-box {
-      margin: 2rem 0;
-      font-weight: 800;
-      border-top: 2px solid #f0f0f0;
-      padding-top: 1rem;
-      color: #1a1a1a;
-      font-size: 1.2rem;
-    }
-
+    #sum-box { margin: 2rem 0; font-weight: 800; border-top: 2px solid #f0f0f0; padding-top: 1rem; color: #1a1a1a; font-size: 1.2rem; }
     .checkout-footer {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      gap: 1rem;
-      margin-top: 2rem;
-      padding: 1.5rem;
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+      display: flex; justify-content: flex-end; align-items: center; gap: 1rem; margin-top: 2rem; padding: 1.5rem; background: white; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08);
     }
-
-    #total {
-      font-weight: 800;
-      font-size: 1.3rem;
-      color: #1a1a1a;
-    }
+    #total { font-weight: 800; font-size: 1.3rem; color: #1a1a1a; }
 
     .btn {
-      background: #1a1a1a;
-      color: white;
-      border: none;
-      padding: 1rem 2rem;
-      border-radius: 15px;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
+      background: #1a1a1a; color: white; border: none; padding: 1rem 2rem; border-radius: 15px; font-weight: 600; font-size: 1rem;
+      cursor: pointer; transition: all .3s ease; text-decoration: none; display: inline-flex; align-items: center; gap: .5rem;
     }
-
-    .btn:hover {
-      background: #333;
-      transform: translateY(-2px);
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
-    }
+    .btn:hover { background: #333; transform: translateY(-2px); box-shadow: 0 15px 40px rgba(0,0,0,0.12); }
 
     /* Empty state */
     .empty {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 4rem 2rem;
-      color: #666;
-      text-align: center;
-      font-size: 1.1rem;
-      background: #f8f8f8;
-      border-radius: 15px;
-      margin-top: 2rem;
+      display: flex; justify-content: center; align-items: center; padding: 4rem 2rem; color: #666; text-align: center;
+      font-size: 1.1rem; background: #f8f8f8; border-radius: 15px; margin-top: 2rem;
     }
 
     /* Dark Theme */
-    .dark-theme {
-      background: #1a1a1a;
-      color: white;
-    }
-
-    .dark-theme .header {
-      background: #2d2d2d;
-    }
-
-    .dark-theme .nav-menu {
-      background: #2d2d2d;
-    }
-
-    .dark-theme .nav-menu a,
-    .dark-theme .nav-menu button {
-      color: white;
-      border-bottom-color: #444;
-    }
-
-    .dark-theme .ck-row,
-    .dark-theme .checkout-footer {
-      background: #2d2d2d;
-    }
-
-    .dark-theme .ck-row h3,
-    .dark-theme .price-line,
-    .dark-theme #total,
-    .dark-theme #page-title {
-      color: white;
-    }
-
-    .dark-theme .quantity-info {
-      background: #ffffcc;
-      color: #1a1a1a;
-    }
-
-    .dark-theme .btn {
-      background: #ffffcc;
-      color: #1a1a1a;
-    }
-
-    .dark-theme .btn:hover {
-      background: #ffff99;
-    }
-
-    .dark-theme .empty {
-      background: #2d2d2d;
-      color: #ccc;
-    }
+    .dark-theme { background: #1a1a1a; color: white; }
+    .dark-theme .header { background: #2d2d2d; }
+    .dark-theme .nav-menu { background: #2d2d2d; }
+    .dark-theme .nav-menu a, .dark-theme .nav-menu button { color: white; border-bottom-color: #444; }
+    .dark-theme .ck-row, .dark-theme .checkout-footer { background: #2d2d2d; }
+    .dark-theme .ck-row h3, .dark-theme .price-line, .dark-theme #total, .dark-theme #page-title { color: white; }
+    .dark-theme .quantity-info { background: #ffffcc; color: #1a1a1a; }
+    .dark-theme .btn { background: #ffffcc; color: #1a1a1a; }
+    .dark-theme .btn:hover { background: #ffff99; }
+    .dark-theme .empty { background: #2d2d2d; color: #ccc; }
 
     /* Responsive Design */
     @media (max-width: 968px) {
-      .header-nav {
-        gap: 0.5rem;
-      }
-
-      .header-btn {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.8rem;
-      }
-
-      #page-title {
-        font-size: 2.5rem;
-      }
-
-      .ck-row {
-        grid-template-columns: auto 70px 1fr;
-        gap: 0.8rem;
-        padding: 1rem;
-      }
-
-      .ck-row img {
-        width: 70px;
-        height: 70px;
-      }
+      .header-nav { gap: .5rem; }
+      .header-btn { padding: .4rem .8rem; font-size: .8rem; }
+      #page-title { font-size: 2.5rem; }
+      .ck-row { grid-template-columns: auto 70px 1fr; gap: .8rem; padding: 1rem; }
+      .ck-row img { width: 70px; height: 70px; }
     }
-
     @media (max-width: 768px) {
-      .header {
-        padding: 1rem;
-        flex-wrap: wrap;
-        gap: 1rem;
-      }
-
-      .header-left {
-        order: 1;
-      }
-
-      .logo {
-        font-size: 1.8rem;
-        order: 2;
-      }
-
-      .header-nav {
-        order: 3;
-        width: 100%;
-        justify-content: center;
-        gap: 0.5rem;
-      }
-
-      .header-btn {
-        padding: 0.4rem 0.6rem;
-        font-size: 0.75rem;
-      }
-
-      .main-content {
-        padding: 1rem;
-      }
-
-      #page-title {
-        font-size: 2rem;
-      }
-
-      .ck-row {
-        grid-template-columns: 1fr;
-        text-align: center;
-        gap: 1rem;
-      }
-
-      .checkout-footer {
-        flex-direction: column;
-        text-align: center;
-      }
+      .header { padding: 1rem; flex-wrap: wrap; gap: 1rem; }
+      .header-left { order: 1; }
+      .logo { font-size: 1.8rem; order: 2; }
+      .header-nav { order: 3; width: 100%; justify-content: center; gap: .5rem; }
+      .header-btn { padding: .4rem .6rem; font-size: .75rem; }
+      .main-content { padding: 1rem; }
+      #page-title { font-size: 2rem; }
+      .ck-row { grid-template-columns: 1fr; text-align: center; gap: 1rem; }
+      .checkout-footer { flex-direction: column; text-align: center; }
     }
-
     @media (max-width: 480px) {
-      .header-btn {
-        padding: 0.3rem 0.5rem;
-        font-size: 0.7rem;
-      }
-
-      .header-btn::before {
-        display: none;
-      }
-
-      .ck-row {
-        padding: 1rem;
-      }
+      .header-btn { padding: .3rem .5rem; font-size: .7rem; }
+      .header-btn::before { display: none; }
+      .ck-row { padding: 1rem; }
     }
   </style>
 </head>
@@ -517,6 +153,8 @@
     
     <nav class="header-nav">
       <a href="index.html" class="header-btn home-btn">בית</a>
+      <!-- כפתור חנות – טקסט בלבד, בלי לוגו -->
+      <a href="store.html" class="header-btn">חנות</a>
       <a href="cart.html" class="header-btn cart-btn">סל קניות</a>
       <a href="login.html" class="header-btn login-btn" id="header-login">התחברות</a>
     </nav>
@@ -557,58 +195,21 @@
     const navMenu = document.getElementById('navMenu');
     const navClose = document.getElementById('navClose');
     const overlay = document.getElementById('overlay');
-
-    function openMenu() {
-      navMenu.classList.add('active');
-      overlay.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeMenu() {
-      navMenu.classList.remove('active');
-      overlay.classList.remove('active');
-      document.body.style.overflow = 'auto';
-    }
-
-    menuBtn.addEventListener('click', openMenu);
-    navClose.addEventListener('click', closeMenu);
-    overlay.addEventListener('click', closeMenu);
+    function openMenu(){ navMenu.classList.add('active'); overlay.classList.add('active'); document.body.style.overflow='hidden'; }
+    function closeMenu(){ navMenu.classList.remove('active'); overlay.classList.remove('active'); document.body.style.overflow='auto'; }
+    menuBtn.addEventListener('click', openMenu); navClose.addEventListener('click', closeMenu); overlay.addEventListener('click', closeMenu);
 
     // טעינת התאמות אישיות מ-localStorage
     function loadUICustomization() {
       const theme = localStorage.getItem('theme') || 'light';
       const themeToggle = document.getElementById('theme-toggle');
       const languageToggle = document.getElementById('language-toggle');
-      
-      // עדכון נושא
-      if (theme === 'dark') {
-        document.body.classList.add('dark-theme');
-        if (window.Translations && window.Translations.get) {
-          themeToggle.textContent = '☀️ ' + window.Translations.get('themeToggleLight');
-        } else {
-          themeToggle.textContent = '☀️ מצב בהיר';
-        }
-      } else {
-        document.body.classList.remove('dark-theme');
-        if (window.Translations && window.Translations.get) {
-          themeToggle.textContent = '🌙 ' + window.Translations.get('themeToggleDark');
-        } else {
-          themeToggle.textContent = '🌙 מצב כהה';
-        }
-      }
-      
-      // עדכון כפתור שפה
+      if (theme === 'dark') { document.body.classList.add('dark-theme'); themeToggle.textContent = '☀️ מצב בהיר'; }
+      else { document.body.classList.remove('dark-theme'); themeToggle.textContent = '🌙 מצב כהה'; }
+
       const currentLanguage = localStorage.getItem('language') || 'he';
-      if (currentLanguage === 'en') {
-        languageToggle.textContent = '🌐 עברית';
-        document.documentElement.dir = 'ltr';
-        document.documentElement.lang = 'en';
-      } else {
-        languageToggle.textContent = '🌐 English';
-        document.documentElement.dir = 'rtl';
-        document.documentElement.lang = 'he';
-      }
-      
+      if (currentLanguage === 'en') { languageToggle.textContent = '🌐 עברית'; document.documentElement.dir = 'ltr'; document.documentElement.lang = 'en'; }
+      else { languageToggle.textContent = '🌐 English'; document.documentElement.dir = 'rtl'; document.documentElement.lang = 'he'; }
       updateInterfaceLanguage(currentLanguage);
     }
 
@@ -618,7 +219,7 @@
         en:{'nav-store':'Store','nav-cart':'Shopping Cart','nav-checkout':'Checkout','nav-myitems':'My Purchases','nav-login':'Login','nav-logout':'Logout','nav-admin':'Admin','page-title':'Select Items for Payment','continue-pay':'Continue to Payment','total':'Total: ','theme-dark':'🌙 Dark Mode','theme-light':'☀️ Light Mode'}
       }[lang];
       if(!t) return;
-      
+
       const navStore = document.getElementById('nav-store');
       const navCheckout = document.getElementById('nav-checkout');
       const navMyitems = document.getElementById('nav-myitems');
@@ -628,34 +229,30 @@
       const pageTitle = document.getElementById('page-title');
       const goPayBtn = document.getElementById('go-pay');
       const themeToggle = document.getElementById('theme-toggle');
-      
+
       if(navStore) navStore.textContent = t['nav-store'];
       if(navCheckout) navCheckout.textContent = t['nav-checkout'];
-      if(navMyitems) navMyitems.textContent = t['nav-myitems']; 
-      if(loginLink) loginLink.textContent = t['nav-login']; 
+      if(navMyitems) navMyitems.textContent = t['nav-myitems'];
+      if(loginLink) loginLink.textContent = t['nav-login'];
       if(logoutBtn) logoutBtn.textContent = t['nav-logout'];
-      if(navAdmin) navAdmin.textContent = t['nav-admin']; 
-      if(pageTitle) pageTitle.textContent = t['page-title']; 
+      if(navAdmin) navAdmin.textContent = t['nav-admin'];
+      if(pageTitle) pageTitle.textContent = t['page-title'];
       if(goPayBtn) goPayBtn.textContent = t['continue-pay'];
       if(themeToggle) themeToggle.textContent = (localStorage.getItem('theme')||'light')==='dark' ? t['theme-light'] : t['theme-dark'];
     }
 
-    // החלפת נושא
     document.getElementById('theme-toggle').addEventListener('click', () => {
       const isDark = document.body.classList.contains('dark-theme');
-      const newTheme = isDark ? 'light' : 'dark';
-      localStorage.setItem('theme', newTheme);
+      localStorage.setItem('theme', isDark ? 'light' : 'dark');
       loadUICustomization();
     });
 
-    // החלפת שפה
     document.getElementById('language-toggle').addEventListener('click', () => {
       if (window.Translations && window.Translations.toggleLanguage) {
         window.Translations.toggleLanguage();
         loadUICustomization();
-        render(); // טעינה מחדש עם השפה החדשה
+        render();
       } else {
-        // fallback אם הפונקציה לא נטענה
         const currentLang = localStorage.getItem('language') || 'he';
         const newLang = currentLang === 'he' ? 'en' : 'he';
         localStorage.setItem('language', newLang);
@@ -668,7 +265,6 @@
     const nis = n => `₪${n}`;
     const slug = s => String(s||'').trim().toLowerCase().replace(/[^\p{L}\p{N} ]/gu,'').replace(/\s+/g,'-');
 
-    // מחירון ושמות
     const PRICE_MAP = {
       'chocolate-cake':150, '8-cookies-box':125, 'cupcakes':160, 'minnie-mous-cake':300,
       'nutella-box':70, 'chocolate-pizza-xl':120, 'bento-design-cake':140,
@@ -688,42 +284,28 @@
     };
 
     const nameOf = (p,lang) => {
-      const id = String(p.id??''); 
-      const title = String(p.title??''); 
-      const dict = NAMES[lang]||{}; 
-      const k = [id,slug(id),title,slug(title)].find(x=>dict[x]); 
+      const id = String(p.id??''); const title = String(p.title??'');
+      const dict = NAMES[lang]||{}; const k = [id,slug(id),title,slug(title)].find(x=>dict[x]);
       return k ? dict[k] : (title||id);
     };
 
     // מצב התחברות
-    (async () => { 
-      try { 
-        const r=await fetch('/api/session'); 
+    (async () => {
+      try {
+        const r=await fetch('/api/session');
         if(r.ok){
           const data = await r.json();
-          document.getElementById('header-login').style.display='none'; 
+          document.getElementById('header-login').style.display='none';
           document.getElementById('logout').style.display='';
-          if (data.username === 'admin') {
-            document.getElementById('nav-admin').style.display = '';
-          }
-        } 
-      } catch{} 
+          if (data.username === 'admin') document.getElementById('nav-admin').style.display = '';
+        }
+      } catch{}
     })();
-    
-    document.getElementById('logout').onclick = async () => { 
-      try{await fetch('/api/logout',{method:'POST'})}
-      finally{location.href='login.html'} 
-    };
+    document.getElementById('logout').onclick = async () => { try{await fetch('/api/logout',{method:'POST'})} finally{location.href='login.html'} };
 
     let PRODUCTS=[];
-    async function loadProducts(){ 
-      try{ 
-        const r=await fetch('/api/products'); 
-        PRODUCTS=r.ok?await r.json():[]; 
-      }catch{} 
-    }
+    async function loadProducts(){ try{ const r=await fetch('/api/products'); PRODUCTS=r.ok?await r.json():[]; }catch{} }
 
-    // פונקציה לתרגום צבעים
     function getColorName(color) {
       const currentLang = localStorage.getItem('language') || 'he';
       if (window.Translations && window.Translations.get) {
@@ -731,115 +313,53 @@
         const translated = window.Translations.get(colorKey);
         if (translated && translated !== colorKey) return translated;
       }
-      
-      // fallback
-      const colorNames = {
-        he: {
-          'pink': 'ורוד', 'white': 'לבן', 'green': 'ירוק', 'red': 'אדום',
-          'purple': 'סגול', 'light-blue': 'כחול בהיר', 'orange': 'כתום'
-        },
-        en: {
-          'pink': 'Pink', 'white': 'White', 'green': 'Green', 'red': 'Red',
-          'purple': 'Purple', 'light-blue': 'Light Blue', 'orange': 'Orange'
-        }
-      };
+      const colorNames = { he:{'pink':'ורוד','white':'לבן','green':'ירוק','red':'אדום','purple':'סגול','light-blue':'כחול בהיר','orange':'כתום'}, en:{'pink':'Pink','white':'White','green':'Green','red':'Red','purple':'Purple','light-blue':'Light Blue','orange':'Orange'} };
       return colorNames[currentLang]?.[color] || color;
     }
+    function getCustomCakeKey(design){ return `${design.size}-${design.color}-${design.text || ''}-${design.textColor}`; }
 
-    // פונקציה ליצירת מפתח ייחודי לעוגה מותאמת
-    function getCustomCakeKey(design) {
-      return `${design.size}-${design.color}-${design.text || ''}-${design.textColor}`;
-    }
-
-    // רינדור עוגה מותאמת ב-checkout
     function renderCustomCakeForCheckout(customCake, quantity = 1) {
       const design = customCake.design;
       const currentLang = localStorage.getItem('language') || 'he';
-      
-      const sizeText = currentLang === 'en'
-        ? (design.size === 'bento' ? 'Bento (10cm)' : 'Large (22cm)')
-        : (design.size === 'bento' ? 'בנטו (10 ס"מ)' : 'גדולה (22 ס"מ)');
-      
+      const sizeText = currentLang==='en' ? (design.size==='bento'?'Bento (10cm)':'Large (22cm)') : (design.size==='bento'?'בנטו (10 ס"מ)':'גדולה (22 ס"מ)');
       const colorName = getColorName(design.color);
       const total = design.price * quantity;
-      
-      const customBadge = currentLang === 'en' ? '🎨 Custom' : '🎨 מותאמת';
-      const cakeText = currentLang === 'en' ? 'Cake' : 'עוגה';
-      const colorText = currentLang === 'en' ? 'Color:' : 'צבע:';
-      const textText = currentLang === 'en' ? 'Text:' : 'כיתוב:';
-      const noTextText = currentLang === 'en' ? 'No text' : 'ללא כיתוב';
-      
+      const customBadge = currentLang==='en' ? '🎨 Custom' : '🎨 מותאמת';
+      const cakeText = currentLang==='en' ? 'Cake' : 'עוגה';
+      const colorText = currentLang==='en' ? 'Color:' : 'צבע:'; const textText = currentLang==='en' ? 'Text:' : 'כיתוב:'; const noTextText = currentLang==='en' ? 'No text' : 'ללא כיתוב';
       const row = document.createElement('label');
       row.className = 'ck-row';
       row.innerHTML = `
         <input type="checkbox" data-custom-ids="${customCake.ids ? customCake.ids.join(',') : customCake.id}" checked>
         <img src="/images/cakes/${design.imageFile || `cake-${design.color}.png`}" alt="עוגה מותאמת">
         <div>
-          <div style="font-weight:700">
-            <span class="custom-cake-badge">${customBadge}</span>
-            ${cakeText} ${sizeText}
-          </div>
+          <div style="font-weight:700"><span class="custom-cake-badge">${customBadge}</span>${cakeText} ${sizeText}</div>
           <div class="design-details-mini">
             <span class="design-detail-mini"><strong>${colorText}</strong> ${colorName}</span>
             ${design.text ? `<span class="design-detail-mini"><strong>${textText}</strong> <span class="custom-text-preview-mini" style="color: ${design.textColor}">"${design.text}"</span></span>` : `<span class="design-detail-mini">${noTextText}</span>`}
           </div>
           <div class="price-line">${nis(design.price)} × ${quantity} = <strong>${nis(total)}</strong></div>
-        </div>
-      `;
-      
+        </div>`;
       return row;
     }
 
-    // ממיר כל פורמט ל‎{id: qty}
     function toQtyMap(payload){
       if (payload && typeof payload==='object' && Array.isArray(payload.items)) payload = payload.items;
-      const q={};
-      if (Array.isArray(payload)){
-        for (const it of payload){
-          if (typeof it==='string'){ q[it]=(q[it]||0)+1; continue; }
-          if (it && typeof it==='object'){
-            const id = it.id || it.productId;
-            const qty = Number(it.qty ?? it.quantity ?? 1);
-            if (id) q[id]=(q[id]||0)+qty;
-          }
-        }
-      } else if (payload && typeof payload==='object'){
-        for (const [id,val] of Object.entries(payload)){
-          q[id] = typeof val==='number' ? val : Number(val?.qty ?? val?.quantity ?? 1);
-        }
-      }
+      const q={}; if (Array.isArray(payload)){ for (const it of payload){ if (typeof it==='string'){ q[it]=(q[it]||0)+1; continue; }
+        if (it && typeof it==='object'){ const id = it.id || it.productId; const qty = Number(it.qty ?? it.quantity ?? 1); if (id) q[id]=(q[id]||0)+qty; } } }
+      else if (payload && typeof payload==='object'){ for (const [id,val] of Object.entries(payload)){ q[id] = typeof val==='number' ? val : Number(val?.qty ?? val?.quantity ?? 1); } }
       return q;
     }
 
-    // קבלת נתוני העגלה עם עוגות מותאמות
     async function getCartMap(){
-      try {
-        const res = await fetch('/api/cart-with-custom');
-        if (res.status === 401) { location.href = 'login.html'; return {}; }
-        if (res.ok) {
-          return await res.json();
-        }
-      } catch {}
-
-      // fallback ל-API ישן
-      try {
-        const r = await fetch('/api/cart');
-        if (!r.ok) return {};
-        const quantities = toQtyMap(await r.json());
-        return { regularItems: quantities, customCakes: [] };
-      } catch { 
-        return { regularItems: {}, customCakes: [] }; 
-      }
+      try{ const res = await fetch('/api/cart-with-custom'); if (res.status===401){ location.href='login.html'; return {}; } if (res.ok){ return await res.json(); } }catch{}
+      try{ const r = await fetch('/api/cart'); if (!r.ok) return {}; const quantities = toQtyMap(await r.json()); return { regularItems: quantities, customCakes: [] }; }catch{ return { regularItems: {}, customCakes: [] }; }
     }
 
-    let cartData = {};
-    let customCakes = [];
-    let groupedCustomCakes = {};
+    let cartData = {}; let customCakes = []; let groupedCustomCakes = {};
 
     function computeTotalFromChecked(){
       let total = 0;
-      
-      // מוצרים רגילים
       document.querySelectorAll('.ck-row input[type="checkbox"]:not([data-custom-ids])').forEach(cb => {
         if (!cb.checked) return;
         const id = cb.value;
@@ -848,19 +368,14 @@
         const unit = priceOf(p);
         total += (unit || 0) * qty;
       });
-
-      // עוגות מותאמות
       document.querySelectorAll('.ck-row input[type="checkbox"][data-custom-ids]').forEach(cb => {
         if (!cb.checked) return;
         const customIds = cb.getAttribute('data-custom-ids').split(',');
         customIds.forEach(customId => {
           const cake = customCakes.find(c => c.id === customId);
-          if (cake) {
-            total += cake.design.price;
-          }
+          if (cake) total += cake.design.price;
         });
       });
-
       const currentLang = localStorage.getItem('language') || 'he';
       const totalText = currentLang === 'en' ? 'Total: ' : 'סה"כ מחיר: ';
       document.getElementById('total').textContent = totalText + nis(total);
@@ -872,9 +387,6 @@
 
       cartData = await getCartMap();
       customCakes = cartData.customCakes || [];
-
-      console.log('Cart data:', cartData);
-      console.log('Custom cakes:', customCakes);
 
       const regularEntries = Object.entries(cartData.regularItems || {});
       const hasRegularItems = regularEntries.length > 0;
@@ -888,7 +400,6 @@
         return;
       }
 
-      // הצגת מוצרים רגילים
       if (hasRegularItems) {
         for (const [id, qty] of regularEntries) {
           const p = PRODUCTS.find(x => String(x.id) === String(id)) || {id, title:id, image:''};
@@ -905,94 +416,56 @@
             <div>
               <div style="font-weight:700">${productName}</div>
               <div class="price-line">${nis(unit)} × ${qty} = <strong>${nis(total)}</strong></div>
-            </div>
-          `;
+            </div>`;
           list.appendChild(row);
         }
       }
 
-      // הצגת עוגות מותאמות
       if (hasCustomCakes) {
-        // קיבוץ עוגות מותאמות לפי מאפיינים זהים
         groupedCustomCakes = {};
         customCakes.forEach(cake => {
           const key = getCustomCakeKey(cake.design);
-          if (!groupedCustomCakes[key]) {
-            groupedCustomCakes[key] = {
-              cake: cake,
-              quantity: 0,
-              ids: []
-            };
-          }
-          groupedCustomCakes[key].quantity++;
-          groupedCustomCakes[key].ids.push(cake.id);
+          if (!groupedCustomCakes[key]) groupedCustomCakes[key] = { cake, quantity: 0, ids: [] };
+          groupedCustomCakes[key].quantity++; groupedCustomCakes[key].ids.push(cake.id);
         });
-
-        // הצגת עוגות מותאמות עם כמויות מקובצות
         Object.values(groupedCustomCakes).forEach(group => {
-          const cakeElement = renderCustomCakeForCheckout({
-            ...group.cake,
-            ids: group.ids
-          }, group.quantity);
+          const cakeElement = renderCustomCakeForCheckout({ ...group.cake, ids: group.ids }, group.quantity);
           list.appendChild(cakeElement);
         });
       }
 
       computeTotalFromChecked();
-      list.addEventListener('change', (e) => {
-        if (e.target.matches('input[type="checkbox"]')) computeTotalFromChecked();
-      });
+      list.addEventListener('change', (e) => { if (e.target.matches('input[type="checkbox"]')) computeTotalFromChecked(); });
     }
 
-    // שמירת הבחירה והמשך לתשלום - הקוד המתוקן
     document.getElementById('go-pay').onclick = () => {
       const selectedRegularItems = [];
       const selectedCustomItems = [];
-      
-      // מוצרים רגילים
       document.querySelectorAll('.ck-row input[type="checkbox"]:not([data-custom-ids]):checked').forEach(cb => {
         const id = cb.value;
         const qty = Number(cartData.regularItems?.[id] || 0);
-        for (let i = 0; i < qty; i++) {
-          selectedRegularItems.push(id);
-        }
+        for (let i = 0; i < qty; i++) selectedRegularItems.push(id);
       });
-
-      // עוגות מותאמות
       document.querySelectorAll('.ck-row input[type="checkbox"][data-custom-ids]:checked').forEach(cb => {
         const customIds = cb.getAttribute('data-custom-ids').split(',');
         selectedCustomItems.push(...customIds);
       });
 
-      console.log('Selected items for checkout:', { regularItems: selectedRegularItems, customItems: selectedCustomItems });
-      
       if (selectedRegularItems.length === 0 && selectedCustomItems.length === 0) {
         const currentLang = localStorage.getItem('language') || 'he';
-        const alertText = currentLang === 'en' ? 'Please select items for payment' : 'נא לבחור פריטים לתשלום';
-        alert(alertText);
+        alert(currentLang === 'en' ? 'Please select items for payment' : 'נא לבחור פריטים לתשלום');
         return;
       }
-      
-      // שמירת הפריטים שנבחרו ב-localStorage
-      const selectedData = {
-        regularItems: selectedRegularItems,
-        customItems: selectedCustomItems,
-        timestamp: Date.now()
-      };
-      
+
+      const selectedData = { regularItems: selectedRegularItems, customItems: selectedCustomItems, timestamp: Date.now() };
       localStorage.setItem('selectedForPayment', JSON.stringify(selectedData));
-      console.log('Saved to localStorage:', selectedData);
-      
       location.href = 'pay.html';
     };
 
-    (async() => { 
-      await loadProducts(); 
-      // השהיה קטנה לטעינת מערכת התרגום
-      setTimeout(() => {
-        loadUICustomization();
-      }, 100);
-      await render(); 
+    (async() => {
+      await loadProducts();
+      setTimeout(() => { loadUICustomization(); }, 100);
+      await render();
     })();
   </script>
 </body>

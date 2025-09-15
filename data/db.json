@@ -1064,6 +1064,11 @@
       "datetime": "2025-09-15T18:45:42.860Z",
       "username": "לירן",
       "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-09-15T19:23:10.882Z",
+      "username": "לירן",
+      "type": "login"
     }
   ],
   "products": [
