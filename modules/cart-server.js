@@ -208,6 +208,61 @@ module.exports = (app) => {
     }
   });
 
+  // POST /api/cart/decrease/:id – הפחתת יחידה אחת מהסל
+  app.post('/api/cart/decrease/:id', async (req, res, next) => {
+    try {
+      const username = req.cookies.session;
+      if (!username) return res.status(401).json({ error: 'Not logged in' });
+
+      const id = String(req.params.id || '');
+      let carts = asArray(await persist.loadData('carts'));
+      const cart = carts.find(c => c.username === username);
+      
+      if (!cart || !Array.isArray(cart.items)) {
+        return res.status(404).json({ error: 'Cart not found' });
+      }
+
+      // הסרת יחידה אחת בלבד
+      const index = cart.items.findIndex(pid => String(pid) === id);
+      if (index !== -1) {
+        cart.items.splice(index, 1);
+        await persist.saveData('carts', carts);
+      }
+
+      res.json({ ok: true });
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // DELETE /api/cart/removeAll/:id – הסרת כל היחידות של מוצר מהסל
+  app.delete('/api/cart/removeAll/:id', async (req, res, next) => {
+    try {
+      const username = req.cookies.session;
+      if (!username) return res.status(401).json({ error: 'Not logged in' });
+
+      const id = String(req.params.id || '');
+      let carts = asArray(await persist.loadData('carts'));
+      const cart = carts.find(c => c.username === username);
+      
+      if (!cart || !Array.isArray(cart.items)) {
+        return res.status(404).json({ error: 'Cart not found' });
+      }
+
+      // הסרת כל המופעים של המוצר
+      const originalLength = cart.items.length;
+      cart.items = cart.items.filter(pid => String(pid) !== id);
+      
+      if (cart.items.length !== originalLength) {
+        await persist.saveData('carts', carts);
+      }
+
+      res.json({ ok: true });
+    } catch (err) {
+      next(err);
+    }
+  });
+
   // PUT /api/cart/:id – עדכון כמות מוצר בסל
   app.put('/api/cart/:id', async (req, res, next) => {
     try {
@@ -275,6 +330,110 @@ module.exports = (app) => {
       }
 
       res.json({ ok: true });
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // PATCH /api/custom-cake/:id – עדכון סטטוס עוגה מותאמת
+  app.patch('/api/custom-cake/:id', async (req, res, next) => {
+    try {
+      const username = req.cookies.session;
+      if (!username) return res.status(401).json({ error: 'Not logged in' });
+
+      const customCakeId = req.params.id;
+      const { status } = req.body;
+
+      if (!status) {
+        return res.status(400).json({ error: 'Status is required' });
+      }
+
+      // עדכון סטטוס העוגה
+      let customCakes = asArray(await persist.loadData('customCakes'));
+      const cakeIndex = customCakes.findIndex(cake => 
+        cake.id === customCakeId && cake.username === username
+      );
+      
+      if (cakeIndex !== -1) {
+        customCakes[cakeIndex].status = status;
+        await persist.saveData('customCakes', customCakes);
+        res.json({ ok: true, status });
+      } else {
+        res.status(404).json({ error: 'Custom cake not found' });
+      }
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // DELETE /api/cart – ניקוי הסל במלואו
+  app.delete('/api/cart', async (req, res, next) => {
+    try {
+      const username = req.cookies.session;
+      if (!username) return res.status(401).json({ error: 'Not logged in' });
+
+      let carts = asArray(await persist.loadData('carts'));
+      const cartIndex = carts.findIndex(c => c.username === username);
+      
+      if (cartIndex !== -1) {
+        carts[cartIndex].items = [];
+        await persist.saveData('carts', carts);
+      }
+
+      res.json({ ok: true });
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // POST /api/clear-cart-items – ניקוי פריטים ספציפיים מהסל (לאחר תשלום)
+  app.post('/api/clear-cart-items', async (req, res, next) => {
+    try {
+      const username = req.cookies.session;
+      if (!username) return res.status(401).json({ error: 'Not logged in' });
+
+      const { itemsToRemove } = req.body;
+      if (!itemsToRemove || !Array.isArray(itemsToRemove)) {
+        return res.status(400).json({ error: 'itemsToRemove array is required' });
+      }
+
+      console.log('Clearing cart items for user:', username);
+      console.log('Items to remove:', itemsToRemove);
+
+      // רשימת המזהים לניקוי
+      const idsToRemove = new Set(itemsToRemove.map(String));
+
+      // הסרה מהסל
+      let carts = asArray(await persist.loadData('carts'));
+      const cart = carts.find(c => c.username === username);
+      
+      if (cart && Array.isArray(cart.items)) {
+        const originalLength = cart.items.length;
+        cart.items = cart.items.filter(id => !idsToRemove.has(String(id)));
+        console.log(`Cart items before: ${originalLength}, after: ${cart.items.length}`);
+        await persist.saveData('carts', carts);
+      }
+
+      // עדכון סטטוס עוגות מותאמות
+      const customCakeIds = itemsToRemove.filter(id => String(id).startsWith('custom-cake-'));
+      if (customCakeIds.length > 0) {
+        let customCakes = asArray(await persist.loadData('customCakes'));
+        let updated = false;
+        
+        customCakes.forEach(cake => {
+          if (cake.username === username && customCakeIds.includes(cake.id)) {
+            cake.status = 'purchased';
+            updated = true;
+          }
+        });
+        
+        if (updated) {
+          await persist.saveData('customCakes', customCakes);
+          console.log('Updated custom cakes status to purchased');
+        }
+      }
+
+      res.json({ ok: true, removedCount: itemsToRemove.length });
     } catch (err) {
       next(err);
     }

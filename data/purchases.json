@@ -1,25 +1,170 @@
-[
-  {
-    "username": "Maya",
-    "items": [
-      "1",
-      "3",
-      "5"
-    ],
-    "date": "2025-08-09T15:47:54.920Z"
-  },
-  {
-    "username": "Maya",
-    "items": [
-      "10"
-    ],
-    "date": "2025-08-12T19:32:36.030Z"
-  },
-  {
-    "username": "Maya",
-    "items": [
-      "12"
-    ],
-    "date": "2025-08-12T19:50:42.451Z"
-  }
-]
+{
+  "מאיה1": [
+    {
+      "id": "lotus-cookie",
+      "title": "lotus cookie",
+      "image": "lotus-cookie.jpeg",
+      "price": 17,
+      "date": "2025-09-15T10:08:30.088Z",
+      "type": "regular",
+      "purchaseDate": "2025-09-15T10:08:30.126Z",
+      "purchaseId": "1757930910127r0az7uxse"
+    },
+    {
+      "id": "custom-cake-1757366779206-bqrmlkx4u",
+      "title": "עוגה מותאמת בנטו (10 ס\"מ)",
+      "image": "cake-pink.png",
+      "price": 140,
+      "date": "2025-09-15T10:08:30.095Z",
+      "type": "custom",
+      "customDesign": {
+        "size": "bento",
+        "color": "pink",
+        "colorName": "ורוד",
+        "text": "",
+        "textColor": "#333333"
+      },
+      "purchaseDate": "2025-09-15T10:08:30.127Z",
+      "purchaseId": "1757930910127qwft86gus"
+    },
+    {
+      "id": "custom-cake-1757772326282-h33j9i4ct",
+      "title": "עוגה מותאמת בנטו (10 ס\"מ)",
+      "image": "cake-pink.png",
+      "price": 140,
+      "date": "2025-09-15T10:08:30.095Z",
+      "type": "custom",
+      "customDesign": {
+        "size": "bento",
+        "color": "pink",
+        "colorName": "ורוד",
+        "text": "",
+        "textColor": "#333333"
+      },
+      "purchaseDate": "2025-09-15T10:08:30.127Z",
+      "purchaseId": "1757930910127y1gj75wxx"
+    },
+    {
+      "id": "custom-cake-1757864036475-dlgaizkf7",
+      "title": "עוגה מותאמת גדולה (22 ס\"מ)",
+      "image": "cake-red.png",
+      "price": 300,
+      "date": "2025-09-15T10:08:30.095Z",
+      "type": "custom",
+      "customDesign": {
+        "size": "large",
+        "color": "red",
+        "colorName": "אדום",
+        "text": "גבגה",
+        "textColor": "#ff1744"
+      },
+      "purchaseDate": "2025-09-15T10:08:30.127Z",
+      "purchaseId": "17579309101277ak3vz17p"
+    },
+    {
+      "id": "chocolate-cake",
+      "title": "chocolate cake",
+      "image": "chocolate-cake.jpeg",
+      "price": 150,
+      "date": "2025-09-15T13:46:12.174Z",
+      "type": "regular",
+      "purchaseDate": "2025-09-15T13:46:12.243Z",
+      "purchaseId": "1757943972244r8fdxfyad"
+    },
+    {
+      "id": "cookies-box",
+      "title": "cookies box",
+      "image": "cookies-box.jpeg",
+      "price": 17,
+      "date": "2025-09-15T13:46:12.174Z",
+      "type": "regular",
+      "purchaseDate": "2025-09-15T13:46:12.245Z",
+      "purchaseId": "1757943972245r2bbehdyd"
+    },
+    {
+      "id": "custom-cake-1757366779206-bqrmlkx4u",
+      "title": "עוגה מותאמת בנטו (10 ס\"מ)",
+      "image": "cake-pink.png",
+      "price": 140,
+      "date": "2025-09-15T13:46:12.174Z",
+      "type": "custom",
+      "customDesign": {
+        "size": "bento",
+        "color": "pink",
+        "colorName": "ורוד",
+        "text": "",
+        "textColor": "#333333"
+      },
+      "purchaseDate": "2025-09-15T13:46:12.245Z",
+      "purchaseId": "1757943972245et54e2lo4"
+    },
+    {
+      "id": "custom-cake-1757772326282-h33j9i4ct",
+      "title": "עוגה מותאמת בנטו (10 ס\"מ)",
+      "image": "cake-pink.png",
+      "price": 140,
+      "date": "2025-09-15T13:46:12.174Z",
+      "type": "custom",
+      "customDesign": {
+        "size": "bento",
+        "color": "pink",
+        "colorName": "ורוד",
+        "text": "",
+        "textColor": "#333333"
+      },
+      "purchaseDate": "2025-09-15T13:46:12.245Z",
+      "purchaseId": "1757943972245n0a2xfory"
+    },
+    {
+      "id": "custom-cake-1757366779206-bqrmlkx4u",
+      "title": "עוגה מותאמת בנטו (10 ס\"מ)",
+      "image": "cake-pink.png",
+      "price": 140,
+      "date": "2025-09-15T14:00:51.903Z",
+      "type": "custom",
+      "customDesign": {
+        "size": "bento",
+        "color": "pink",
+        "colorName": "ורוד",
+        "text": "",
+        "textColor": "#333333"
+      },
+      "purchaseDate": "2025-09-15T14:00:51.917Z",
+      "purchaseId": "1757944851918mv3yhdzfu"
+    },
+    {
+      "id": "custom-cake-1757772326282-h33j9i4ct",
+      "title": "עוגה מותאמת בנטו (10 ס\"מ)",
+      "image": "cake-pink.png",
+      "price": 140,
+      "date": "2025-09-15T14:00:51.903Z",
+      "type": "custom",
+      "customDesign": {
+        "size": "bento",
+        "color": "pink",
+        "colorName": "ורוד",
+        "text": "",
+        "textColor": "#333333"
+      },
+      "purchaseDate": "2025-09-15T14:00:51.918Z",
+      "purchaseId": "1757944851918v9055adou"
+    },
+    {
+      "id": "custom-cake-1757864036475-dlgaizkf7",
+      "title": "עוגה מותאמת גדולה (22 ס\"מ)",
+      "image": "cake-red.png",
+      "price": 300,
+      "date": "2025-09-15T14:00:51.903Z",
+      "type": "custom",
+      "customDesign": {
+        "size": "large",
+        "color": "red",
+        "colorName": "אדום",
+        "text": "גבגה",
+        "textColor": "#ff1744"
+      },
+      "purchaseDate": "2025-09-15T14:00:51.918Z",
+      "purchaseId": "1757944851918d41ptxyx2"
+    }
+  ]
+}

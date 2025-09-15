@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title data-page="store">חנות קינוחים 🍰</title>
+  <title data-page="store">חנות קינוחים 🧁</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script src="/assets/translations"></script>
   <style>
@@ -515,29 +515,29 @@
   <header class="header">
     <div class="header-left">
       <button class="menu-btn" id="menuBtn">Menu</button>
-      <a href="/" class="logo">dessert</a>
+      <a href="index.html" class="logo">dessert</a>
     </div>
     
     <nav class="header-nav">
-      <a href="/screens/index.html" class="header-btn home-btn">בית</a>
-      <a href="/screens/cart.html" class="header-btn cart-btn">סל קניות</a>
-      <a href="/screens/store.html" class="header-btn store-btn primary">חנות</a>
-      <a href="/screens/login.html" class="header-btn login-btn" id="header-login">התחברות</a>
+      <a href="index.html" class="header-btn home-btn">בית</a>
+      <a href="cart.html" class="header-btn cart-btn">סל קניות</a>
+      <a href="store.html" class="header-btn store-btn primary">חנות</a>
+      <a href="login.html" class="header-btn login-btn" id="header-login">התחברות</a>
     </nav>
   </header>
 
   <nav class="nav-menu" id="navMenu">
     <button class="nav-close" id="navClose">×</button>
 
-    <a href="/screens/store.html" id="nav-store">חנות</a>
-    <a href="/screens/cart.html" id="nav-cart">סל הקניות</a>
-    <a href="/screens/checkout.html" id="nav-checkout">תשלום</a>
-    <a href="/screens/myitems.html" id="nav-myitems">הרכישות שלי</a>
-    <a href="/screens/admin.html" id="nav-admin" style="display:none">ניהול</a>
-    <a href="/screens/dessert-finder.html">מציאת הקינוח המושלם</a>
-    <a href="/screens/wheel.html">גלגל מזל</a>
-    <a href="/screens/cake-designer.html">עיצוב עוגה</a>
-    <a href="/screens/recipes.html" id="nav-recipes">מתכונים</a>
+    <a href="store.html" id="nav-store">חנות</a>
+    <a href="cart.html" id="nav-cart">סל הקניות</a>
+    <a href="checkout.html" id="nav-checkout">תשלום</a>
+    <a href="myitems.html" id="nav-myitems">הרכישות שלי</a>
+    <a href="admin.html" id="nav-admin" style="display:none">ניהול</a>
+    <a href="dessert-finder.html">מציאת הקינוח המושלם</a>
+    <a href="wheel.html">גלגל מזל</a>
+    <a href="cake-designer.html">עיצוב עוגה</a>
+    <a href="recipes.html" id="nav-recipes">מתכונים</a>
     <button id="logout" style="display:none">התנתקות</button>
     <button id="theme-toggle">🌙 מצב כהה</button>
     <button id="language-toggle">🌍 English</button>
@@ -555,7 +555,7 @@
         <button class="filter-btn" data-filter="cookie">עוגיות</button>
         <button class="filter-btn" data-filter="cake">עוגות</button>
         <button class="filter-btn" data-filter="cupcakes">קאפקייקס</button>
-        <button class="filter-btn" data-filter="box">מארזים</button>
+        <button class="filter-btn" data-filter="box">מארזי</button>
       </div>
       
       <input type="text" id="search" placeholder="חפש קינוח..." />
@@ -571,7 +571,7 @@
       .replace(/\s+/g, '-');
     const nis = n => `₪${n}`;
 
-    // === מחירון מעודכן + עליֹסים נפוצים שמגיעים מהשרת ===
+    // === מחירון מעודכן + עליסים נפוצים שמגיעים מהשרת ===
     const PRICE_MAP = {
       'chocolate-cake': 150,
       '8-cookies-box': 125,
@@ -593,7 +593,7 @@
       '8-cookies-box': { he: 'מארז 8 עוגיות', en: '8 Cookies Box' },
       'cupcakes': { he: 'קאפקייקס', en: 'Cupcakes' },
       'minnie-mous-cake': { he: 'עוגת מיני מאוס', en: 'Minnie Mouse Cake' },
-      'nutella-box': { he: 'מארז מגולגלות נוטלה', en: 'Nutella Box' },
+      'nutella-box': { he: 'מארז מבולבלות נוטלה', en: 'Nutella Box' },
       'chocolate-pizza-xl': { he: 'פיצת שוקולד גדולה', en: 'Chocolate Pizza XL' },
       'bento-design-cake': { he: 'עוגת בנטו מעוצבת', en: 'Bento Design Cake' },
       'chocolate-design-cake': { he: 'עוגת שוקולד מעוצבת', en: 'Chocolate Design Cake' },
@@ -808,7 +808,7 @@
       // Update filter buttons
       const filterBtns = document.querySelectorAll('.filter-btn');
       const filterTexts = {
-        he: { '': 'הכל', 'cookie': 'עוגיות', 'cake': 'עוגות', 'cupcakes': 'קאפקייקס', 'box': 'מארזים' },
+        he: { '': 'הכל', 'cookie': 'עוגיות', 'cake': 'עוגות', 'cupcakes': 'קאפקייקס', 'box': 'מארזי' },
         en: { '': 'All', 'cookie': 'Cookies', 'cake': 'Cakes', 'cupcakes': 'Cupcakes', 'box': 'Boxes' }
       };
       
@@ -876,7 +876,7 @@
         try{ 
           await fetch('/api/logout',{method:'POST'});
         } finally{ 
-          location.href='/screens/login.html'; 
+          location.href='login.html'; 
         } 
       };
     }
@@ -977,7 +977,7 @@
       });
       
       if(r.status===401){ 
-        location.href='/screens/login.html'; 
+        location.href='login.html'; 
         return; 
       }
       

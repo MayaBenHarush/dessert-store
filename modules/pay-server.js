@@ -35,10 +35,62 @@ module.exports = function(app) {
     }
   });
 
+  // API חדש לשמירת רכישה (נקרא מ-pay.html)
+  app.post('/api/save-purchase', async (req, res) => {
+    try {
+      const username = req.cookies.session;
+      if (!username) {
+        return res.status(401).json({ error: 'לא מחובר' });
+      }
+
+      const { items } = req.body;
+      if (!items || !Array.isArray(items)) {
+        return res.status(400).json({ error: 'נתוני פריטים לא תקינים' });
+      }
+
+      console.log('Saving purchase for user:', username);
+      console.log('Items to save:', items);
+
+      // שמירת הרכישה
+      let purchases = await persist.loadData('purchases') || {};
+      if (!purchases[username]) {
+        purchases[username] = [];
+      }
+
+      // הוספת כל פריט בנפרד עם התאריך
+      items.forEach(item => {
+        purchases[username].push({
+          ...item,
+          purchaseDate: new Date().toISOString()
+        });
+      });
+
+      await persist.saveData('purchases', purchases);
+
+      // רישום פעילות
+      let activity = await persist.loadData('activity') || [];
+      activity.push({
+        datetime: new Date().toISOString(),
+        username,
+        type: 'purchase',
+        itemCount: items.length
+      });
+      await persist.saveData('activity', activity);
+
+      console.log('Purchase saved successfully');
+      res.json({ success: true, itemCount: items.length });
+
+    } catch (error) {
+      console.error('Save purchase error:', error);
+      res.status(500).json({ error: 'שגיאה בשמירת הרכישה' });
+    }
+  });
+
   // API לתשלום משופר
   app.post('/api/pay', async (req, res) => {
     try {
-      const username = req.cookies.username;
+      const username = req.cookies.session;
+
       if (!username) {
         return res.status(401).json({ error: 'לא מחובר' });
       }
@@ -64,7 +116,7 @@ module.exports = function(app) {
         return res.status(400).json({ error: 'CVV לא תקין' });
       }
 
-      // סימולציה של תהליך תשלום (במציאות זה יהיה קריאה לספק תשלומים)
+      // סימולציה של תהליך תשלום
       await new Promise(resolve => setTimeout(resolve, 1500));
 
       // חישוב מחירים מחדש בשרת לאבטחה
@@ -96,80 +148,18 @@ module.exports = function(app) {
       finalOrderData.shipping = finalShipping;
       finalOrderData.total = finalOrderData.subtotal - appliedDiscount + finalShipping;
 
-      // יצירת רשומת רכישה תואמת למבנה הקיים
-      const purchaseItem = {
-        items: [],
-        date: new Date().toISOString()
-      };
-
-      // הוספת פריטים לרכישה בפורמט הקיים
-      if (orderData?.items) {
-        for (const item of orderData.items) {
-          for (let i = 0; i < item.qty; i++) {
-            if (item.type === 'custom') {
-              // עוגות מותאמות - נשאיר את ה-ID המלא
-              purchaseItem.items.push(item.id);
-            } else {
-              // מוצרים רגילים
-              purchaseItem.items.push(item.id);
-            }
-          }
-        }
-      }
-
-      // שמירת הרכישה במבנה הקיים
-      let purchases = await persist.loadData('purchases') || {};
-      if (!purchases[username]) {
-        purchases[username] = [];
-      }
-      purchases[username].push(purchaseItem);
-      await persist.saveData('purchases', purchases);
-
-      // הוספת רשומה לאקטיביטי
+      // רישום פעילות תשלום
       try {
         let activity = await persist.loadData('activity') || [];
         activity.push({
           datetime: new Date().toISOString(),
           username,
-          type: 'pay'
+          type: 'pay',
+          amount: finalOrderData.total
         });
         await persist.saveData('activity', activity);
       } catch (actError) {
         console.warn('Failed to log activity:', actError);
-      }
-
-      // ניקוי העגלה לאחר תשלום מוצלח
-      try {
-        // ניקוי עגלה רגילה
-        let db = await persist.loadData('db') || {};
-        if (db.carts && Array.isArray(db.carts)) {
-          db.carts = db.carts.filter(cart => cart.username !== username);
-          await persist.saveData('db', db);
-        }
-
-        // ניקוי עוגות מותאמות
-        if (db.customCakes && Array.isArray(db.customCakes)) {
-          // סימון עוגות מותאמות כנרכשות
-          for (let cake of db.customCakes) {
-            if (cake.username === username && cake.status === 'in-cart') {
-              cake.status = 'purchased';
-            }
-          }
-          await persist.saveData('db', db);
-        }
-
-        // גם ניקוי מהקבצים הנפרדים אם קיימים
-        try {
-          let carts = await persist.loadData('carts') || [];
-          if (Array.isArray(carts)) {
-            carts = carts.filter(cart => cart.username !== username);
-            await persist.saveData('carts', carts);
-          }
-        } catch {}
-
-      } catch (clearError) {
-        console.warn('Failed to clear cart after payment:', clearError);
-        // לא נכשיל את התשלום בגלל שגיאה בניקוי העגלה
       }
 
       res.json({
@@ -184,10 +174,84 @@ module.exports = function(app) {
     }
   });
 
-  // API לקבלת היסטוריית רכישות (שיפור לדף "הרכישות שלי")
+  // API לניקוי סל לאחר תשלום
+  app.post('/api/clear-cart-after-payment', async (req, res) => {
+    try {
+      const username = req.cookies.session;
+      if (!username) {
+        return res.status(401).json({ error: 'לא מחובר' });
+      }
+
+      const { selectedItems } = req.body;
+      if (!selectedItems) {
+        return res.status(400).json({ error: 'לא נמצרו פריטים לניקוי' });
+      }
+
+      console.log('Clearing cart for user:', username);
+      console.log('Selected items to remove:', selectedItems);
+
+      // רשימת כל המזהים לניקוי
+      const idsToRemove = new Set();
+      
+      // הוספת מוצרים רגילים
+      if (selectedItems.regularItems && Array.isArray(selectedItems.regularItems)) {
+        selectedItems.regularItems.forEach(id => idsToRemove.add(String(id)));
+      }
+      
+      // הוספת עוגות מותאמות
+      if (selectedItems.customItems && Array.isArray(selectedItems.customItems)) {
+        selectedItems.customItems.forEach(id => idsToRemove.add(String(id)));
+      }
+
+      console.log('IDs to remove from cart:', Array.from(idsToRemove));
+
+      // ניקוי הסל
+      let carts = await persist.loadData('carts') || [];
+      const userCart = carts.find(c => c.username === username);
+      
+      if (userCart && Array.isArray(userCart.items)) {
+        const originalLength = userCart.items.length;
+        userCart.items = userCart.items.filter(id => !idsToRemove.has(String(id)));
+        console.log(`Cart items before: ${originalLength}, after: ${userCart.items.length}`);
+        await persist.saveData('carts', carts);
+      }
+
+      // עדכון סטטוס עוגות מותאמות
+      if (selectedItems.customItems && selectedItems.customItems.length > 0) {
+        let customCakes = await persist.loadData('customCakes') || [];
+        let updated = false;
+        
+        customCakes.forEach(cake => {
+          if (cake.username === username && selectedItems.customItems.includes(cake.id)) {
+            cake.status = 'purchased';
+            updated = true;
+          }
+        });
+        
+        if (updated) {
+          await persist.saveData('customCakes', customCakes);
+          console.log('Updated custom cakes status to purchased');
+        }
+      }
+
+      // ניקוי pending
+      let pending = await persist.loadData('pending') || [];
+      pending = pending.filter(row => row.username !== username);
+      await persist.saveData('pending', pending);
+
+      console.log('Cart cleared successfully');
+      res.json({ success: true });
+
+    } catch (error) {
+      console.error('Clear cart error:', error);
+      res.status(500).json({ error: 'שגיאה בניקוי הסל' });
+    }
+  });
+
+  // API לקבלת היסטוריית רכישות
   app.get('/api/my-purchases', async (req, res) => {
     try {
-      const username = req.cookies.username;
+      const username = req.cookies.session;
       if (!username) {
         return res.status(401).json({ error: 'לא מחובר' });
       }
@@ -196,7 +260,7 @@ module.exports = function(app) {
       const userPurchases = purchases[username] || [];
 
       // מיון לפי תאריך (החדשים ראשון)
-      userPurchases.sort((a, b) => new Date(b.date) - new Date(a.date));
+      userPurchases.sort((a, b) => new Date(b.date || b.purchaseDate) - new Date(a.date || a.purchaseDate));
 
       res.json(userPurchases);
     } catch (error) {

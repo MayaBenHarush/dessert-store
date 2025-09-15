@@ -2,38 +2,476 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title data-page="thankyou">תודה! התשלום התקבל ✅</title>
+  <title>תודה! התשלום התקבל</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="/assets/styles.css">
-  <script src="/assets/translations"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #ffffff;
+      color: #1a1a1a;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      background: #ffffcc;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .menu-btn {
+      background: none;
+      border: none;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .menu-btn::before {
+      content: "☰";
+      font-size: 1.2rem;
+    }
+
+    .logo {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #1a1a1a;
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .header-btn {
+      background: none;
+      border: 2px solid #1a1a1a;
+      color: #1a1a1a;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .header-btn:hover {
+      background: #1a1a1a;
+      color: white;
+    }
+
+    .cart-btn::before {
+      content: "🛒";
+    }
+
+    .home-btn::before {
+      content: "🏠";
+    }
+
+    .login-btn::before {
+      content: "👤";
+    }
+
+    /* Navigation Menu */
+    .nav-menu {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 300px;
+      height: 100vh;
+      background: white;
+      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+      transition: right 0.3s ease;
+      padding: 2rem;
+      z-index: 2000;
+    }
+
+    .nav-menu.active {
+      right: 0;
+    }
+
+    .nav-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      float: left;
+      margin-bottom: 2rem;
+    }
+
+    .nav-item,
+    .nav-menu a,
+    .nav-menu button {
+      display: block;
+      padding: 0.75rem 0;
+      color: #1a1a1a;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid #f0f0f0;
+      transition: color 0.2s ease;
+      background: none;
+      border: none;
+      text-align: right;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .nav-item:hover,
+    .nav-menu a:hover,
+    .nav-menu button:hover {
+      color: #ffffcc;
+    }
+
+    /* Overlay */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1500;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .thank-you-container {
+      max-width: 600px;
+      text-align: center;
+      background: white;
+      padding: 3rem 2rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .success-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      color: #28a745;
+      animation: bounce 1s ease-in-out;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 60%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-10px);
+      }
+      80% {
+        transform: translateY(-5px);
+      }
+    }
+
+    .thank-you-title {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: #1a1a1a;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .thank-you-subtitle {
+      font-size: 1.2rem;
+      color: #666;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+
+    .demo-notice {
+      background: #fff9c4;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+      border: 2px solid #f0e68c;
+    }
+
+    .actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      background: #1a1a1a;
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 15px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-width: 180px;
+      justify-content: center;
+    }
+
+    .action-btn:hover {
+      background: #333;
+      transform: translateY(-2px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    .action-btn.secondary {
+      background: transparent;
+      color: #1a1a1a;
+      border: 2px solid #1a1a1a;
+    }
+
+    .action-btn.secondary:hover {
+      background: #1a1a1a;
+      color: white;
+    }
+
+    /* Dark Theme */
+    .dark-theme {
+      background: #1a1a1a;
+      color: white;
+    }
+
+    .dark-theme .header {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .nav-menu {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .nav-menu a,
+    .dark-theme .nav-menu button {
+      color: white;
+      border-bottom-color: #444;
+    }
+
+    .dark-theme .thank-you-container {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .thank-you-title {
+      color: white;
+    }
+
+    .dark-theme .demo-notice {
+      background: #3d3d3d;
+      border-color: #ffffcc;
+    }
+
+    .dark-theme .action-btn {
+      background: #ffffcc;
+      color: #1a1a1a;
+    }
+
+    .dark-theme .action-btn:hover {
+      background: #ffff99;
+    }
+
+    .dark-theme .action-btn.secondary {
+      background: transparent;
+      color: white;
+      border-color: #ffffcc;
+    }
+
+    .dark-theme .action-btn.secondary:hover {
+      background: #ffffcc;
+      color: #1a1a1a;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .header {
+        padding: 1rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .header-left {
+        order: 1;
+      }
+
+      .logo {
+        font-size: 1.8rem;
+        order: 2;
+      }
+
+      .header-nav {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .header-btn {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.75rem;
+      }
+
+      .main-content {
+        padding: 1rem;
+      }
+
+      .thank-you-container {
+        padding: 2rem 1rem;
+      }
+
+      .thank-you-title {
+        font-size: 2rem;
+      }
+
+      .actions {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .action-btn {
+        width: 100%;
+        max-width: 280px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header-btn::before {
+        display: none;
+      }
+
+      .success-icon {
+        font-size: 3rem;
+      }
+
+      .thank-you-title {
+        font-size: 1.8rem;
+      }
+
+      .thank-you-subtitle {
+        font-size: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <nav>
-      <a href="cart.html" id="nav-cart" data-key="nav.cart">סל הקניות</a>
-      <a href="checkout.html" id="nav-checkout" data-key="nav.checkout">תשלום</a>
-      <a href="myitems.html" id="nav-myitems" data-key="nav.myPurchases">הרכישות שלי</a>
-      <a id="login-link" href="login.html" data-key="nav.login">התחברות</a>
-      <a href="admin.html" id="nav-admin" data-key="nav.admin" style="display:none">ניהול</a>
-      <a href="dessert-finder.html" data-key="nav.dessertFinder"> מציאת הקינוח המושלם</a>
-      <a href="wheel.html" data-key="nav.wheel"> גלגל מזל</a>
-      <a href="cake-designer.html" data-key="nav.cakeDesigner">עיצוב עוגה</a>
-      <a href="recipes.html" id="nav-recipes" data-key="nav.recipes"> מתכונים</a>
-      <a href="store.html" id="nav-store" data-key="nav.store">חנות</a>
-      <a href="index.html" id="nav-home" class="nav-item" data-key="nav.home"> בית</a>
-      <button id="logout" style="display:none" data-key="nav.logout">התנתקות</button>
-      <button id="theme-toggle">🌙 מצב כהה</button>
-      <button id="language-toggle">🌐 English</button>
+  <div class="overlay" id="overlay"></div>
+  
+  <header class="header">
+    <div class="header-left">
+      <button class="menu-btn" id="menuBtn">Menu</button>
+      <a href="index.html" class="logo">dessert</a>
+    </div>
+    
+    <nav class="header-nav">
+      <a href="index.html" class="header-btn home-btn">בית</a>
+      <a href="cart.html" class="header-btn cart-btn">סל קניות</a>
+      <a href="login.html" class="header-btn login-btn" id="header-login">התחברות</a>
     </nav>
+  </header>
 
-  <h1 data-key="pageTitle.thankyou">תודה! התשלום התקבל ✅</h1>
-  <p data-key="paymentDemo">זהו תשלום דמו לצורכי תרגול בלבד.</p>
+  <nav class="nav-menu" id="navMenu">
+    <button class="nav-close" id="navClose">×</button>
+    <a href="cart.html" id="nav-cart">סל הקניות</a>
+    <a href="checkout.html" id="nav-checkout">תשלום</a>
+    <a href="myitems.html" id="nav-myitems">הרכישות שלי</a>
+    <a href="admin.html" id="nav-admin" style="display:none">ניהול</a>
+    <a href="dessert-finder.html">מציאת הקינוח המושלם</a>
+    <a href="wheel.html">גלגל מזל</a>
+    <a href="cake-designer.html">עיצוב עוגה</a>
+    <a href="recipes.html" id="nav-recipes">מתכונים</a>
+    <a href="store.html" id="nav-store">חנות</a>
+    <button id="logout" style="display:none">התנתקות</button>
+    <button id="theme-toggle">🌙 מצב כהה</button>
+    <button id="language-toggle">🌍 English</button>
+  </nav>
 
-  <div class="actions">
-    <a href="myitems.html" data-key="viewMyPurchases">צפייה ברכישות שלי</a>
-    <a href="store.html" data-key="continueShopping">להמשיך לקנות</a>
-  </div>
+  <main class="main-content">
+    <div class="thank-you-container">
+      <div class="success-icon">✅</div>
+      <h1 class="thank-you-title" id="page-title">תודה! התשלום התקבל</h1>
+      <p class="thank-you-subtitle" id="page-subtitle">הזמנתך התקבלה בהצלחה ותטופל בקדם</p>
+      
+      <div class="demo-notice" id="demo-notice">
+        זהו תשלום דמו לצורכי תרגול בלבד - לא בוצע חיוב אמיתי
+      </div>
+
+      <div class="actions">
+        <a href="myitems.html" class="action-btn" id="view-purchases">צפייה ברכישות שלי</a>
+        <a href="store.html" class="action-btn secondary" id="continue-shopping">המשך קנייה</a>
+      </div>
+    </div>
+  </main>
 
   <script>
+    // Menu functionality
+    const menuBtn = document.getElementById('menuBtn');
+    const navMenu = document.getElementById('navMenu');
+    const navClose = document.getElementById('navClose');
+    const overlay = document.getElementById('overlay');
+
+    function openMenu() {
+      navMenu.classList.add('active');
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+      navMenu.classList.remove('active');
+      overlay.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    menuBtn.addEventListener('click', openMenu);
+    navClose.addEventListener('click', closeMenu);
+    overlay.addEventListener('click', closeMenu);
+
     // טעינת התאמות אישיות מ-localStorage
     function loadUICustomization() {
       const theme = localStorage.getItem('theme') || 'light';
@@ -52,14 +490,63 @@
       // עדכון כפתור שפה
       const currentLanguage = localStorage.getItem('language') || 'he';
       if (currentLanguage === 'en') {
-        languageToggle.textContent = '🌐 עברית';
+        languageToggle.textContent = '🌍 עברית';
+        document.documentElement.dir = 'ltr';
+        document.documentElement.lang = 'en';
       } else {
-        languageToggle.textContent = '🌐 English';
+        languageToggle.textContent = '🌍 English';
+        document.documentElement.dir = 'rtl';
+        document.documentElement.lang = 'he';
       }
       
-      // עדכון תרגומים
-      if (typeof window.updateLanguage === 'function') {
-        window.updateLanguage();
+      updateInterfaceLanguage(currentLanguage);
+    }
+
+    function updateInterfaceLanguage(lang) {
+      const t = {
+        he: {
+          'page-title': 'תודה! התשלום התקבל',
+          'page-subtitle': 'הזמנתך התקבלה בהצלחה ותטופל בקדם',
+          'demo-notice': 'זהו תשלום דמו לצורכי תרגול בלבד - לא בוצע חיוב אמיתי',
+          'view-purchases': 'צפייה ברכישות שלי',
+          'continue-shopping': 'המשך קנייה',
+          'nav-cart': 'סל הקניות',
+          'nav-checkout': 'תשלום',
+          'nav-myitems': 'הרכישות שלי',
+          'nav-admin': 'ניהול',
+          'logout': 'התנתקות',
+          'theme-dark': '🌙 מצב כהה',
+          'theme-light': '☀️ מצב בהיר'
+        },
+        en: {
+          'page-title': 'Thank You! Payment Received',
+          'page-subtitle': 'Your order has been successfully received and will be processed soon',
+          'demo-notice': 'This is a demo payment for practice only - no actual charge was made',
+          'view-purchases': 'View My Purchases',
+          'continue-shopping': 'Continue Shopping',
+          'nav-cart': 'Shopping Cart',
+          'nav-checkout': 'Checkout',
+          'nav-myitems': 'My Purchases',
+          'nav-admin': 'Admin',
+          'logout': 'Logout',
+          'theme-dark': '🌙 Dark Mode',
+          'theme-light': '☀️ Light Mode'
+        }
+      }[lang];
+      
+      if (!t) return;
+      
+      Object.keys(t).forEach(key => {
+        const element = document.getElementById(key);
+        if (element) {
+          element.textContent = t[key];
+        }
+      });
+      
+      const themeToggle = document.getElementById('theme-toggle');
+      const theme = localStorage.getItem('theme') || 'light';
+      if (themeToggle) {
+        themeToggle.textContent = theme === 'dark' ? t['theme-light'] : t['theme-dark'];
       }
     }
 
@@ -73,20 +560,17 @@
 
     // החלפת שפה
     document.getElementById('language-toggle').addEventListener('click', () => {
-      if (typeof window.toggleLanguage === 'function') {
-        window.toggleLanguage();
-      }
+      const currentLang = localStorage.getItem('language') || 'he';
+      const newLang = currentLang === 'he' ? 'en' : 'he';
+      localStorage.setItem('language', newLang);
+      loadUICustomization();
     });
 
+    // בדיקת מצב התחברות
     async function setupAuthButtons() {
-      const loginLink = document.getElementById('login-link');
-      const logoutBtn = document.getElementById('logout');
-      const adminLink = document.getElementById('admin-link');
-      let loggedIn = false;
-      let username = '';
-      
-      try { 
-        const r = await fetch('/api/session'); 
+      let loggedIn = false, username = '';
+      try {
+        const r = await fetch('/api/session');
         if (r.ok) {
           loggedIn = true;
           const data = await r.json();
@@ -94,23 +578,26 @@
         }
       } catch {}
       
+      const loginLink = document.getElementById('header-login');
+      const logoutBtn = document.getElementById('logout');
+      const navAdmin = document.getElementById('nav-admin');
+      
       loginLink.style.display = loggedIn ? 'none' : '';
       logoutBtn.style.display = loggedIn ? '' : 'none';
-      adminLink.style.display = (loggedIn && username === 'admin') ? '' : 'none';
+      navAdmin.style.display = (loggedIn && username === 'admin') ? '' : 'none';
     }
-    
-    setupAuthButtons();
+
     document.getElementById('logout').onclick = async () => {
-      try { await fetch('/api/logout', { method: 'POST' }); }
-      finally { location.href = 'login.html'; }
+      try {
+        await fetch('/api/logout', {method: 'POST'});
+      } finally {
+        location.href = 'login.html';
+      }
     };
 
+    // אתחול
     setupAuthButtons();
-    
-    // טעינה ראשונית - עם השהיה קטנה כדי לוודא שtranslations.js נטען
-    setTimeout(() => {
-      loadUICustomization();
-    }, 100);
+    loadUICustomization();
   </script>
 </body>
 </html>

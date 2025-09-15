@@ -4,476 +4,94 @@
   <meta charset="UTF-8" />
   <title data-page="myitems">הרכישות שלי</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script src="/assets/translations.js" defer></script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    /* ===== Base / Header ===== */
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:#fff;color:#1a1a1a;line-height:1.6}
+    .header{background:#ffffcc;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1000;box-shadow:0 2px 10px rgba(0,0,0,.1)}
+    .header-left{display:flex;align-items:center;gap:1rem}
+    .menu-btn{background:none;border:0;font-size:1.1rem;font-weight:600;color:#1a1a1a;cursor:pointer;display:flex;align-items:center;gap:.5rem}
+    .menu-btn::before{content:"☰"}
+    .logo{font-size:2.2rem;font-weight:900;color:#1a1a1a;text-decoration:none;letter-spacing:-.02em}
+    .header-nav{display:flex;align-items:center;gap:1rem}
+    .header-btn{background:none;border:2px solid #1a1a1a;color:#1a1a1a;padding:.5rem 1rem;border-radius:20px;font-weight:600;font-size:.9rem;cursor:pointer;transition:.2s;text-decoration:none;display:flex;align-items:center;gap:.3rem}
+    .header-btn:hover{background:#1a1a1a;color:#fff}
+    .home-btn::before{content:"🏠"} .store-btn::before{content:"🍰"} .cart-btn::before{content:"🛒"} .login-btn::before{content:"👤"}
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      background: #ffffff;
-      color: #1a1a1a;
-      line-height: 1.6;
+    /* ===== Side Nav (styled like store) ===== */
+    .nav-menu{
+      position:fixed;top:0;right:-320px;width:280px;height:100vh;
+      background:#fffef5;box-shadow:-4px 0 20px rgba(0,0,0,.1);
+      transition:right .3s ease;padding:1.5rem;z-index:2000;
+      display:flex;flex-direction:column;justify-content:space-between;
+      border-radius:15px 0 0 15px
     }
-
-    /* Header */
-    .header {
-      background: #ffffcc;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    .nav-menu.active{right:0}
+    .nav-close{background:none;border:0;font-size:1.8rem;cursor:pointer;margin-bottom:.75rem;color:#333}
+    .nav-links{flex:1;display:flex;flex-direction:column;gap:.75rem;margin-top:.25rem}
+    .nav-menu a,.nav-menu button{
+      padding:.8rem 1rem;border-radius:10px;text-align:right;font-weight:600;
+      background:transparent;border:none;cursor:pointer;text-decoration:none;color:#333;transition:.2s
     }
-
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .menu-btn {
-      background: none;
-      border: none;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #1a1a1a;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .menu-btn::before {
-      content: "☰";
-      font-size: 1.2rem;
-    }
-
-    .logo {
-      font-size: 2.2rem;
-      font-weight: 900;
-      color: #1a1a1a;
-      text-decoration: none;
-      letter-spacing: -0.02em;
-    }
-
-    .header-nav {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .header-btn {
-      background: none;
-      border: 2px solid #1a1a1a;
-      color: #1a1a1a;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-    }
-
-    .header-btn:hover {
-      background: #1a1a1a;
-      color: white;
-    }
-
-    .header-btn.primary {
-      background: #1a1a1a;
-      color: white;
-    }
-
-    .header-btn.primary:hover {
-      background: #333;
-    }
-
-    .cart-btn::before {
-      content: "🛒";
-    }
-
-    .home-btn::before {
-      content: "🏠";
-    }
-
-    .login-btn::before {
-      content: "👤";
-    }
-
-    .store-btn::before {
-      content: "🍰";
-    }
-
-    /* Navigation Menu */
-    .nav-menu {
-      position: fixed;
-      top: 0;
-      right: -300px;
-      width: 300px;
-      height: 100vh;
-      background: white;
-      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
-      transition: right 0.3s ease;
-      padding: 2rem;
-      z-index: 2000;
-    }
-
-    .nav-menu.active {
-      right: 0;
-    }
-
-    .nav-close {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      float: left;
-      margin-bottom: 2rem;
-    }
-
-    .nav-item,
-    .nav-menu a,
-    .nav-menu button {
-      display: block;
-      padding: 0.75rem 0;
-      color: #1a1a1a;
-      text-decoration: none;
-      font-weight: 500;
-      border-bottom: 1px solid #f0f0f0;
-      transition: color 0.2s ease;
-      background: none;
-      border: none;
-      text-align: right;
-      width: 100%;
-      cursor: pointer;
-    }
-
-    .nav-item:hover,
-    .nav-menu a:hover,
-    .nav-menu button:hover {
-      color: #ffffcc;
-    }
+    .nav-menu a:hover,.nav-menu button:hover{background:#ffffcc;color:#000}
+    .nav-footer{border-top:1px solid #eee;padding-top:1rem;display:flex;flex-direction:column;gap:.6rem}
 
     /* Overlay */
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 1500;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-    }
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1500;opacity:0;visibility:hidden;transition:.3s}
+    .overlay.active{opacity:1;visibility:visible}
 
-    .overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
+    /* ===== Main ===== */
+    .main-content{max-width:1200px;margin:0 auto;padding:2rem}
+    .page-header{text-align:center;margin-bottom:2rem}
+    #page-title{font-size:3rem;font-weight:900;color:#1a1a1a;margin-bottom:1rem;letter-spacing:-.02em;text-transform:uppercase}
 
-    /* Main Content */
-    .main-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
+    /* Orders grouping */
+    .orders-wrap{display:grid;gap:2rem;margin-top:1rem}
+    .order-card{background:#fff;border-radius:16px;box-shadow:0 5px 20px rgba(0,0,0,.08);padding:1rem 1.25rem}
+    .order-header{display:flex;align-items:center;justify-content:space-between;gap:.75rem;border-bottom:1px dashed #eaeaea;padding-bottom:.6rem;margin-bottom:1rem;color:#555;font-weight:700}
+    .order-id{font-weight:800;color:#111}
+    .order-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem}
 
-    .page-header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
+    .purchase-card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 3px 14px rgba(0,0,0,.06);transition:transform .2s ease}
+    .purchase-card:hover{transform:translateY(-3px)}
+    .purchase-card .thumb{width:100%;height:180px;object-fit:cover;background:#f3f3f3;display:block}
+    .purchase-card .body{padding:.9rem 1rem}
+    .purchase-card h3{font-size:1.05rem;margin:0 0 .25rem 0;color:#111}
+    .purchase-card .meta{font-size:.9rem;color:#666}
 
-    #page-title {
-      font-size: 3rem;
-      font-weight: 900;
-      color: #1a1a1a;
-      margin-bottom: 1rem;
-      letter-spacing: -0.02em;
-      text-transform: uppercase;
-    }
+    /* States */
+    .empty-state,.error-state,.loading-state{text-align:center;padding:4rem 2rem;border-radius:15px;margin-top:2rem}
+    .empty-state{color:#666;background:#f8f8f8}
+    .error-state{color:#c62828;background:#ffffcc}
+    .loading-state{color:#666;background:#f8f8f8}
 
-    /* Items Grid */
-    #list {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: 2rem;
-      margin-top: 2rem;
-    }
+    /* Dark theme */
+    .dark-theme{background:#1a1a1a;color:#fff}
+    .dark-theme .header{background:#2d2d2d}
+    .dark-theme .nav-menu{background:#2d2d2d}
+    .dark-theme .nav-menu a,.dark-theme .nav-menu button{color:#fff;border-bottom-color:#444}
+    .dark-theme #page-title{color:#fff}
+    .dark-theme .order-card{background:#2d2d2d}
+    .dark-theme .order-header{border-bottom-color:#444;color:#ddd}
+    .dark-theme .order-id{color:#fff}
+    .dark-theme .purchase-card{background:#2f2f2f}
+    .dark-theme .purchase-card h3{color:#fff}
+    .dark-theme .purchase-card .meta{color:#bbb}
 
-    .item {
-      background: white;
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-      transition: all 0.3s ease;
-      position: relative;
-    }
-
-    .item:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
-    }
-
-    .item img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-    }
-
-    .item > div {
-      padding: 1.5rem;
-    }
-
-    .item h3 {
-      font-size: 1.3rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      color: #1a1a1a;
-    }
-
-    .price {
-      font-weight: 800;
-      color: #1a1a1a;
-    }
-
-    .meta {
-      color: #666;
-      font-size: 0.9rem;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-    }
-
-    .item p {
-      color: #666;
-      line-height: 1.5;
-      margin-top: 0.5rem;
-    }
-
-    /* Empty State */
-    .empty-state {
-      text-align: center;
-      padding: 4rem 2rem;
-      color: #666;
-      background: #f8f8f8;
-      border-radius: 15px;
-      margin-top: 2rem;
-    }
-
-    .empty-state h2 {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-      color: #1a1a1a;
-    }
-
-    .empty-state p {
-      font-size: 1.1rem;
-      margin-bottom: 2rem;
-    }
-
-    .empty-state a {
-      background: #1a1a1a;
-      color: white;
-      padding: 0.8rem 2rem;
-      border-radius: 25px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: all 0.2s ease;
-    }
-
-    .empty-state a:hover {
-      background: #333;
-      transform: translateY(-2px);
-    }
-
-    /* Error State */
-    .error-state {
-      text-align: center;
-      padding: 4rem 2rem;
-      color: #c62828;
-      background: #ffffcc;
-      border-radius: 15px;
-      margin-top: 2rem;
-    }
-
-    /* Loading State */
-    .loading-state {
-      text-align: center;
-      padding: 4rem 2rem;
-      color: #666;
-      background: #f8f8f8;
-      border-radius: 15px;
-      margin-top: 2rem;
-    }
-
-    /* Toast */
-    #toast {
-      position: fixed;
-      top: 12px;
-      right: 12px;
-      z-index: 9999;
-      display: none;
-      padding: 10px 14px;
-      background: #333;
-      color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, .2);
-      font-size: 14px;
-      opacity: 0;
-      transform: translateY(-6px);
-      transition: opacity .2s, transform .2s;
-    }
-
-    #toast.show {
-      display: block;
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* Dark Theme */
-    .dark-theme {
-      background: #1a1a1a;
-      color: white;
-    }
-
-    .dark-theme .header {
-      background: #2d2d2d;
-    }
-
-    .dark-theme .nav-menu {
-      background: #2d2d2d;
-    }
-
-    .dark-theme .nav-menu a,
-    .dark-theme .nav-menu button {
-      color: white;
-      border-bottom-color: #444;
-    }
-
-    .dark-theme .item {
-      background: #2d2d2d;
-    }
-
-    .dark-theme .item h3 {
-      color: white;
-    }
-
-    .dark-theme .price {
-      color: white;
-    }
-
-    .dark-theme #page-title {
-      color: white;
-    }
-
-    .dark-theme .empty-state,
-    .dark-theme .loading-state {
-      background: #2d2d2d;
-    }
-
-    .dark-theme .empty-state h2 {
-      color: white;
-    }
-
-    .dark-theme .error-state {
-      background: #444;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 968px) {
-      .header-nav {
-        gap: 0.5rem;
-      }
-
-      .header-btn {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.8rem;
-      }
-
-      #page-title {
-        font-size: 2.5rem;
-      }
-
-      #list {
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      }
-    }
-
-    @media (max-width: 768px) {
-      .header {
-        padding: 1rem;
-        flex-wrap: wrap;
-        gap: 1rem;
-      }
-
-      .header-left {
-        order: 1;
-      }
-
-      .logo {
-        font-size: 1.8rem;
-        order: 2;
-      }
-
-      .header-nav {
-        order: 3;
-        width: 100%;
-        justify-content: center;
-        gap: 0.5rem;
-      }
-
-      .header-btn {
-        padding: 0.4rem 0.6rem;
-        font-size: 0.75rem;
-      }
-
-      .main-content {
-        padding: 1rem;
-      }
-
-      #page-title {
-        font-size: 2rem;
-      }
-
-      #list {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .header-btn {
-        padding: 0.3rem 0.5rem;
-        font-size: 0.7rem;
-      }
-
-      .header-btn::before {
-        display: none;
-      }
+    @media (max-width:768px){
+      #page-title{font-size:2.2rem}
+      .order-grid{grid-template-columns:1fr}
     }
   </style>
 </head>
 <body>
   <div class="overlay" id="overlay"></div>
-  
+
   <header class="header">
     <div class="header-left">
       <button class="menu-btn" id="menuBtn">Menu</button>
       <a href="/" class="logo">dessert</a>
     </div>
-    
     <nav class="header-nav">
       <a href="index.html" class="header-btn home-btn">בית</a>
       <a href="store.html" class="header-btn store-btn">חנות</a>
@@ -482,283 +100,192 @@
     </nav>
   </header>
 
+  <!-- prettier side menu -->
   <nav class="nav-menu" id="navMenu">
     <button class="nav-close" id="navClose">×</button>
 
-    <a href="checkout.html" id="nav-checkout" data-key="nav.checkout">תשלום</a>
-    <a href="myitems.html" id="nav-myitems" data-key="nav.myPurchases">הרכישות שלי</a>
-    <a href="admin.html" id="nav-admin" data-key="nav.admin" style="display:none">ניהול</a>
-    <a href="dessert-finder.html" data-key="nav.dessertFinder">מציאת הקינוח המושלם</a>
-    <a href="wheel.html" data-key="nav.wheel">גלגל מזל</a>
-    <a href="cake-designer.html" data-key="nav.cakeDesigner">עיצוב עוגה</a>
-    <a href="recipes.html" id="nav-recipes" data-key="nav.recipes">מתכונים</a>
-    <button id="logout" style="display:none" data-key="nav.logout">התנתקות</button>
-    <button id="theme-toggle">🌙 מצב כהה</button>
-    <button id="language-toggle">🌐 English</button>
-  </nav>
+    <div class="nav-links">
+      <a href="checkout.html" id="nav-checkout">תשלום</a>
+      <a href="myitems.html" id="nav-myitems">הרכישות שלי</a>
+      <a href="admin.html" id="nav-admin" style="display:none">ניהול</a>
+      <a href="dessert-finder.html">מציאת הקינוח המושלם</a>
+      <a href="wheel.html">גלגל מזל</a>
+      <a href="cake-designer.html">עיצוב עוגה</a>
+      <a href="recipes.html" id="nav-recipes">מתכונים</a>
+    </div>
 
-  <div id="toast"></div>
+    <div class="nav-footer">
+      <button id="logout" style="display:none">התנתקות</button>
+      <button id="theme-toggle">🌙 מצב כהה</button>
+      <button id="language-toggle">🌐 English</button>
+    </div>
+  </nav>
 
   <main class="main-content">
     <div class="page-header">
       <h1 id="page-title">הרכישות שלי</h1>
     </div>
-
-    <div id="list"></div>
+    <section id="orders" class="orders-wrap"></section>
   </main>
 
   <script>
-    // Menu functionality
-    const menuBtn = document.getElementById('menuBtn');
-    const navMenu = document.getElementById('navMenu');
-    const navClose = document.getElementById('navClose');
-    const overlay = document.getElementById('overlay');
+    /* ===== Menu ===== */
+    const menuBtn=document.getElementById('menuBtn'),navMenu=document.getElementById('navMenu'),navClose=document.getElementById('navClose'),overlay=document.getElementById('overlay');
+    const openMenu=()=>{navMenu.classList.add('active');overlay.classList.add('active');document.body.style.overflow='hidden'};
+    const closeMenu=()=>{navMenu.classList.remove('active');overlay.classList.remove('active');document.body.style.overflow='auto'};
+    menuBtn.addEventListener('click',openMenu);navClose.addEventListener('click',closeMenu);overlay.addEventListener('click',closeMenu);
 
-    function openMenu() {
-      navMenu.classList.add('active');
-      overlay.classList.add('active');
-      document.body.style.overflow = 'hidden';
+    /* ===== Theme & Lang ===== */
+    function loadUICustomization(){
+      const theme=localStorage.getItem('theme')||'light';
+      document.body.classList.toggle('dark-theme',theme==='dark');
+      document.getElementById('language-toggle').textContent=(localStorage.getItem('language')||'he')==='en'?'🌐 עברית':'🌐 English';
     }
-
-    function closeMenu() {
-      navMenu.classList.remove('active');
-      overlay.classList.remove('active');
-      document.body.style.overflow = 'auto';
-    }
-
-    menuBtn.addEventListener('click', openMenu);
-    navClose.addEventListener('click', closeMenu);
-    overlay.addEventListener('click', closeMenu);
-
-    // Toast
-    const toastEl = document.getElementById('toast');
-    let toastTimer;
-    function showToast(msg) {
-      toastEl.textContent = msg;
-      toastEl.classList.add('show');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1500);
-    }
-
-    // Helper functions
-    const slugify = s => String(s||'').trim().toLowerCase().replace(/[^\p{L}\p{N} ]/gu,'').replace(/\s+/g,'-');
-    const nis = n => `₪${n}`;
-    
-    const PRICE_MAP = {
-      'chocolate-cake': 150, '8-cookies-box': 125, 'cupcakes': 160, 'minnie-mous-cake': 300,
-      'nutella-box': 70, 'chocolate-pizza-xl': 120, 'bento-design-cake': 140, 'chocolate-design-cake': 180,
-      'orange-cake': 70, 'white-design-cake': 140, 'pizza-cookie': 120, 'pizza cookie': 120
-    };
-    
-    const NAMES = {
-      he: {
-        'chocolate-cake': 'עוגת שוקולד מעוצבת', '8-cookies-box': 'מארז 8 עוגיות', 'cupcakes': 'קאפקייקס',
-        'minnie-mous-cake': 'עוגת מיני מאוס', 'nutella-box': 'מארז מגולגלות נוטלה', 'chocolate-pizza-xl': 'פיצת שוקולד גדולה',
-        'bento-design-cake': 'עוגת בנטו מעוצבת', 'chocolate-design-cake': 'עוגת שוקולד מעוצבת', 'orange-cake': 'עוגת תפוזים',
-        'bagle-cookie': 'עוגיית בייגל', 'caramel-cookie': 'עוגיית קרמל', 'kinder-cookie': 'עוגיית קינדר',
-        'lotus-cookie': 'עוגיית לוטוס', 'nutella-cookie': 'עוגיית נוטלה', 'white-chocolate-cookie': 'עוגיית שוקולד לבן',
-        'white-design-cake': 'עוגת בנטו מעוצבת', 'pizza-cookie': 'פיצת שוקולד גדולה', 'pizza cookie': 'פיצת שוקולד גדולה'
-      },
-      en: {
-        'chocolate-cake': 'Chocolate Design Cake', '8-cookies-box': '8 Cookies Box', 'cupcakes': 'Cupcakes',
-        'minnie-mous-cake': 'Minnie Mouse Cake', 'nutella-box': 'Nutella Box', 'chocolate-pizza-xl': 'Chocolate Pizza XL',
-        'bento-design-cake': 'Bento Design Cake', 'chocolate-design-cake': 'Chocolate Design Cake', 'orange-cake': 'Orange Cake',
-        'bagle-cookie': 'Bagel Cookie', 'caramel-cookie': 'Caramel Cookie', 'kinder-cookie': 'Kinder Cookie',
-        'lotus-cookie': 'Lotus Cookie', 'nutella-cookie': 'Nutella Cookie', 'white-chocolate-cookie': 'White Chocolate Cookie',
-        'white-design-cake': 'Bento Design Cake', 'pizza-cookie': 'Chocolate Pizza XL', 'pizza cookie': 'Chocolate Pizza XL'
-      }
-    };
-
-    const priceOf = (prod) => {
-      const id = String(prod.id ?? '');
-      const title = String(prod.title ?? '');
-      const keys = [id, slugify(id), title, slugify(title)];
-      const hit = keys.find(k => k in PRICE_MAP);
-      return hit ? PRICE_MAP[hit] : (/(cookie)/i.test(id + title) ? 17 : 0);
-    };
-
-    const nameOf = (prod, lang) => {
-      const id = String(prod.id ?? '');
-      const title = String(prod.title ?? '');
-      const dict = NAMES[lang] || {};
-      const keys = [id, slugify(id), title, slugify(title)];
-      const hit = keys.find(k => dict[k]);
-      return hit ? dict[hit] : (title || id);
-    };
-
-    function updateInterfaceLanguage(lang) {
-      const texts = {
-        he: {
-          'nav-store': 'חנות', 'nav-cart': 'סל קניות', 'nav-checkout': 'תשלום', 'nav-myitems': 'הרכישות שלי',
-          'nav-login': 'התחברות', 'nav-logout': 'התנתקות', 'nav-admin': 'ניהול', 'nav-recipes': 'מתכונים',
-          'page-title': 'הרכישות שלי', 'theme-dark': '🌙 מצב כהה', 'theme-light': '☀️ מצב בהיר',
-          'no-purchases': 'אין רכישות עדיין', 'no-purchases-desc': 'לא ביצעת עדיין רכישות. בקר בחנות שלנו למגוון מוצרים טעימים!',
-          'go-to-store': 'לחנות', 'loading': 'טוען רכישות...', 'error': 'שגיאה בטעינת הרכישות'
-        },
-        en: {
-          'nav-store': 'Store', 'nav-cart': 'Shopping Cart', 'nav-checkout': 'Checkout', 'nav-myitems': 'My Purchases',
-          'nav-login': 'Login', 'nav-logout': 'Logout', 'nav-admin': 'Admin', 'nav-recipes': 'Recipes',
-          'page-title': 'My Purchases', 'theme-dark': '🌙 Dark Mode', 'theme-light': '☀️ Light Mode',
-          'no-purchases': 'No purchases yet', 'no-purchases-desc': 'You haven\'t made any purchases yet. Visit our store for delicious products!',
-          'go-to-store': 'Go to Store', 'loading': 'Loading purchases...', 'error': 'Error loading purchases'
-        }
-      }[lang];
-
-      if (!texts) return;
-
-      // Navigation updates
-      const checkoutBtn = document.getElementById('nav-checkout');
-      const myitemsBtn = document.getElementById('nav-myitems');
-      const loginLink = document.getElementById('header-login');
-      const logoutBtn = document.getElementById('logout');
-      const adminBtn = document.getElementById('nav-admin');
-      const recipesBtn = document.getElementById('nav-recipes');
-
-      if (checkoutBtn) checkoutBtn.textContent = texts['nav-checkout'];
-      if (myitemsBtn) myitemsBtn.textContent = texts['nav-myitems'];
-      if (loginLink) loginLink.textContent = texts['nav-login'];
-      if (logoutBtn) logoutBtn.textContent = texts['nav-logout'];
-      if (adminBtn) adminBtn.textContent = texts['nav-admin'];
-      if (recipesBtn) recipesBtn.textContent = texts['nav-recipes'];
-
-      document.getElementById('page-title').textContent = texts['page-title'];
-
-      const theme = localStorage.getItem('theme') || 'light';
-      document.getElementById('theme-toggle').textContent = theme === 'dark' ? texts['theme-light'] : texts['theme-dark'];
-
-      if (lang === 'en') {
-        document.documentElement.dir = 'ltr';
-        document.documentElement.lang = 'en';
-      } else {
-        document.documentElement.dir = 'rtl';
-        document.documentElement.lang = 'he';
-      }
-    }
-
-    function loadUICustomization() {
-      const theme = localStorage.getItem('theme') || 'light';
-      const themeToggle = document.getElementById('theme-toggle');
-      const languageToggle = document.getElementById('language-toggle');
-
-      if (theme === 'dark') {
-        document.body.classList.add('dark-theme');
-      } else {
-        document.body.classList.remove('dark-theme');
-      }
-
-      const currentLanguage = localStorage.getItem('language') || 'he';
-      if (currentLanguage === 'en') {
-        languageToggle.textContent = '🌐 עברית';
-      } else {
-        languageToggle.textContent = '🌐 English';
-      }
-
-      updateInterfaceLanguage(currentLanguage);
-    }
-
-    document.getElementById('theme-toggle').addEventListener('click', () => {
-      const isDark = document.body.classList.contains('dark-theme');
-      localStorage.setItem('theme', isDark ? 'light' : 'dark');
-      loadUICustomization();
+    document.getElementById('theme-toggle').addEventListener('click',()=>{
+      const isDark=document.body.classList.contains('dark-theme');
+      localStorage.setItem('theme',isDark?'light':'dark');loadUICustomization();
+    });
+    document.getElementById('language-toggle').addEventListener('click',()=>{
+      const cur=localStorage.getItem('language')||'he';
+      localStorage.setItem('language',cur==='he'?'en':'he');
+      loadPurchases();loadUICustomization();
     });
 
-    document.getElementById('language-toggle').addEventListener('click', () => {
-      const current = localStorage.getItem('language') || 'he';
-      const next = current === 'he' ? 'en' : 'he';
-      localStorage.setItem('language', next);
-      document.getElementById('language-toggle').textContent = next === 'en' ? '🌐 עברית' : '🌐 English';
-      updateInterfaceLanguage(next);
-      loadMyItems();
-    });
-
-    async function setupAuthButtons() {
-      const loginLink = document.getElementById('header-login');
-      const logoutBtn = document.getElementById('logout');
-      const adminLink = document.getElementById('nav-admin');
-
-      let loggedIn = false;
-      let username = '';
-
-      try {
-        const r = await fetch('/api/session');
-        if (r.ok) {
-          loggedIn = true;
-          const data = await r.json();
-          username = data.username;
-        }
-      } catch {}
-
-      loginLink.style.display = loggedIn ? 'none' : '';
-      logoutBtn.style.display = loggedIn ? '' : 'none';
-
-      if (adminLink) {
-        adminLink.style.display = (loggedIn && username === 'admin') ? '' : 'none';
-      }
+    async function setupAuthButtons(){
+      let logged=false, username='';
+      try{const r=await fetch('/api/session');if(r.ok){logged=true;username=(await r.json()).username}}catch{}
+      document.getElementById('header-login').style.display=logged?'none':'';
+      document.getElementById('logout').style.display=logged?'':'none';
+      document.getElementById('nav-admin').style.display=(logged&&username==='admin')?'':'none';
     }
+    document.getElementById('logout').onclick=async()=>{try{await fetch('/api/logout',{method:'POST'})}finally{location.href='login.html'}};
 
-    setupAuthButtons();
-    document.getElementById('logout').onclick = async () => {
-      try { await fetch('/api/logout', { method: 'POST' }); }
-      finally { location.href = 'login.html'; }
+    /* ===== Helpers ===== */
+    const slugify=s=>String(s||'').trim().toLowerCase().replace(/[^\p{L}\p{N} ]/gu,'').replace(/\s+/g,'-');
+
+    const ID_TO_IMAGE={
+      'bagle-cookie':'bagle-cookie.jpg',
+      'caramel-cookie':'caramel-cookie.jpg',
+      'kinder-cookie':'kinder-cookie.jpg',
+      'lotus-cookie':'lotus-cookie.jpg',
+      'nutella-cookie':'nutella-cookie.jpg',
+      'white-chocolate-cookie':'white-chocolate-cookie.jpg',
+      'orange-cake':'orange-cake.jpg',
+      'chocolate-cake':'chocolate-cake.jpg',
+      'white-design-cake':'white-design-cake.jpg',
+      'minnie-mous-cake':'minnie-mous-cake.jpg',
+      'cupcakes':'cupcakes.jpg',
+      'cookies-box':'cookies-box.jpg',
+      '8-cookies-box':'cookies-box.jpg',
+      'nutella-box':'nutella-box.jpg',
+      'chocolate-pizza-xl':'pizza-cookie.jpg',
+      'pizza-cookie':'pizza-cookie.jpg',
+      'pizza cookie':'pizza-cookie.jpg'
     };
 
-    const list = document.getElementById('list');
+    function resolveImage(it){
+      if (it.image) return it.image;
+      const key = ID_TO_IMAGE[slugify(it.id)] || ID_TO_IMAGE[slugify(it.title)];
+      if (key) return key;
+      if (it.customDesign?.color){
+        const file = `cake-${it.customDesign.color}.jpg`;
+        return `cakes/${file}`;
+      }
+      return 'placeholder.png';
+    }
 
-    async function loadMyItems() {
-      const lang = localStorage.getItem('language') || 'he';
-      const texts = {
-        he: { loading: 'טוען רכישות...', error: 'שגיאה בטעינת הרכישות', noPurchases: 'אין רכישות עדיין', noPurchasesDesc: 'לא ביצעת עדיין רכישות. בקר בחנות שלנו למגוון מוצרים טעימים!', goToStore: 'לחנות' },
-        en: { loading: 'Loading purchases...', error: 'Error loading purchases', noPurchases: 'No purchases yet', noPurchasesDesc: 'You haven\'t made any purchases yet. Visit our store for delicious products!', goToStore: 'Go to Store' }
-      }[lang];
+    function buildSafeImage(src, alt){
+      const img=document.createElement('img');
+      img.className='thumb';
+      img.alt=alt||'';
+      const candidates=[];
+      const file=(src||'').split('/').pop()||src;
+      if(src){candidates.push(`/images/${src}`);}
+      if(file){candidates.push(`/images/cakes/${file}`);}
+      candidates.push('/images/placeholder.png');
+      let i=0; const tryNext=()=>{ if(i<candidates.length){ img.src=candidates[i++]; } };
+      img.onerror=tryNext; tryNext(); return img;
+    }
 
-      list.innerHTML = `<div class="loading-state"><h2>${texts.loading}</h2></div>`;
+    function getOrderKey(it, idx){
+      return it.orderId || it.order_id || it.order ||
+             (it.purchaseId ? `PID-${String(it.purchaseId).slice(0,8)}` : null) ||
+             (it.date && !isNaN(new Date(it.date)) ? `TS-${new Date(it.date).toISOString().slice(0,16)}` : `GEN-${idx}`);
+    }
+    function titleForOrder(key, lang){
+      const nice=String(key).replace(/^TS-/,'').replace('T',' ');
+      return lang==='en'?`Order #${nice}`:`הזמנה מספר ${nice}`;
+    }
+    function groupByOrder(items){
+      const map=new Map();
+      items.forEach((it,idx)=>{const k=getOrderKey(it,idx); if(!map.has(k)) map.set(k,[]); map.get(k).push(it);});
+      return map;
+    }
 
-      try {
-        const res = await fetch('/api/my-items');
-        if (res.status === 401) {
-          location.href = 'login.html';
-          return;
-        }
-        const items = await res.json();
+    /* ===== Render ===== */
+    const ordersRoot=document.getElementById('orders');
 
-        list.innerHTML = '';
-        if (!Array.isArray(items) || items.length === 0) {
-          list.innerHTML = `
+    async function loadPurchases(){
+      const lang=localStorage.getItem('language')||'he';
+      ordersRoot.innerHTML=`<div class="loading-state"><h2>${lang==='en'?'Loading purchases...':'טוען רכישות...'}</h2></div>`;
+      try{
+        const res=await fetch('/api/my-items');
+        if(res.status===401){location.href='login.html';return;}
+        const items=await res.json();
+        if(!Array.isArray(items)||items.length===0){
+          ordersRoot.innerHTML=`
             <div class="empty-state">
-              <h2>${texts.noPurchases}</h2>
-              <p>${texts.noPurchasesDesc}</p>
-              <a href="store.html">${texts.goToStore}</a>
-            </div>
-          `;
+              <h2>${lang==='en'?'No purchases yet':'אין רכישות עדיין'}</h2>
+              <p>${lang==='en'?'Visit our store for delicious products!':'בקרי בחנות שלנו למגוון מוצרים טעימים!'}</p>
+              <a href="store.html">${lang==='en'?'Go to Store':'לחנות'}</a>
+            </div>`;
           return;
         }
 
-        for (const it of items) {
-          const p = { id: it.id, title: it.title, image: it.image };
-          const productName = nameOf(p, lang);
-          const price = priceOf(p);
+        const grouped=groupByOrder(items);
+        ordersRoot.innerHTML='';
+        const sorted=[...grouped.entries()].sort((a,b)=>{
+          const ad=Math.max(...a[1].map(x=>+new Date(x.date)));
+          const bd=Math.max(...b[1].map(x=>+new Date(x.date)));
+          return bd-ad;
+        });
 
-          const card = document.createElement('div');
-          card.className = 'item';
-          card.innerHTML = `
-            <img src="/images/${it.image}" alt="${productName}">
-            <div>
-              <h3>${productName} · <span class="price">${nis(price)}</span></h3>
-              <div class="meta">${new Date(it.date).toLocaleDateString(lang === 'he' ? 'he-IL' : 'en-US')}</div>
-              <p>${it.description || ''}</p>
-            </div>
-          `;
-          list.appendChild(card);
+        for(const [orderKey, arr] of sorted){
+          const sec=document.createElement('section');
+          sec.className='order-card';
+
+          const header=document.createElement('div');
+          header.className='order-header';
+          header.innerHTML=`<div>${lang==='en'?'Grouped by order':'רכישות מקובצות לפי הזמנה'}</div>
+                            <div class="order-id">${titleForOrder(orderKey,lang)}</div>`;
+          sec.appendChild(header);
+
+          const grid=document.createElement('div'); grid.className='order-grid';
+
+          for(const it of arr){
+            const card=document.createElement('article'); card.className='purchase-card';
+            const img=buildSafeImage(resolveImage(it), it.title||it.id); card.appendChild(img);
+            const body=document.createElement('div'); body.className='body';
+            const dateStr=(it.date && !isNaN(new Date(it.date)))
+              ? new Date(it.date).toLocaleDateString(lang==='he'?'he-IL':'en-US')
+              : (lang==='en'?'Unknown date':'תאריך לא ידוע');
+            body.innerHTML=`<h3>${it.title || it.id || ''}</h3><div class="meta">${dateStr}</div>`;
+            card.appendChild(body);
+            grid.appendChild(card);
+          }
+
+          sec.appendChild(grid);
+          ordersRoot.appendChild(sec);
         }
-      } catch {
-        list.innerHTML = `<div class="error-state"><h2>${texts.error}</h2></div>`;
+      }catch(e){
+        ordersRoot.innerHTML=`<div class="error-state"><h2>${lang==='en'?'Error loading purchases':'שגיאה בטעינת הרכישות'}</h2></div>`;
       }
     }
 
-    // Initial load
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async ()=>{
+      await setupAuthButtons();
       loadUICustomization();
-      loadMyItems();
+      loadPurchases();
     });
   </script>
 </body>
