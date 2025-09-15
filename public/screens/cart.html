@@ -389,6 +389,56 @@
       margin-top: 2rem;
     }
 
+    /* Checkout Section */
+    .checkout-section {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+      margin-top: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .checkout-button {
+      background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
+      color: white;
+      border: none;
+      padding: 1.2rem 3rem;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .checkout-button::before {
+      content: "💳";
+      font-size: 1.5rem;
+    }
+
+    .checkout-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      background: linear-gradient(135deg, #333 0%, #555 100%);
+    }
+
+    .checkout-button:active {
+      transform: translateY(-1px);
+    }
+
+    /* Hidden when cart is empty */
+    .checkout-section.hidden {
+      display: none;
+    }
+
     /* Dark Theme */
     .dark-theme {
       background: #1a1a1a;
@@ -409,7 +459,8 @@
       border-bottom-color: #444;
     }
 
-    .dark-theme .cart-item {
+    .dark-theme .cart-item,
+    .dark-theme .checkout-section {
       background: #2d2d2d;
     }
 
@@ -441,6 +492,15 @@
     .dark-theme .quantity-btn:hover {
       background: #ffffcc;
       color: #1a1a1a;
+    }
+
+    .dark-theme .checkout-button {
+      background: linear-gradient(135deg, #ffffcc 0%, #ffff99 100%);
+      color: #1a1a1a;
+    }
+
+    .dark-theme .checkout-button:hover {
+      background: linear-gradient(135deg, #ffff99 0%, #ffff66 100%);
     }
 
     /* Responsive Design */
@@ -500,6 +560,15 @@
         margin-top: 1rem;
         align-self: center;
       }
+
+      .checkout-button {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+      }
+
+      .checkout-section {
+        padding: 1.5rem;
+      }
     }
 
     @media (max-width: 480px) {
@@ -510,6 +579,11 @@
 
       .header-btn::before {
         display: none;
+      }
+
+      .checkout-button {
+        padding: 0.8rem 1.5rem;
+        font-size: 0.9rem;
       }
     }
   </style>
@@ -551,6 +625,13 @@
       <h1 class="page-title" data-key="pages.cartTitle">סל הקניות</h1>
     </div>
     <div id="items" class="cart-list"></div>
+    
+    <!-- Checkout Section -->
+    <div class="checkout-section hidden" id="checkout-section">
+      <a href="checkout.html" class="checkout-button" id="checkout-btn">
+        לתשלום
+      </a>
+    </div>
   </main>
 
   <script>
@@ -603,6 +684,17 @@
       // עדכון כיוון הדף
       document.documentElement.lang = currentLanguage;
       document.documentElement.dir = currentLanguage === 'en' ? 'ltr' : 'rtl';
+      
+      // עדכון טקסט כפתור התשלום
+      updateCheckoutButtonText(currentLanguage);
+    }
+
+    // עדכון טקסט כפתור התשלום
+    function updateCheckoutButtonText(lang) {
+      const checkoutBtn = document.getElementById('checkout-btn');
+      if (checkoutBtn) {
+        checkoutBtn.textContent = lang === 'en' ? 'Proceed to Checkout' : 'לתשלום';
+      }
     }
 
     // החלפת נושא
@@ -712,7 +804,7 @@
       const currentLang = localStorage.getItem('language') || 'he';
       const colorNames = {
         he: {
-          'pink': 'וורוד', 'white': 'לבן', 'green': 'ירוק', 'red': 'אדום',
+          'pink': 'ורוד', 'white': 'לבן', 'green': 'ירוק', 'red': 'אדום',
           'purple': 'סגול', 'light-blue': 'כחול בהיר', 'orange': 'כתום'
         },
         en: {
@@ -782,6 +874,7 @@
     
     async function loadCart(){
       const itemsBox = document.getElementById('items');
+      const checkoutSection = document.getElementById('checkout-section');
       const currentLang = localStorage.getItem('language') || 'he';
       
       // ניסיון לטעינה עם תמיכה בעוגות מותאמות
@@ -867,6 +960,9 @@
       if (!hasItems) {
         const emptyText = currentLang === 'en' ? 'Your cart is empty.' : 'הסל ריק.';
         itemsBox.innerHTML = `<p class="empty">${emptyText}</p>`;
+        checkoutSection.classList.add('hidden');
+      } else {
+        checkoutSection.classList.remove('hidden');
       }
     }
 
