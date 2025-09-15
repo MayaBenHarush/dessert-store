@@ -210,8 +210,15 @@
       else { document.body.classList.remove('dark-theme'); themeToggle.textContent = '🌙 מצב כהה'; }
 
       const currentLanguage = localStorage.getItem('language') || 'he';
-      if (currentLanguage === 'en') { languageToggle.textContent = '🌐 עברית'; document.documentElement.dir = 'ltr'; document.documentElement.lang = 'en'; }
-      else { languageToggle.textContent = '🌐 English'; document.documentElement.dir = 'rtl'; document.documentElement.lang = 'he'; }
+      if (currentLanguage === 'en') {
+        languageToggle.textContent = '🌐 עברית';
+        document.documentElement.lang = 'en';
+        document.documentElement.dir = 'rtl'; /* ← נשאר RTL גם באנגלית */
+      } else {
+        languageToggle.textContent = '🌐 English';
+        document.documentElement.lang = 'he';
+        document.documentElement.dir = 'rtl';
+      }
       updateInterfaceLanguage(currentLanguage);
     }
 

@@ -1285,6 +1285,16 @@
       "datetime": "2025-09-15T23:36:28.589Z",
       "username": "admin",
       "type": "login"
+    },
+    {
+      "datetime": "2025-09-15T23:46:21.239Z",
+      "username": "admin",
+      "type": "logout"
+    },
+    {
+      "datetime": "2025-09-15T23:46:33.591Z",
+      "username": "מאיה",
+      "type": "login"
     }
   ],
   "products": [
