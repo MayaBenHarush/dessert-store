@@ -89,14 +89,9 @@
             color: white;
         }
 
-        
-
         .header-btn.primary:hover {
             background: #333;
         }
-
-        
-        
 
         .login-btn::before {
             content: "👤";
@@ -253,7 +248,7 @@
             flex-wrap: wrap;
         }
 
-        .learn-more-btn {
+        .about-us-btn {
             background: transparent;
             color: #1a1a1a;
             border: 2px solid #1a1a1a;
@@ -263,11 +258,24 @@
             text-decoration: none;
             transition: all 0.2s ease;
             display: inline-block;
+            cursor: pointer;
+            position: relative;
         }
 
-        .learn-more-btn:hover {
+        .about-us-btn:hover {
             background: #1a1a1a;
             color: white;
+            transform: translateY(-1px);
+        }
+
+        .about-us-btn.playing {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+
+        .about-us-btn.playing::after {
+            content: ' 🔊';
         }
 
         .hero-image {
@@ -730,7 +738,8 @@
                 align-items: center;
             }
 
-            .hero-actions a {
+            .hero-actions a,
+            .hero-actions button {
                 width: 200px;
                 text-align: center;
             }
@@ -827,9 +836,9 @@
             <div class="hero-content">
                 <h1 class="bakery-title" id="bakery-title">MOKA BAKERY</h1>
                 <div class="featured-product" id="featured-product">מאפייה בוטיק מעולה</div>
-                <p class="product-description" id="product-description">חוויית טעם מושלמת עם מאפים ועוגות בעבודת יד מחומרי הגלם הטובים ביותר.</p>
+                <p class="product-description" id="product-description">חווית טעם מושלמת עם מאפים ועוגות בעבודת יד מחומרי הגלם הטובים ביותר.</p>
                 <div class="hero-actions">
-                    <a href="/screens/store.html" class="learn-more-btn" id="learn-more-link">גלה עוד</a>
+                    <button class="about-us-btn" id="about-us-btn">מי אנחנו</button>
                     <a href="/screens/store.html" class="order-btn" id="order-now-link">הזמנה עכשיו</a>
                 </div>
             </div>
@@ -851,7 +860,7 @@
             <h1 class="kinder-hero-title" id="kinder-hero-title">עוגיית קינדר</h1>
             <p class="kinder-hero-subtitle" id="kinder-hero-subtitle">
                 עוגייה רכה ומתוקה עם פיסות שוקולד קינדר וקרם לבן קרמי. 
-                חוויה של מתיקות וטעם בלתי נשכח בכל ביס.
+                חוויה של מתיקות וטעם בלתי נשכח בכל גיס.
             </p>
             <div class="kinder-hero-buttons">
                 <button class="kinder-hero-btn primary" id="add-to-cart-btn">
@@ -872,7 +881,7 @@
             <h2 class="section-title" id="categories-title">הקטגוריות שלנו</h2>
             <div class="categories-grid">
                 <a href="/screens/store.html?filter=cookie" class="category-card">
-                    <h3 id="cat-1-title">עוגיות פרימיום</h3>
+                    <h3 id="cat-1-title">עוגיות פרמיום</h3>
                     <p id="cat-1-desc">עוגיות טריות ואיכותיות בטעמים מגוונים עם מרכיבים טבעיים</p>
                 </a>
                 
@@ -904,7 +913,7 @@
             <h2 class="section-title" id="features-title">למה לבחור בנו</h2>
             <div class="features-grid">
                 <div class="feature-card">
-                    <h3 id="feat-1-title">איכות פרימיום</h3>
+                    <h3 id="feat-1-title">איכות פרמיום</h3>
                     <p id="feat-1-desc">רק חומרי גלם איכותיים ומרכיבים טריים מהמעלה הראשונה</p>
                 </div>
                 
@@ -925,6 +934,12 @@
             </div>
         </div>
     </section>
+
+    <!-- Hidden audio element for about us -->
+    <audio id="about-us-audio" preload="auto">
+        <source src="/aboutus.mp3" type="audio/mpeg">
+        הדפדפן שלך לא תומך בהשמעת אודיו
+    </audio>
 
     <script>
         // Translations object
@@ -950,18 +965,19 @@
                 // Homepage content
                 'bakery-title': 'MOKA BAKERY',
                 'featured-product': 'מאפייה בוטיק מעולה',
-                'product-description': 'חוויית טעם מושלמת עם מאפים ועוגות בעבודת יד מחומרי הגלם הטובים ביותר.',
-                'learn-more-link': 'גלה עוד',
+                'product-description': 'חווית טעם מושלמת עם מאפים ועוגות בעבודת יד מחומרי הגלם הטובים ביותר.',
+                'about-us-btn': 'מי אנחנו',
+                'about-us-btn-playing': 'מי אנחנו 🔊',
                 'order-now-link': 'הזמנה עכשיו',
                 'kinder-hero-title': 'עוגיית קינדר',
-                'kinder-hero-subtitle': 'עוגייה רכה ומתוקה עם פיסות שוקולד קינדר וקרם לבן קרמי. חוויה של מתיקות וטעם בלתי נשכח בכל ביס.',
+                'kinder-hero-subtitle': 'עוגייה רכה ומתוקה עם פיסות שוקולד קינדר וקרם לבן קרמי. חוויה של מתיקות וטעם בלתי נשכח בכל גיס.',
                 'add-to-cart-btn': '🛒 הוסף לסל',
                 'learn-more-btn': 'למד עוד',
                 'categories-title': 'הקטגוריות שלנו',
                 'features-title': 'למה לבחור בנו',
                 
                 // Categories
-                'cat-1-title': 'עוגיות פרימיום',
+                'cat-1-title': 'עוגיות פרמיום',
                 'cat-1-desc': 'עוגיות טריות ואיכותיות בטעמים מגוונים עם מרכיבים טבעיים',
                 'cat-2-title': 'עוגות מעוצבות',
                 'cat-2-desc': 'עוגות יום הולדת, חתונות ואירועים מיוחדים בעיצוב מקצועי',
@@ -973,7 +989,7 @@
                 'cat-5-desc': 'מארזים מעוצבים למתנות מיוחדות עם אריזה מהודרת',
                 
                 // Features
-                'feat-1-title': 'איכות פרימיום',
+                'feat-1-title': 'איכות פרמיום',
                 'feat-1-desc': 'רק חומרי גלם איכותיים ומרכיבים טריים מהמעלה הראשונה',
                 'feat-2-title': 'משלוחים מהירים',
                 'feat-2-desc': 'משלוח מהיר ובטוח עד הבית בקירור מתאים',
@@ -1009,7 +1025,8 @@
                 'bakery-title': 'MOKA BAKERY',
                 'featured-product': 'Premium Boutique Bakery',
                 'product-description': 'Perfect taste experience with handmade pastries and cakes from the finest ingredients.',
-                'learn-more-link': 'Learn More',
+                'about-us-btn': 'About Us',
+                'about-us-btn-playing': 'About Us 🔊',
                 'order-now-link': 'Order Now',
                 'kinder-hero-title': 'Kinder Cookie',
                 'kinder-hero-subtitle': 'Soft and sweet cookie with Kinder chocolate pieces and creamy white cream. An unforgettable experience of sweetness and taste in every bite.',
@@ -1096,6 +1113,50 @@
             const currentLang = getCurrentLanguage();
             const newLang = currentLang === 'he' ? 'en' : 'he';
             setLanguage(newLang);
+        }
+
+        // Audio functionality for about us button
+        function initializeAboutUsAudio() {
+            const aboutUsBtn = document.getElementById('about-us-btn');
+            const audio = document.getElementById('about-us-audio');
+            
+            if (!aboutUsBtn || !audio) return;
+
+            aboutUsBtn.addEventListener('click', function() {
+                const lang = getCurrentLanguage();
+                
+                if (audio.paused) {
+                    // Start playing
+                    audio.play().then(() => {
+                        aboutUsBtn.classList.add('playing');
+                        aboutUsBtn.textContent = translations[lang]['about-us-btn-playing'];
+                    }).catch(error => {
+                        console.error('Error playing audio:', error);
+                        alert('שגיאה בהשמעת הקובץ');
+                    });
+                } else {
+                    // Stop playing
+                    audio.pause();
+                    audio.currentTime = 0;
+                    aboutUsBtn.classList.remove('playing');
+                    aboutUsBtn.textContent = translations[lang]['about-us-btn'];
+                }
+            });
+
+            // Handle audio end
+            audio.addEventListener('ended', function() {
+                const lang = getCurrentLanguage();
+                aboutUsBtn.classList.remove('playing');
+                aboutUsBtn.textContent = translations[lang]['about-us-btn'];
+            });
+
+            // Handle audio error
+            audio.addEventListener('error', function() {
+                console.error('Audio file not found or cannot be loaded');
+                aboutUsBtn.classList.remove('playing');
+                const lang = getCurrentLanguage();
+                aboutUsBtn.textContent = translations[lang]['about-us-btn'];
+            });
         }
 
         // Menu functionality
@@ -1248,6 +1309,9 @@
                     }
                 });
             }
+
+            // Initialize about us audio functionality
+            initializeAboutUsAudio();
 
             // Initialize
             loadUICustomization();

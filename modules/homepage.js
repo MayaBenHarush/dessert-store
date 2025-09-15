@@ -80,6 +80,47 @@ async function logout() {
     location.reload();
 }
 
+// פונקציית השמעת הקלטה "מי אנחנו"
+function initializeAboutUsAudio() {
+    const aboutUsBtn = document.getElementById('about-us-btn');
+    const audio = document.getElementById('about-us-audio');
+    
+    if (!aboutUsBtn || !audio) return;
+
+    aboutUsBtn.addEventListener('click', function() {
+        if (audio.paused) {
+            // התחל השמעה
+            audio.play().then(() => {
+                aboutUsBtn.classList.add('playing');
+                aboutUsBtn.innerHTML = 'מי אנחנו 🔊';
+            }).catch(error => {
+                console.error('Error playing audio:', error);
+                alert('שגיאה בהשמעת הקובץ. אנא ודא שקובץ aboutus.mp3 נמצא בתיקיה הנכונה.');
+            });
+        } else {
+            // עצור השמעה
+            audio.pause();
+            audio.currentTime = 0;
+            aboutUsBtn.classList.remove('playing');
+            aboutUsBtn.innerHTML = 'מי אנחנו';
+        }
+    });
+
+    // טיפול בסיום השמעה
+    audio.addEventListener('ended', function() {
+        aboutUsBtn.classList.remove('playing');
+        aboutUsBtn.innerHTML = 'מי אנחנו';
+    });
+
+    // טיפול בשגיאות
+    audio.addEventListener('error', function(e) {
+        console.error('Audio error:', e);
+        aboutUsBtn.classList.remove('playing');
+        aboutUsBtn.innerHTML = 'מי אנחנו';
+        alert('לא ניתן לטעון את קובץ השמע. אנא ודא שקובץ aboutus.mp3 קיים בתיקיה: C:/SecondYear/FullStack/dessert-store/public/');
+    });
+}
+
 // אירועי אינטראקציה לכרטיסי קטגוריות
 function initializeInteractions() {
     const categoryCards = document.querySelectorAll('.category-card');
@@ -99,4 +140,5 @@ document.addEventListener('DOMContentLoaded', async function() {
     await buildNavigation();
     await updateAuthButtons();
     initializeInteractions();
+    initializeAboutUsAudio(); // הוספת אתחול פונקציית האודיו
 });
