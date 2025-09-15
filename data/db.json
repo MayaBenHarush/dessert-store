@@ -69,7 +69,9 @@
     {
       "username": "לירן",
       "items": [
-        "kinder-cookie"
+        "kinder-cookie",
+        "caramel-cookie",
+        "cookies-box"
       ]
     }
   ],
@@ -1089,6 +1091,16 @@
       "username": "לירן",
       "type": "purchase",
       "itemCount": 1
+    },
+    {
+      "datetime": "2025-09-15T19:44:11.239Z",
+      "username": "לירן",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-09-15T19:44:12.381Z",
+      "username": "לירן",
+      "type": "add-to-cart"
     }
   ],
   "products": [

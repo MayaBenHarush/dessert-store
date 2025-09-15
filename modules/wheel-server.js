@@ -19,42 +19,42 @@ function rand(min, max) { return Math.random() * (max - min) + min; }
 // [0]NONE, [1]10%, [2]NONE, [3]DESSERT, [4]NONE, [5]SHIP, [6]NONE, [7]NIS50, [8]NONE
 const ORDER = ['NONE','PCT10','NONE','DESSERT','NONE','SHIP','NONE','NIS50','NONE'];
 
-// מטא-נתונים עם קודי קופון חדשים
+// מטא-נתונים עם קודי קופון שתואמים בדיוק ל-pay-server.js
 const PRIZE_META = {
   PCT10:  { 
     message: '🎉 זכית ב‑10% הנחה!', 
     coupon: { 
-      code: 'WHEEL10', 
+      code: 'WHEEL10', // תואם לקופון בpay-server
       type: 'percent', 
       value: 10,
-      description: 'הנחה של 10% על כל הקנייה'
+      description: 'הנחה של 10% מגלגל המזל'
     } 
   },
   DESSERT:{ 
     message: '🍪 קינוח במתנה!',     
     coupon: { 
-      code: 'עוגיה', 
+      code: 'עוגיה', // תואם לקופון בpay-server
       type: 'free-cookie', 
       value: 17,
-      description: 'עוגיה אחת חינם'
+      description: 'עוגיה חינם מגלגל המזל'
     } 
   },
   SHIP:   { 
     message: '🚚 משלוח חינם!',      
     coupon: { 
-      code: 'משלוח', 
-      type: 'free-shipping', 
+      code: 'משלוח', // תואם לקופון בpay-server
+      type: 'shipping', 
       value: 29,
-      description: 'משלוח חינם'
+      description: 'משלוח חינם מגלגל המזל'
     } 
   },
   NIS50:  { 
     message: '💸 שובר ₪50 לקנייה!',  
     coupon: { 
-      code: 'שובר', 
-      type: 'fixed-discount', 
+      code: 'שובר', // תואם לקופון בpay-server
+      type: 'fixed', 
       value: 50,
-      description: 'שובר הנחה של 50 ₪'
+      description: 'שובר הנחה של 50 ₪ מגלגל המזל'
     } 
   },
   NONE:   { 

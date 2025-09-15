@@ -46,12 +46,26 @@ module.exports = function(app) {
     'VIP15': { discount: 15, type: 'percent', description: 'הנחה של 15% ללקוחות VIP' }
   };
 
-  // קופונים מגלגל המזל
+  // קופונים מגלגל המזל - מעודכן לפי הגלגל האמיתי
   const WHEEL_COUPONS = {
+    // קופונים שתואמים לגלגל המזל
+    '10%': { discount: 10, type: 'percent', description: 'הנחה של 10% מגלגל המזל' },
     'WHEEL10': { discount: 10, type: 'percent', description: 'הנחה של 10% מגלגל המזל' },
+    
+    // משלוח חינם - למשבצת "משלוח"
     'משלוח': { discount: 29, type: 'shipping', description: 'משלוח חינם מגלגל המזל' },
+    'FREESHIP-WHEEL': { discount: 29, type: 'shipping', description: 'משלוח חינם מגלגל המזל' },
+    
+    // עוגיה חינם - למשבצת "קינוח"  
+    'קינוח': { discount: 17, type: 'free-cookie', description: 'עוגיה חינם מגלגל המזל' },
     'עוגיה': { discount: 17, type: 'free-cookie', description: 'עוגיה חינם מגלגל המזל' },
-    'שובר': { discount: 50, type: 'fixed', description: 'שובר הנחה של 50 ₪ מגלגל המזל' }
+    'DESSERT-FREE': { discount: 17, type: 'free-cookie', description: 'עוגיה חינם מגלגל המזל' },
+    
+    // שובר 50 שח - למשבצת "50₪"
+    '50': { discount: 50, type: 'fixed', description: 'שובר הנחה של 50 ₪ מגלגל המזל' },
+    '50₪': { discount: 50, type: 'fixed', description: 'שובר הנחה של 50 ₪ מגלגל המזל' },
+    'שובר': { discount: 50, type: 'fixed', description: 'שובר הנחה של 50 ₪ מגלגל המזל' },
+    'VOUCHER50': { discount: 50, type: 'fixed', description: 'שובר הנחה של 50 ₪ מגלגל המזל' }
   };
 
   // איחוד כל הקופונים
@@ -121,7 +135,9 @@ module.exports = function(app) {
             return res.json({
               valid: true,
               coupon: {
-                discount: userData.coupon.value,
+                discount: typeof userData.coupon.value === 'string' ? 
+                  parseFloat(userData.coupon.value) || parseInt(userData.coupon.value) || 0 :
+                  userData.coupon.value,
                 type: userData.coupon.type === 'percent' ? 'percent' :
                       userData.coupon.type === 'free-shipping' ? 'shipping' :
                       userData.coupon.type === 'free-cookie' ? 'free-cookie' :
@@ -286,8 +302,13 @@ module.exports = function(app) {
             for (const userData of Object.values(allUsers)) {
               if (userData.coupon && userData.coupon.code === coupon) {
                 if (!userData.coupon.expiresAt || new Date() <= new Date(userData.coupon.expiresAt)) {
+                  // המרה של הערך למספר כדי לתקן בעיות עם מחרוזות
+                  const discountValue = typeof userData.coupon.value === 'string' ? 
+                    parseFloat(userData.coupon.value) || parseInt(userData.coupon.value) || 0 :
+                    userData.coupon.value;
+                  
                   couponData = {
-                    discount: userData.coupon.value,
+                    discount: discountValue,
                     type: userData.coupon.type === 'percent' ? 'percent' :
                           userData.coupon.type === 'free-shipping' ? 'shipping' :
                           userData.coupon.type === 'free-cookie' ? 'free-cookie' :
