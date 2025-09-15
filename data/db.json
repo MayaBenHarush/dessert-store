@@ -71,6 +71,7 @@
       "items": [
         "kinder-cookie",
         "caramel-cookie",
+        "cookies-box",
         "cookies-box"
       ]
     }
@@ -1099,6 +1100,16 @@
     },
     {
       "datetime": "2025-09-15T19:44:12.381Z",
+      "username": "לירן",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-09-15T19:56:29.700Z",
+      "username": "לירן",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-09-15T20:08:49.143Z",
       "username": "לירן",
       "type": "add-to-cart"
     }

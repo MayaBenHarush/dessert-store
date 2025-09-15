@@ -99,8 +99,6 @@
       background: #333;
     }
 
-    
-
     .login-btn::before {
       content: "👤";
     }
@@ -593,7 +591,6 @@
     
     <nav class="header-nav">
       <a href="index.html" class="header-btn home-btn">בית</a>
-      
       <a href="store.html" class="header-btn">חנות</a>
       <a href="cart.html" class="header-btn cart-btn">סל קניות</a>
       <a href="login.html" class="header-btn login-btn" id="header-login">התחברות</a>
@@ -677,12 +674,49 @@
         window.Translations.updateDomTexts();
       }
       
-      // עדכון כיוון הדף
+      // שמירה על כיוון RTL תמיד - ללא קשר לשפה
       document.documentElement.lang = currentLanguage;
-      document.documentElement.dir = currentLanguage === 'en' ? 'ltr' : 'rtl';
+      document.documentElement.dir = 'rtl'; // תמיד RTL
       
+      // עדכון טקסטים נוספים
+      updateUITexts(currentLanguage);
+    }
+
+    // פונקציה נפרדת לעדכון טקסטים
+    function updateUITexts(lang) {
       // עדכון טקסט כפתור התשלום
-      updateCheckoutButtonText(currentLanguage);
+      updateCheckoutButtonText(lang);
+      
+      // עדכון טקסטים בניווט
+      const navElements = {
+        'nav-checkout': lang === 'en' ? 'Checkout' : 'תשלום',
+        'nav-myitems': lang === 'en' ? 'My Purchases' : 'הרכישות שלי', 
+        'nav-admin': lang === 'en' ? 'Admin' : 'ניהול',
+        'nav-recipes': lang === 'en' ? 'Recipes' : 'מתכונים',
+        'nav-store': lang === 'en' ? 'Store' : 'חנות',
+        'logout': lang === 'en' ? 'Logout' : 'התנתקות'
+      };
+      
+      Object.entries(navElements).forEach(([id, text]) => {
+        const element = document.getElementById(id);
+        if (element) element.textContent = text;
+      });
+      
+      // עדכון כותרת הדף
+      const pageTitle = document.querySelector('[data-key="pages.cartTitle"]');
+      if (pageTitle) {
+        pageTitle.textContent = lang === 'en' ? 'Shopping Cart' : 'סל הקניות';
+      }
+      
+      // עדכון טקסטים בניווט העליון
+      const headerBtns = document.querySelectorAll('.header-btn');
+      if (headerBtns.length >= 3) {
+        headerBtns[0].textContent = lang === 'en' ? 'Home' : 'בית';
+        headerBtns[1].textContent = lang === 'en' ? 'Store' : 'חנות'; 
+        headerBtns[2].textContent = lang === 'en' ? 'Shopping Cart' : 'סל קניות';
+      }
+      const loginBtn = document.getElementById('header-login');
+      if (loginBtn) loginBtn.textContent = lang === 'en' ? 'Login' : 'התחברות';
     }
 
     // עדכון טקסט כפתור התשלום
@@ -721,9 +755,9 @@
     const nis = n => `₪${n}`;
     const slug = s => String(s||'').trim().toLowerCase().replace(/[^\p{L}\p{N} ]/gu,'').replace(/\s+/g,'-');
 
-    // מחירון ושמות
+    // מחירון ושמות - עם התיקונים החדשים
     const PRICE_MAP = {
-      'chocolate-cake':150, '8-cookies-box':125, 'cupcakes':160, 'minnie-mous-cake':300,
+      'chocolate-cake':150, '8-cookies-box':125, 'cookies-box':120, 'cupcakes':160, 'minnie-mous-cake':300,
       'nutella-box':70, 'chocolate-pizza-xl':120, 'bento-design-cake':140,
       'chocolate-design-cake':180, 'orange-cake':70, 'white-design-cake':140,
       'pizza-cookie':120, 'pizza cookie':120
