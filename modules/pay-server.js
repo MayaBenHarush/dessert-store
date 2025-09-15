@@ -1,5 +1,40 @@
 // modules/pay-server.js
 const persist = require('../persist_module');
+const fs = require('fs');
+const path = require('path');
+
+// נתיב לקובץ הרכישות
+const PURCHASES_FILE = path.join(__dirname, '..', 'data', 'purchases.json');
+
+// יצירת תיקיית data אם לא קיימת
+const dataDir = path.join(__dirname, '..', 'data');
+if (!fs.existsSync(dataDir)) {
+  fs.mkdirSync(dataDir, { recursive: true });
+}
+
+// פונקציות עזר לניהול קובץ הרכישות
+function loadPurchasesFromFile() {
+  try {
+    if (!fs.existsSync(PURCHASES_FILE)) {
+      return {};
+    }
+    const data = fs.readFileSync(PURCHASES_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Error loading purchases from file:', error);
+    return {};
+  }
+}
+
+function savePurchasesToFile(purchases) {
+  try {
+    fs.writeFileSync(PURCHASES_FILE, JSON.stringify(purchases, null, 2));
+    return true;
+  } catch (error) {
+    console.error('Error saving purchases to file:', error);
+    return false;
+  }
+}
 
 module.exports = function(app) {
   
@@ -26,7 +61,6 @@ module.exports = function(app) {
 
   // פונקציה לחישוב הנחת עוגיה חינם
   function calculateCookieDiscount(items) {
-    // מחירי עוגיות (כמו בקוד המקורי)
     const COOKIE_PRICES = {
       'chocolate-cake': 150, '8-cookies-box': 125, 'cupcakes': 160, 'minnie-mous-cake': 300,
       'nutella-box': 70, 'chocolate-pizza-xl': 120, 'bento-design-cake': 140,
@@ -36,31 +70,28 @@ module.exports = function(app) {
 
     if (!items || !Array.isArray(items)) return 0;
 
-    // חיפוש העוגיה הזולה ביותר
     let cheapestCookiePrice = Infinity;
     
     for (const item of items) {
       const id = item.id || item.productId;
       if (!id) continue;
       
-      // בדיקה אם זה עוגיה (על פי המחיר או השם)
       const price = COOKIE_PRICES[id] || COOKIE_PRICES[id.toLowerCase()];
-      if (price && price <= 25) { // עוגיות בדרך כלל עד 25 שח
+      if (price && price <= 25) {
         cheapestCookiePrice = Math.min(cheapestCookiePrice, price);
       }
       
-      // בדיקה נוספת על פי השם
       const name = (item.title || item.name || '').toLowerCase();
       if (name.includes('cookie') || name.includes('עוגיה')) {
-        const itemPrice = price || 17; // ברירת מחדל לעוגיה
+        const itemPrice = price || 17;
         cheapestCookiePrice = Math.min(cheapestCookiePrice, itemPrice);
       }
     }
 
-    return cheapestCookiePrice === Infinity ? 17 : cheapestCookiePrice; // ברירת מחדל
+    return cheapestCookiePrice === Infinity ? 17 : cheapestCookiePrice;
   }
 
-  // API לוולידציה של קופון מחודש
+  // API לוולידציה של קופון
   app.get('/api/validate-coupon/:code', async (req, res) => {
     try {
       const couponCode = req.params.code;
@@ -73,16 +104,13 @@ module.exports = function(app) {
         });
       }
 
-      // בדיקה בקופונים מגלגל המזל - קרא מהקובץ
+      // בדיקה בקופונים מגלגל המזל
       try {
         const wheelData = await persist.loadData('wheel-spins') || { users: {}, guests: {} };
-        
-        // חיפוש הקופון בכל המשתמשים
         const allUsers = { ...wheelData.users, ...wheelData.guests };
         
         for (const userData of Object.values(allUsers)) {
           if (userData.coupon && userData.coupon.code === couponCode) {
-            // בדיקת תוקף
             if (userData.coupon.expiresAt && new Date() > new Date(userData.coupon.expiresAt)) {
               return res.status(400).json({
                 valid: false,
@@ -107,7 +135,6 @@ module.exports = function(app) {
         console.warn('Error reading wheel data:', wheelError);
       }
 
-      // קופון לא נמצא
       res.status(400).json({
         valid: false,
         error: 'קוד קופון לא תקין'
@@ -119,7 +146,7 @@ module.exports = function(app) {
     }
   });
 
-  // API חדש לשמירת רכישה (נקרא מ-pay.html)
+  // API לשמירת רכישה - מעודכן לתמיכה בכל המשתמשים
   app.post('/api/save-purchase', async (req, res) => {
     try {
       const username = req.cookies.session;
@@ -135,34 +162,66 @@ module.exports = function(app) {
       console.log('Saving purchase for user:', username);
       console.log('Items to save:', items);
 
-      // שמירת הרכישה
-      let purchases = await persist.loadData('purchases') || {};
-      if (!purchases[username]) {
-        purchases[username] = [];
+      // יצירת פריטים עם מזהים ייחודיים
+      const itemsWithDetails = items.map(item => ({
+        ...item,
+        purchaseDate: new Date().toISOString(),
+        purchaseId: Date.now() + Math.random().toString(36).substr(2, 9)
+      }));
+
+      let saveSuccess = false;
+
+      // שמירה במערכת persist (תאימות לאחור)
+      try {
+        let persistPurchases = await persist.loadData('purchases') || {};
+        if (!persistPurchases[username]) {
+          persistPurchases[username] = [];
+        }
+        persistPurchases[username].push(...itemsWithDetails);
+        await persist.saveData('purchases', persistPurchases);
+        console.log('Saved to persist system successfully');
+        saveSuccess = true;
+      } catch (persistError) {
+        console.error('Error saving to persist system:', persistError);
       }
 
-      // הוספת כל פריט בנפרד עם התאריך
-      items.forEach(item => {
-        purchases[username].push({
-          ...item,
-          purchaseDate: new Date().toISOString()
-        });
-      });
+      // שמירה בקובץ חדש (מערכת עיקרית)
+      try {
+        const filePurchases = loadPurchasesFromFile();
+        if (!filePurchases[username]) {
+          filePurchases[username] = [];
+        }
+        filePurchases[username].push(...itemsWithDetails);
+        const fileSuccess = savePurchasesToFile(filePurchases);
+        
+        if (fileSuccess) {
+          console.log('Saved to file system successfully');
+          saveSuccess = true;
+        }
+      } catch (fileError) {
+        console.error('Error saving to file system:', fileError);
+      }
 
-      await persist.saveData('purchases', purchases);
+      if (saveSuccess) {
+        // רישום פעילות
+        try {
+          let activity = await persist.loadData('activity') || [];
+          activity.push({
+            datetime: new Date().toISOString(),
+            username,
+            type: 'purchase',
+            itemCount: items.length
+          });
+          await persist.saveData('activity', activity);
+        } catch (actError) {
+          console.warn('Failed to log activity:', actError);
+        }
 
-      // רישום פעילות
-      let activity = await persist.loadData('activity') || [];
-      activity.push({
-        datetime: new Date().toISOString(),
-        username,
-        type: 'purchase',
-        itemCount: items.length
-      });
-      await persist.saveData('activity', activity);
-
-      console.log('Purchase saved successfully');
-      res.json({ success: true, itemCount: items.length });
+        console.log(`Purchase saved successfully for user: ${username}`);
+        res.json({ success: true, itemCount: items.length });
+      } else {
+        res.status(500).json({ error: 'שגיאה בשמירת הרכישה' });
+      }
 
     } catch (error) {
       console.error('Save purchase error:', error);
@@ -217,10 +276,8 @@ module.exports = function(app) {
       let finalShipping = SHIPPING_COST;
       
       if (coupon) {
-        // בדיקה בקופונים קבועים
         let couponData = ALL_COUPONS[coupon];
         
-        // אם לא נמצא, חפש בקופונים מגלגל המזל
         if (!couponData) {
           try {
             const wheelData = await persist.loadData('wheel-spins') || { users: {}, guests: {} };
@@ -228,7 +285,6 @@ module.exports = function(app) {
             
             for (const userData of Object.values(allUsers)) {
               if (userData.coupon && userData.coupon.code === coupon) {
-                // בדיקת תוקף
                 if (!userData.coupon.expiresAt || new Date() <= new Date(userData.coupon.expiresAt)) {
                   couponData = {
                     discount: userData.coupon.value,
@@ -254,7 +310,6 @@ module.exports = function(app) {
           } else if (couponData.type === 'shipping') {
             finalShipping = 0;
           } else if (couponData.type === 'free-cookie') {
-            // חישוב הנחה על העוגיה הזולה ביותר
             const cookieDiscount = calculateCookieDiscount(finalOrderData.items);
             appliedDiscount = Math.min(cookieDiscount, finalOrderData.subtotal);
           }
@@ -294,7 +349,7 @@ module.exports = function(app) {
     }
   });
 
-  // API לניקוי פריטים ספציפיים מהסל (משופר)
+  // API לניקוי פריטים ספציפיים מהסל
   app.post('/api/clear-cart-items', async (req, res) => {
     try {
       const username = req.cookies.session;
@@ -358,7 +413,7 @@ module.exports = function(app) {
 
       const { selectedItems } = req.body;
       if (!selectedItems) {
-        return res.status(400).json({ error: 'לא נמצרו פריטים לניקוי' });
+        return res.status(400).json({ error: 'לא נמצאו פריטים לניקוי' });
       }
 
       console.log('Clearing cart after payment for user:', username);
@@ -377,11 +432,42 @@ module.exports = function(app) {
         selectedItems.customItems.forEach(id => idsToRemove.add(String(id)));
       }
 
-      // השתמש ב-API הפנימי לניקוי
-      return app.locals.clearCartItems({ 
+      // קריאה לפונקציה הפנימית לניקוי
+      const mockReq = {
         cookies: { session: username },
         body: { itemsToRemove: Array.from(idsToRemove) }
-      }, res);
+      };
+      
+      // ביצוע הניקוי
+      const idsToRemoveArray = Array.from(idsToRemove);
+      
+      // ניקוי הסל הרגיל
+      let carts = await persist.loadData('carts') || [];
+      const userCart = carts.find(c => c.username === username);
+      
+      if (userCart && Array.isArray(userCart.items)) {
+        const originalLength = userCart.items.length;
+        userCart.items = userCart.items.filter(id => !idsToRemove.has(String(id)));
+        console.log(`Regular cart items before: ${originalLength}, after: ${userCart.items.length}`);
+        await persist.saveData('carts', carts);
+      }
+
+      // עדכון עוגות מותאמות
+      let customCakes = await persist.loadData('customCakes') || [];
+      let customUpdated = false;
+      
+      customCakes.forEach(cake => {
+        if (cake.username === username && idsToRemove.has(String(cake.id))) {
+          cake.status = 'purchased';
+          customUpdated = true;
+        }
+      });
+      
+      if (customUpdated) {
+        await persist.saveData('customCakes', customCakes);
+      }
+
+      res.json({ success: true });
 
     } catch (error) {
       console.error('Clear cart after payment error:', error);
@@ -389,7 +475,7 @@ module.exports = function(app) {
     }
   });
 
-  // API לקבלת היסטוריית רכישות
+  // API לקבלת היסטוריית רכישות - מעודכן לכל המשתמשים
   app.get('/api/my-purchases', async (req, res) => {
     try {
       const username = req.cookies.session;
@@ -397,13 +483,44 @@ module.exports = function(app) {
         return res.status(401).json({ error: 'לא מחובר' });
       }
 
-      const purchases = await persist.loadData('purchases') || {};
-      const userPurchases = purchases[username] || [];
+      console.log('Loading purchases for user:', username);
+
+      // טעינה ממערכת persist
+      let userPurchases = [];
+      try {
+        const persistPurchases = await persist.loadData('purchases') || {};
+        userPurchases = persistPurchases[username] || [];
+      } catch (persistError) {
+        console.warn('Error loading from persist:', persistError);
+      }
+
+      // טעינה מהקובץ החדש
+      try {
+        const filePurchases = loadPurchasesFromFile();
+        const fileUserPurchases = filePurchases[username] || [];
+        
+        // מיזוג התוצאות (הימנעות מכפילויות)
+        const existingIds = new Set(userPurchases.map(p => p.purchaseId).filter(Boolean));
+        
+        for (const purchase of fileUserPurchases) {
+          if (!purchase.purchaseId || !existingIds.has(purchase.purchaseId)) {
+            userPurchases.push(purchase);
+          }
+        }
+      } catch (fileError) {
+        console.warn('Error loading from file:', fileError);
+      }
 
       // מיון לפי תאריך (החדשים ראשון)
-      userPurchases.sort((a, b) => new Date(b.date || b.purchaseDate) - new Date(a.date || a.purchaseDate));
+      userPurchases.sort((a, b) => {
+        const dateA = new Date(a.purchaseDate || a.date);
+        const dateB = new Date(b.purchaseDate || b.date);
+        return dateB - dateA;
+      });
 
+      console.log(`Found ${userPurchases.length} purchases for user: ${username}`);
       res.json(userPurchases);
+      
     } catch (error) {
       console.error('Get purchases error:', error);
       res.status(500).json({ error: 'שגיאה בטעינת הרכישות' });
