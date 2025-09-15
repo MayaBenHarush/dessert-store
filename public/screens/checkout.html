@@ -950,33 +950,44 @@
       });
     }
 
-    // שמירת הבחירה והמשך לתשלום
+    // שמירת הבחירה והמשך לתשלום - הקוד המתוקן
     document.getElementById('go-pay').onclick = () => {
-      const selectedItems = [];
+      const selectedRegularItems = [];
+      const selectedCustomItems = [];
       
       // מוצרים רגילים
       document.querySelectorAll('.ck-row input[type="checkbox"]:not([data-custom-ids]):checked').forEach(cb => {
         const id = cb.value;
         const qty = Number(cartData.regularItems?.[id] || 0);
         for (let i = 0; i < qty; i++) {
-          selectedItems.push(id);
+          selectedRegularItems.push(id);
         }
       });
 
       // עוגות מותאמות
       document.querySelectorAll('.ck-row input[type="checkbox"][data-custom-ids]:checked').forEach(cb => {
         const customIds = cb.getAttribute('data-custom-ids').split(',');
-        selectedItems.push(...customIds);
+        selectedCustomItems.push(...customIds);
       });
 
-      console.log('Selected items for checkout:', selectedItems);
+      console.log('Selected items for checkout:', { regularItems: selectedRegularItems, customItems: selectedCustomItems });
       
-      if (selectedItems.length === 0) {
+      if (selectedRegularItems.length === 0 && selectedCustomItems.length === 0) {
         const currentLang = localStorage.getItem('language') || 'he';
         const alertText = currentLang === 'en' ? 'Please select items for payment' : 'נא לבחור פריטים לתשלום';
         alert(alertText);
         return;
       }
+      
+      // שמירת הפריטים שנבחרו ב-localStorage
+      const selectedData = {
+        regularItems: selectedRegularItems,
+        customItems: selectedCustomItems,
+        timestamp: Date.now()
+      };
+      
+      localStorage.setItem('selectedForPayment', JSON.stringify(selectedData));
+      console.log('Saved to localStorage:', selectedData);
       
       location.href = 'pay.html';
     };

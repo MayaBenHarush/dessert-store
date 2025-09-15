@@ -2,135 +2,800 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>תשלום (דמו)</title>
+  <title>תשלום</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="/assets/styles.css" />
   <style>
-    .payment-container {
-      max-width: 500px;
-      margin: 0 auto;
-      background: var(--bg-card);
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: var(--shadow);
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    .payment-form { display: grid; gap: 16px; }
-    .form-group { display: grid; gap: 8px; }
-    .form-group label { font-weight: 600; }
-    .input, .select, .btn { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg-input); }
-    .summary { background: var(--bg-soft); padding: 16px; border-radius: 12px; display: grid; gap: 8px; }
-    .summary-row { display: flex; justify-content: space-between; }
-    .pay-button { background: var(--accent); color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; }
-    .error-message { color: #b00020; margin: 8px 0; display:none; }
-    .demo-notice { background: var(--bg-soft); padding: 10px; border-radius: 10px; margin-bottom: 12px; font-size: 0.95rem; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #ffffff;
+      color: #1a1a1a;
+      line-height: 1.6;
+    }
+
+    /* Header */
+    .header {
+      background: #ffffcc;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .menu-btn {
+      background: none;
+      border: none;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .menu-btn::before {
+      content: "☰";
+      font-size: 1.2rem;
+    }
+
+    .logo {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #1a1a1a;
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .header-btn {
+      background: none;
+      border: 2px solid #1a1a1a;
+      color: #1a1a1a;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .header-btn:hover {
+      background: #1a1a1a;
+      color: white;
+    }
+
+    .cart-btn::before {
+      content: "🛒";
+    }
+
+    .home-btn::before {
+      content: "🏠";
+    }
+
+    .login-btn::before {
+      content: "👤";
+    }
+
+    /* Navigation Menu */
+    .nav-menu {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 300px;
+      height: 100vh;
+      background: white;
+      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+      transition: right 0.3s ease;
+      padding: 2rem;
+      z-index: 2000;
+    }
+
+    .nav-menu.active {
+      right: 0;
+    }
+
+    .nav-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      float: left;
+      margin-bottom: 2rem;
+    }
+
+    .nav-item,
+    .nav-menu a,
+    .nav-menu button {
+      display: block;
+      padding: 0.75rem 0;
+      color: #1a1a1a;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid #f0f0f0;
+      transition: color 0.2s ease;
+      background: none;
+      border: none;
+      text-align: right;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .nav-item:hover,
+    .nav-menu a:hover,
+    .nav-menu button:hover {
+      color: #ffffcc;
+    }
+
+    /* Overlay */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1500;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Main Content */
+    .main-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+      display: grid;
+      gap: 2rem;
+    }
+
+    .page-header {
+      text-align: center;
+    }
+
+    #page-title {
+      font-size: 3rem;
+      font-weight: 900;
+      color: #1a1a1a;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+
+    .demo-notice {
+      background: #fff9c4;
+      padding: 1rem;
+      border-radius: 15px;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+      text-align: center;
+      border: 2px solid #f0e68c;
+    }
+
+    /* Payment Container */
+    .payment-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+      display: grid;
+      gap: 2rem;
+    }
+
+    /* Selected Items Section */
+    .selected-items-section {
+      background: #f8f8f8;
+      padding: 1.5rem;
+      border-radius: 15px;
+      border: 2px solid #f0f0f0;
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #1a1a1a;
+    }
+
+    .selected-items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .selected-item {
+      display: grid;
+      grid-template-columns: 60px 1fr auto;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .selected-item img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .item-details h4 {
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+    .item-price {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .item-total {
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    /* Custom Cake Styling */
+    .custom-cake-badge {
+      background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+      color: white;
+      padding: 0.2rem 0.6rem;
+      border-radius: 15px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      margin-left: 0.5rem;
+      display: inline-block;
+    }
+
+    .design-details-mini {
+      background: rgba(255, 107, 157, 0.1);
+      border-radius: 6px;
+      padding: 0.4rem;
+      margin-top: 0.3rem;
+      font-size: 0.8rem;
+      line-height: 1.3;
+      border-right: 2px solid #ff6b9d;
+    }
+
+    .design-detail-mini {
+      display: inline-block;
+      margin-left: 0.4rem;
+      color: #666;
+      font-weight: 500;
+    }
+
+    .design-detail-mini:first-child {
+      margin-left: 0;
+    }
+
+    .custom-text-preview-mini {
+      background: white;
+      border: 1px solid #ff6b9d;
+      border-radius: 3px;
+      padding: 0.1rem 0.3rem;
+      font-weight: bold;
+      display: inline-block;
+      margin-left: 0.2rem;
+      font-size: 0.7rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    /* Coupon Section */
+    .coupon-section {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 15px;
+      border: 2px solid #f0f0f0;
+    }
+
+    .coupon-input-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .input, .btn {
+      padding: 0.8rem;
+      border-radius: 10px;
+      border: 2px solid #f0f0f0;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+    }
+
+    .input {
+      flex: 1;
+      background: #f8f8f8;
+    }
+
+    .input:focus {
+      outline: none;
+      border-color: #1a1a1a;
+      background: white;
+    }
+
+    .btn {
+      background: #1a1a1a;
+      color: white;
+      border: 2px solid #1a1a1a;
+      cursor: pointer;
+      font-weight: 600;
+      min-width: 100px;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: #333;
+      transform: translateY(-1px);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Summary Section */
+    .summary-section {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 15px;
+      border: 2px solid #f0f0f0;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .summary-row:last-child {
+      border-bottom: none;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding-top: 1rem;
+      margin-top: 0.5rem;
+      border-top: 2px solid #1a1a1a;
+    }
+
+    .discount-row {
+      color: #28a745;
+    }
+
+    /* Payment Form */
+    .payment-form {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 15px;
+      border: 2px solid #f0f0f0;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .form-group {
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 100px;
+      gap: 1rem;
+    }
+
+    .pay-button {
+      background: #1a1a1a;
+      color: white;
+      border: none;
+      padding: 1.2rem;
+      border-radius: 15px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 1rem;
+    }
+
+    .pay-button:hover:not(:disabled) {
+      background: #333;
+      transform: translateY(-2px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    .pay-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .error-message {
+      color: #dc3545;
+      margin: 0.5rem 0;
+      display: none;
+      padding: 0.5rem;
+      background: #ffe6e6;
+      border-radius: 8px;
+      border: 1px solid #ffcccc;
+    }
+
+    /* Empty state */
+    .empty {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 4rem 2rem;
+      color: #666;
+      text-align: center;
+      font-size: 1.1rem;
+      background: #f8f8f8;
+      border-radius: 15px;
+      margin-top: 2rem;
+      gap: 1rem;
+    }
+
+    .empty .btn {
+      background: #1a1a1a;
+      color: white;
+      padding: 0.8rem 1.5rem;
+      text-decoration: none;
+      border-radius: 10px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .empty .btn:hover {
+      background: #333;
+      transform: translateY(-1px);
+    }
+
+    /* Dark Theme */
+    .dark-theme {
+      background: #1a1a1a;
+      color: white;
+    }
+
+    .dark-theme .header {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .nav-menu {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .nav-menu a,
+    .dark-theme .nav-menu button {
+      color: white;
+      border-bottom-color: #444;
+    }
+
+    .dark-theme .payment-container,
+    .dark-theme .selected-items-section,
+    .dark-theme .coupon-section,
+    .dark-theme .summary-section,
+    .dark-theme .payment-form {
+      background: #2d2d2d;
+      border-color: #444;
+    }
+
+    .dark-theme .selected-item {
+      background: #3d3d3d;
+    }
+
+    .dark-theme .section-title,
+    .dark-theme #page-title {
+      color: white;
+    }
+
+    .dark-theme .input {
+      background: #3d3d3d;
+      border-color: #555;
+      color: white;
+    }
+
+    .dark-theme .input:focus {
+      border-color: #ffffcc;
+      background: #444;
+    }
+
+    .dark-theme .btn {
+      background: #ffffcc;
+      color: #1a1a1a;
+      border-color: #ffffcc;
+    }
+
+    .dark-theme .btn:hover:not(:disabled) {
+      background: #ffff99;
+    }
+
+    .dark-theme .pay-button {
+      background: #ffffcc;
+      color: #1a1a1a;
+    }
+
+    .dark-theme .pay-button:hover:not(:disabled) {
+      background: #ffff99;
+    }
+
+    .dark-theme .demo-notice {
+      background: #3d3d3d;
+      border-color: #ffffcc;
+    }
+
+    .dark-theme .empty {
+      background: #2d2d2d;
+      color: #ccc;
+    }
+
+    .dark-theme .empty .btn {
+      background: #ffffcc;
+      color: #1a1a1a;
+    }
+
+    .dark-theme .empty .btn:hover {
+      background: #ffff99;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .header {
+        padding: 1rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .header-left {
+        order: 1;
+      }
+
+      .logo {
+        font-size: 1.8rem;
+        order: 2;
+      }
+
+      .header-nav {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .header-btn {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.75rem;
+      }
+
+      .main-content {
+        padding: 1rem;
+      }
+
+      #page-title {
+        font-size: 2rem;
+      }
+
+      .selected-item {
+        grid-template-columns: 50px 1fr;
+        gap: 0.8rem;
+      }
+
+      .selected-item img {
+        width: 50px;
+        height: 50px;
+      }
+
+      .item-total {
+        grid-column: span 2;
+        text-align: center;
+        margin-top: 0.5rem;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .coupon-input-group {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header-btn::before {
+        display: none;
+      }
+
+      .payment-container,
+      .selected-items-section,
+      .coupon-section,
+      .summary-section,
+      .payment-form {
+        padding: 1rem;
+      }
+    }
   </style>
 </head>
 <body>
-  <nav>
-    <a href="cart.html" id="nav-cart" data-key="nav.cart">סל הקניות</a>
-    <a href="checkout.html" id="nav-checkout" data-key="nav.checkout">תשלום</a>
-    <a href="myitems.html" id="nav-myitems" data-key="nav.myPurchases">הרכישות שלי</a>
-    <a id="login-link" href="login.html" data-key="nav.login">התחברות</a>
-    <a href="admin.html" id="nav-admin" data-key="nav.admin" style="display:none">ניהול</a>
-    <a href="dessert-finder.html" data-key="nav.dessertFinder"> מציאת הקינוח המושלם</a>
-    <a href="wheel.html" data-key="nav.wheel"> גלגל מזל</a>
-    <a href="cake-designer.html" data-key="nav.cakeDesigner">עיצוב עוגה</a>
-    <a href="recipes.html" id="nav-recipes" data-key="nav.recipes"> מתכונים</a>
-    <a href="store.html" id="nav-store" data-key="nav.store">חנות</a>
-    <a href="index.html" id="nav-home" class="nav-item" data-key="nav.home"> בית</a>
-    <button id="logout" style="display:none" data-key="nav.logout">התנתקות</button>
+  <div class="overlay" id="overlay"></div>
+  
+  <header class="header">
+    <div class="header-left">
+      <button class="menu-btn" id="menuBtn">Menu</button>
+      <a href="/" class="logo">dessert</a>
+    </div>
+    
+    <nav class="header-nav">
+      <a href="index.html" class="header-btn home-btn">בית</a>
+      <a href="cart.html" class="header-btn cart-btn">סל קניות</a>
+      <a href="login.html" class="header-btn login-btn" id="header-login">התחברות</a>
+    </nav>
+  </header>
+
+  <nav class="nav-menu" id="navMenu">
+    <button class="nav-close" id="navClose">×</button>
+    <a href="cart.html" id="nav-cart">סל הקניות</a>
+    <a href="checkout.html" id="nav-checkout">תשלום</a>
+    <a href="myitems.html" id="nav-myitems">הרכישות שלי</a>
+    <a href="admin.html" id="nav-admin" style="display:none">ניהול</a>
+    <a href="dessert-finder.html">מציאת הקינוח המושלם</a>
+    <a href="wheel.html">גלגל מזל</a>
+    <a href="cake-designer.html">עיצוב עוגה</a>
+    <a href="recipes.html" id="nav-recipes">מתכונים</a>
+    <a href="store.html" id="nav-store">חנות</a>
+    <button id="logout" style="display:none">התנתקות</button>
     <button id="theme-toggle">🌙 מצב כהה</button>
     <button id="language-toggle">🌐 English</button>
   </nav>
 
-  <div class="payment-container">
-    <h1 id="page-title">תשלום (דמו)</h1>
-    
-    <div class="demo-notice" id="demo-notice">
-      זהו תשלום דמו לצורכי תרגול בלבד - אין שמירה של פרטי כרטיס
+  <main class="main-content">
+    <div class="page-header">
+      <h1 id="page-title">תשלום</h1>
+      <div class="demo-notice" id="demo-notice">
+        זהו תשלום דמו לצורכי תרגול בלבד - אין שמירה של פרטי כרטיס
+      </div>
     </div>
 
-    <div id="error-message" class="error-message"></div>
+    <div class="payment-container">
+      <!-- Selected Items Section -->
+      <div class="selected-items-section">
+        <h2 class="section-title" id="selected-items-title">פריטים שנבחרו</h2>
+        <div id="selected-items-list" class="selected-items-list"></div>
+      </div>
 
-    <div class="coupon-section">
-      <div class="form-group">
-        <label for="coupon-code" id="coupon-label">קופון הנחה (אופציונלי)</label>
-        <div style="display:flex; gap:8px;">
+      <!-- Coupon Section -->
+      <div class="coupon-section">
+        <h3 class="section-title" id="coupon-title">קופון הנחה</h3>
+        <div id="error-message" class="error-message"></div>
+        <div class="coupon-input-group">
           <input class="input" type="text" id="coupon-code" placeholder="הכנס קוד קופון" />
           <button class="btn" id="apply-coupon-btn">החל</button>
         </div>
       </div>
+
+      <!-- Summary Section -->
+      <div class="summary-section">
+        <h3 class="section-title" id="summary-title">סיכום הזמנה</h3>
+        <div class="summary-row">
+          <span id="items-cost-label">עלות הפריטים:</span>
+          <span id="items-cost">₪0</span>
+        </div>
+        <div class="summary-row">
+          <span id="shipping-cost-label">עלות משלוח:</span>
+          <span id="shipping-cost">₪0</span>
+        </div>
+        <div class="summary-row discount-row" id="discount-row" style="display:none;">
+          <span id="discount-text">הנחה:</span>
+          <span id="discount-amount">₪0</span>
+        </div>
+        <div class="summary-row">
+          <span id="total-label">סה"כ לתשלום:</span>
+          <span id="total">₪0</span>
+        </div>
+      </div>
+
+      <!-- Payment Form -->
+      <div class="payment-form">
+        <h3 class="section-title" id="payment-details-title">פרטי תשלום</h3>
+        <form id="payment-form">
+          <div class="form-group">
+            <label for="cardNumber" id="card-number-label">מספר כרטיס</label>
+            <input class="input" id="cardNumber" type="text" placeholder="1234 5678 9012 3456" />
+          </div>
+
+          <div class="form-group">
+            <label for="cardName" id="card-name-label">שם בעל/ת הכרטיס</label>
+            <input class="input" id="cardName" type="text" placeholder="שם מלא" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="expiry" id="expiry-label">תוקף (MM/YY)</label>
+              <input class="input" id="expiry" type="text" placeholder="12/25" />
+            </div>
+            <div class="form-group">
+              <label for="cvv" id="cvv-label">CVV</label>
+              <input class="input" id="cvv" type="text" placeholder="123" />
+            </div>
+          </div>
+
+          <button type="submit" class="pay-button" id="pay-btn">
+            שלם עכשיו
+          </button>
+        </form>
+      </div>
     </div>
-
-    <div class="summary">
-      <div class="summary-row">
-        <span id="items-cost-label">עלות הפריטים:</span>
-        <span id="items-cost">₪0</span>
-      </div>
-      <div class="summary-row">
-        <span id="shipping-cost-label">עלות משלוח:</span>
-        <span id="shipping-cost">₪0</span>
-      </div>
-      <div class="summary-row" id="discount-row" style="display:none;">
-        <span id="discount-text">הנחה:</span>
-        <span id="discount-amount">₪0</span>
-      </div>
-      <div class="summary-row" style="font-weight:700;">
-        <span id="total-label">סה"כ לתשלום:</span>
-        <span id="total">₪0</span>
-      </div>
-    </div>
-
-    <form class="payment-form" id="payment-form">
-      <div class="form-group">
-        <label for="cardNumber" id="card-number-label">מספר כרטיס</label>
-        <input class="input" id="cardNumber" type="text" />
-      </div>
-
-      <div class="form-group">
-        <label for="cardName" id="card-name-label">שם בעל/ת הכרטיס</label>
-        <input class="input" id="cardName" type="text" placeholder="שם מלא" />
-      </div>
-
-      <div class="form-group">
-        <label for="expiry" id="expiry-label">תוקף (MM/YY)</label>
-        <input class="input" id="expiry" type="text" />
-      </div>
-
-      <div class="form-group">
-        <label for="cvv" id="cvv-label">CVV</label>
-        <input class="input" id="cvv" type="text" />
-      </div>
-
-      <button type="submit" class="pay-button" id="pay-btn">
-        שלם עכשיו
-      </button>
-    </form>
-  </div>
+  </main>
 
   <script>
-    // גישה פשוטה מבוססת store.html - בלי מערכות תרגום מורכבות
-    const navStore = document.getElementById('nav-store');
-    const navCart = document.getElementById('nav-cart');
-    const navCheckout = document.getElementById('nav-checkout');
-    const navMyitems = document.getElementById('nav-myitems');
-    const loginLink = document.getElementById('login-link');
-    const logoutBtn = document.getElementById('logout');
-    const navAdmin = document.getElementById('nav-admin');
-    const pageTitle = document.getElementById('page-title');
-    const themeToggle = document.getElementById('theme-toggle');
+    // Menu functionality
+    const menuBtn = document.getElementById('menuBtn');
+    const navMenu = document.getElementById('navMenu');
+    const navClose = document.getElementById('navClose');
+    const overlay = document.getElementById('overlay');
 
+    function openMenu() {
+      navMenu.classList.add('active');
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+      navMenu.classList.remove('active');
+      overlay.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    menuBtn.addEventListener('click', openMenu);
+    navClose.addEventListener('click', closeMenu);
+    overlay.addEventListener('click', closeMenu);
+
+    // טעינת התאמות אישיות
     function loadUICustomization() {
       const theme = localStorage.getItem('theme') || 'light';
       const themeToggle = document.getElementById('theme-toggle');
       const languageToggle = document.getElementById('language-toggle');
       
-      if (theme === 'dark') { 
-        document.body.classList.add('dark-theme'); 
-        themeToggle.textContent = '☀️ מצב בהיר'; 
-      } else { 
-        document.body.classList.remove('dark-theme'); 
-        themeToggle.textContent = '🌙 מצב כהה'; 
+      if (theme === 'dark') {
+        document.body.classList.add('dark-theme');
+        themeToggle.textContent = '☀️ מצב בהיר';
+      } else {
+        document.body.classList.remove('dark-theme');
+        themeToggle.textContent = '🌙 מצב כהה';
       }
       
       const currentLanguage = localStorage.getItem('language') || 'he';
@@ -141,16 +806,13 @@
     function updateInterfaceLanguage(lang) {
       const t = {
         he: {
-          'nav-store': 'חנות',
-          'nav-cart': 'סל הקניות', 
-          'nav-checkout': 'תשלום',
-          'nav-myitems': 'הרכישות שלי',
-          'login-link': 'התחברות',
-          'logout': 'התנתקות',
-          'nav-admin': 'ניהול',
-          'page-title': 'תשלום (דמו)',
+          'page-title': 'תשלום',
           'demo-notice': 'זהו תשלום דמו לצורכי תרגול בלבד - אין שמירה של פרטי כרטיס',
-          'coupon-label': 'קופון הנחה (אופציונלי)',
+          'selected-items-title': 'פריטים שנבחרו',
+          'coupon-title': 'קופון הנחה',
+          'summary-title': 'סיכום הזמנה',
+          'payment-details-title': 'פרטי תשלום',
+          'coupon-placeholder': 'הכנס קוד קופון',
           'apply-coupon-btn': 'החל',
           'items-cost-label': 'עלות הפריטים:',
           'shipping-cost-label': 'עלות משלוח:',
@@ -163,20 +825,28 @@
           'pay-btn': 'שלם עכשיו',
           'theme-dark': '🌙 מצב כהה',
           'theme-light': '☀️ מצב בהיר',
-          'coupon-placeholder': 'הכנס קוד קופון',
-          'card-name-placeholder': 'שם מלא'
+          'card-name-placeholder': 'שם מלא',
+          'custom-cake': '🎨 מותאמת',
+          'cake': 'עוגה',
+          'color': 'צבע:',
+          'text': 'כיתוב:',
+          'no-text': 'ללא כיתוב',
+          'nav-cart': 'סל הקניות',
+          'nav-checkout': 'תשלום',
+          'nav-myitems': 'הרכישות שלי',
+          'nav-admin': 'ניהול',
+          'logout': 'התנתקות',
+          'empty-cart': 'לא נבחרו פריטים לתשלום',
+          'back-to-checkout': 'חזור לצ\'ק-אאוט'
         },
         en: {
-          'nav-store': 'Store',
-          'nav-cart': 'Shopping Cart',
-          'nav-checkout': 'Checkout',
-          'nav-myitems': 'My Purchases',
-          'login-link': 'Login',
-          'logout': 'Logout',
-          'nav-admin': 'Admin',
-          'page-title': 'Payment (Demo)',
+          'page-title': 'Payment',
           'demo-notice': 'This is a demo payment for practice only - no credit card details are saved',
-          'coupon-label': 'Discount Coupon (Optional)',
+          'selected-items-title': 'Selected Items',
+          'coupon-title': 'Discount Coupon',
+          'summary-title': 'Order Summary',
+          'payment-details-title': 'Payment Details',
+          'coupon-placeholder': 'Enter coupon code',
           'apply-coupon-btn': 'Apply',
           'items-cost-label': 'Items Cost:',
           'shipping-cost-label': 'Shipping Cost:',
@@ -189,105 +859,531 @@
           'pay-btn': 'Pay Now',
           'theme-dark': '🌙 Dark Mode',
           'theme-light': '☀️ Light Mode',
-          'coupon-placeholder': 'Enter coupon code',
-          'card-name-placeholder': 'Full name'
+          'card-name-placeholder': 'Full name',
+          'custom-cake': '🎨 Custom',
+          'cake': 'Cake',
+          'color': 'Color:',
+          'text': 'Text:',
+          'no-text': 'No text',
+          'nav-cart': 'Shopping Cart',
+          'nav-checkout': 'Checkout',
+          'nav-myitems': 'My Purchases',
+          'nav-admin': 'Admin',
+          'logout': 'Logout',
+          'empty-cart': 'No items selected for payment. Please go back to checkout.',
+          'back-to-checkout': 'Back to Checkout'
         }
       }[lang];
       
       if (!t) return;
       
-      navStore.textContent = t['nav-store']; 
-      navCart.textContent = t['nav-cart']; 
-      navCheckout.textContent = t['nav-checkout'];
-      navMyitems.textContent = t['nav-myitems']; 
-      loginLink.textContent = t['login-link']; 
-      logoutBtn.textContent = t['logout'];
-      navAdmin.textContent = t['nav-admin']; 
-      pageTitle.textContent = t['page-title'];
+      Object.keys(t).forEach(key => {
+        const element = document.getElementById(key) || document.querySelector(`[data-key="${key}"]`);
+        if (element) {
+          if (element.tagName === 'INPUT' && element.type !== 'submit') {
+            element.placeholder = t[key];
+          } else {
+            element.textContent = t[key];
+          }
+        }
+      });
       
-      document.getElementById('demo-notice').textContent = t['demo-notice'];
-      document.getElementById('coupon-label').textContent = t['coupon-label'];
-      document.getElementById('apply-coupon-btn').textContent = t['apply-coupon-btn'];
-      document.getElementById('items-cost-label').textContent = t['items-cost-label'];
-      document.getElementById('shipping-cost-label').textContent = t['shipping-cost-label'];
-      document.getElementById('discount-text').textContent = t['discount-text'];
-      document.getElementById('total-label').textContent = t['total-label'];
-      document.getElementById('card-number-label').textContent = t['card-number-label'];
-      document.getElementById('card-name-label').textContent = t['card-name-label'];
-      document.getElementById('expiry-label').textContent = t['expiry-label'];
-      document.getElementById('cvv-label').textContent = t['cvv-label'];
-      document.getElementById('pay-btn').textContent = t['pay-btn'];
-      
-      document.getElementById('coupon-code').placeholder = t['coupon-placeholder'];
-      document.getElementById('cardName').placeholder = t['card-name-placeholder'];
-      
-      const theme = localStorage.getItem('theme') || 'light';
-      themeToggle.textContent = (theme === 'dark') ? t['theme-light'] : t['theme-dark'];
-      
-      if (lang === 'en') { 
-        document.documentElement.dir = 'ltr'; 
-        document.documentElement.lang = 'en'; 
-      } else { 
-        document.documentElement.dir = 'rtl'; 
-        document.documentElement.lang = 'he'; 
+      if (lang === 'en') {
+        document.documentElement.dir = 'ltr';
+        document.documentElement.lang = 'en';
+      } else {
+        document.documentElement.dir = 'rtl';
+        document.documentElement.lang = 'he';
       }
     }
 
+    // החלפת נושא
     document.getElementById('theme-toggle').addEventListener('click', () => {
       const isDark = document.body.classList.contains('dark-theme');
-      localStorage.setItem('theme', isDark ? 'light' : 'dark'); 
+      localStorage.setItem('theme', isDark ? 'light' : 'dark');
       loadUICustomization();
     });
 
+    // החלפת שפה
     document.getElementById('language-toggle').addEventListener('click', () => {
       const cur = localStorage.getItem('language') || 'he';
       const next = cur === 'he' ? 'en' : 'he';
       localStorage.setItem('language', next);
-      
-      // עדכון מיידי של כפתור השפה
-      const langBtn = document.getElementById('language-toggle');
-      langBtn.textContent = next === 'en' ? '🌐 עברית' : '🌐 English';
-      
-      // עדכון כיוון הדף
-      document.documentElement.lang = next;
-      document.documentElement.dir = next === 'en' ? 'ltr' : 'rtl';
-      
-      // בדיקה פשוטה - רק כותרת הדף
-      if (next === 'en') {
-        document.getElementById('page-title').textContent = 'Payment (Demo)';
-        document.getElementById('demo-notice').textContent = 'This is a demo payment for practice only';
-      } else {
-        document.getElementById('page-title').textContent = 'תשלום (דמו)';
-        document.getElementById('demo-notice').textContent = 'זהו תשלום דמו לצורכי תרגול בלבד - אין שמירה של פרטי כרטיס';
-      }
+      loadUICustomization();
+      loadSelectedItems();
     });
 
+    // בדיקת מצב התחברות
     async function setupAuthButtons() {
       let loggedIn = false, username = '';
-      try { 
-        const r = await fetch('/api/session'); 
-        if (r.ok) { 
-          loggedIn = true; 
-          const data = await r.json(); 
-          username = data.username; 
-        } 
+      try {
+        const r = await fetch('/api/session');
+        if (r.ok) {
+          loggedIn = true;
+          const data = await r.json();
+          username = data.username;
+        }
       } catch {}
+      
+      const loginLink = document.getElementById('header-login');
+      const logoutBtn = document.getElementById('logout');
+      const navAdmin = document.getElementById('nav-admin');
       
       loginLink.style.display = loggedIn ? 'none' : '';
       logoutBtn.style.display = loggedIn ? '' : 'none';
       navAdmin.style.display = (loggedIn && username === 'admin') ? '' : 'none';
     }
 
-    document.getElementById('logout').onclick = async () => { 
-      try { 
-        await fetch('/api/logout', {method:'POST'}); 
-      } finally { 
-        location.href = '/screens/login.html'; 
-      } 
+    document.getElementById('logout').onclick = async () => {
+      try {
+        await fetch('/api/logout', {method: 'POST'});
+      } finally {
+        location.href = 'login.html';
+      }
     };
 
-    loadUICustomization();
-    setupAuthButtons();
+    // ===== helpers =====
+    const nis = n => `₪${n}`;
+    const slug = s => String(s || '').trim().toLowerCase().replace(/[^\p{L}\p{N} ]/gu, '').replace(/\s+/g, '-');
+
+    // מחירון ושמות
+    const PRICE_MAP = {
+      'chocolate-cake': 150, '8-cookies-box': 125, 'cupcakes': 160, 'minnie-mous-cake': 300,
+      'nutella-box': 70, 'chocolate-pizza-xl': 120, 'bento-design-cake': 140,
+      'chocolate-design-cake': 180, 'orange-cake': 70, 'white-design-cake': 140,
+      'pizza-cookie': 120, 'pizza cookie': 120
+    };
+
+    const NAMES = {
+      he: {
+        'chocolate-cake': 'עוגת שוקולד מעוצבת', '8-cookies-box': 'מארז 8 עוגיות',
+        'cupcakes': 'קאפקייקס', 'minnie-mous-cake': 'עוגת מיני מאוס',
+        'nutella-box': 'מארז מגולגלות נוטלה', 'chocolate-pizza-xl': 'פיצת שוקולד גדולה',
+        'bento-design-cake': 'עוגת בנטו מעוצבת', 'chocolate-design-cake': 'עוגת שוקולד מעוצבת',
+        'orange-cake': 'עוגת תפוזים', 'bagle-cookie': 'עוגיית בייגל',
+        'caramel-cookie': 'עוגיית קרמל', 'kinder-cookie': 'עוגיית קינדר',
+        'lotus-cookie': 'עוגיית לוטוס', 'nutella-cookie': 'עוגיית נוטלה',
+        'white-chocolate-cookie': 'עוגיית שוקולד לבן', 'white-design-cake': 'עוגת בנטו מעוצבת',
+        'pizza-cookie': 'פיצת שוקולד גדולה', 'pizza cookie': 'פיצת שוקולד גדולה'
+      },
+      en: {
+        'chocolate-cake': 'Chocolate Design Cake', '8-cookies-box': '8 Cookies Box',
+        'cupcakes': 'Cupcakes', 'minnie-mous-cake': 'Minnie Mouse Cake',
+        'nutella-box': 'Nutella Box', 'chocolate-pizza-xl': 'Chocolate Pizza XL',
+        'bento-design-cake': 'Bento Design Cake', 'chocolate-design-cake': 'Chocolate Design Cake',
+        'orange-cake': 'Orange Cake', 'bagle-cookie': 'Bagel Cookie',
+        'caramel-cookie': 'Caramel Cookie', 'kinder-cookie': 'Kinder Cookie',
+        'lotus-cookie': 'Lotus Cookie', 'nutella-cookie': 'Nutella Cookie',
+        'white-chocolate-cookie': 'White Chocolate Cookie', 'white-design-cake': 'Bento Design Cake',
+        'pizza-cookie': 'Chocolate Pizza XL', 'pizza cookie': 'Chocolate Pizza XL'
+      }
+    };
+
+    const priceOf = (p) => {
+      const keys = [p.id, slug(p.id), p.title, slug(p.title)];
+      const hit = keys.find(k => k && PRICE_MAP[k] != null);
+      return hit ? PRICE_MAP[hit] : (/(cookie)/i.test(String(p.id) + p.title) ? 17 : 0);
+    };
+
+    const nameOf = (p, lang) => {
+      const id = String(p.id ?? '');
+      const title = String(p.title ?? '');
+      const dict = NAMES[lang] || {};
+      const k = [id, slug(id), title, slug(title)].find(x => dict[x]);
+      return k ? dict[k] : (title || id);
+    };
+
+    // פונקציה לתרגום צבעים
+    function getColorName(color) {
+      const currentLang = localStorage.getItem('language') || 'he';
+      const colorNames = {
+        he: {
+          'pink': 'ורוד', 'white': 'לבן', 'green': 'ירוק', 'red': 'אדום',
+          'purple': 'סגול', 'light-blue': 'כחול בהיר', 'orange': 'כתום'
+        },
+        en: {
+          'pink': 'Pink', 'white': 'White', 'green': 'Green', 'red': 'Red',
+          'purple': 'Purple', 'light-blue': 'Light Blue', 'orange': 'Orange'
+        }
+      };
+      return colorNames[currentLang]?.[color] || color;
+    }
+
+    // טעינת מוצרים
+    let PRODUCTS = [];
+    async function loadProducts() {
+      try {
+        const r = await fetch('/api/products');
+        PRODUCTS = r.ok ? await r.json() : [];
+      } catch {}
+    }
+
+    // קבלת נתוני העגלה עם עוגות מותאמות
+    async function getCartMap() {
+      try {
+        const res = await fetch('/api/cart-with-custom');
+        if (res.status === 401) { 
+          location.href = 'login.html'; 
+          return {}; 
+        }
+        if (res.ok) {
+          return await res.json();
+        }
+      } catch {}
+
+      // fallback ל-API ישן
+      try {
+        const r = await fetch('/api/cart');
+        if (!r.ok) return {};
+        const quantities = toQtyMap(await r.json());
+        return { regularItems: quantities, customCakes: [] };
+      } catch { 
+        return { regularItems: {}, customCakes: [] }; 
+      }
+    }
+
+    // ממיר כל פורמט ל{id: qty}
+    function toQtyMap(payload) {
+      if (payload && typeof payload === 'object' && Array.isArray(payload.items)) payload = payload.items;
+      const q = {};
+      if (Array.isArray(payload)) {
+        for (const it of payload) {
+          if (typeof it === 'string') { q[it] = (q[it] || 0) + 1; continue; }
+          if (it && typeof it === 'object') {
+            const id = it.id || it.productId;
+            const qty = Number(it.qty ?? it.quantity ?? 1);
+            if (id) q[id] = (q[id] || 0) + qty;
+          }
+        }
+      } else if (payload && typeof payload === 'object') {
+        for (const [id, val] of Object.entries(payload)) {
+          q[id] = typeof val === 'number' ? val : Number(val?.qty ?? val?.quantity ?? 1);
+        }
+      }
+      return q;
+    }
+
+    // משתנים גלובליים
+    let cartData = {};
+    let customCakes = [];
+    let itemsCost = 0;
+    let shippingCost = 0;
+    let discountAmount = 0;
+
+    // קבלת הפריטים שנבחרו בדף הצ'ק-אאוט
+    function getSelectedItemsFromStorage() {
+      try {
+        const selectedData = localStorage.getItem('selectedForPayment');
+        return selectedData ? JSON.parse(selectedData) : null;
+      } catch {
+        return null;
+      }
+    }
+
+    // טעינת הפריטים שנבחרו לתשלום
+    async function loadSelectedItems() {
+      const selectedData = getSelectedItemsFromStorage();
+      
+      const selectedItemsList = document.getElementById('selected-items-list');
+      selectedItemsList.innerHTML = '';
+      
+      const lang = localStorage.getItem('language') || 'he';
+      itemsCost = 0;
+      
+      // אם אין פריטים נבחרים, חזור לדף הצ'ק-אאוט
+      if (!selectedData || (!selectedData.regularItems.length && !selectedData.customItems.length)) {
+        const emptyText = lang === 'en' ? 'No items selected for payment. Please go back to checkout.' : 'לא נבחרו פריטים לתשלום. אנא חזור לדף הצ\'ק-אאוט.';
+        const backButtonText = lang === 'en' ? 'Back to Checkout' : 'חזור לצ\'ק-אאוט';
+        selectedItemsList.innerHTML = `
+          <div class="empty">
+            ${emptyText}
+            <a href="checkout.html" class="btn">${backButtonText}</a>
+          </div>
+        `;
+        updateSummary();
+        return;
+      }
+      
+      // טעינת נתוני עגלה כדי לקבל פרטי עוגות מותאמות
+      cartData = await getCartMap();
+      customCakes = cartData.customCakes || [];
+      
+      // הצגת מוצרים רגילים שנבחרו
+      if (selectedData.regularItems && selectedData.regularItems.length > 0) {
+        // ספירת כמויות של מוצרים רגילים
+        const regularItemCounts = {};
+        selectedData.regularItems.forEach(id => {
+          regularItemCounts[id] = (regularItemCounts[id] || 0) + 1;
+        });
+
+        for (const [id, qty] of Object.entries(regularItemCounts)) {
+          const p = PRODUCTS.find(x => String(x.id) === String(id)) || { id, title: id, image: '' };
+          const productName = nameOf(p, lang);
+          const unit = priceOf(p);
+          const total = unit * qty;
+          itemsCost += total;
+
+          const itemDiv = document.createElement('div');
+          itemDiv.className = 'selected-item';
+          itemDiv.innerHTML = `
+            <img src="/images/${p.image || 'placeholder.png'}" alt="${productName}">
+            <div class="item-details">
+              <h4>${productName}</h4>
+              <div class="item-price">${nis(unit)} × ${qty}</div>
+            </div>
+            <div class="item-total">${nis(total)}</div>
+          `;
+          selectedItemsList.appendChild(itemDiv);
+        }
+      }
+
+      // הצגת עוגות מותאמות שנבחרו
+      if (selectedData.customItems && selectedData.customItems.length > 0) {
+        // מציאת עוגות מותאמות שנבחרו
+        const selectedCustomCakes = customCakes.filter(cake => 
+          selectedData.customItems.includes(cake.id)
+        );
+
+        // קיבוץ עוגות מותאמות זהות
+        const groupedCustomCakes = {};
+        selectedCustomCakes.forEach(cake => {
+          const key = `${cake.design.size}-${cake.design.color}-${cake.design.text || ''}-${cake.design.textColor}`;
+          if (!groupedCustomCakes[key]) {
+            groupedCustomCakes[key] = {
+              cake: cake,
+              quantity: 0,
+              ids: []
+            };
+          }
+          groupedCustomCakes[key].quantity++;
+          groupedCustomCakes[key].ids.push(cake.id);
+        });
+
+        Object.values(groupedCustomCakes).forEach(group => {
+          const design = group.cake.design;
+          const total = design.price * group.quantity;
+          itemsCost += total;
+
+          const sizeText = lang === 'en'
+            ? (design.size === 'bento' ? 'Bento (10cm)' : 'Large (22cm)')
+            : (design.size === 'bento' ? 'בנטו (10 ס"מ)' : 'גדולה (22 ס"מ)');
+          
+          const colorName = getColorName(design.color);
+          const customBadge = lang === 'en' ? '🎨 Custom' : '🎨 מותאמת';
+          const cakeText = lang === 'en' ? 'Cake' : 'עוגה';
+          const colorText = lang === 'en' ? 'Color:' : 'צבע:';
+          const textText = lang === 'en' ? 'Text:' : 'כיתוב:';
+          const noTextText = lang === 'en' ? 'No text' : 'ללא כיתוב';
+
+          const itemDiv = document.createElement('div');
+          itemDiv.className = 'selected-item';
+          itemDiv.innerHTML = `
+            <img src="/images/cakes/${design.imageFile || `cake-${design.color}.png`}" alt="עוגה מותאמת">
+            <div class="item-details">
+              <h4>
+                <span class="custom-cake-badge">${customBadge}</span>
+                ${cakeText} ${sizeText}
+              </h4>
+              <div class="design-details-mini">
+                <span class="design-detail-mini"><strong>${colorText}</strong> ${colorName}</span>
+                ${design.text ? `<span class="design-detail-mini"><strong>${textText}</strong> <span class="custom-text-preview-mini" style="color: ${design.textColor}">"${design.text}"</span></span>` : `<span class="design-detail-mini">${noTextText}</span>`}
+              </div>
+              <div class="item-price">${nis(design.price)} × ${group.quantity}</div>
+            </div>
+            <div class="item-total">${nis(total)}</div>
+          `;
+          selectedItemsList.appendChild(itemDiv);
+        });
+      }
+
+      updateSummary();
+    }
+
+    // עדכון סיכום התשלום
+    function updateSummary() {
+      shippingCost = itemsCost > 200 ? 0 : 25; // משלוח חינם מעל 200 ש"ח
+      
+      document.getElementById('items-cost').textContent = nis(itemsCost);
+      document.getElementById('shipping-cost').textContent = nis(shippingCost);
+      
+      const finalTotal = itemsCost + shippingCost - discountAmount;
+      document.getElementById('total').textContent = nis(Math.max(0, finalTotal));
+      
+      // הצגת הנחה אם קיימת
+      const discountRow = document.getElementById('discount-row');
+      if (discountAmount > 0) {
+        discountRow.style.display = '';
+        document.getElementById('discount-amount').textContent = '-' + nis(discountAmount);
+      } else {
+        discountRow.style.display = 'none';
+      }
+    }
+
+    // טיפול בקופונים
+    const coupons = {
+      'SAVE10': { type: 'percentage', value: 10, minOrder: 100 },
+      'SAVE20': { type: 'fixed', value: 20, minOrder: 50 },
+      'FREESHIP': { type: 'shipping', value: 0, minOrder: 0 },
+      'WELCOME': { type: 'percentage', value: 15, minOrder: 150 }
+    };
+
+    document.getElementById('apply-coupon-btn').addEventListener('click', () => {
+      const couponCode = document.getElementById('coupon-code').value.trim().toUpperCase();
+      const errorDiv = document.getElementById('error-message');
+      
+      if (!couponCode) {
+        const lang = localStorage.getItem('language') || 'he';
+        const message = lang === 'en' ? 'Please enter coupon code' : 'אנא הכנס קוד קופון';
+        showError(message);
+        return;
+      }
+      
+      const coupon = coupons[couponCode];
+      if (!coupon) {
+        const lang = localStorage.getItem('language') || 'he';
+        const message = lang === 'en' ? 'Invalid coupon code' : 'קוד קופון לא תקין';
+        showError(message);
+        return;
+      }
+      
+      if (itemsCost < coupon.minOrder) {
+        const lang = localStorage.getItem('language') || 'he';
+        const message = lang === 'en' 
+          ? `Minimum order for this coupon is ₪${coupon.minOrder}`
+          : `הזמנה מינימלית לקופון זה היא ₪${coupon.minOrder}`;
+        showError(message);
+        return;
+      }
+      
+      // חישוב הנחה
+      if (coupon.type === 'percentage') {
+        discountAmount = Math.round(itemsCost * coupon.value / 100);
+      } else if (coupon.type === 'fixed') {
+        discountAmount = coupon.value;
+      } else if (coupon.type === 'shipping') {
+        discountAmount = shippingCost;
+      }
+      
+      updateSummary();
+      
+      const lang = localStorage.getItem('language') || 'he';
+      const successMessage = lang === 'en' ? 'Coupon applied successfully!' : 'קופון הוחל בהצלחה!';
+      showError(successMessage, 'success');
+      
+      document.getElementById('coupon-code').disabled = true;
+      document.getElementById('apply-coupon-btn').disabled = true;
+      document.getElementById('apply-coupon-btn').textContent = lang === 'en' ? 'Applied' : 'הוחל';
+    });
+
+    function showError(message, type = 'error') {
+      const errorDiv = document.getElementById('error-message');
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+      
+      if (type === 'success') {
+        errorDiv.style.background = '#d4edda';
+        errorDiv.style.borderColor = '#c3e6cb';
+        errorDiv.style.color = '#155724';
+      } else {
+        errorDiv.style.background = '#ffe6e6';
+        errorDiv.style.borderColor = '#ffcccc';
+        errorDiv.style.color = '#dc3545';
+      }
+      
+      if (type !== 'success') {
+        setTimeout(() => {
+          errorDiv.style.display = 'none';
+        }, 5000);
+      }
+    }
+
+    // טיפול בטופס התשלום
+    document.getElementById('payment-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const cardNumber = document.getElementById('cardNumber').value.trim();
+      const cardName = document.getElementById('cardName').value.trim();
+      const expiry = document.getElementById('expiry').value.trim();
+      const cvv = document.getElementById('cvv').value.trim();
+      
+      if (!cardNumber || !cardName || !expiry || !cvv) {
+        const lang = localStorage.getItem('language') || 'he';
+        const message = lang === 'en' ? 'Please fill all payment fields' : 'אנא מלא את כל שדות התשלום';
+        showError(message);
+        return;
+      }
+      
+      // בדיקות בסיסיות
+      if (cardNumber.replace(/\s/g, '').length < 13) {
+        const lang = localStorage.getItem('language') || 'he';
+        const message = lang === 'en' ? 'Invalid card number' : 'מספר כרטיס לא תקין';
+        showError(message);
+        return;
+      }
+      
+      if (!/^\d{2}\/\d{2}$/.test(expiry)) {
+        const lang = localStorage.getItem('language') || 'he';
+        const message = lang === 'en' ? 'Invalid expiry date format' : 'פורמט תאריך תוקף לא תקין';
+        showError(message);
+        return;
+      }
+      
+      if (!/^\d{3,4}$/.test(cvv)) {
+        const lang = localStorage.getItem('language') || 'he';
+        const message = lang === 'en' ? 'Invalid CVV' : 'CVV לא תקין';
+        showError(message);
+        return;
+      }
+      
+      // הדמיה של תשלום
+      const payButton = document.getElementById('pay-btn');
+      payButton.disabled = true;
+      const lang = localStorage.getItem('language') || 'he';
+      payButton.textContent = lang === 'en' ? 'Processing...' : 'מעבד...';
+      
+      setTimeout(() => {
+        const successMessage = lang === 'en' ? 'Payment completed successfully!' : 'התשלום הושלם בהצלחה!';
+        alert(successMessage);
+        
+        // ניקוי הפריטים שנבחרו
+        localStorage.removeItem('selectedForPayment');
+        
+        // מעבר לדף רכישות
+        location.href = 'myitems.html';
+      }, 2000);
+    });
+
+    // פורמוט אוטומטי למספר כרטיס
+    document.getElementById('cardNumber').addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\s/g, '').replace(/[^0-9]/gi, '');
+      let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+      if (formattedValue.length > 19) formattedValue = formattedValue.substr(0, 19);
+      e.target.value = formattedValue;
+    });
+
+    // פורמוט אוטומטי לתאריך תוקף
+    document.getElementById('expiry').addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length >= 2) {
+        value = value.substring(0, 2) + '/' + value.substring(2, 4);
+      }
+      e.target.value = value;
+    });
+
+    // פורמוט אוטומטי ל-CVV
+    document.getElementById('cvv').addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/\D/g, '').substring(0, 4);
+    });
+
+    // אתחול
+    async function init() {
+      await loadProducts();
+      await setupAuthButtons();
+      loadUICustomization();
+      await loadSelectedItems();
+    }
+
+    init();
   </script>
 </body>
 </html>

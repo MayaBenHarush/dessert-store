@@ -47,7 +47,9 @@
         "chocolate-cake",
         "custom-cake-1757366779206-bqrmlkx4u",
         "custom-cake-1757772326282-h33j9i4ct",
-        "custom-cake-1757864036475-dlgaizkf7"
+        "custom-cake-1757864036475-dlgaizkf7",
+        "cookies-box",
+        "lotus-cookie"
       ]
     }
   ],
@@ -847,6 +849,16 @@
       "username": "מאיה1",
       "type": "add-custom-cake-to-cart",
       "details": "large red cake with \"גבגה\" in #ff1744"
+    },
+    {
+      "datetime": "2025-09-14T23:56:07.736Z",
+      "username": "מאיה1",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-09-14T23:56:10.394Z",
+      "username": "מאיה1",
+      "type": "add-to-cart"
     }
   ],
   "products": [
