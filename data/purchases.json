@@ -166,5 +166,17 @@
       "purchaseDate": "2025-09-15T14:00:51.918Z",
       "purchaseId": "1757944851918d41ptxyx2"
     }
+  ],
+  "מאיה4": [
+    {
+      "id": "cookies-box",
+      "title": "cookies box",
+      "image": "cookies-box.jpeg",
+      "price": 17,
+      "date": "2025-09-15T23:35:35.747Z",
+      "type": "regular",
+      "purchaseDate": "2025-09-15T23:35:35.761Z",
+      "purchaseId": "1757979335761lynk3vgcr"
+    }
   ]
 }

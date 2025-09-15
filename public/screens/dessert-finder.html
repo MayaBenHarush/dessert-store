@@ -476,6 +476,8 @@
         document.body.classList.add('dark-theme');
         if (themeToggle) themeToggle.textContent = '☀️ מצב בהיר';
       } else {
+        /* 👇 התיקון היחיד: להסיר את המחלקה כשחוזרים למצב בהיר */
+        document.body.classList.remove('dark-theme');
         if (themeToggle) themeToggle.textContent = '🌙 מצב כהה';
       }
       
