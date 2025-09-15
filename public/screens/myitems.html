@@ -139,7 +139,13 @@
     function loadUICustomization(){
       const theme=localStorage.getItem('theme')||'light';
       document.body.classList.toggle('dark-theme',theme==='dark');
-      document.getElementById('language-toggle').textContent=(localStorage.getItem('language')||'he')==='en'?'🌐 עברית':'🌐 English';
+      const lang = localStorage.getItem('language')||'he';
+      document.getElementById('language-toggle').textContent=(lang==='en')?'🌐 עברית':'🌐 English';
+
+      /* ← הוספה: עדכון כותרת העמוד והטאב לפי שפה */
+      const pt=document.getElementById('page-title');
+      if(pt){ pt.textContent = (lang==='en') ? 'My Purchases' : 'הרכישות שלי'; }
+      document.title = (lang==='en') ? 'My Purchases' : 'הרכישות שלי';
     }
     document.getElementById('theme-toggle').addEventListener('click',()=>{
       const isDark=document.body.classList.contains('dark-theme');
