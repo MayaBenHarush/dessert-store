@@ -73,7 +73,27 @@
       noItemsPending:'אין פריטים ממתינים לתשלום', 
       processing:'מעבד תשלום...', 
       totalLabel:'סה"כ מחיר:',
-      addedToCart:'נוסף לסל'
+      addedToCart:'נוסף לסל',
+
+      // מחרוזות עזר לדף Finder (לא פוגעות בעיצוב)
+      finder: {
+        pageTitle: '🔍 מציאת הקינוח המושלם',
+        prevQuestion: 'שאלה קודמת',
+        nextQuestion: 'שאלה הבאה',
+        lastQuestion: 'צפה בתוצאות',
+        questionCounter: 'שאלה {current} מתוך {total}',
+        loading: 'טוען התאמות לקינוחים…',
+        noResultsTitle: 'אופס! לא מצאנו התאמה מושלמת',
+        noResultsDesc: 'נסי לשנות חלק מהתשובות או פני אלינו לייעוץ אישי',
+        resultsTitle: 'מצאנו בשבילך!',
+        resultsSubtitle: 'הקינוחים המושלמים בהתאם להעדפות שלך',
+        reasonsTitle: 'למה זה מתאים לך:',
+        addToCart: 'הוסף לסל הקניות',
+        added: '✓ נוסף לסל!',
+        mustLogin: 'יש להתחבר כדי להוסיף מוצרים לסל',
+        addError: 'שגיאה בהוספה לסל. נסי שוב.',
+        restart: 'התחל שוב'
+      }
     },
     en: {
       nav:{
@@ -156,45 +176,106 @@
       noItemsPending:'No items pending payment', 
       processing:'Processing...', 
       totalLabel:'Total:',
-      addedToCart:'added to cart'
+      addedToCart:'added to cart',
+
+      finder: {
+        pageTitle: '🔍 Find the Perfect Dessert',
+        prevQuestion: 'Previous Question',
+        nextQuestion: 'Next Question',
+        lastQuestion: 'View Results',
+        questionCounter: 'Question {current} of {total}',
+        loading: 'Loading dessert matches…',
+        noResultsTitle: 'Oops! No perfect match found',
+        noResultsDesc: 'Try changing some answers or contact us for personal advice',
+        resultsTitle: 'We found for you!',
+        resultsSubtitle: 'The perfect desserts based on your preferences',
+        reasonsTitle: 'Why it suits you:',
+        addToCart: 'Add to Cart',
+        added: '✓ Added!',
+        mustLogin: 'Please log in to add items to the cart',
+        addError: 'Error adding to cart. Please try again.',
+        restart: 'Start Again'
+      }
     }
   };
 
   const PRODUCTS = {
-    he: {
-      'chocolate-cake': 'עוגת שוקולד מעוצבת',
-      '8-cookies-box': 'מארז 8 עוגיות',
-      'cupcakes': 'קאפקייקס',
-      'minnie-mous-cake': 'עוגת מיני מאוס',
-      'nutella-box': 'מארז מגולגלות נוטלה',
-      'chocolate-pizza-xl': 'פיצת שוקולד גדולה',
-      'bento-design-cake': 'עוגת בנטו מעוצבת',
-      'chocolate-design-cake': 'עוגת שוקולד מעוצבת',
-      'orange-cake': 'עוגת תפוזים',
-      // כינויים אפשריים מהשרת
-      'white-design-cake': 'עוגת בנטו מעוצבת',
-      'pizza-cookie': 'פיצת שוקולד גדולה',
-      'pizza cookie': 'פיצת שוקולד גדולה'
-    },
-    en: {
-      'chocolate-cake': 'Chocolate Design Cake',
-      '8-cookies-box': '8 Cookies Box',
-      'cupcakes': 'Cupcakes',
-      'minnie-mous-cake': 'Minnie Mouse Cake',
-      'nutella-box': 'Nutella Box',
-      'chocolate-pizza-xl': 'Chocolate Pizza XL',
-      'bento-design-cake': 'Bento Design Cake',
-      'chocolate-design-cake': 'Chocolate Design Cake',
-      'orange-cake': 'Orange Cake',
-      'white-design-cake': 'Bento Design Cake',
-      'pizza-cookie': 'Chocolate Pizza XL',
-      'pizza cookie': 'Chocolate Pizza XL'
-    }
-  };
+  he: {
+    // 🎂 עוגות / מוצרים קיימים אצלך
+    'chocolate-cake': 'עוגת שוקולד מעוצבת',
+    '8-cookies-box': 'מארז 8 עוגיות',
+    'cupcakes': 'קאפקייקס',
+    'minnie-mous-cake': 'עוגת מיני מאוס',
+    'nutella-box': 'מארז מגולגלות נוטלה',
+    'chocolate-pizza-xl': 'פיצת שוקולד גדולה',
+    'bento-design-cake': 'עוגת בנטו מעוצבת',
+    'chocolate-design-cake': 'עוגת שוקולד מעוצבת',
+    'orange-cake': 'עוגת תפוזים',
+    // כינויים קיימים
+    'white-design-cake': 'עוגת בנטו מעוצבת',
+    'pizza-cookie': 'פיצת שוקולד גדולה',
+    'pizza cookie': 'פיצת שוקולד גדולה',
+
+    // 🍪 עוגיות – הוספתי מיפויים חסרים
+    'kinder-cookie': 'עוגיית קינדר',
+    'kinder cookie': 'עוגיית קינדר',
+    'kinder': 'עוגיית קינדר',
+
+    'caramel-cookie': 'עוגיית קרמל',
+    'caramel cookie': 'עוגיית קרמל',
+    'caramel': 'עוגיית קרמל',
+
+    'bagel-cookie': 'עוגיית בייגלה מלוח',
+    'bagle-cookie': 'עוגיית בייגלה מלוח',
+    'bagle-forHome': 'עוגיית בייגלה מלוח',
+    'bagel': 'עוגיית בייגלה מלוח',
+    'bagle': 'עוגיית בייגלה מלוח'
+  },
+  en: {
+    'chocolate-cake': 'Chocolate Design Cake',
+    '8-cookies-box': '8 Cookies Box',
+    'cupcakes': 'Cupcakes',
+    'minnie-mous-cake': 'Minnie Mouse Cake',
+    'nutella-box': 'Nutella Box',
+    'chocolate-pizza-xl': 'Chocolate Pizza XL',
+    'bento-design-cake': 'Bento Design Cake',
+    'chocolate-design-cake': 'Chocolate Design Cake',
+    'orange-cake': 'Orange Cake',
+    'white-design-cake': 'Bento Design Cake',
+    'pizza-cookie': 'Chocolate Pizza XL',
+    'pizza cookie': 'Chocolate Pizza XL',
+
+    'kinder-cookie': 'Kinder Cookie',
+    'kinder cookie': 'Kinder Cookie',
+    'kinder': 'Kinder Cookie',
+
+    'caramel-cookie': 'Caramel Cookie',
+    'caramel cookie': 'Caramel Cookie',
+    'caramel': 'Caramel Cookie',
+
+    'bagel-cookie': 'Salty Pretzel Cookie',
+    'bagle-cookie': 'Salty Pretzel Cookie',
+    'bagle-forHome': 'Salty Pretzel Cookie',
+    'bagel': 'Salty Pretzel Cookie',
+    'bagle': 'Salty Pretzel Cookie'
+  }
+};
+
 
   function cur(){ return localStorage.getItem('language') || DEFAULT_LANG || 'he'; }
-  function setLanguage(lang){ const L = (lang==='en'?'en':'he'); localStorage.setItem('language',L); document.documentElement.lang=L; document.documentElement.dir=(L==='en'?'ltr':'rtl'); updateDomTexts(); return L; }
+
+  // ✅ שינוי שורה יחיד: לא להפוך את הכיוון (נשאר RTL)
+  function setLanguage(lang){
+    const L = (lang==='en'?'en':'he');
+    localStorage.setItem('language', L);
+    document.documentElement.lang = L;
+    document.documentElement.dir = 'rtl'; // ← לא הופכים ל-LTR
+    updateDomTexts();
+    return L;
+  }
+
   function toggleLanguage(){ return setLanguage(cur()==='he'?'en':'he'); }
+
   function get(key, fallback=''){
     const L=cur();
     const parts=String(key).split('.');
@@ -214,6 +295,7 @@
     }
     return o;
   }
+
   function getProduct(id,fallback=''){
     const L=cur();
     const v = PRODUCTS[L][id] || PRODUCTS[L][id?.toLowerCase?.()] || PRODUCTS[L][String(id).toLowerCase()] ;
@@ -221,6 +303,7 @@
     const other=L==='he'?'en':'he';
     return PRODUCTS[other][id] || fallback || id;
   }
+
   function updateDomTexts(){
     const L=cur();
     document.querySelectorAll('[data-key]').forEach(el=>{

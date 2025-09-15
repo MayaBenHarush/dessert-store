@@ -72,7 +72,9 @@
         "kinder-cookie",
         "caramel-cookie",
         "cookies-box",
-        "cookies-box"
+        "cookies-box",
+        "kinder-cookie",
+        "bagle-cookie"
       ]
     }
   ],
@@ -1112,6 +1114,26 @@
       "datetime": "2025-09-15T20:08:49.143Z",
       "username": "לירן",
       "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-09-15T20:52:40.708Z",
+      "username": "לירן",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-09-15T20:52:53.977Z",
+      "username": "לירן",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-09-15T20:54:18.114Z",
+      "username": "לירן",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-09-15T21:50:22.715Z",
+      "username": "לירן",
+      "type": "login"
     }
   ],
   "products": [

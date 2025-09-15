@@ -5,11 +5,7 @@
   <title>מציאת הקינוח המושלם</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -30,693 +26,142 @@
       z-index: 1000;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
-
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .menu-btn {
-      background: none;
-      border: none;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #1a1a1a;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .menu-btn::before {
-      content: "☰";
-      font-size: 1.2rem;
-    }
-
-    .logo {
-      font-size: 2.2rem;
-      font-weight: 900;
-      color: #1a1a1a;
-      text-decoration: none;
-      letter-spacing: -0.02em;
-    }
-
-    .header-nav {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
+    .header-left { display: flex; align-items: center; gap: 1rem; }
+    .menu-btn { background: none; border: none; font-size: 1.1rem; font-weight: 600; color: #1a1a1a; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; }
+    .menu-btn::before { content: "☰"; font-size: 1.2rem; }
+    .logo { font-size: 2.2rem; font-weight: 900; color: #1a1a1a; text-decoration: none; letter-spacing: -0.02em; }
+    .header-nav { display: flex; align-items: center; gap: 1rem; }
     .header-btn {
-      background: none;
-      border: 2px solid #1a1a1a;
-      color: #1a1a1a;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
+      background: none; border: 2px solid #1a1a1a; color: #1a1a1a; padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s ease; text-decoration: none; display: flex; align-items: center; gap: 0.3rem;
     }
-
-    .header-btn:hover {
-      background: #1a1a1a;
-      color: white;
-    }
-
-    
-
-    .header-btn.primary:hover {
-      background: #333;
-    }
-
-   
-   
-
-    .login-btn::before {
-      content: "👤";
-    }
-
-    
+    .header-btn:hover { background: #1a1a1a; color: white; }
+    .header-btn.primary:hover { background: #333; }
+    .login-btn::before { content: "👤"; }
 
     /* Navigation Menu */
-    .nav-menu {
-      position: fixed;
-      top: 0;
-      right: -350px;
-      width: 300px;
-      height: 100vh;
-      background: white;
-      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
-      transition: right 0.3s ease;
-      padding: 2rem;
-      z-index: 2000;
+    .nav-menu { position: fixed; top: 0; right: -350px; width: 300px; height: 100vh; background: white; box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1); transition: right 0.3s ease; padding: 2rem; z-index: 2000; }
+    .nav-menu.active { right: 0; }
+    .nav-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; float: left; margin-bottom: 2rem; }
+    .nav-item, .nav-menu a, .nav-menu button {
+      display: block; padding: 0.75rem 0; color: #1a1a1a; text-decoration: none; font-weight: 500; border-bottom: 1px solid #f0f0f0; transition: color 0.2s ease; background: none; border: none; text-align: right; width: 100%; cursor: pointer;
     }
-
-    .nav-menu.active {
-      right: 0;
-    }
-
-    .nav-close {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      float: left;
-      margin-bottom: 2rem;
-    }
-
-    .nav-item,
-    .nav-menu a,
-    .nav-menu button {
-      display: block;
-      padding: 0.75rem 0;
-      color: #1a1a1a;
-      text-decoration: none;
-      font-weight: 500;
-      border-bottom: 1px solid #f0f0f0;
-      transition: color 0.2s ease;
-      background: none;
-      border: none;
-      text-align: right;
-      width: 100%;
-      cursor: pointer;
-    }
-
-    .nav-item:hover,
-    .nav-menu a:hover,
-    .nav-menu button:hover {
-      color: #ffffcc;
-    }
+    .nav-item:hover, .nav-menu a:hover, .nav-menu button:hover { color: #ffffcc; }
 
     /* Overlay */
     .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 1500;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5); z-index: 1500; opacity: 0; visibility: hidden; transition: all 0.3s ease;
     }
-
-    .overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
+    .overlay.active { opacity: 1; visibility: visible; }
 
     /* Main Content */
-    .main-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
-
-    .page-header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-
+    .main-content { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+    .page-header { text-align: center; margin-bottom: 2rem; }
     .page-title {
-      font-size: 3rem;
-      font-weight: 900;
-      color: #1a1a1a;
-      margin-bottom: 1rem;
-      letter-spacing: -0.02em;
-      text-transform: uppercase;
+      font-size: 3rem; font-weight: 900; color: #1a1a1a; margin-bottom: 1rem; letter-spacing: -0.02em; text-transform: uppercase;
     }
 
     /* Finder Container */
     .finder-container {
-      background: white;
-      border-radius: 20px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-      padding: 2rem;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
+      background: white; border-radius: 20px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08); padding: 2rem; transition: all 0.3s ease; position: relative; overflow: hidden;
     }
-
-    .finder-container::before {
-      content: '';
-      position: absolute;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      width: 4px;
-      background: #ffffcc;
-    }
+    .finder-container::before { content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 4px; background: #ffffcc; }
 
     /* Quiz Section */
-    .quiz-section {
-      margin-bottom: 2rem;
-    }
-
-    .progress-bar {
-      background: #f0f0f0;
-      height: 8px;
-      border-radius: 20px;
-      overflow: hidden;
-      margin-bottom: 2rem;
-    }
-
-    .progress-fill {
-      background: linear-gradient(90deg, #ff6b9d 0%, #ffffcc 100%);
-      height: 100%;
-      transition: width 0.5s ease;
-      border-radius: 20px;
-    }
-
-    .question-header {
-      background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
-      color: white;
-      padding: 2rem;
-      border-radius: 16px;
-      margin-bottom: 2rem;
-      text-align: center;
-    }
-
-    .question-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin: 0 0 0.5rem 0;
-    }
-
-    .question-subtitle {
-      font-size: 1rem;
-      opacity: 0.9;
-      margin: 0;
-    }
-
-    .options-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin: 2rem 0;
-    }
-
+    .quiz-section { margin-bottom: 2rem; }
+    .progress-bar { background: #f0f0f0; height: 8px; border-radius: 20px; overflow: hidden; margin-bottom: 2rem; }
+    .progress-fill { background: linear-gradient(90deg, #ff6b9d 0%, #ffffcc 100%); height: 100%; transition: width 0.5s ease; border-radius: 20px; }
+    .question-header { background: linear-gradient(135deg, #1a1a1a 0%, #333 100%); color: white; padding: 2rem; border-radius: 16px; margin-bottom: 2rem; text-align: center; }
+    .question-title { font-size: 1.5rem; font-weight: 700; margin: 0 0 0.5rem 0; }
+    .question-subtitle { font-size: 1rem; opacity: 0.9; margin: 0; }
+    .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0; }
     .option-card {
-      background: #f8f8f8;
-      border: 2px solid transparent;
-      border-radius: 16px;
-      padding: 1.5rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
+      background: #f8f8f8; border: 2px solid transparent; border-radius: 16px; padding: 1.5rem; cursor: pointer; transition: all 0.2s ease; text-align: center; position: relative; overflow: hidden;
     }
-
-    .option-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: #ffffcc;
-      transform: scaleX(0);
-      transition: transform 0.2s ease;
-      transform-origin: right;
-    }
-
-    .option-card:hover {
-      border-color: #1a1a1a;
-      transform: translateY(-4px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-      background: #ffffcc;
-    }
-
-    .option-card:hover::before {
-      transform: scaleX(1);
-    }
-
-    .option-card.selected {
-      border-color: #1a1a1a;
-      background: #1a1a1a;
-      color: white;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    }
-
-    .option-card.selected::before {
-      transform: scaleX(1);
-      background: white;
-    }
-
-    .option-emoji {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      display: block;
-    }
-
-    .option-title {
-      font-weight: 700;
-      font-size: 1.1rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .option-description {
-      font-size: 0.9rem;
-      opacity: 0.8;
-      line-height: 1.4;
-    }
-
-    .quiz-navigation {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 2rem;
-    }
-
-    .quiz-btn {
-      background: #1a1a1a;
-      color: white;
-      border: none;
-      padding: 1rem 2rem;
-      border-radius: 20px;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .quiz-btn:hover:not(:disabled) {
-      background: #333;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-
-    .quiz-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .quiz-btn.primary {
-      background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
-    }
-
-    .quiz-btn.primary:hover:not(:disabled) {
-      background: linear-gradient(135deg, #ff5a8a 0%, #b23a56 100%);
-    }
-
-    #question-counter {
-      font-weight: 600;
-      color: #666;
-    }
+    .option-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: #ffffcc; transform: scaleX(0); transition: transform 0.2s ease; transform-origin: right; }
+    .option-card:hover { border-color: #1a1a1a; transform: translateY(-4px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); background: #ffffcc; }
+    .option-card:hover::before { transform: scaleX(1); }
+    .option-card.selected { border-color: #1a1a1a; background: #1a1a1a; color: white; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); }
+    .option-card.selected::before { transform: scaleX(1); background: white; }
+    .option-emoji { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
+    .option-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem; }
+    .option-description { font-size: 0.9rem; opacity: 0.8; line-height: 1.4; }
+    .quiz-navigation { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; }
+    .quiz-btn { background: #1a1a1a; color: white; border: none; padding: 1rem 2rem; border-radius: 20px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.2s ease; }
+    .quiz-btn:hover:not(:disabled) { background: #333; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .quiz-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .quiz-btn.primary { background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%); }
+    .quiz-btn.primary:hover:not(:disabled) { background: linear-gradient(135deg, #ff5a8a 0%, #b23a56 100%); }
+    #question-counter { font-weight: 600; color: #666; }
 
     /* Results Section */
-    .results-section {
-      display: none;
-    }
-
-    .results-header {
-      background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
-      color: white;
-      padding: 2rem;
-      border-radius: 20px;
-      margin-bottom: 2rem;
-      text-align: center;
-    }
-
-    .results-title {
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-
-    .results-subtitle {
-      font-size: 1.2rem;
-      opacity: 0.9;
-    }
-
-    .recommendation-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-      margin: 2rem 0;
-    }
-
-    .recommendation-card {
-      background: white;
-      border-radius: 20px;
-      padding: 1.5rem;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-      border: 2px solid transparent;
-    }
-
-    .recommendation-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 6px;
-      background: #ffffcc;
-    }
-
-    .recommendation-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
-    }
-
-    .recommendation-card.perfect-match {
-      border-color: #ff6b9d;
-    }
-
-    .recommendation-card.perfect-match::before {
-      background: linear-gradient(90deg, #ff6b9d 0%, #c44569 100%);
-      height: 8px;
-    }
-
-    .match-badge {
-      background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
-      color: white;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      display: inline-block;
-    }
-
-    .recommendation-image {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 12px;
-      margin-bottom: 1rem;
-    }
-
-    .recommendation-title {
-      font-size: 1.3rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      color: #1a1a1a;
-    }
-
-    .recommendation-price {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #1a1a1a;
-      margin-bottom: 1rem;
-    }
-
-    .recommendation-description {
-      font-size: 0.9rem;
-      color: #666;
-      line-height: 1.5;
-      margin-bottom: 1rem;
-    }
-
-    .recommendation-reasons {
-      background: rgba(255, 255, 204, 0.3);
-      border-radius: 12px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      border-right: 3px solid #1a1a1a;
-    }
-
-    .recommendation-reasons h4 {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: #1a1a1a;
-      margin: 0 0 0.5rem 0;
-    }
-
-    .recommendation-reasons ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .recommendation-reasons li {
-      font-size: 0.8rem;
-      color: #666;
-      margin-bottom: 0.25rem;
-      position: relative;
-      padding-right: 16px;
-    }
-
-    .recommendation-reasons li::before {
-      content: "✓";
-      position: absolute;
-      right: 0;
-      color: #1a1a1a;
-      font-weight: bold;
-    }
-
-    .add-to-cart-btn {
-      background: #1a1a1a;
-      color: white;
-      border: none;
-      padding: 1rem;
-      border-radius: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      width: 100%;
-    }
-
-    .add-to-cart-btn:hover {
-      background: #333;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-
-    .restart-quiz {
-      background: none;
-      border: 2px solid #1a1a1a;
-      color: #1a1a1a;
-      padding: 1rem 2rem;
-      border-radius: 20px;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      margin: 2rem auto;
-      display: block;
-    }
-
-    .restart-quiz:hover {
-      background: #1a1a1a;
-      color: white;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-
-    .loading-box {
-      text-align: center;
-      padding: 3rem;
-      font-size: 1.1rem;
-      color: #666;
-    }
+    .results-section { display: none; }
+    .results-header { background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%); color: white; padding: 2rem; border-radius: 20px; margin-bottom: 2rem; text-align: center; }
+    .results-title { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .results-subtitle { font-size: 1.2rem; opacity: 0.9; }
+    .recommendation-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 2rem 0; }
+    .recommendation-card { background: white; border-radius: 20px; padding: 1.5rem; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08); transition: all 0.3s ease; position: relative; overflow: hidden; border: 2px solid transparent; }
+    .recommendation-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px; background: #ffffcc; }
+    .recommendation-card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12); }
+    .recommendation-card.perfect-match { border-color: #ff6b9d; }
+    .recommendation-card.perfect-match::before { background: linear-gradient(90deg, #ff6b9d 0%, #c44569 100%); height: 8px; }
+    .match-badge { background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%); color: white; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; margin-bottom: 1rem; display: inline-block; }
+    .recommendation-image { width: 100%; height: 200px; object-fit: cover; border-radius: 12px; margin-bottom: 1rem; }
+    .recommendation-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem; color: #1a1a1a; }
+    .recommendation-price { font-size: 1.1rem; font-weight: 700; color: #1a1a1a; margin-bottom: 1rem; }
+    .recommendation-description { font-size: 0.9rem; color: #666; line-height: 1.5; margin-bottom: 1rem; }
+    .recommendation-reasons { background: rgba(255, 255, 204, 0.3); border-radius: 12px; padding: 1rem; margin-bottom: 1rem; border-right: 3px solid #1a1a1a; }
+    .recommendation-reasons h4 { font-size: 0.9rem; font-weight: 700; color: #1a1a1a; margin: 0 0 0.5rem 0; }
+    .recommendation-reasons ul { list-style: none; padding: 0; margin: 0; }
+    .recommendation-reasons li { font-size: 0.8rem; color: #666; margin-bottom: 0.25rem; position: relative; padding-right: 16px; }
+    .recommendation-reasons li::before { content: "✓"; position: absolute; right: 0; color: #1a1a1a; font-weight: bold; }
+    .add-to-cart-btn { background: #1a1a1a; color: white; border: none; padding: 1rem; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; width: 100%; }
+    .add-to-cart-btn:hover { background: #333; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .restart-quiz { background: none; border: 2px solid #1a1a1a; color: #1a1a1a; padding: 1rem 2rem; border-radius: 20px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.2s ease; margin: 2rem auto; display: block; }
+    .restart-quiz:hover { background: #1a1a1a; color: white; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .loading-box { text-align: center; padding: 3rem; font-size: 1.1rem; color: #666; }
 
     /* Animations */
-    @keyframes slideInRight {
-      from {
-        opacity: 0;
-        transform: translateX(-30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-
-    .question-slide-in {
-      animation: slideInRight 0.5s ease;
-    }
+    @keyframes slideInRight { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+    .question-slide-in { animation: slideInRight 0.5s ease; }
 
     /* Dark Theme */
-    .dark-theme {
-      background: #1a1a1a;
-      color: white;
-    }
-
-    .dark-theme .header {
-      background: #2d2d2d;
-    }
-
-    .dark-theme .nav-menu {
-      background: #2d2d2d;
-    }
-
-    .dark-theme .nav-menu a,
-    .dark-theme .nav-menu button {
-      color: white;
-      border-bottom-color: #444;
-    }
-
-    .dark-theme .finder-container,
-    .dark-theme .recommendation-card {
-      background: #2d2d2d;
-    }
-
-    .dark-theme .question-title,
-    .dark-theme .recommendation-title {
-      color: white;
-    }
-
-    .dark-theme .option-card {
-      background: #444;
-      color: white;
-    }
-
-    .dark-theme .option-card:hover {
-      background: #555;
-    }
-
-    .dark-theme .option-card.selected {
-      background: #ffffcc;
-      color: #1a1a1a;
-    }
-
-    .dark-theme .quiz-btn {
-      background: #ffffcc;
-      color: #1a1a1a;
-    }
-
-    .dark-theme .quiz-btn:hover:not(:disabled) {
-      background: #fff;
-    }
-
-    .dark-theme .recommendation-reasons {
-      background: rgba(45, 45, 45, 0.5);
-      border-color: #ffffcc;
-    }
-
-    .dark-theme .add-to-cart-btn {
-      background: #ffffcc;
-      color: #1a1a1a;
-    }
-
-    .dark-theme .add-to-cart-btn:hover {
-      background: #fff;
-    }
+    .dark-theme { background: #1a1a1a; color: white; }
+    .dark-theme .header { background: #2d2d2d; }
+    .dark-theme .nav-menu { background: #2d2d2d; }
+    .dark-theme .nav-menu a, .dark-theme .nav-menu button { color: white; border-bottom-color: #444; }
+    .dark-theme .finder-container, .dark-theme .recommendation-card { background: #2d2d2d; }
+    .dark-theme .question-title, .dark-theme .recommendation-title { color: white; }
+    .dark-theme .option-card { background: #444; color: white; }
+    .dark-theme .option-card:hover { background: #555; }
+    .dark-theme .option-card.selected { background: #ffffcc; color: #1a1a1a; }
+    .dark-theme .quiz-btn { background: #ffffcc; color: #1a1a1a; }
+    .dark-theme .quiz-btn:hover:not(:disabled) { background: #fff; }
+    .dark-theme .recommendation-reasons { background: rgba(45, 45, 45, 0.5); border-color: #ffffcc; }
+    .dark-theme .add-to-cart-btn { background: #ffffcc; color: #1a1a1a; }
+    .dark-theme .add-to-cart-btn:hover { background: #fff; }
 
     /* Hide old nav but NOT the slide-out menu */
-    body > nav:not(.nav-menu) {
-    display: none;
-    }
+    body > nav:not(.nav-menu) { display: none; }
 
     /* Responsive Design */
     @media (max-width: 768px) {
-      .header {
-        padding: 1rem;
-        flex-wrap: wrap;
-        gap: 1rem;
-      }
-
-      .header-left {
-        order: 1;
-      }
-
-      .logo {
-        font-size: 1.8rem;
-        order: 2;
-      }
-
-      .header-nav {
-        order: 3;
-        width: 100%;
-        justify-content: center;
-        gap: 0.5rem;
-      }
-
-      .header-btn {
-        padding: 0.4rem 0.6rem;
-        font-size: 0.75rem;
-      }
-
-      .main-content {
-        padding: 1rem;
-      }
-
-      .page-title {
-        font-size: 2rem;
-      }
-
-      .finder-container {
-        padding: 1.5rem;
-        border-radius: 16px;
-      }
-
-      .options-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .quiz-navigation {
-        flex-direction: column;
-        gap: 1rem;
-      }
-
-      .recommendation-cards {
-        grid-template-columns: 1fr;
-      }
+      .header { padding: 1rem; flex-wrap: wrap; gap: 1rem; }
+      .header-left { order: 1; }
+      .logo { font-size: 1.8rem; order: 2; }
+      .header-nav { order: 3; width: 100%; justify-content: center; gap: 0.5rem; }
+      .header-btn { padding: 0.4rem 0.6rem; font-size: 0.75rem; }
+      .main-content { padding: 1rem; }
+      .page-title { font-size: 2rem; }
+      .finder-container { padding: 1.5rem; border-radius: 16px; }
+      .options-grid { grid-template-columns: 1fr; }
+      .quiz-navigation { flex-direction: column; gap: 1rem; }
+      .recommendation-cards { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 480px) {
-      .header-btn {
-        padding: 0.3rem 0.5rem;
-        font-size: 0.7rem;
-      }
-
-      .header-btn::before {
-        display: none;
-      }
+      .header-btn { padding: 0.3rem 0.5rem; font-size: 0.7rem; }
+      .header-btn::before { display: none; }
     }
   </style>
 </head>
@@ -781,6 +226,9 @@
       </div>
     </div>
   </main>
+
+  <!-- טוען את מערכת התרגומים (אין שינוי עיצוב/פונקציונליות) -->
+  <script src="/translations.js"></script>
 
   <script>
     // Menu functionality
@@ -856,6 +304,102 @@
         ]}
     ];
 
+    // ===== שכבת תרגום בזמן רינדור (ללא שינוי עיצוב/פונקציות אחרות) =====
+    const QUESTIONS_EN_MAP = {
+      occasion:{ title:'What occasion are you planning?', subtitle:'Helps us suggest the right size & style',
+        options:{ personal:{title:'Personal treat',description:'Just for me or two'},
+                  family:{title:'Family evening',description:'3–6 people'},
+                  party:{title:'Party / Event',description:'7+ people'},
+                  gift:{title:'A special gift',description:'For someone you love'} } },
+      taste_preference:{ title:'Which taste tempts you most?', subtitle:'Let’s find the flavor you’ll love',
+        options:{ chocolate:{title:'Rich chocolate',description:'For true chocoholics'},
+                  fruity:{title:'Fruity & fresh',description:'Oranges and fresh flavors'},
+                  sweet_treats:{title:'Sweet & cozy',description:'Lotus, Nutella, caramel'},
+                  mixed:{title:'Love it all',description:'Open to surprises'} } },
+      texture:{ title:'What texture is perfect for you?', subtitle:'Texture shapes the experience',
+        options:{ soft_cake:{title:'Soft & spongy cake',description:'Melts in your mouth'},
+                  crunchy:{title:'Crunchy & crisp',description:'Cookies with a bite'},
+                  creamy:{title:'Creamy & smooth',description:'Cupcakes with frosting'},
+                  mixed_texture:{title:'Mixed textures',description:'Soft and crispy together'} } },
+      dietary:{ title:'Any dietary preferences?', subtitle:'We’ll make sure it fits you',
+        options:{ none:{title:'No restrictions',description:'Eat everything happily'},
+                  nuts_aware:{title:'Careful with nuts',description:'Allergy or preference'},
+                  light:{title:'On the lighter side',description:'Not too heavy'},
+                  portions:{title:'Individual portions',description:'Prefer small servings'} } },
+      budget:{ title:'What’s your budget?', subtitle:'We’ll find the perfect match for your price range',
+        options:{ budget:{title:'Up to ₪100',description:'Nice and affordable'},
+                  medium:{title:'₪100–₪200',description:'Willing to invest in quality'},
+                  premium:{title:'₪200+',description:'Looking for something special'},
+                  flexible:{title:'Flexible',description:'Depends on what fits'} } },
+      presentation:{ title:'How important is the look & design?', subtitle:'Affects the choice between simple and designed items',
+        options:{ simple:{title:'Simple & tasty',description:'Taste above all'},
+                  nice:{title:'Nice for photos',description:'Good to showcase'},
+                  wow:{title:'Something impressive',description:'To surprise and stand out'},
+                  custom:{title:'Custom made',description:'Personalized design'} } }
+    };
+
+    function currentLang(){ return (window.Translations?.currentLanguage?.() || localStorage.getItem('language') || 'he'); }
+
+    function localizeQuestion(baseQ){
+      if (currentLang() !== 'en') return baseQ;
+      const map = QUESTIONS_EN_MAP[baseQ.id];
+      if (!map) return baseQ;
+      return {
+        id: baseQ.id,
+        title: map.title || baseQ.title,
+        subtitle: map.subtitle || baseQ.subtitle,
+        options: baseQ.options.map(opt=>{
+          const m = map.options?.[opt.id] || {};
+          return { ...opt, title:(m.title||opt.title), description:(m.description||opt.description) };
+        })
+      };
+    }
+
+    function applyFinderStaticTexts(){
+      const idx = currentQuestion + 1;
+      const total = QUESTIONS.length;
+      const t = window.Translations?.get?.bind(window.Translations);
+      const prev = t ? t('finder.prevQuestion','שאלה קודמת') : 'שאלה קודמת';
+      const next = t ? (currentQuestion===total-1 ? t('finder.lastQuestion','צפה בתוצאות') : t('finder.nextQuestion','שאלה הבאה'))
+                     : (currentQuestion===total-1 ? 'צפה בתוצאות' : 'שאלה הבאה');
+      const counter = t ? t('finder.questionCounter','שאלה {current} מתוך {total}').replace('{current}', idx).replace('{total}', total)
+                        : `שאלה ${idx} מתוך ${total}`;
+      document.getElementById('prev-btn').textContent = prev;
+      document.getElementById('next-btn').textContent = next;
+      document.getElementById('question-counter').textContent = counter;
+    }
+
+    // מאזין לשינוי שפה
+    document.addEventListener('DOMContentLoaded', () => {
+      const languageToggle = document.getElementById('language-toggle');
+      if (languageToggle) {
+        languageToggle.addEventListener('click', () => {
+          // ✅ אם קיימת מערכת התרגומים – השתמש בה; אחרת Fallback שמחליף localStorage בלבד
+          if (window.toggleLanguage) {
+            window.toggleLanguage(); // מפעיל translations.js (נשאר RTL)
+          } else {
+            const cur = localStorage.getItem('language') || 'he';
+            const next = (cur === 'he') ? 'en' : 'he';
+            localStorage.setItem('language', next);
+            document.documentElement.lang = next;
+            document.documentElement.dir = 'rtl';
+          }
+          // רענון טקסטים
+          applyFinderStaticTexts();
+          showQuestion(currentQuestion);
+          // עדכון תווית הכפתור עצמו
+          const btn = document.getElementById('language-toggle');
+          if (btn) btn.textContent = ((localStorage.getItem('language')||'he')==='en') ? '🌐 עברית' : '🌐 English';
+        });
+      }
+    });
+
+    window.addEventListener('language-changed', () => {
+      applyFinderStaticTexts();
+      showQuestion(currentQuestion);
+    });
+    // ===== סוף שכבת התרגום =====
+
     // ----- מצב אפליקציה -----
     let currentQuestion = 0;
     let answers = {};
@@ -875,8 +419,8 @@
     // ----- אתחול -----
     async function initApp() {
       loadUICustomization();
-      await checkAuth();      // מגדיר isAuthenticated
-      await setupAuth();      //  טוען את התפריט לפי מצב ההתחברות
+      await checkAuth();
+      await setupAuth();
       showQuestion(0);
     }
 
@@ -955,14 +499,14 @@
       if (index < 0 || index >= QUESTIONS.length) return;
 
       currentQuestion = index;
-      const q = QUESTIONS[index];
+      const q = localizeQuestion(QUESTIONS[index]); // ← משתמש בשכבת תרגום
 
       // Progress
       const progress = ((index + 1) / QUESTIONS.length) * 100;
       progressFill.style.width = `${progress}%`;
 
-      // Counter
-      questionCounter.textContent = `שאלה ${index + 1} מתוך ${QUESTIONS.length}`;
+      // Counter/כפתורים
+      applyFinderStaticTexts();
 
       // Render
       questionContainer.innerHTML = `
@@ -991,7 +535,9 @@
 
       prevBtn.disabled = index === 0;
       nextBtn.disabled = !answers[q.id];
-      nextBtn.textContent = index === QUESTIONS.length - 1 ? 'צפה בתוצאות' : 'שאלה הבאה';
+      nextBtn.textContent = (window.Translations?.get && (index===QUESTIONS.length-1
+        ? Translations.get('finder.lastQuestion','צפה בתוצאות')
+        : Translations.get('finder.nextQuestion','שאלה הבאה'))) || (index===QUESTIONS.length-1 ? 'צפה בתוצאות' : 'שאלה הבאה');
     }
 
     // ----- בחירה -----
@@ -1031,36 +577,46 @@
     // ----- תוצאות -----
     async function showResults() {
       // מצב טעינה
-      recommendationsContainer.innerHTML = `<div class="loading-box">טוען התאמות לקינוחים…</div>`;
+      const loadingText = (window.Translations?.get && Translations.get('finder.loading','טוען התאמות לקינוחים…')) || 'טוען התאמות לקינוחים…';
+      recommendationsContainer.innerHTML = `<div class="loading-box">${loadingText}</div>`;
       quizSection.style.display = 'none';
       resultsSection.style.display = 'block';
 
       const recommendations = await calculateRecommendations();
 
       if (!recommendations.length) {
+        const noTitle = (window.Translations?.get && Translations.get('finder.noResultsTitle','אופס! לא מצאנו התאמה מושלמת')) || 'אופס! לא מצאנו התאמה מושלמת';
+        const noDesc  = (window.Translations?.get && Translations.get('finder.noResultsDesc','נסי לשנות חלק מהתשובות או פני אלינו לייעוץ אישי')) || 'נסי לשנות חלק מהתשובות או פני אלינו לייעוץ אישי';
         recommendationsContainer.innerHTML = `
           <div style="text-align:center; padding:40px;">
-            <h3>אופס! לא מצאנו התאמה מושלמת</h3>
-            <p>נסי לשנות חלק מהתשובות או פני אלינו לייעוץ אישי</p>
+            <h3>${noTitle}</h3>
+            <p>${noDesc}</p>
           </div>
         `;
       } else {
+        const reasonsTitle = (window.Translations?.get && Translations.get('finder.reasonsTitle','למה זה מתאים לך:')) || 'למה זה מתאים לך:';
+        const addToCartLbl = (window.Translations?.get && Translations.get('finder.addToCart','הוסף לסל הקניות')) || 'הוסף לסל הקניות';
         recommendationsContainer.innerHTML = recommendations.map((product) => `
           <div class="recommendation-card ${product.matchLevel === 'perfect' ? 'perfect-match' : ''}">
-            ${product.matchLevel === 'perfect' ? '<div class="match-badge">⭐ ההתאמה הטובה ביותר</div>' : ''}
+            ${product.matchLevel === 'perfect' ? '<div class="match-badge">⭐</div>' : ''}
             <img src="/images/${product.image}" alt="${product.title}" class="recommendation-image" onerror="this.src='/images/placeholder.png'">
             <h3 class="recommendation-title">${product.title}</h3>
             <div class="recommendation-price">₪${product.price}</div>
             <p class="recommendation-description">${product.description || ''}</p>
             <div class="recommendation-reasons">
-              <h4>למה זה מתאים לך:</h4>
+              <h4>${reasonsTitle}</h4>
               <ul>${(product.reasons || []).map(r => `<li>${r}</li>`).join('')}</ul>
             </div>
-            <button class="add-to-cart-btn" onclick="addToCart('${product.id}', '${product.title}', this)">
-              הוסף לסל הקניות
-            </button>
+            <button class="add-to-cart-btn" onclick="addToCart('${product.id}', '${product.title}', this)">${addToCartLbl}</button>
           </div>
         `).join('');
+      }
+
+      // עדכון כותרות התוצאות לפי שפה
+      if (window.Translations?.get) {
+        document.querySelector('.results-title').textContent    = Translations.get('finder.resultsTitle','מצאנו בשבילך!');
+        document.querySelector('.results-subtitle').textContent = Translations.get('finder.resultsSubtitle','הקינוחים המושלמים בהתאם להעדפות שלך');
+        document.getElementById('restart-quiz').textContent     = Translations.get('finder.restart','התחל שוב');
       }
 
       resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1070,7 +626,7 @@
     // ----- הוספה לסל -----
     async function addToCart(productId, productTitle, buttonEl) {
       if (!isAuthenticated) {
-        alert('יש להתחבר כדי להוסיף מוצרים לסל');
+        alert((window.Translations?.get && Translations.get('finder.mustLogin','יש להתחבר כדי להוסיף מוצרים לסל')) || 'יש להתחבר כדי להוסיף מוצרים לסל');
         window.location.href = '/screens/login.html';
         return;
       }
@@ -1085,7 +641,7 @@
         if (!response.ok) throw new Error('Failed to add to cart');
 
         const originalText = buttonEl.textContent;
-        buttonEl.textContent = '✓ נוסף לסל!';
+        buttonEl.textContent = (window.Translations?.get && Translations.get('finder.added','✓ נוסף לסל!')) || '✓ נוסף לסל!';
         buttonEl.style.background = '#28a745';
         buttonEl.style.transform = 'scale(0.98)';
         setTimeout(() => {
@@ -1095,7 +651,7 @@
         }, 1800);
       } catch (error) {
         console.error('Error adding to cart:', error);
-        alert('שגיאה בהוספה לסל. נסי שוב.');
+        alert((window.Translations?.get && Translations.get('finder.addError','שגיאה בהוספה לסל. נסי שוב.')) || 'שגיאה בהוספה לסל. נסי שוב.');
       }
     }
 

@@ -770,13 +770,26 @@
     };
 
     const nameOf = (p, lang = null) => {
-      const currentLang = lang || localStorage.getItem('language') || 'he';
-      if (window.Translations && window.Translations.getProduct) {
-        const translated = window.Translations.getProduct(p.id);
-        if (translated && translated !== p.id) return translated;
-      }
-      return p.title || p.id;
-    };
+  const currentLang = lang || localStorage.getItem('language') || 'he';
+  if (window.Translations && window.Translations.getProduct) {
+    const candidates = [
+      p.id,
+      (p.id && String(p.id).toLowerCase()) || '',
+      (p.id && String(p.id).trim().toLowerCase().replace(/[^\p{L}\p{N} ]/gu,'').replace(/\s+/g,'-')) || '',
+      p.title,
+      (p.title && String(p.title).toLowerCase()) || '',
+      (p.title && String(p.title).trim().toLowerCase().replace(/[^\p{L}\p{N} ]/gu,'').replace(/\s+/g,'-')) || ''
+    ].filter(Boolean);
+
+    for (const key of candidates) {
+      const t = window.Translations.getProduct(key);
+      if (t && t !== key) return t;
+    }
+  }
+  // fallback: אם לא נמצא תרגום, נציג את הכותרת ואם אין – את ה־id
+  return p.title || p.id;
+};
+
 
     // ===== auth header =====
     (async function setupAuth(){

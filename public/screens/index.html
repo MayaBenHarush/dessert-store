@@ -307,11 +307,11 @@
 
         /* Kinder Cookie Hero Section */
         .kinder-hero-section {
-            margin: 4rem 0;
-            background: white;
+            margin: 4rem auto;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 30px;
             overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
             position: relative;
             min-height: 500px;
             display: flex;
@@ -319,13 +319,14 @@
             transition: all 0.4s ease;
             cursor: pointer;
             max-width: 1200px;
-            margin: 4rem auto;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .kinder-hero-section:hover {
             transform: translateY(-5px);
             box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
-            background: linear-gradient(135deg, #884c20 0%, #884c20 100%);
+            background: linear-gradient(135deg, #8B4513 0%, #DAA520 100%);
         }
 
         .kinder-hero-content {
@@ -334,6 +335,7 @@
             color: #1a1a1a;
             z-index: 2;
             transition: color 0.4s ease;
+            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
         }
 
         .kinder-hero-section:hover .kinder-hero-content {
@@ -424,7 +426,7 @@
             color: white;
             border-color: white;
         }
-
+        
         .kinder-hero-section:hover .kinder-hero-btn.secondary:hover {
             background: white;
             color: #D2691E;
@@ -447,11 +449,164 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
             transform: rotate(-5deg);
             transition: all 0.4s ease;
+            background: transparent;
         }
 
         .kinder-hero-section:hover .kinder-hero-image img {
             transform: rotate(0deg) scale(1.05);
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Bagel Cookie Hero Section */
+        .bagel-hero-section {
+            margin: 4rem auto;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            position: relative;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            max-width: 1200px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .bagel-hero-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(135deg, #8B4513 0%, #DAA520 100%);
+        }
+
+        .bagel-hero-content {
+            flex: 1;
+            padding: 4rem;
+            color: #1a1a1a;
+            z-index: 2;
+            transition: color 0.4s ease;
+            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+        }
+
+        .bagel-hero-section:hover .bagel-hero-content {
+            color: white;
+        }
+
+        .bagel-hero-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+            transition: text-shadow 0.4s ease;
+        }
+
+        .bagel-hero-section:hover .bagel-hero-title {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .bagel-hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+            line-height: 1.4;
+            transition: opacity 0.4s ease;
+        }
+
+        .bagel-hero-section:hover .bagel-hero-subtitle {
+            opacity: 0.95;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .bagel-hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .bagel-hero-btn {
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .bagel-hero-btn.primary {
+            background: #1a1a1a;
+            color: white;
+            box-shadow: 0 10px 30px rgba(26, 26, 26, 0.3);
+        }
+
+        .bagel-hero-btn.primary:hover {
+            background: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(26, 26, 26, 0.4);
+        }
+
+        .bagel-hero-section:hover .bagel-hero-btn.primary {
+            background: white;
+            color: #8B4513;
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
+        }
+
+        .bagel-hero-section:hover .bagel-hero-btn.primary:hover {
+            background: #f5f5f5;
+            color: #8B4513;
+        }
+
+        .bagel-hero-btn.secondary {
+            background: transparent;
+            color: #1a1a1a;
+            border: 2px solid #1a1a1a;
+        }
+
+        .bagel-hero-btn.secondary:hover {
+            background: #1a1a1a;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .bagel-hero-section:hover .bagel-hero-btn.secondary {
+            color: white;
+            border-color: white;
+        }
+
+        .bagel-hero-section:hover .bagel-hero-btn.secondary:hover {
+            background: white;
+            color: #D2691E;
+        }
+
+        .bagel-hero-image {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .bagel-hero-image img {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            transform: rotate(5deg);
+            transition: all 0.4s ease;
+            background: transparent;
+        }
+
+        .bagel-hero-section:hover .bagel-hero-image img {
+            transform: rotate(0deg) scale(1.05);
+            background: white;
         }
 
         /* Loading Spinner */
@@ -613,7 +768,7 @@
         }
 
         .dark-theme .kinder-hero-section {
-            background: #2d2d2d;
+            background: transparent;
         }
 
         .dark-theme .kinder-hero-section:hover {
@@ -622,6 +777,20 @@
 
         .dark-theme .kinder-hero-content {
             color: white;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+        }
+
+        .dark-theme .bagel-hero-section {
+            background: transparent;
+        }
+
+        .dark-theme .bagel-hero-section:hover {
+            background: linear-gradient(135deg, #8B4513 0%, #DAA520 100%);
+        }
+
+        .dark-theme .bagel-hero-content {
+            color: white;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
         }
 
         /* Responsive Design */
@@ -653,34 +822,41 @@
                 font-size: 0.8rem;
             }
 
-            .kinder-hero-section {
+            .kinder-hero-section,
+            .bagel-hero-section {
                 flex-direction: column;
                 text-align: center;
                 min-height: auto;
                 margin: 2rem auto;
             }
 
-            .kinder-hero-content {
+            .kinder-hero-content,
+            .bagel-hero-content {
                 padding: 2rem;
             }
 
-            .kinder-hero-title {
+            .kinder-hero-title,
+            .bagel-hero-title {
                 font-size: 2.5rem;
             }
 
-            .kinder-hero-subtitle {
+            .kinder-hero-subtitle,
+            .bagel-hero-subtitle {
                 font-size: 1.1rem;
             }
 
-            .kinder-hero-image {
+            .kinder-hero-image,
+            .bagel-hero-image {
                 padding: 1rem 2rem 2rem;
             }
 
-            .kinder-hero-image img {
+            .kinder-hero-image img,
+            .bagel-hero-image img {
                 max-width: 300px;
             }
 
-            .kinder-hero-buttons {
+            .kinder-hero-buttons,
+            .bagel-hero-buttons {
                 justify-content: center;
             }
         }
@@ -744,15 +920,18 @@
                 text-align: center;
             }
 
-            .kinder-hero-title {
+            .kinder-hero-title,
+            .bagel-hero-title {
                 font-size: 2rem;
             }
 
-            .kinder-hero-subtitle {
+            .kinder-hero-subtitle,
+            .bagel-hero-subtitle {
                 font-size: 1rem;
             }
 
-            .kinder-hero-btn {
+            .kinder-hero-btn,
+            .bagel-hero-btn {
                 padding: 0.8rem 2rem;
                 font-size: 1rem;
             }
@@ -773,24 +952,29 @@
                 display: none;
             }
 
-            .kinder-hero-content {
+            .kinder-hero-content,
+            .bagel-hero-content {
                 padding: 1.5rem;
             }
 
-            .kinder-hero-title {
+            .kinder-hero-title,
+            .bagel-hero-title {
                 font-size: 1.8rem;
             }
 
-            .kinder-hero-subtitle {
+            .kinder-hero-subtitle,
+            .bagel-hero-subtitle {
                 font-size: 0.9rem;
             }
 
-            .kinder-hero-btn {
+            .kinder-hero-btn,
+            .bagel-hero-btn {
                 padding: 0.7rem 1.5rem;
                 font-size: 0.9rem;
             }
 
-            .kinder-hero-buttons {
+            .kinder-hero-buttons,
+            .bagel-hero-buttons {
                 flex-direction: column;
                 align-items: center;
             }
@@ -860,7 +1044,7 @@
             <h1 class="kinder-hero-title" id="kinder-hero-title">עוגיית קינדר</h1>
             <p class="kinder-hero-subtitle" id="kinder-hero-subtitle">
                 עוגייה רכה ומתוקה עם פיסות שוקולד קינדר וקרם לבן קרמי. 
-                חוויה של מתיקות וטעם בלתי נשכח בכל גיס.
+                חוויה של מתיקות וטעם בלתי נשכח בכל ביס.
             </p>
             <div class="kinder-hero-buttons">
                 <button class="kinder-hero-btn primary" id="add-to-cart-btn">
@@ -873,6 +1057,28 @@
         </div>
         <div class="kinder-hero-image">
             <img src="/images/kinder-hero-cookie.jpg" alt="עוגיית קינדר" id="kinder-hero-image">
+        </div>
+    </section>
+
+    <!-- Bagel Cookie Hero Section -->
+    <section class="bagel-hero-section" id="bagel-hero-section">
+        <div class="bagel-hero-content">
+            <h1 class="bagel-hero-title" id="bagel-hero-title">עוגיית בייגלה מלוח</h1>
+            <p class="bagel-hero-subtitle" id="bagel-hero-subtitle">
+                עוגייה רכה ועסיסית עם מילוי ממרח בייגלה קרמי ושברי בייגלה פריכים מלמעלה. 
+                שילוב מושלם של מתיקות וטעם מלוח בכל ביס.
+            </p>
+            <div class="bagel-hero-buttons">
+                <button class="bagel-hero-btn primary" id="add-bagel-to-cart-btn">
+                    🛒 הוסף לסל
+                </button>
+                <a href="/screens/store.html" class="bagel-hero-btn secondary" id="bagel-learn-more-btn">
+                    למד עוד
+                </a>
+            </div>
+        </div>
+        <div class="bagel-hero-image">
+            <img src="/images/bagle-forHome.png" alt="עוגיית בייגלה מלוח" id="bagel-hero-image">
         </div>
     </section>
 
@@ -970,9 +1176,13 @@
                 'about-us-btn-playing': 'מי אנחנו 🔊',
                 'order-now-link': 'הזמנה עכשיו',
                 'kinder-hero-title': 'עוגיית קינדר',
-                'kinder-hero-subtitle': 'עוגייה רכה ומתוקה עם פיסות שוקולד קינדר וקרם לבן קרמי. חוויה של מתיקות וטעם בלתי נשכח בכל גיס.',
+                'kinder-hero-subtitle': 'עוגייה רכה ומתוקה עם פיסות שוקולד קינדר וקרם לבן קרמי. חוויה של מתיקות וטעם בלתי נשכח בכל ביס.',
                 'add-to-cart-btn': '🛒 הוסף לסל',
                 'learn-more-btn': 'למד עוד',
+                'bagel-hero-title': 'עוגיית בייגלה מלוח',
+                'bagel-hero-subtitle': 'עוגייה רכה ועסיסית עם מילוי ממרח בייגלה קרמי ושברי בייגלה פריכים מלמעלה. שילוב מושלם של מתיקות וטעם מלוח בכל ביס.',
+                'add-bagel-to-cart-btn': '🛒 הוסף לסל',
+                'bagel-learn-more-btn': 'למד עוד',
                 'categories-title': 'הקטגוריות שלנו',
                 'features-title': 'למה לבחור בנו',
                 
@@ -1032,6 +1242,10 @@
                 'kinder-hero-subtitle': 'Soft and sweet cookie with Kinder chocolate pieces and creamy white cream. An unforgettable experience of sweetness and taste in every bite.',
                 'add-to-cart-btn': '🛒 Add to Cart',
                 'learn-more-btn': 'Learn More',
+                'bagel-hero-title': 'Salty Bagel Cookie',
+                'bagel-hero-subtitle': 'Soft and juicy cookie with creamy bagel spread filling and crispy bagel pieces on top. Perfect combination of sweetness and salty taste in every bite.',
+                'add-bagel-to-cart-btn': '🛒 Add to Cart',
+                'bagel-learn-more-btn': 'Learn More',
                 'categories-title': 'Our Categories',
                 'features-title': 'Why Choose Us',
                 
@@ -1086,8 +1300,8 @@
             Object.keys(texts).forEach(id => {
                 const element = document.getElementById(id);
                 if (element) {
-                    if (id === 'add-to-cart-btn') {
-                        element.innerHTML = texts[id]; // Keep emoji
+                    if (id.includes('cart-btn') || id === 'add-to-cart-btn' || id === 'add-bagel-to-cart-btn') {
+                        element.innerHTML = texts[id]; // Keep emoji for cart buttons
                     } else {
                         element.textContent = texts[id];
                     }
@@ -1157,6 +1371,78 @@
                 const lang = getCurrentLanguage();
                 aboutUsBtn.textContent = translations[lang]['about-us-btn'];
             });
+        }
+
+        // Generic add to cart handler
+        async function handleAddToCart(productId, btn) {
+            const lang = getCurrentLanguage();
+            
+            // Check if user is logged in
+            try {
+                const sessionRes = await fetch('/api/session');
+                if (!sessionRes.ok) {
+                    location.href = '/screens/login.html';
+                    return false;
+                }
+            } catch {
+                location.href = '/screens/login.html';
+                return false;
+            }
+
+            // Save original text
+            const originalText = btn.innerHTML;
+            
+            // Update button to loading state
+            const loadingText = `<span class="loading-spinner"></span>${translations[lang]['adding']}`;
+            btn.innerHTML = loadingText;
+            btn.disabled = true;
+
+            try {
+                // Send add to cart request
+                const response = await fetch('/api/cart', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        productId: productId
+                    })
+                });
+
+                if (response.ok) {
+                    // Success - animation and button update
+                    const successText = `✅ ${translations[lang]['added']}`;
+                    btn.innerHTML = successText;
+                    btn.style.background = '#28a745';
+                    
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                        btn.style.background = '';
+                        btn.disabled = false;
+                    }, 2000);
+                    
+                    return true; // הצלחה
+                } else {
+                    throw new Error('Failed to add to cart');
+                }
+            } catch (error) {
+                console.error(`Error adding ${productId} to cart:`, error);
+                
+                // אל תציג שגיאה אם זה נסיון אוטומטי (מחזור על מספר IDs)
+                if (arguments.length === 2) {
+                    const errorText = translations[lang]['error'];
+                    btn.innerHTML = errorText;
+                    btn.style.background = '#dc3545';
+                    
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                        btn.style.background = '';
+                        btn.disabled = false;
+                    }, 2000);
+                }
+                
+                return false; // כישלון
+            }
         }
 
         // Menu functionality
@@ -1245,67 +1531,23 @@
             const addToCartBtn = document.getElementById('add-to-cart-btn');
             if (addToCartBtn) {
                 addToCartBtn.addEventListener('click', async () => {
-                    const btn = addToCartBtn;
-                    const heroSection = document.getElementById('kinder-hero-section');
-                    const lang = getCurrentLanguage();
+                    await handleAddToCart('kinder-cookie', addToCartBtn, true);
+                });
+            }
+
+            // Bagel Cookie Add to Cart functionality
+            const addBagelToCartBtn = document.getElementById('add-bagel-to-cart-btn');
+            if (addBagelToCartBtn) {
+                addBagelToCartBtn.addEventListener('click', async () => {
+                    // נסה כמה אפשרויות למוצר הבייגלה
+                    const possibleIds = ['bagel-cookie', 'bagle-cookie', 'bagel', 'bagle-forHome'];
                     
-                    // Check if user is logged in
-                    try {
-                        const sessionRes = await fetch('/api/session');
-                        if (!sessionRes.ok) {
-                            location.href = '/screens/login.html';
-                            return;
+                    for (const productId of possibleIds) {
+                        const success = await handleAddToCart(productId, addBagelToCartBtn);
+                        if (success) {
+                            console.log(`Successfully added ${productId} to cart`);
+                            break;
                         }
-                    } catch {
-                        location.href = '/screens/login.html';
-                        return;
-                    }
-
-                    // Save original text
-                    const originalText = btn.innerHTML;
-                    
-                    // Update button to loading state
-                    const loadingText = `<span class="loading-spinner"></span>${translations[lang]['adding']}`;
-                    btn.innerHTML = loadingText;
-                    btn.disabled = true;
-
-                    try {
-                        // Send add to cart request
-                        const response = await fetch('/api/cart', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                productId: 'kinder-cookie'
-                            })
-                        });
-
-                        if (response.ok) {
-                            // Success - animation and button update
-                            const successText = `✅ ${translations[lang]['added']}`;
-                            btn.innerHTML = successText;
-                            btn.style.background = '#28a745';
-                            
-                            setTimeout(() => {
-                                btn.innerHTML = originalText;
-                                btn.style.background = '';
-                                btn.disabled = false;
-                            }, 2000);
-                        } else {
-                            throw new Error('Failed to add to cart');
-                        }
-                    } catch (error) {
-                        console.error('Error adding to cart:', error);
-                        const errorText = translations[lang]['error'];
-                        btn.innerHTML = errorText;
-                        btn.style.background = '#dc3545';
-                        
-                        setTimeout(() => {
-                            btn.innerHTML = originalText;
-                            btn.style.background = '';
-                            btn.disabled = false;
-                        }, 2000);
                     }
                 });
             }
