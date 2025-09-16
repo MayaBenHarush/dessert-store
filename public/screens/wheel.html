@@ -98,15 +98,9 @@
       background: #333;
     }
 
-    
-
-    
-
     .login-btn::before {
       content: "👤";
     }
-
-    
 
     /* Navigation Menu */
     .nav-menu {
@@ -251,13 +245,13 @@
       border-radius: 50%;
       background: conic-gradient(
         #bdbdbd 0deg 40deg,      /* NONE */
-        #ff6b9d 40deg 80deg,     /* 10% */
+        #ff6b9d 40deg 80deg,     /* PCT10 - 10% הנחה */
         #bdbdbd 80deg 120deg,    /* NONE */
-        #ffd93d 120deg 160deg,   /* קינוח */
+        #ffd93d 120deg 160deg,   /* DESSERT - עוגיה */
         #bdbdbd 160deg 200deg,   /* NONE */
-        #4ecdc4 200deg 240deg,   /* משלוח */
+        #4ecdc4 200deg 240deg,   /* SHIP - משלוח */
         #bdbdbd 240deg 280deg,   /* NONE */
-        #ff9a9e 280deg 320deg,   /* 50 ₪ */
+        #ff9a9e 280deg 320deg,   /* NIS50 - 50₪ שובר */
         #bdbdbd 320deg 360deg    /* NONE */
       );
     }
@@ -694,7 +688,6 @@
             <div class="coupon-description" id="coupon-description">תיאור הקופון</div>
             <div class="coupon-action">
               <button class="copy-code-btn" id="copy-code-btn">העתק קוד</button>
-              <a href="store.html" class="use-now-btn" id="use-now-btn">השתמש עכשיו</a>
             </div>
             <div class="coupon-expiry" id="coupon-expiry">תוקף עד: DD/MM/YYYY</div>
           </div>
@@ -724,7 +717,7 @@
         navRecipes: 'מתכונים',
         noWin: 'לא זכית',
         discount: 'הנחה',
-        dessert: 'קינוח',
+        dessert: 'עוגיה',
         delivery: 'משלוח',
         voucher: 'שובר',
         spinning: 'מגריל...',
@@ -757,8 +750,8 @@
         navRecipes: 'Recipes',
         noWin: "Didn't Win",
         discount: 'Discount',
-        dessert: 'Dessert',
-        delivery: 'Delivery',
+        dessert: 'Cookie',
+        delivery: 'Shipping',
         voucher: 'Voucher',
         spinning: 'Spinning...',
         cannotSpin: 'Cannot spin right now',
@@ -790,16 +783,18 @@
     }
 
     function updateWheelLabels() {
+      // סדר הפלחים מתואם לשרת: ['NONE','PCT10','NONE','DESSERT','NONE','SHIP','NONE','NIS50','NONE']
+      // שמירה על המיקומים המקוריים של הטקסטים כמו שהיו בעיצוב
       const wheelLabels = [
-        { rotation: -90, distance: 90, symbol: '—',   text: getText('noWin')     },
-        { rotation: -50, distance: 95, symbol: '10%', text: getText('discount')  },
-        { rotation: -10, distance: 90, symbol: '—',   text: getText('noWin')     },
-        { rotation:  30, distance: 85, symbol: '🎁',  text: getText('dessert')   },
-        { rotation:  70, distance: 85, symbol: '—',   text: getText('noWin')     },
-        { rotation: 110, distance: 85, symbol: '🚚',  text: getText('delivery')  },
-        { rotation: 150, distance: 85, symbol: '—',   text: getText('noWin')     },
-        { rotation: 190, distance: 85, symbol: '₪50', text: getText('voucher')   },
-        { rotation: 230, distance: 85, symbol: '—',   text: getText('noWin')     }
+        { rotation: -90, distance: 90, symbol: '—',   text: getText('noWin')     }, // [0] NONE
+        { rotation: -50, distance: 95, symbol: '10%', text: getText('discount')  }, // [1] PCT10
+        { rotation: -10, distance: 90, symbol: '—',   text: getText('noWin')     }, // [2] NONE
+        { rotation:  30, distance: 85, symbol: '🎁',  text: getText('dessert')   }, // [3] DESSERT
+        { rotation:  70, distance: 85, symbol: '—',   text: getText('noWin')     }, // [4] NONE
+        { rotation: 110, distance: 85, symbol: '🚚',  text: getText('delivery')  }, // [5] SHIP
+        { rotation: 150, distance: 85, symbol: '—',   text: getText('noWin')     }, // [6] NONE
+        { rotation: 190, distance: 85, symbol: '₪50', text: getText('voucher')   }, // [7] NIS50
+        { rotation: 230, distance: 85, symbol: '—',   text: getText('noWin')     }  // [8] NONE
       ];
 
       const labelsContainer = document.getElementById('wheel-labels');
@@ -853,7 +848,6 @@
       // Update coupon texts
       document.getElementById('coupon-header').textContent = getText('couponHeader');
       document.getElementById('copy-code-btn').textContent = getText('copyCode');
-      document.getElementById('use-now-btn').textContent = getText('useNow');
 
       updateWheelLabels();
     }
@@ -1031,7 +1025,11 @@
       const current = wheel._angle || 0;
       wheel.style.transform = `rotate(${current}deg)`;
       requestAnimationFrame(() => {
-        const spins = 360*5 + targetAngle;
+        // השרת מחזיר זווית בין 0-360
+        // החץ מצביע למעלה (0 מעלות) במקום למטה
+        // צריך להפוך את הכיוון כדי שהזווית תתאים
+        const adjustedAngle = (360 - targetAngle) % 360;
+        const spins = 360*5 + adjustedAngle;
         wheel.style.transition = 'transform 5s cubic-bezier(.2,.7,.1,1)';
         wheel._angle = current + spins;
         wheel.style.transform = `rotate(${wheel._angle}deg)`;
@@ -1065,6 +1063,8 @@
           if (coupon && coupon.code) {
             displayCoupon(coupon);
           }
+          
+          spinBtn.classList.remove('disabled');
         }, 5200);
 
       }catch(e){

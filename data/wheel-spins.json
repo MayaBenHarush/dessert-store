@@ -53,6 +53,64 @@
         "issuedAt": "2025-09-15T23:22:49.693Z",
         "expiresAt": "2025-09-22T23:22:49.693Z"
       }
+    },
+    "מאיה5": {
+      "last": "2025-09-16T00:29:06.866Z",
+      "prizeId": "NONE",
+      "coupon": null
+    },
+    "מאיה6": {
+      "last": "2025-09-16T00:29:41.333Z",
+      "prizeId": "NONE",
+      "coupon": null
+    },
+    "מאיה7": {
+      "last": "2025-09-16T00:30:14.401Z",
+      "prizeId": "NIS50",
+      "coupon": {
+        "code": "שובר",
+        "type": "fixed",
+        "value": 50,
+        "description": "שובר הנחה של 50 ₪ מגלגל המזל",
+        "issuedAt": "2025-09-16T00:30:14.401Z",
+        "expiresAt": "2025-09-23T00:30:14.401Z"
+      }
+    },
+    "מאיה8": {
+      "last": "2025-09-16T00:33:43.526Z",
+      "prizeId": "DESSERT",
+      "coupon": {
+        "code": "עוגיה",
+        "type": "free-cookie",
+        "value": 17,
+        "description": "עוגיה חינם מגלגל המזל",
+        "issuedAt": "2025-09-16T00:33:43.526Z",
+        "expiresAt": "2025-09-23T00:33:43.526Z"
+      }
+    },
+    "מאיה9": {
+      "last": "2025-09-16T00:35:41.480Z",
+      "prizeId": "PCT10",
+      "coupon": {
+        "code": "WHEEL10",
+        "type": "percent",
+        "value": 10,
+        "description": "הנחה של 10% מגלגל המזל",
+        "issuedAt": "2025-09-16T00:35:41.480Z",
+        "expiresAt": "2025-09-23T00:35:41.480Z"
+      }
+    },
+    "מאיה20": {
+      "last": "2025-09-16T00:37:20.238Z",
+      "prizeId": "DESSERT",
+      "coupon": {
+        "code": "עוגיה",
+        "type": "free-cookie",
+        "value": 17,
+        "description": "עוגיה חינם מגלגל המזל",
+        "issuedAt": "2025-09-16T00:37:20.238Z",
+        "expiresAt": "2025-09-23T00:37:20.238Z"
+      }
     }
   },
   "guests": {

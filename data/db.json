@@ -49,6 +49,36 @@
       "username": "מאיה4",
       "password": "123",
       "role": "user"
+    },
+    "מאיה5": {
+      "username": "מאיה5",
+      "password": "123",
+      "role": "user"
+    },
+    "מאיה6": {
+      "username": "מאיה6",
+      "password": "123",
+      "role": "user"
+    },
+    "מאיה7": {
+      "username": "מאיה7",
+      "password": "122",
+      "role": "user"
+    },
+    "מאיה8": {
+      "username": "מאיה8",
+      "password": "123",
+      "role": "user"
+    },
+    "מאיה9": {
+      "username": "מאיה9",
+      "password": "123",
+      "role": "user"
+    },
+    "מאיה20": {
+      "username": "מאיה20",
+      "password": "111",
+      "role": "user"
     }
   },
   "carts": [
@@ -73,7 +103,8 @@
         "caramel-cookie",
         "custom-cake-1755791175782-cof4x5964",
         "caramel-cookie",
-        "custom-cake-1755976596749-g72pwdj4x"
+        "custom-cake-1755976596749-g72pwdj4x",
+        "cookies-box"
       ]
     },
     {
@@ -109,6 +140,12 @@
     {
       "username": "מאיה4",
       "items": []
+    },
+    {
+      "username": "מאיה7",
+      "items": [
+        "cookies-box"
+      ]
     }
   ],
   "purchases": {
@@ -1294,6 +1331,101 @@
     {
       "datetime": "2025-09-15T23:46:33.591Z",
       "username": "מאיה",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-09-15T23:52:38.636Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-09-16T00:28:50.966Z",
+      "username": "מאיה5",
+      "type": "register"
+    },
+    {
+      "datetime": "2025-09-16T00:29:02.007Z",
+      "username": "מאיה5",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-09-16T00:29:22.820Z",
+      "username": "מאיה5",
+      "type": "logout"
+    },
+    {
+      "datetime": "2025-09-16T00:29:30.567Z",
+      "username": "מאיה6",
+      "type": "register"
+    },
+    {
+      "datetime": "2025-09-16T00:29:36.844Z",
+      "username": "מאיה6",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-09-16T00:29:50.017Z",
+      "username": "מאיה6",
+      "type": "logout"
+    },
+    {
+      "datetime": "2025-09-16T00:30:01.080Z",
+      "username": "מאיה7",
+      "type": "register"
+    },
+    {
+      "datetime": "2025-09-16T00:30:08.038Z",
+      "username": "מאיה7",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-09-16T00:31:30.569Z",
+      "username": "מאיה7",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-09-16T00:33:24.061Z",
+      "username": "מאיה7",
+      "type": "logout"
+    },
+    {
+      "datetime": "2025-09-16T00:33:31.264Z",
+      "username": "מאיה8",
+      "type": "register"
+    },
+    {
+      "datetime": "2025-09-16T00:33:37.637Z",
+      "username": "מאיה8",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-09-16T00:35:17.307Z",
+      "username": "מאיה8",
+      "type": "logout"
+    },
+    {
+      "datetime": "2025-09-16T00:35:28.059Z",
+      "username": "מאיה9",
+      "type": "register"
+    },
+    {
+      "datetime": "2025-09-16T00:35:35.083Z",
+      "username": "מאיה9",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-09-16T00:36:55.860Z",
+      "username": "מאיה9",
+      "type": "logout"
+    },
+    {
+      "datetime": "2025-09-16T00:37:06.097Z",
+      "username": "מאיה20",
+      "type": "register"
+    },
+    {
+      "datetime": "2025-09-16T00:37:13.817Z",
+      "username": "מאיה20",
       "type": "login"
     }
   ],
