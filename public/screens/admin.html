@@ -4,25 +4,605 @@
   <meta charset="UTF-8" />
   <title data-page="admin">מסך ניהול</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="/assets/styles.css">
   <script src="/assets/translations"></script>
   <style>
-    .admin-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
-    @media (max-width:900px){ .admin-grid{ grid-template-columns:1fr; } }
-    .panel{ border:1px solid #eee; border-radius:10px; padding:14px; background:#fff; }
-    .panel h2{ margin-top:0; }
-    .admin-list{ display:flex; flex-direction:column; gap:10px; }
-    .admin-row{ display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:12px; border:1px solid #eee; border-radius:8px; padding:8px; background:#fafafa; }
-    .admin-row img{ width:64px; height:64px; object-fit:cover; border-radius:6px; }
-    .admin-row button{ border:1px solid #ccc; background:#fff; border-radius:8px; padding:6px 10px; cursor:pointer; }
-    .admin-row button:hover{ background:#f2f2f2; }
-    .admin-form label{ display:block; margin-bottom:10px; }
-    .admin-form input, .admin-form textarea{ width:100%; box-sizing:border-box; padding:8px; border:1px solid #ccc; border-radius:8px; }
-    .muted{ color:#666; font-size:12px; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #ffffff;
+      color: #1a1a1a;
+      line-height: 1.6;
+    }
+
+    /* Header */
+    .header {
+      background: #ffffcc;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .menu-btn {
+      background: none;
+      border: none;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .menu-btn::before {
+      content: "☰";
+      font-size: 1.2rem;
+    }
+
+    .logo {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #1a1a1a;
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .header-btn {
+      background: none;
+      border: 2px solid #1a1a1a;
+      color: #1a1a1a;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .header-btn:hover {
+      background: #1a1a1a;
+      color: white;
+    }
+
+    .header-btn.primary {
+      background: #1a1a1a;
+      color: white;
+    }
+
+    .header-btn.primary:hover {
+      background: #333;
+    }
+
+    /* Navigation Menu */
+    .nav-menu {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 300px;
+      height: 100vh;
+      background: white;
+      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+      transition: right 0.3s ease;
+      padding: 2rem;
+      z-index: 2000;
+    }
+
+    .nav-menu.active {
+      right: 0;
+    }
+
+    .nav-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      float: left;
+      margin-bottom: 2rem;
+    }
+
+    .nav-item,
+    .nav-menu a,
+    .nav-menu button {
+      display: block;
+      padding: 0.75rem 0;
+      color: #1a1a1a;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid #f0f0f0;
+      transition: color 0.2s ease;
+      background: none;
+      border: none;
+      text-align: right;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .nav-item:hover,
+    .nav-menu a:hover,
+    .nav-menu button:hover {
+      color: #ffffcc;
+    }
+
+    /* Overlay */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1500;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Main Content */
+    .main-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .page-title {
+      font-size: 3rem;
+      font-weight: 900;
+      color: #1a1a1a;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+
+    .page-subtitle {
+      color: #666;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    /* Admin Grid */
+    .admin-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    /* Panel Styling */
+    .panel {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+    }
+
+    .panel:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    .panel-header {
+      background: #1a1a1a;
+      color: white;
+      padding: 1.5rem;
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .panel-content {
+      padding: 1.5rem;
+    }
+
+    /* Form Styling */
+    .admin-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: #1a1a1a;
+      font-size: 0.9rem;
+    }
+
+    .form-input,
+    .form-textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #f0f0f0;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      background: white;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: #ffffcc;
+      box-shadow: 0 0 0 3px rgba(255, 255, 204, 0.1);
+    }
+
+    .form-button {
+      background: #1a1a1a;
+      color: white;
+      border: none;
+      padding: 1rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-top: 0.5rem;
+    }
+
+    .form-button:hover {
+      background: #333;
+      transform: translateY(-2px);
+    }
+
+    .form-hint {
+      color: #666;
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      background: #f8f8f8;
+      border-radius: 6px;
+    }
+
+    /* List Styling */
+    .admin-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .admin-row {
+      display: grid;
+      grid-template-columns: 64px 1fr auto;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: #f8f8f8;
+      border-radius: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .admin-row:hover {
+      background: #f0f0f0;
+      transform: translateX(5px);
+    }
+
+    .admin-row img {
+      width: 64px;
+      height: 64px;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .product-name {
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .product-id {
+      color: #666;
+      font-size: 0.8rem;
+    }
+
+    .admin-button {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .admin-button:hover {
+      background: #c82333;
+      transform: scale(1.05);
+    }
+
+    /* Activity Styling */
+    .activity-row {
+      padding: 1rem;
+      background: #f8f8f8;
+      border-radius: 10px;
+      margin-bottom: 0.5rem;
+      border-left: 4px solid #ffffcc;
+    }
+
+    .activity-type {
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .activity-details {
+      color: #666;
+      font-size: 0.9rem;
+      margin-top: 0.2rem;
+    }
+
+    /* Loading and Empty States */
+    .loading,
+    .empty,
+    .error-box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      text-align: center;
+      color: #666;
+      font-size: 1rem;
+      background: #f8f8f8;
+      border-radius: 10px;
+      min-height: 120px;
+    }
+
+    .error-box {
+      background: #fee;
+      color: #c62828;
+      border: 2px solid #ffcdd2;
+    }
+
+    /* Toast */
+    #toast {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      z-index: 9999;
+      display: none;
+      padding: 10px 14px;
+      background: #333;
+      color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .2);
+      font-size: 14px;
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: opacity .2s, transform .2s;
+    }
+
+    #toast.show {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Dark Theme */
+    .dark-theme {
+      background: #1a1a1a;
+      color: white;
+    }
+
+    .dark-theme .header {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .nav-menu {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .nav-menu a,
+    .dark-theme .nav-menu button {
+      color: white;
+      border-bottom-color: #444;
+    }
+
+    .dark-theme .panel {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .panel-header {
+      background: #ffffcc;
+      color: #1a1a1a;
+    }
+
+    .dark-theme .form-input,
+    .dark-theme .form-textarea {
+      background: #1a1a1a;
+      border-color: #444;
+      color: white;
+    }
+
+    .dark-theme .admin-row {
+      background: #1a1a1a;
+    }
+
+    .dark-theme .admin-row:hover {
+      background: #333;
+    }
+
+    .dark-theme .activity-row {
+      background: #1a1a1a;
+      border-left-color: #ffffcc;
+    }
+
+    .dark-theme .form-hint {
+      background: #333;
+      color: #ccc;
+    }
+
+    .dark-theme .loading,
+    .dark-theme .empty {
+      background: #2d2d2d;
+      color: #ccc;
+    }
+
+    .dark-theme .product-name {
+      color: white;
+    }
+
+    .dark-theme .activity-type {
+      color: white;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 968px) {
+      .admin-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .header-nav {
+        gap: 0.5rem;
+      }
+
+      .header-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+      }
+
+      .page-title {
+        font-size: 2.5rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        padding: 1rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .header-left {
+        order: 1;
+      }
+
+      .logo {
+        font-size: 1.8rem;
+        order: 2;
+      }
+
+      .header-nav {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .main-content {
+        padding: 1rem;
+      }
+
+      .page-title {
+        font-size: 2rem;
+      }
+
+      .admin-grid {
+        gap: 1.5rem;
+        grid-template-columns: 1fr;
+      }
+
+      .admin-row {
+        grid-template-columns: 48px 1fr auto;
+        gap: 0.75rem;
+        padding: 0.75rem;
+      }
+
+      .admin-row img {
+        width: 48px;
+        height: 48px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header-btn {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.7rem;
+      }
+
+      .panel-content {
+        padding: 1rem;
+      }
+
+      .admin-row {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .admin-row img {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto;
+      }
+    }
   </style>
 </head>
 <body>
-  <nav>
+  <div class="overlay" id="overlay"></div>
+  
+  <header class="header">
+    <div class="header-left">
+      <button class="menu-btn" id="menuBtn">Menu</button>
+      <a href="/screens/store.html" class="logo">dessert</a>
+    </div>
+    
+    <nav class="header-nav">
+      <a href="/screens/store.html" class="header-btn">חנות</a>
+      <a href="/screens/cart.html" class="header-btn">סל קניות</a>
+      <a href="/screens/admin.html" class="header-btn primary">ניהול</a>
+      <a href="/screens/login.html" class="header-btn" id="header-login">התחברות</a>
+    </nav>
+  </header>
+
+  <nav class="nav-menu" id="navMenu">
+    <button class="nav-close" id="navClose">×</button>
     <a href="/screens/cart.html" data-key="cart">סל הקניות</a>
     <a href="/screens/checkout.html" data-key="checkout">תשלום</a>
     <a href="/screens/myitems.html" data-key="myPurchases">הרכישות שלי</a>
@@ -33,37 +613,100 @@
     <a href="/screens/dessert-finder.html">🔍 מציאת קינוח מושלם</a>
     <a href="/screens/wheel.html">🎡 גלגל מזל</a>
     <a href="/screens/diy.html">🍪 <span data-key="nav.diy">עשה זאת בעצמך</span></a>
+    <button id="theme-toggle">🌙 מצב כהה</button>
+    <button id="language-toggle">🌐 English</button>
   </nav>
 
-  <h1 data-key="pageTitle.admin">מסך ניהול</h1>
+  <div id="toast"></div>
 
-  <div class="admin-grid">
-    <section class="panel">
-      <h2 data-key="addProduct">הוספת מוצר חדש</h2>
-      <form id="add-form" class="admin-form">
-        <label><span data-key="productTitle">כותרת המוצר</span> <input type="text" name="title" required></label>
-        <label><span data-key="description">תיאור (אופציונלי)</span> <textarea name="description" rows="3"></textarea></label>
-        <label><span data-key="image">תמונה</span> (שם קובץ מתוך /public/images או URL מלא)
-          <input type="text" name="image" placeholder="cookie.jpg או https://…" required>
-        </label>
-        <button type="submit" data-key="addProduct">הוסף מוצר</button>
-        <div class="muted">טיפ: אם מעלים קובץ ל־<code>public/images</code>, מספיק לכתוב את שמו (למשל <code>cookie.jpg</code>).</div>
-      </form>
-    </section>
+  <main class="main-content">
+    <div class="page-header">
+      <h1 class="page-title" data-key="pageTitle.admin">מסך ניהול</h1>
+      <p class="page-subtitle">ניהול מוצרים ופעילות משתמשים</p>
+    </div>
 
-    <section class="panel">
-      <h2>מוצרים קיימים</h2>
-      <div id="products" class="admin-list"></div>
-    </section>
+    <div class="admin-grid">
+      <!-- Add Product Panel -->
+      <section class="panel">
+        <div class="panel-header">
+          <h2 data-key="addProduct">הוספת מוצר חדש</h2>
+        </div>
+        <div class="panel-content">
+          <form id="add-form" class="admin-form">
+            <div class="form-group">
+              <label class="form-label"><span data-key="productTitle">כותרת המוצר</span></label>
+              <input type="text" name="title" class="form-input" required>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label"><span data-key="description">תיאור (אופציונלי)</span></label>
+              <textarea name="description" rows="3" class="form-textarea"></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label"><span data-key="image">תמונה</span></label>
+              <input type="text" name="image" class="form-input" placeholder="cookie.jpg או https://…" required>
+              <div class="form-hint">
+                <strong>טיפ:</strong> אם מעלים קובץ ל־<code>public/images</code>, מספיק לכתוב את שמו (למשל <code>cookie.jpg</code>).
+              </div>
+            </div>
+            
+            <button type="submit" class="form-button" data-key="addProduct">הוסף מוצר</button>
+          </form>
+        </div>
+      </section>
 
-    <section class="panel">
-      <h2>פעילות אחרונה</h2>
-      <div class="muted">מוצג חדש→ישן.</div>
-      <div id="activity" class="admin-list"></div>
-    </section>
-  </div>
+      <!-- Existing Products Panel -->
+      <section class="panel">
+        <div class="panel-header">
+          <h2>מוצרים קיימים</h2>
+        </div>
+        <div class="panel-content">
+          <div id="products" class="admin-list"></div>
+        </div>
+      </section>
+
+      <!-- Recent Activity Panel -->
+      <section class="panel">
+        <div class="panel-header">
+          <h2>פעילות אחרונה</h2>
+        </div>
+        <div class="panel-content">
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label class="form-label">פילטר לפי שם משתמש</label>
+            <input type="text" id="activity-filter" class="form-input" placeholder="הקלד קידומת של שם משתמש...">
+            <div class="form-hint">הצג רק פעילות של משתמשים שהשם שלהם מתחיל בקידומת הזו</div>
+          </div>
+          <div class="form-hint" style="margin-bottom: 1rem;">מוצג חדש→ישן.</div>
+          <div id="activity" class="admin-list"></div>
+        </div>
+      </section>
+    </div>
+  </main>
 
   <script>
+    // Menu functionality
+    const menuBtn = document.getElementById('menuBtn');
+    const navMenu = document.getElementById('navMenu');
+    const navClose = document.getElementById('navClose');
+    const overlay = document.getElementById('overlay');
+
+    function openMenu() {
+      navMenu.classList.add('active');
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+      navMenu.classList.remove('active');
+      overlay.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    menuBtn.addEventListener('click', openMenu);
+    navClose.addEventListener('click', closeMenu);
+    overlay.addEventListener('click', closeMenu);
+
     // טעינת התאמות אישיות מ-localStorage
     function loadUICustomization() {
       const theme = localStorage.getItem('theme') || 'light';
@@ -113,23 +756,37 @@
     async function setupAuthButtons() {
       const loginLink = document.getElementById('login-link');
       const logoutBtn = document.getElementById('logout');
+      const headerLogin = document.getElementById('header-login');
       let loggedIn = false;
       try { const r = await fetch('/api/session'); loggedIn = r.ok; } catch {}
-      loginLink.style.display = loggedIn ? 'none' : '';
-      logoutBtn.style.display = loggedIn ? '' : 'none';
+      
+      if (loginLink) loginLink.style.display = loggedIn ? 'none' : '';
+      if (logoutBtn) logoutBtn.style.display = loggedIn ? '' : 'none';
+      if (headerLogin) headerLogin.style.display = loggedIn ? 'none' : '';
     }
+    
     setupAuthButtons();
     document.getElementById('logout').onclick = async () => {
       try { await fetch('/api/logout', { method: 'POST' }); }
       finally { location.href = '/screens/login.html'; }
     };
 
+    // Toast functionality
+    const toastEl = document.getElementById('toast');
+    let toastTimer;
+    function showToast(msg) {
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1500);
+    }
+
     const productsBox = document.getElementById('products');
     async function loadProducts(){
-      productsBox.innerHTML = 'טוען...';
+      productsBox.innerHTML = '<div class="loading">טוען...</div>';
       const res = await fetch('/api/admin/products');
       if (res.status === 401) return location.href = '/screens/login.html';
-      if (res.status === 403) { productsBox.textContent = 'Admin only'; return; }
+      if (res.status === 403) { productsBox.innerHTML = '<div class="error-box">Admin only</div>'; return; }
       const items = await res.json();
       const currentLanguage = localStorage.getItem('language') || 'he';
       
@@ -145,11 +802,11 @@
         
         row.innerHTML = `
           <img src="${p.image.startsWith('http') ? p.image : '/images/' + p.image}" alt="${productName}">
-          <div>
-            <div><strong>${productName}</strong></div>
-            <div class="muted">${p.id}</div>
+          <div class="product-info">
+            <div class="product-name">${productName}</div>
+            <div class="product-id">${p.id}</div>
           </div>
-          <button data-id="${p.id}" data-key="removeProduct">מחק</button>
+          <button class="admin-button" data-id="${p.id}" data-key="removeProduct">מחק</button>
         `;
         row.querySelector('button').onclick = async () => {
           if (!confirm('למחוק את "'+productName+'"?')) return;
@@ -186,26 +843,53 @@
       if (res.status === 403) return alert('Admin only');
       const j = await res.json().catch(() => ({}));
       if (!res.ok || !j.ok) return alert(j.error || 'הוספה נכשלה');
-      addForm.reset(); await loadProducts(); await loadActivity(); alert('המוצר נוסף בהצלחה!');
+      addForm.reset(); await loadProducts(); await loadActivity(); 
+      showToast('המוצר נוסף בהצלחה!');
     });
 
     const actBox = document.getElementById('activity');
+    let allActivity = []; // שמירת כל הפעילות
+    
     async function loadActivity(){
-      actBox.innerHTML = 'טוען...';
+      actBox.innerHTML = '<div class="loading">טוען...</div>';
       const res = await fetch('/api/admin/activity');
-      if (res.status === 403) { actBox.textContent = 'אין הרשאת מנהל'; return; }
-      if (!res.ok) { actBox.textContent = 'שגיאה'; return; }
-      const rows = await res.json();
+      if (res.status === 403) { actBox.innerHTML = '<div class="error-box">אין הרשאת מנהל</div>'; return; }
+      if (!res.ok) { actBox.innerHTML = '<div class="error-box">שגיאה</div>'; return; }
+      allActivity = await res.json();
+      filterAndDisplayActivity();
+    }
+
+    function filterAndDisplayActivity() {
+      const filterValue = (document.getElementById('activity-filter').value || '').trim().toLowerCase();
       const currentLanguage = localStorage.getItem('language') || 'he';
       
+      let filteredActivity = allActivity;
+      if (filterValue) {
+        filteredActivity = allActivity.filter(r => 
+          (r.username || '').toLowerCase().startsWith(filterValue)
+        );
+      }
+      
       actBox.innerHTML = '';
-      for (const r of rows){
-        const div = document.createElement('div'); div.className = 'admin-row';
+      if (filteredActivity.length === 0) {
+        actBox.innerHTML = '<div class="empty">אין פעילות להצגה</div>';
+        return;
+      }
+      
+      for (const r of filteredActivity){
+        const div = document.createElement('div'); 
+        div.className = 'activity-row';
         const when = r.datetime ? new Date(r.datetime).toLocaleString(currentLanguage === 'he' ? 'he-IL' : 'en-US') : '';
-        div.innerHTML = `<div style="grid-column:1 / span 3;"><strong>${r.type}</strong> <span class="muted">— ${when} — ${r.username || ''}</span></div>`;
+        div.innerHTML = `
+          <div class="activity-type">${r.type}</div>
+          <div class="activity-details">${when} — ${r.username || ''}</div>
+        `;
         actBox.appendChild(div);
       }
     }
+
+    // הוספת event listener לפילטר
+    document.getElementById('activity-filter').addEventListener('input', filterAndDisplayActivity);
 
     setupAuthButtons();
     // טעינה ראשונית - עם השהיה קטנה כדי לוודא שtranslations.js נטען
