@@ -111,6 +111,30 @@
         "issuedAt": "2025-09-16T00:37:20.238Z",
         "expiresAt": "2025-09-23T00:37:20.238Z"
       }
+    },
+    "מאיה": {
+      "last": "2025-09-16T06:12:53.913Z",
+      "prizeId": "DESSERT",
+      "coupon": {
+        "code": "עוגיה",
+        "type": "free-cookie",
+        "value": 17,
+        "description": "עוגיה חינם מגלגל המזל",
+        "issuedAt": "2025-09-16T06:12:53.913Z",
+        "expiresAt": "2025-09-23T06:12:53.913Z"
+      }
+    },
+    "לירן5": {
+      "last": "2025-09-16T10:15:28.394Z",
+      "prizeId": "DESSERT",
+      "coupon": {
+        "code": "עוגיה",
+        "type": "free-cookie",
+        "value": 17,
+        "description": "עוגיה חינם מגלגל המזל",
+        "issuedAt": "2025-09-16T10:15:28.394Z",
+        "expiresAt": "2025-09-23T10:15:28.394Z"
+      }
     }
   },
   "guests": {

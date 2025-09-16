@@ -79,6 +79,16 @@
       "username": "מאיה20",
       "password": "111",
       "role": "user"
+    },
+    "לירן5": {
+      "username": "לירן5",
+      "password": "123",
+      "role": "user"
+    },
+    "מאיהב": {
+      "username": "מאיהב",
+      "password": "121211",
+      "role": "user"
     }
   },
   "carts": [
@@ -92,19 +102,8 @@
     {
       "username": "מאיה",
       "items": [
-        "bagle-cookie",
-        "bagle-cookie",
-        "bagle-cookie",
-        "bagle-cookie",
-        "custom-cake-1755789531164-58m0ygnuw",
-        "custom-cake-1755789536188-qhmbjjyw9",
-        "custom-cake-1755789542596-ch7sy10p8",
-        "custom-cake-1755790467633-orkubhn1e",
         "caramel-cookie",
-        "custom-cake-1755791175782-cof4x5964",
-        "caramel-cookie",
-        "custom-cake-1755976596749-g72pwdj4x",
-        "cookies-box"
+        "caramel-cookie"
       ]
     },
     {
@@ -151,6 +150,17 @@
       "username": "מאיה20",
       "items": [
         "cookies-box"
+      ]
+    },
+    {
+      "username": "admin",
+      "items": []
+    },
+    {
+      "username": "לירן5",
+      "items": [
+        "bagle-cookie",
+        "custom-cake-1758017724640-eb8zgn4iq"
       ]
     }
   ],
@@ -272,6 +282,178 @@
           "chocolate-cake"
         ],
         "date": "2025-08-18T13:10:23.042Z"
+      },
+      {
+        "id": "bagle-cookie",
+        "title": "bagle cookie",
+        "image": "bagle-cookie.jpeg",
+        "price": 17,
+        "date": "2025-09-16T06:12:31.822Z",
+        "type": "regular",
+        "purchaseDate": "2025-09-16T06:12:31.879Z",
+        "purchaseId": "17580031518797qqyxe8il"
+      },
+      {
+        "id": "bagle-cookie",
+        "title": "bagle cookie",
+        "image": "bagle-cookie.jpeg",
+        "price": 17,
+        "date": "2025-09-16T06:12:31.823Z",
+        "type": "regular",
+        "purchaseDate": "2025-09-16T06:12:31.879Z",
+        "purchaseId": "1758003151879hs6iy7em1"
+      },
+      {
+        "id": "bagle-cookie",
+        "title": "bagle cookie",
+        "image": "bagle-cookie.jpeg",
+        "price": 17,
+        "date": "2025-09-16T06:12:31.823Z",
+        "type": "regular",
+        "purchaseDate": "2025-09-16T06:12:31.879Z",
+        "purchaseId": "1758003151879frd56fdwx"
+      },
+      {
+        "id": "bagle-cookie",
+        "title": "bagle cookie",
+        "image": "bagle-cookie.jpeg",
+        "price": 17,
+        "date": "2025-09-16T06:12:31.823Z",
+        "type": "regular",
+        "purchaseDate": "2025-09-16T06:12:31.879Z",
+        "purchaseId": "17580031518798yokb9i8m"
+      },
+      {
+        "id": "caramel-cookie",
+        "title": "caramel cookie",
+        "image": "caramel-cookie.jpeg",
+        "price": 17,
+        "date": "2025-09-16T06:12:31.823Z",
+        "type": "regular",
+        "purchaseDate": "2025-09-16T06:12:31.879Z",
+        "purchaseId": "1758003151879s2h55c0ot"
+      },
+      {
+        "id": "caramel-cookie",
+        "title": "caramel cookie",
+        "image": "caramel-cookie.jpeg",
+        "price": 17,
+        "date": "2025-09-16T06:12:31.823Z",
+        "type": "regular",
+        "purchaseDate": "2025-09-16T06:12:31.879Z",
+        "purchaseId": "1758003151879ug3s8elim"
+      },
+      {
+        "id": "cookies-box",
+        "title": "cookies box",
+        "image": "cookies-box.jpeg",
+        "price": 120,
+        "date": "2025-09-16T06:12:31.823Z",
+        "type": "regular",
+        "purchaseDate": "2025-09-16T06:12:31.879Z",
+        "purchaseId": "17580031518791oj6p60d6"
+      },
+      {
+        "id": "custom-cake-1755789531164-58m0ygnuw",
+        "title": "עוגה מותאמת בנטו (10 ס\"מ)",
+        "image": "cake-green.png",
+        "price": 140,
+        "date": "2025-09-16T06:12:31.823Z",
+        "type": "custom",
+        "customDesign": {
+          "size": "bento",
+          "color": "green",
+          "colorName": "ירוק",
+          "text": "",
+          "textColor": "#ffc107"
+        },
+        "purchaseDate": "2025-09-16T06:12:31.879Z",
+        "purchaseId": "1758003151879kbmt3p14x"
+      },
+      {
+        "id": "custom-cake-1755789536188-qhmbjjyw9",
+        "title": "עוגה מותאמת בנטו (10 ס\"מ)",
+        "image": "cake-green.png",
+        "price": 140,
+        "date": "2025-09-16T06:12:31.823Z",
+        "type": "custom",
+        "customDesign": {
+          "size": "bento",
+          "color": "green",
+          "colorName": "ירוק",
+          "text": "",
+          "textColor": "#ffc107"
+        },
+        "purchaseDate": "2025-09-16T06:12:31.879Z",
+        "purchaseId": "17580031518799trdobqiz"
+      },
+      {
+        "id": "custom-cake-1755789542596-ch7sy10p8",
+        "title": "עוגה מותאמת גדולה (22 ס\"מ)",
+        "image": "cake-light-blue.png",
+        "price": 300,
+        "date": "2025-09-16T06:12:31.823Z",
+        "type": "custom",
+        "customDesign": {
+          "size": "large",
+          "color": "light-blue",
+          "colorName": "כחול בהיר",
+          "text": "",
+          "textColor": "#333333"
+        },
+        "purchaseDate": "2025-09-16T06:12:31.879Z",
+        "purchaseId": "17580031518790i4xh91wg"
+      },
+      {
+        "id": "custom-cake-1755790467633-orkubhn1e",
+        "title": "עוגה מותאמת בנטו (10 ס\"מ)",
+        "image": "cake-green.png",
+        "price": 140,
+        "date": "2025-09-16T06:12:31.824Z",
+        "type": "custom",
+        "customDesign": {
+          "size": "bento",
+          "color": "green",
+          "colorName": "ירוק",
+          "text": "",
+          "textColor": "#ffc107"
+        },
+        "purchaseDate": "2025-09-16T06:12:31.879Z",
+        "purchaseId": "1758003151879jzdavnq08"
+      },
+      {
+        "id": "custom-cake-1755791175782-cof4x5964",
+        "title": "עוגה מותאמת גדולה (22 ס\"מ)",
+        "image": "cake-green.png",
+        "price": 300,
+        "date": "2025-09-16T06:12:31.824Z",
+        "type": "custom",
+        "customDesign": {
+          "size": "large",
+          "color": "green",
+          "colorName": "ירוק",
+          "text": "מזל טוב",
+          "textColor": "#ff9800"
+        },
+        "purchaseDate": "2025-09-16T06:12:31.879Z",
+        "purchaseId": "1758003151879ojb3zh33p"
+      },
+      {
+        "id": "custom-cake-1755976596749-g72pwdj4x",
+        "title": "עוגה מותאמת בנטו (10 ס\"מ)",
+        "image": "cake-purple.png",
+        "price": 140,
+        "date": "2025-09-16T06:12:31.824Z",
+        "type": "custom",
+        "customDesign": {
+          "size": "bento",
+          "color": "purple",
+          "colorName": "סגול",
+          "text": "מזל טוב",
+          "textColor": "#ffffff"
+        },
+        "purchaseDate": "2025-09-16T06:12:31.879Z",
+        "purchaseId": "1758003151879e966z00w5"
       }
     ],
     "מאיה1": [
@@ -1448,6 +1630,128 @@
       "datetime": "2025-09-16T00:43:38.335Z",
       "username": "admin",
       "type": "login"
+    },
+    {
+      "datetime": "2025-09-16T00:52:20.930Z",
+      "username": "admin",
+      "type": "admin-add-product"
+    },
+    {
+      "datetime": "2025-09-16T00:52:41.936Z",
+      "username": "admin",
+      "type": "admin-remove-product"
+    },
+    {
+      "datetime": "2025-09-16T01:14:52.515Z",
+      "username": "admin",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-09-16T01:15:12.950Z",
+      "username": "admin",
+      "type": "admin-add-product"
+    },
+    {
+      "datetime": "2025-09-16T01:16:48.281Z",
+      "username": "admin",
+      "type": "admin-remove-product"
+    },
+    {
+      "datetime": "2025-09-16T01:54:03.733Z",
+      "username": "admin",
+      "type": "admin-add-product"
+    },
+    {
+      "datetime": "2025-09-16T01:54:19.934Z",
+      "username": "admin",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-09-16T01:54:56.891Z",
+      "username": "admin",
+      "type": "admin-remove-product"
+    },
+    {
+      "datetime": "2025-09-16T05:23:28.352Z",
+      "username": "system",
+      "type": "fix-prices: 14 products fixed with correct prices"
+    },
+    {
+      "datetime": "2025-09-16T05:34:18.665Z",
+      "username": "admin",
+      "type": "admin-add-product"
+    },
+    {
+      "datetime": "2025-09-16T05:34:26.568Z",
+      "username": "admin",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-09-16T05:54:26.820Z",
+      "username": "admin",
+      "type": "admin-remove-product"
+    },
+    {
+      "datetime": "2025-09-16T06:11:38.694Z",
+      "username": "admin",
+      "type": "logout"
+    },
+    {
+      "datetime": "2025-09-16T06:11:43.869Z",
+      "username": "מאיה",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-09-16T06:12:31.888Z",
+      "username": "מאיה",
+      "type": "purchase",
+      "itemCount": 13
+    },
+    {
+      "datetime": "2025-09-16T10:15:04.440Z",
+      "username": "לירן5",
+      "type": "register"
+    },
+    {
+      "datetime": "2025-09-16T10:15:11.770Z",
+      "username": "לירן5",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-09-16T10:15:17.863Z",
+      "username": "לירן5",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-09-16T10:15:24.649Z",
+      "username": "לירן5",
+      "type": "add-custom-cake-to-cart",
+      "details": "bento pink cake with \"no text\" in #333333"
+    },
+    {
+      "datetime": "2025-09-16T10:30:56.149Z",
+      "username": "לירן5",
+      "type": "logout"
+    },
+    {
+      "datetime": "2025-09-16T10:31:17.145Z",
+      "username": "מאיהב",
+      "type": "register"
+    },
+    {
+      "datetime": "2025-09-16T10:54:46.153Z",
+      "username": "מאיה",
+      "type": "login"
+    },
+    {
+      "datetime": "2025-09-16T10:55:04.081Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
+    },
+    {
+      "datetime": "2025-09-16T10:55:06.457Z",
+      "username": "מאיה",
+      "type": "add-to-cart"
     }
   ],
   "products": [
@@ -1455,85 +1759,99 @@
       "id": "bagle-cookie",
       "title": "bagle cookie",
       "description": "",
-      "image": "bagle-cookie.jpeg"
+      "image": "bagle-cookie.jpeg",
+      "price": 17
     },
     {
       "id": "caramel-cookie",
       "title": "caramel cookie",
       "description": "",
-      "image": "caramel-cookie.jpeg"
+      "image": "caramel-cookie.jpeg",
+      "price": 17
     },
     {
       "id": "chocolate-cake",
       "title": "chocolate cake",
       "description": "",
-      "image": "chocolate-cake.jpeg"
+      "image": "chocolate-cake.jpeg",
+      "price": 150
     },
     {
       "id": "cookies-box",
       "title": "cookies box",
       "description": "",
-      "image": "cookies-box.jpeg"
+      "image": "cookies-box.jpeg",
+      "price": 120
     },
     {
       "id": "cupcakes",
       "title": "cupcakes",
       "description": "",
-      "image": "cupcakes.jpeg"
+      "image": "cupcakes.jpeg",
+      "price": 160
     },
     {
       "id": "kinder-cookie",
       "title": "kinder cookie",
       "description": "",
-      "image": "kinder-cookie.jpeg"
+      "image": "kinder-cookie.jpeg",
+      "price": 17
     },
     {
       "id": "lotus-cookie",
       "title": "lotus cookie",
       "description": "",
-      "image": "lotus-cookie.jpeg"
+      "image": "lotus-cookie.jpeg",
+      "price": 17
     },
     {
       "id": "minnie-mous-cake",
       "title": "minnie mous cake",
       "description": "",
-      "image": "minnie-mous-cake.jpeg"
+      "image": "minnie-mous-cake.jpeg",
+      "price": 300
     },
     {
       "id": "nutella-box",
       "title": "nutella box",
       "description": "",
-      "image": "nutella-box.jpeg"
+      "image": "nutella-box.jpeg",
+      "price": 70
     },
     {
       "id": "nutella-cookie",
       "title": "nutella cookie",
       "description": "",
-      "image": "nutella-cookie.jpeg"
+      "image": "nutella-cookie.jpeg",
+      "price": 17
     },
     {
       "id": "orange-cake",
       "title": "orange cake",
       "description": "",
-      "image": "orange-cake.jpeg"
+      "image": "orange-cake.jpeg",
+      "price": 70
     },
     {
       "id": "pizza-cookie",
       "title": "pizza cookie",
       "description": "",
-      "image": "pizza-cookie.jpeg"
+      "image": "pizza-cookie.jpeg",
+      "price": 120
     },
     {
       "id": "white-chocolate-cookie",
       "title": "white chocolate cookie",
       "description": "",
-      "image": "white-chocolate-cookie.jpeg"
+      "image": "white-chocolate-cookie.jpeg",
+      "price": 17
     },
     {
       "id": "white-design-cake",
       "title": "white design cake",
       "description": "",
-      "image": "white-design-cake.jpeg"
+      "image": "white-design-cake.jpeg",
+      "price": 140
     }
   ],
   "pending": [
@@ -1606,7 +1924,7 @@
         "imageFile": "cake-green.png"
       },
       "createdAt": "2025-08-21T15:18:51.166Z",
-      "status": "in-cart"
+      "status": "purchased"
     },
     {
       "id": "custom-cake-1755789536188-qhmbjjyw9",
@@ -1620,7 +1938,7 @@
         "imageFile": "cake-green.png"
       },
       "createdAt": "2025-08-21T15:18:56.189Z",
-      "status": "in-cart"
+      "status": "purchased"
     },
     {
       "id": "custom-cake-1755789542596-ch7sy10p8",
@@ -1634,7 +1952,7 @@
         "imageFile": "cake-light-blue.png"
       },
       "createdAt": "2025-08-21T15:19:02.598Z",
-      "status": "in-cart"
+      "status": "purchased"
     },
     {
       "id": "custom-cake-1755790467633-orkubhn1e",
@@ -1648,7 +1966,7 @@
         "imageFile": "cake-green.png"
       },
       "createdAt": "2025-08-21T15:34:27.634Z",
-      "status": "in-cart"
+      "status": "purchased"
     },
     {
       "id": "custom-cake-1755791175782-cof4x5964",
@@ -1662,7 +1980,7 @@
         "imageFile": "cake-green.png"
       },
       "createdAt": "2025-08-21T15:46:15.785Z",
-      "status": "in-cart"
+      "status": "purchased"
     },
     {
       "id": "custom-cake-1755976596749-g72pwdj4x",
@@ -1676,7 +1994,7 @@
         "imageFile": "cake-purple.png"
       },
       "createdAt": "2025-08-23T19:16:36.755Z",
-      "status": "in-cart"
+      "status": "purchased"
     },
     {
       "id": "custom-cake-1757365758327-2efznx94e",
@@ -1760,6 +2078,20 @@
         "imageFile": "cake-red.png"
       },
       "createdAt": "2025-09-14T15:33:56.479Z",
+      "status": "in-cart"
+    },
+    {
+      "id": "custom-cake-1758017724640-eb8zgn4iq",
+      "username": "לירן5",
+      "design": {
+        "size": "bento",
+        "color": "pink",
+        "text": "",
+        "textColor": "#333333",
+        "price": 140,
+        "imageFile": "cake-pink.png"
+      },
+      "createdAt": "2025-09-16T10:15:24.642Z",
       "status": "in-cart"
     }
   ]

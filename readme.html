@@ -6,282 +6,252 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/styles.css" />
   <style>
-    .readme-container {
-      max-width: 900px;
-      margin: 0 auto;
-      background: var(--bg-card);
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: var(--shadow-lg);
-      line-height: 1.8;
-    }
-    .readme-section {
-      margin-bottom: 30px;
-      padding: 20px 0;
-      border-bottom: 1px solid #eee;
-    }
-    .readme-section:last-child {
-      border-bottom: none;
-    }
-    .readme-section h2 {
-      color: var(--primary-color);
-      margin-bottom: 15px;
-    }
-    .routes-list {
-      background: var(--bg-primary);
-      padding: 20px;
-      border-radius: 10px;
-      margin: 10px 0;
-      font-family: 'Courier New', monospace;
-      font-size: 14px;
-    }
-    .route-item {
-      margin: 5px 0;
-      padding: 5px;
-    }
-    .route-method {
-      color: var(--primary-color);
-      font-weight: bold;
-      display: inline-block;
-      width: 60px;
-    }
-    .partner-info {
-      background: var(--gradient-secondary);
-      color: white;
-      padding: 20px;
-      border-radius: 15px;
-      margin: 15px 0;
-    }
-    .challenges {
-      background: var(--bg-primary);
-      padding: 20px;
-      border-radius: 10px;
-      border-right: 4px solid var(--primary-color);
-    }
+    .readme-container{max-width:900px;margin:0 auto;background:var(--bg-card);padding:40px;border-radius:20px;box-shadow:var(--shadow-lg);line-height:1.8}
+    .readme-section{margin-bottom:30px;padding:20px 0;border-bottom:1px solid #eee}
+    .readme-section:last-child{border-bottom:none}
+    .readme-section h2{color:var(--primary-color);margin-bottom:15px}
+    
+    .routes-list{background:var(--bg-primary);padding:20px;border-radius:10px;margin:10px 0;font-family:'Courier New',monospace;font-size:14px}
+    .route-item{margin:5px 0;padding:5px}
+    .route-method{color:var(--primary-color);font-weight:bold;display:inline-block;width:60px}
+    .partner-info{background:var(--gradient-secondary);color:#fff;padding:20px;border-radius:15px;margin:15px 0}
+    .challenges{background:var(--bg-primary);padding:20px;border-radius:10px;border-right:4px solid var(--primary-color)}
   </style>
 </head>
 <body>
-  <nav>
-    <a href="store.html">חנות</a>
-    <a href="cart.html">סל הקניות</a>
-    <a href="checkout.html">תשלום</a>
-    <a href="myitems.html">הרכישות שלי</a>
-    <a href="readme.html">📖 README</a>
-    <a id="login-link" href="login.html">התחברות</a>
-    <button id="logout" style="display:none">התנתקות</button>
-    <a id="admin-link" href="admin.html" style="display:none">ניהול</a>
-    <button id="theme-toggle">🌙 מצב כהה</button>
-    <button id="language-toggle">🌐 English</button>
-  </nav>
+  
 
   <div class="readme-container">
-    <h1>📖 README - פרויקט גמר</h1>
+    <h1> README - פרויקט גמר</h1>
 
+    <!-- הוראות התקנה -->
     <div class="readme-section">
-      <h2>🏪 שם החנות</h2>
-      <p><strong>חנות הקינוחים המתוקה</strong> - "Sweet Desserts Store"</p>
+      <h2> הוראות התקנה והפעלה</h2>
+      <div class="installation-box">
+        <h3>התקנה ראשונית:</h3>
+        <ol>
+          <li>התקן: <code>npm install multer</code></li>
+          <li><strong>חשוב!</strong> הרץ פעם אחת: <code>node fix-prices.js</code></li>
+          <li>הפעל שרת: <code>npm run dev</code></li>
+          <li>גלוש ל־<code>http://localhost:3000</code></li>
+        </ol>
+      </div>
+      <div class="warning-box">
+        <h4> הערות חשובות:</h4>
+        <ul>
+          <li>המשתמש <code>admin/admin</code> קיים מראש</li>
+          <li><code>fix-prices.js</code> לתיקון מחירי מוצרים קיימים (פעם אחת)</li>
+          <li>Persist לקבצי JSON בתיקיית <code>data/</code></li>
+          <li>שרת בברירת מחדל: פורט 3000</li>
+        </ul>
+      </div>
     </div>
 
     <div class="readme-section">
-      <h2>🍰 מה אנחנו מוכרים?</h2>
-      <p>אנחנו מוכרים מגוון רחב של קינוחים טעימים ומתוקים:</p>
+      <h2> שם החנות</h2>
+      <p> "MOKA BAKERY"</p>
+    </div>
+
+    <div class="readme-section">
+      <h2> מה אנחנו מוכרים?</h2>
       <ul>
-        <li><strong>עוגיות מיוחדות:</strong> עוגיות בייגל, קרמל, נוטלה, לוטוס ושוקולד לבן</li>
-        <li><strong>עוגות מעוצבות:</strong> עוגות שוקולד, עוגות תפוז, ועוגות מעוצבות (כמו מיני מאוס)</li>
-        <li><strong>קופסאות מתנה:</strong> קופסאות עוגיות ונוטלה</li>
-        <li><strong>קאפקייקס:</strong> מאפינס קטנים וצבעוניים</li>
-        <li><strong>פיצה עוגיה:</strong> עוגיה בצורת פיצה - הפתעה מתוקה!</li>
+        <li><strong>עוגיות מיוחדות</strong></li>
+        <li><strong>עוגות מעוצבות</strong></li>
+        <li><strong>קופסאות מתנה</strong></li>
+        <li><strong>קאפקייקס</strong></li>
+        <li><strong>פיצה עוגיה</strong></li>
+        <li><strong>עוגות מותאמות אישית</strong></li>
       </ul>
     </div>
 
-    <!-- הסעיף שהוחלף מתחיל כאן -->
     <div class="readme-section">
-      <h2>🚀 דפים נוספים שהוספתי</h2>
+      <h2> הדפים הנוספים שהוספתי</h2>
       <ol>
-        <li>
-          <strong>דף עיצוב עוגה (cake-designer.html)</strong> – הלקוח יכול לבחור עוגה בצבע שירצה, בגודל שירצה, ועם כיתוב לבחירתו (כולל בחירת צבע לכיתוב). כך הלקוח מעצב לעצמו עוגה אישית במקום לקנות עוגה עם עיצוב וכיתוב מוכנים מראש.
-        </li>
-        <li>
-          <strong>גלגל מזל (wheel.html)</strong> – הלקוח יכול לסובב פעם ביום את גלגל המזל ולזכות בפרסים שווים (כמו משלוח חינם), ויכול גם שלא לזכות בכלום. כל סיבוב נרשם בצד השרת.
-        </li>
-        <li>
-          <strong>התאמת קינוח (dessert-finder.html)</strong> – כאשר הלקוח מתקשה לבחור קינוח, הוא עונה על מספר שאלות קצרות, והמערכת מתאימה עבורו קינוח באופן חכם לפי ההעדפות שלו.
-        </li>
-        <li>
-          <strong>דף מתכונים (recipes.html)</strong> – הלקוח יכול להכין גם בבית! הדף מציג מגוון מתכונים לקינוחים טעימים עם הוראות הכנה.
-        </li>
-        <li>
-          <strong>דף בית</strong> – דף שמקבל את פני הלקוח ומציג את האתר.
-        </li>
+        <li><strong>cake-designer.html</strong> — עיצוב עוגה אישית לפי גודל, כיתוב וצבעים שבוחר המשתמש</li>
+        <li><strong>wheel.html</strong> — גלגל מזל יומי בכל סיבוב (פעם אחת ביום) לזכות בפרסים או לא לזכות כלל</li>
+        <li><strong>dessert-finder.html</strong> — שאלון התאמת קינוח- המשתמש עונה על שאלות ובהתאם לשתובותיו הוא מקבל את תוצאת הקינוחים המומלצים ביותר עבוו</li>
+        <li><strong>recipes.html</strong> — דף מתכונים- מתכונים טעימים להכנה ביתית</li>
+        <li><strong>index.html</strong> — דף בית הכולל הקלטה המתארת בקצרה מי אנחנו, פיצ'רים וניווט מהיר למוצרי החנות השונים לפי הקטגוריה שלהם</li>
       </ol>
     </div>
-    <!-- הסעיף שהוחלף מסתיים כאן -->
 
     <div class="readme-section">
-      <h2>😅 מה היה קשה לעשות?</h2>
+      <h2> מה היה קשה לעשות?</h2>
       <div class="challenges">
-        <p><strong>האתגרים העיקריים שנתקלתי בהם:</strong></p>
         <ul>
-          <li><strong>ניהול כמויות בסל:</strong> הצגת כמויות במקום כפילויות של אותו מוצר</li>
-          <li><strong>מערכת התשלום:</strong> יצירת זרימה נכונה מ-checkout ל-pending ל-purchases</li>
-          <li><strong>אבטחה ובקרת גישה:</strong> ווידוא שרק admin יכול לגשת למסך הניהול</li>
-          <li><strong>ניהול cookies:</strong> הבנת ההבדל בין 12 ימים ל-30 דקות עבור "זכור אותי"</li>
-          <li><strong>Data persistence:</strong> ניהול קבצי JSON מרובים בצורה מסונכרנת</li>
-          <li><strong>Rate limiting:</strong> הגנה מפני DOS attacks</li>
+          <li><strong>ניהול כמויות בסל</strong></li>
+          <li><strong>זרימת תשלום מלאה</strong></li>
+          <li><strong>אבטחה / הרשאות Admin</strong></li>
+          <li><strong>סנכרון JSON</strong></li>
+          <li><strong>התאמה בין תוצאת גלגל המזל בציור לבין תוצאת הגלגל שמוצאת למשתמש (דף גלגל מזל)</strong></li>
+          <li><strong>עיצוב דף - עוגה בעיצוב אישי</strong></li>
+          <li><strong>שיתוף מחירים למצורים כך שיסתנכרן בין כל הדפים גם כאשר מוסיפים מוצר חדש בדף הניהול</strong></li>
         </ul>
       </div>
     </div>
 
     <div class="readme-section">
-      <h2>👥 מידע על השותפים</h2>
-      <div class="partner-info">
-        <p><strong>שותף:</strong> [שם השותף] - מספר זהות: [מספר זהות השותף]</p>
-        <p><strong>מה אני עשיתי:</strong></p>
+      <h2>עבודה אישית</h2>
+      <p><strong>פרויקט אישי - ללא שותפים</strong></p>
+      <p><strong>מה מימשתי:</strong></p>
+      <ul>
+        <li>Frontend מלא עם מערכת ניווט רספונסיבית</li>
+        <li>Backend עם Node.js ו-Express</li>
+        <li>מערכת אוטנטיקציה ו-cookies (זכור אותי)</li>
+        <li>ניהול סל קניות מתקדם עם כמויות</li>
+        <li>זרימת תשלום מלאה עם קופונים</li>
+        <li>מערכת ניהול (admin) מלאה</li>
+        <li>10+ דפים פונקציונליים:</li>
         <ul>
-          <li>פיתוח ממשק המשתמש (HTML/CSS/JavaScript)</li>
-          <li>עיצוב מערכת הניהול והאדמין</li>
-          <li>יישום מערכת הסל והתשלומים</li>
-          <li>יצירת מערכת ההתאמה האישית (Dark Mode)</li>
+          <li>דף בית, התחברות, הרשמה</li>
+          <li>חנות עם חיפוש וסינון</li>
+          <li>סל קניות, checkout, תשלום</li>
+          <li>עיצוב עוגה מותאמת אישית</li>
+          <li>גלגל מזל עם מגבלות זמן</li>
+          <li>שאלון מציאת קינוח</li>
+          <li>דף מתכונים</li>
+          <li>דף אדמין עם לוג פעילות וניהול מוצרים</li>
         </ul>
-        <p><strong>מה השותף עשה:</strong></p>
-        <ul>
-          <li>פיתוח צד השרת (Node.js modules)</li>
-          <li>יישום מערכת ה-persistence</li>
-          <li>הגדרת מערכת האבטחה והRTe limiting</li>
-          <li>כתיבת הטסטים האוטומטיים</li>
-        </ul>
-      </div>
+        <li>מצב תאורה (Dark/Light mode) עם שמירה ב-localStorage</li>
+        <li>מעבר שפות דינמי (עברית - אנגלית)</li>
+        <li>Rate limiting ואבטחה</li>
+        <li>שמירה ב-JSON files</li>
+        <li>טסטים אוטומטיים מקיפים</li>
+        <li>עיצוב רספונסיבי לכל המכשירים</li>
+      </ul>
     </div>
 
+
+
+
     <div class="readme-section">
-      <h2>🛣️ כל הRoutes שהאפליקציה תומכת בהם</h2>
+      <h2> כל הRoutes שהאפליקציה תומכת בהם</h2>
       <div class="routes-list">
         <h3>📄 Static Pages:</h3>
         <div class="route-item"><span class="route-method">GET</span> / → הפניה לחנות</div>
-        <div class="route-item"><span class="route-method">GET</span> /store.html → דף החנות הראשי</div>
-        <div class="route-item"><span class="route-method">GET</span> /login.html → דף התחברות</div>
-        <div class="route-item"><span class="route-method">GET</span> /register.html → דף הרשמה</div>
+        <div class="route-item"><span class="route-method">GET</span> /index.html → דף הבית</div>
+        <div class="route-item"><span class="route-method">GET</span> /store.html → דף החנות</div>
+        <div class="route-item"><span class="route-method">GET</span> /login.html → התחברות</div>
+        <div class="route-item"><span class="route-method">GET</span> /register.html → הרשמה</div>
         <div class="route-item"><span class="route-method">GET</span> /cart.html → סל הקניות</div>
         <div class="route-item"><span class="route-method">GET</span> /checkout.html → בחירת פריטים לתשלום</div>
-        <div class="route-item"><span class="route-method">GET</span> /pay.html → דף התשלום</div>
-        <div class="route-item"><span class="route-method">GET</span> /thankyou.html → דף תודה אחרי תשלום</div>
+        <div class="route-item"><span class="route-method">GET</span> /pay.html → תשלום</div>
+        <div class="route-item"><span class="route-method">GET</span> /thankyou.html → תודה</div>
         <div class="route-item"><span class="route-method">GET</span> /myitems.html → הרכישות שלי</div>
-        <div class="route-item"><span class="route-method">GET</span> /admin.html → מסך ניהול (admin בלבד)</div>
-        <div class="route-item"><span class="route-method">GET</span> /readme.html → דף README זה</div>
-        <div class="route-item"><span class="route-method">GET</span> /llm.html → רשימת קוד LLM</div>
+        <div class="route-item"><span class="route-method">GET</span> /admin.html → ניהול</div>
+        <div class="route-item"><span class="route-method">GET</span> /cake-designer.html → עוגה מותאמת</div>
+        <div class="route-item"><span class="route-method">GET</span> /wheel.html → גלגל מזל</div>
+        <div class="route-item"><span class="route-method">GET</span> /dessert-finder.html → מציאת קינוח</div>
+        <div class="route-item"><span class="route-method">GET</span> /recipes.html → מתכונים</div>
+        <div class="route-item"><span class="route-method">GET</span> /readme.html → README</div>
+        <div class="route-item"><span class="route-method">GET</span> /llm.html → דף LLM (ריק/אופציונלי)</div>
 
-        <h3>🔐 Authentication Routes:</h3>
-        <div class="route-item"><span class="route-method">POST</span> /api/register → הרשמת משתמש חדש</div>
-        <div class="route-item"><span class="route-method">POST</span> /api/login → התחברות למערכת</div>
+        <h3> Authentication Routes:</h3>
+        <div class="route-item"><span class="route-method">POST</span> /api/register → הרשמה</div>
+        <div class="route-item"><span class="route-method">POST</span> /api/login → התחברות (כולל "זכור אותי")</div>
         <div class="route-item"><span class="route-method">POST</span> /api/logout → התנתקות</div>
-        <div class="route-item"><span class="route-method">GET</span> /api/session → בדיקת סטטוס התחברות</div>
+        <div class="route-item"><span class="route-method">GET</span> /logout → התנתקות ישירה (קישור)</div>
+        <div class="route-item"><span class="route-method">GET</span> /api/session → סטטוס התחברות</div>
 
-        <h3>🛒 Store & Products Routes:</h3>
-        <div class="route-item"><span class="route-method">GET</span> /api/products → קבלת רשימת מוצרים (עם חיפוש)</div>
-        <div class="route-item"><span class="route-method">GET</span> /api/cart → קבלת תוכן הסל</div>
+        <h3> Store & Cart Routes:</h3>
+        <div class="route-item"><span class="route-method">GET</span> /api/products → רשימת מוצרים (?search=)</div>
+        <div class="route-item"><span class="route-method">GET</span> /api/cart → תוכן הסל</div>
+        <div class="route-item"><span class="route-method">GET</span> /api/cart-with-custom → סל + עוגות מותאמות</div>
         <div class="route-item"><span class="route-method">POST</span> /api/cart → הוספת מוצר לסל</div>
-        <div class="route-item"><span class="route-method">PUT</span> /api/cart/:id → עדכון כמות מוצר בסל</div>
-        <div class="route-item"><span class="route-method">DELETE</span> /api/cart/:id → הסרת מוצר מהסל</div>
+        <div class="route-item"><span class="route-method">PUT</span> /api/cart/:id → עדכון כמות</div>
+        <div class="route-item"><span class="route-method">POST</span> /api/cart/decrease/:id → הפחתה ב-1</div>
+        <div class="route-item"><span class="route-method">DELETE</span> /api/cart/:id → הסרת יחידה</div>
+        <div class="route-item"><span class="route-method">DELETE</span> /api/cart/removeAll/:id → הסרת כל היחידות של מוצר</div>
+        <div class="route-item"><span class="route-method">DELETE</span> /api/cart → ניקוי הסל</div>
 
-        <h3>💳 Checkout & Payment Routes:</h3>
-        <div class="route-item"><span class="route-method">POST</span> /api/checkout → העברת פריטים לתשלום</div>
-        <div class="route-item"><span class="route-method">GET</span> /api/pending → קבלת פריטים ממתינים לתשלום</div>
-        <div class="route-item"><span class="route-method">POST</span> /api/pay → ביצוע תשלום</div>
-        <div class="route-item"><span class="route-method">GET</span> /api/my-items → קבלת רכישות המשתמש</div>
+        <h3> Custom Cake Routes:</h3>
+        <div class="route-item"><span class="route-method">POST</span> /api/custom-cake → יצירה והוספה לסל</div>
+        <div class="route-item"><span class="route-method">GET</span> /api/custom-cake/:id → פרטי עוגה מותאמת</div>
+        <div class="route-item"><span class="route-method">GET</span> /api/my-custom-cakes → כל העוגות המותאמות של המשתמש</div>
+        <div class="route-item"><span class="route-method">DELETE</span> /api/custom-cake/:id → מחיקה</div>
+        <div class="route-item"><span class="route-method">PATCH</span> /api/custom-cake/:id → עדכון סטטוס</div>
 
-        <h3>👨‍💼 Admin Routes:</h3>
-        <div class="route-item"><span class="route-method">GET</span> /api/admin/activity → קבלת לוג פעילות</div>
-        <div class="route-item"><span class="route-method">GET</span> /api/admin/products → ניהול מוצרים</div>
-        <div class="route-item"><span class="route-method">POST</span> /api/admin/products → הוספת מוצר חדש</div>
+        <h3> Checkout & Payment Routes:</h3>
+        <div class="route-item"><span class="route-method">POST</span> /api/checkout → מעבר ל-pending</div>
+        <div class="route-item"><span class="route-method">GET</span> /api/pending → פריטים ממתינים לתשלום</div>
+        <div class="route-item"><span class="route-method">POST</span> /api/pay → תשלום</div>
+        <div class="route-item"><span class="route-method">GET</span> /api/validate-coupon/:code → בדיקת קופון</div>
+        <div class="route-item"><span class="route-method">POST</span> /api/save-purchase → שמירת רכישה</div>
+        <div class="route-item"><span class="route-method">POST</span> /api/clear-cart-items → ניקוי פריטים לאחר תשלום</div>
+        <div class="route-item"><span class="route-method">GET</span> /api/my-items → הרכישות שלי</div>
+
+        <h3> Special Features Routes:</h3>
+        <div class="route-item"><span class="route-method">GET</span> /api/wheel/status → סטטוס גלגל מזל</div>
+        <div class="route-item"><span class="route-method">POST</span> /api/wheel/spin → סיבוב גלגל מזל</div>
+        <div class="route-item"><span class="route-method">GET</span> /api/validate-coupon/:code → בדיקת תוקף קופון</div>
+        <div class="route-item"><span class="route-method">POST</span> /api/dessert-finder/recommendations → המלצות קינוח</div>
+
+        <h3> Recipes API:</h3>
+        <div class="route-item"><span class="route-method">GET</span> /api/recipes → רשימת מתכונים (?search=&lang=)</div>
+        <div class="route-item"><span class="route-method">GET</span> /api/recipes/:id → פרטי מתכון</div>
+        <div class="route-item"><span class="route-method">GET</span> /api/recipes/categories → קטגוריות</div>
+        <div class="route-item"><span class="route-method">GET</span> /api/recipes/tags → תגיות</div>
+
+        <h3> Admin Routes:</h3>
+        <div class="route-item"><span class="route-method">GET</span> /api/admin/activity → לוג פעילות</div>
+        <div class="route-item"><span class="route-method">GET</span> /api/admin/products → מוצרים (אדמין)</div>
+        <div class="route-item"><span class="route-method">POST</span> /api/admin/products → הוספת מוצר (תומך JSON או <code>multipart/form-data</code> להעלאת תמונה)</div>
+        <div class="route-item"><span class="route-method">PUT</span> /api/admin/products/:id → עדכון מוצר</div>
         <div class="route-item"><span class="route-method">DELETE</span> /api/admin/products/:id → מחיקת מוצר</div>
+        <div class="route-item"><span class="route-method">POST</span> /api/admin/fix-prices → תיקון מחירי מוצרים קיימים</div>
 
-        <h3>📁 Static Files:</h3>
-        <div class="route-item"><span class="route-method">GET</span> /assets/* → קבצי CSS</div>
+        <h3> Static Files:</h3>
+        <div class="route-item"><span class="route-method">GET</span> /assets/* → CSS/JS</div>
         <div class="route-item"><span class="route-method">GET</span> /images/* → תמונות מוצרים</div>
       </div>
     </div>
 
     <div class="readme-section">
-      <h2>🧪 איך בדקתי את המערכת</h2>
-      <p><strong>שיטות הבדיקה שהשתמשתי בהן:</strong></p>
+      <h2> איך בדקתי את המערכת</h2>
       <ul>
-        <li><strong>בדיקות ידניות:</strong> ניווט בכל הדפים וביצוע כל הפונקציות</li>
-        <li><strong>בדיקות משתמשים:</strong> התחברות כמשתמש רגיל וכ-admin</li>
-        <li><strong>בדיקות זרימה:</strong> מהוספה לסל ועד לתשלום מוגמר</li>
-        <li><strong>בדיקות אבטחה:</strong> ניסיון גישה לדפי admin ללא הרשאה</li>
-        <li><strong>בדיקות דפדפנים:</strong> Chrome, Firefox, Edge</li>
-        <li><strong>בדיקות responsive:</strong> מובייל, טאבלט, דסקטופ</li>
-        <li><strong>בדיקות localStorage:</strong> Dark mode נשמר בין ביקורים</li>
-        <li><strong>בדיקות cookies:</strong> "זכור אותי" עובד 12 ימים vs 30 דקות</li>
-        <li><strong>בדיקות קבצי test.js:</strong> טסטים אוטומטיים עם node-fetch</li>
+        <li><strong>ידני:</strong> ניווט והרצה של כל הפיצ'רים</li>
+        <li><strong>משתמשים:</strong> רגיל + אדמין</li>
+        <li><strong>זרימה מלאה:</strong> סל → תשלום → תודה/היסטוריה</li>
+        <li><strong>אבטחה:</strong> גישה לאדמין רק למורשים</li>
+        <li><strong>דפדפנים:</strong> Chrome / Firefox / Edge</li>
+        <li><strong>רספונסיביות</strong> בכל מכשיר</li>
+        <li><strong>localStorage:</strong> Dark mode נשמר</li>
+        <li><strong>Cookies:</strong> Remember me לפי ההגדרות</li>
+        <li><strong>Custom Cakes:</strong> עיצוב, שמירה ותצוגה</li>
+        <li><strong>מחירים:</strong> אימות ותיקון</li>
       </ul>
-    </div>
-
-    <div class="readme-section">
-      <h2>⚡ תכונות מיוחדות</h2>
-      <ul>
-        <li>🎨 <strong>Dark Mode:</strong> מצב כהה שנשמר ב-localStorage</li>
-        <li>🌐 <strong>תרגום דו-לשוני (עברית/English):</strong> מעבר שפה מיידי (RTL/LTR) באמצעות <code>translations.js</code> ושמירה ב-localStorage</li>
-        <li>🛡️ <strong>Rate Limiting:</strong> הגנה מפני DOS attacks</li>
-        <li>📊 <strong>ניהול כמויות:</strong> הצגת כמויות במקום כפילויות</li>
-        <li>🔐 <strong>אבטחה מתקדמת:</strong> הגבלת גישה לאדמין</li>
-        <li>📱 <strong>Responsive Design:</strong> עובד על כל המכשירים</li>
-        <li>⚡ <strong>UX משופרת:</strong> הודעות טוסט, אנימציות חלקות</li>
-      </ul>
-
     </div>
   </div>
 
   <script>
-    // התאמה אישית - Dark Mode (localStorage לפי הוראות המטלה)
-    function loadUICustomization() {
+    function loadUICustomization(){
       const theme = localStorage.getItem('theme') || 'light';
-      const themeToggle = document.getElementById('theme-toggle');
-      
-      if (theme === 'dark') {
-        document.body.classList.add('dark-theme');
-        themeToggle.textContent = '☀️ מצב בהיר';
-      } else {
-        document.body.classList.remove('dark-theme');
-        themeToggle.textContent = '🌙 מצב כהה';
-      }
+      const btn = document.getElementById('theme-toggle');
+      if(theme==='dark'){document.body.classList.add('dark-theme');btn.textContent='☀️ מצב בהיר';}
+      else{document.body.classList.remove('dark-theme');btn.textContent='🌙 מצב כהה';}
     }
-
-    document.getElementById('theme-toggle').addEventListener('click', () => {
-      const isDark = document.body.classList.contains('dark-theme');
-      const newTheme = isDark ? 'light' : 'dark';
-      
-      localStorage.setItem('theme', newTheme);
+    document.getElementById('theme-toggle').addEventListener('click',()=>{
+      const dark = document.body.classList.contains('dark-theme');
+      localStorage.setItem('theme', dark?'light':'dark');
       loadUICustomization();
     });
 
-    // ניווט דינמי
-    async function setupAuthButtons() {
-      const loginLink = document.getElementById('login-link');
-      const logoutBtn = document.getElementById('logout');
-      const adminLink = document.getElementById('admin-link');
-      let loggedIn = false;
-      let username = '';
-      
-      try { 
-        const r = await fetch('/api/session'); 
-        if (r.ok) {
-          loggedIn = true;
-          const data = await r.json();
-          username = data.username;
-        }
-      } catch {}
-      
-      loginLink.style.display = loggedIn ? 'none' : '';
-      logoutBtn.style.display = loggedIn ? '' : 'none';
-      adminLink.style.display = (loggedIn && username === 'admin') ? '' : 'none';
+    async function setupAuthButtons(){
+      const loginLink=document.getElementById('login-link');
+      const logoutBtn=document.getElementById('logout');
+      const adminLink=document.getElementById('admin-link');
+      let loggedIn=false, username='';
+      try{
+        const r=await fetch('/api/session');
+        if(r.ok){loggedIn=true; const d=await r.json(); username=d.username;}
+      }catch{}
+      loginLink.style.display=loggedIn?'none':'';
+      logoutBtn.style.display=loggedIn?'':'none';
+      adminLink.style.display=(loggedIn && username==='admin')?'':'none';
     }
-
-    document.getElementById('logout').onclick = async () => {
-      try { await fetch('/api/logout', { method: 'POST' }); }
-      finally { location.href = 'login.html'; }
+    document.getElementById('logout').onclick=async ()=>{
+      try{await fetch('/api/logout',{method:'POST'});}finally{location.href='login.html';}
     };
-
     loadUICustomization();
     setupAuthButtons();
   </script>

@@ -563,7 +563,7 @@
       .replace(/\s+/g, '-');
     const nis = n => `₪${n}`;
 
-    // === מחירון מעודכן + עליסים נפוצים שמגיעים מהשרת ===
+    // === מחירון מעודכןת ===
     const PRICE_MAP = {
       'chocolate-cake': 150,
       'cookies box': 120,
@@ -601,7 +601,14 @@
       'pizza cookie': { he: 'פיצת שוקולד גדולה', en: 'Chocolate Pizza XL' }
     };
 
+    
     const priceOf = (prod) => {
+      
+      if (typeof prod.price === 'number' && prod.price >= 0) {
+        return prod.price;
+      }
+      
+      
       const id = String(prod.id ?? '');
       const title = String(prod.title ?? '');
       const keys = [id, slugify(id), title, slugify(title)];
@@ -994,6 +1001,7 @@
       await fetchAll();
       await render();
     });
+    
   </script>
 </body>
 </html>

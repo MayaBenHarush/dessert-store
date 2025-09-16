@@ -33,7 +33,7 @@
     .home-btn::before { content: "🏠"; }
     .login-btn::before { content: "👤"; }
 
-    /* ביטול האייקונים לבית ולסל – טקסט בלבד */
+    /* ביטול האייקונים לבית ולסל — טקסט בלבד */
     .home-btn::before, .cart-btn::before { content: none !important; display: none !important; }
 
     /* Side menu */
@@ -101,7 +101,8 @@
     .payment-form { background:#fff; padding:1.5rem; border-radius:15px; border:2px solid #f0f0f0; display:grid; gap:1rem; }
     .form-group { display:grid; gap:.5rem; }
     .form-group label { font-weight:600; color:#1a1a1a; }
-    .form-row { display:grid; grid-template-columns:1fr 100px; gap:1rem; }
+    .form-row { display:grid; grid-template-columns:1fr 80px; gap:1rem; }
+    #cvv { width: 80px; text-align: center; }
     .input, .btn { padding:.8rem; border-radius:10px; border:2px solid #f0f0f0; font-size:1rem; transition:all .2s ease; }
     .input { background:#f8f8f8; }
     .input:focus { outline:none; border-color:#1a1a1a; background:#fff; }
@@ -156,9 +157,11 @@
       .item-total { grid-column: span 2; text-align: center; margin-top: .5rem; }
       .form-row { grid-template-columns: 1fr; }
       .coupon-input-row { grid-template-columns: 1fr; }
+      #cvv { width: 100%; text-align: right; }
+
     }
     @media (max-width: 480px) {
-      .header-btn::before { display: none; } /* ליתר ביטחון גם במובייל */
+      .header-btn::before { display: none; }
       .payment-container, .selected-items-section, .summary-section, .payment-form, .coupon-section { padding: 1rem; }
     }
   </style>
@@ -174,7 +177,7 @@
 
     <nav class="header-nav">
       <a href="index.html" class="header-btn home-btn">בית</a>
-      <!-- כפתור חנות ללא לוגו, באמצע -->
+     
       <a href="store.html" class="header-btn">חנות</a>
       <a href="cart.html" class="header-btn cart-btn">סל קניות</a>
       <a href="login.html" class="header-btn login-btn" id="header-login">התחברות</a>
@@ -195,7 +198,7 @@
     <a href="recipes.html" id="nav-recipes">מתכונים</a>
     <button id="logout" style="display:none">התנתקות</button>
     <button id="theme-toggle">🌙 מצב כהה</button>
-    <button id="language-toggle">🌍 English</button>
+    <button id="language-toggle">🌐 English</button>
   </nav>
 
 
@@ -206,7 +209,7 @@
     </div>
 
     <div class="payment-container">
-      <!-- Selected Items -->
+    
       <div class="selected-items-section">
         <h2 class="section-title" id="selected-items-title">פריטים שנבחרו</h2>
         <div id="selected-items-list" class="selected-items-list"></div>
@@ -275,7 +278,7 @@
       const themeToggle = document.getElementById('theme-toggle');
       const languageToggle = document.getElementById('language-toggle');
       if (theme==='dark'){ document.body.classList.add('dark-theme'); themeToggle.textContent='☀️ מצב בהיר'; }
-      else { document.body.classList.remove('dark-theme'); themeToggle.textContent='🌐 English'.includes('English') ? '🌙 מצב כהה' : '🌙 מצב כהה'; }
+      else { document.body.classList.remove('dark-theme'); themeToggle.textContent='🌙 מצב כהה'; }
       const cur = localStorage.getItem('language') || 'he';
       languageToggle.textContent = cur==='en' ? '🌐 עברית' : '🌐 English';
       updateInterfaceLanguage(cur);
@@ -286,7 +289,7 @@
         en:{'page-title':'Payment','demo-notice':'This is a demo payment for practice only - no credit card details are saved','selected-items-title':'Selected Items','coupon-title':'Coupon Code','summary-title':'Order Summary','payment-details-title':'Payment Details','items-cost-label':'Items Cost:','shipping-cost-label':'Shipping Cost:','discount-text':'Discount:','total-label':'Total to Pay:','card-number-label':'Card Number','card-name-label':'Cardholder Name','expiry-label':'Expiry (MM/YY)','cvv-label':'CVV','pay-btn':'Pay Now','coupon-placeholder':'Enter coupon code','apply-coupon':'Apply','coupon-applied':'Coupon applied successfully!','coupon-invalid':'Invalid coupon code','coupon-expired':'Coupon has expired','coupon-error':'Error validating coupon','processing':'Processing...','payment-success':'Payment completed successfully!'}
       }[lang]; if(!t) return;
       Object.keys(t).forEach(id=>{ const el=document.getElementById(id); if(!el) return; if(el.tagName==='INPUT'&&el.type!=='submit'){ el.placeholder=t[id]; } else { el.textContent=t[id]; }});
-      // חשוב: לא להפוך את הדף – נשאר RTL תמיד
+      
       document.documentElement.dir = 'rtl';
       document.documentElement.lang = (lang==='en') ? 'en' : 'he';
     }
@@ -305,9 +308,28 @@
     // Helpers
     const nis = n => `₪${n}`;
     const slug = s => String(s||'').trim().toLowerCase().replace(/[^\p{L}\p{N} ]/gu,'').replace(/\s+/g,'-');
-    const PRICE_MAP = {'chocolate-cake':150,'cookies box':120,'cupcakes':160,'minnie-mous-cake':300,'nutella-box':70,'chocolate-pizza-xl':120,'bento-design-cake':140,'chocolate-design-cake':180,'orange-cake':70,'white-design-cake':140,'pizza-cookie':120,'pizza cookie':120,'kinder-cookie':17};
-    const NAMES = { he:{'chocolate-cake':'עוגת שוקולד מעוצבת','8-cookies-box':'מארז 8 עוגיות','cupcakes':'קאפקייקס','minnie-mous-cake':'עוגת מיני מאוס','nutella-box':'מארז מגולגלות נוטלה','chocolate-pizza-xl':'פיצת שוקולד גדולה','bento-design-cake':'עוגת בנטו מעוצבת','chocolate-design-cake':'עוגת שוקולד מעוצבת','orange-cake':'עוגת תפוזים','white-design-cake':'עוגת בנטו מעוצבת','pizza-cookie':'פיצת שוקולד גדולה','pizza cookie':'פיצת שוקולד גדולה','kinder-cookie':'עוגיית קינדר'}, en:{'chocolate-cake':'Chocolate Design Cake','8-cookies-box':'8 Cookies Box','cupcakes':'Cupcakes','minnie-mous-cake':'Minnie Mouse Cake','nutella-box':'Nutella Box','chocolate-pizza-xl':'Chocolate Pizza XL','bento-design-cake':'Bento Design Cake','chocolate-design-cake':'Chocolate Design Cake','orange-cake':'Orange Cake','white-design-cake':'Bento Design Cake','pizza-cookie':'Chocolate Pizza XL','pizza cookie':'Chocolate Pizza XL','kinder-cookie':'Kinder Cookie'} };
-    const priceOf = p => { const keys=[p.id,slug(p.id),p.title,slug(p.title)]; const hit=keys.find(k=>k&&PRICE_MAP[k]!=null); return hit?PRICE_MAP[hit]:(/(cookie)/i.test(String(p.id)+p.title)?17:0); };
+    
+    // פונקציה לקבלת מחיר מוצר - תמיכה במחירים מהשרת
+    const priceOf = (p) => {
+      
+      if (p.price !== undefined && p.price !== null && !isNaN(Number(p.price))) {
+        return Number(p.price);
+      }
+      
+      // אחרת - fallback למיפוי ישן
+      const PRICE_MAP = {
+        'chocolate-cake':150,'cookies box':120,'cupcakes':160,'minnie-mous-cake':300,
+        'nutella-box':70,'chocolate-pizza-xl':120,'bento-design-cake':140,
+        'chocolate-design-cake':180,'orange-cake':70,'white-design-cake':140,
+        'pizza-cookie':120,'pizza cookie':120,'kinder-cookie':17
+      };
+      
+      const keys = [p.id, slug(p.id), p.title, slug(p.title)];
+      const hit = keys.find(k => k && PRICE_MAP[k] != null);
+      return hit ? PRICE_MAP[hit] : (/(cookie)/i.test(String(p.id)+p.title) ? 17 : 50);
+    };
+    
+    const NAMES = { he:{'chocolate-cake':'עוגת שוקולד מעוצבת','8-cookies-box':'מארז 8 עוגיות','cupcakes':'קאפקייקס','minnie-mous-cake':'עוגת מיני מאוס','nutella-box':'מארז מבולבלות נוטלה','chocolate-pizza-xl':'פיצת שוקולד גדולה','bento-design-cake':'עוגת בנטו מעוצבת','chocolate-design-cake':'עוגת שוקולד מעוצבת','orange-cake':'עוגת תפוזים','white-design-cake':'עוגת בנטו מעוצבת','pizza-cookie':'פיצת שוקולד גדולה','pizza cookie':'פיצת שוקולד גדולה','kinder-cookie':'עוגיית קינדר'}, en:{'chocolate-cake':'Chocolate Design Cake','8-cookies-box':'8 Cookies Box','cupcakes':'Cupcakes','minnie-mous-cake':'Minnie Mouse Cake','nutella-box':'Nutella Box','chocolate-pizza-xl':'Chocolate Pizza XL','bento-design-cake':'Bento Design Cake','chocolate-design-cake':'Chocolate Design Cake','orange-cake':'Orange Cake','white-design-cake':'Bento Design Cake','pizza-cookie':'Chocolate Pizza XL','pizza cookie':'Chocolate Pizza XL','kinder-cookie':'Kinder Cookie'} };
     const nameOf = (p,lang) => { const id=String(p.id??''); const title=String(p.title??''); const dict=NAMES[lang]||{}; const k=[id,slug(id),title,slug(title)].find(x=>dict[x]); return k?dict[k]:(title||id); };
     function getColorName(color){ const lang=localStorage.getItem('language')||'he'; const map={he:{pink:'ורוד',white:'לבן',green:'ירוק',red:'אדום',purple:'סגול','light-blue':'כחול בהיר',orange:'כתום'},en:{pink:'Pink',white:'White',green:'Green',red:'Red',purple:'Purple','light-blue':'Light Blue',orange:'Orange'}}; return map[lang]?.[color]||color; }
 
@@ -320,7 +342,7 @@
     // Selected items + summary
     let cartData={}, customCakes=[];
     function getSelectedItemsFromStorage(){ try{ const s=localStorage.getItem('selectedForPayment'); return s?JSON.parse(s):null; }catch{ return null; } }
-    function calculateCookieDiscount(){ const sel=getSelectedItemsFromStorage(); if(!sel||!sel.regularItems) return 0; let cheapest=Infinity; sel.regularItems.forEach(id=>{ const p=PRODUCTS.find(x=>String(x.id)===String(id)); if(p){ const price=priceOf(p); if(price<=25||/(cookie|עוגיה)/i.test(p.title||p.id)){ cheapest=Math.min(cheapest,price); } } }); return cheapest===Infinity?17:cheapest; }
+    function calculateCookieDiscount(){ const sel=getSelectedItemsFromStorage(); if(!sel||!sel.regularItems) return 0; let cheapest=Infinity; sel.regularItems.forEach(id=>{ const p=PRODUCTS.find(x=>String(x.id)===String(id)); if(p){ const price=priceOf(p); if(price<=25||/(cookie|עוגיי)/i.test(p.title||p.id)){ cheapest=Math.min(cheapest,price); } } }); return cheapest===Infinity?17:cheapest; }
 
     let appliedCoupon=null, originalShippingCost=29, itemsCost=0, shippingCost=originalShippingCost, discountAmount=0;
     function updateSummary(){

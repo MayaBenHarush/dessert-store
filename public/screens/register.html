@@ -48,6 +48,19 @@
     .auth-form button { width: 100%; background: #1a1a1a; color: white; border: none; padding: 1rem 2rem; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.2s ease; text-transform: uppercase; letter-spacing: 0.5px; }
     .auth-form button:hover { background: #333; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); }
     .auth-form button:active { transform: translateY(0); }
+    
+    /* Password error message */
+    .password-error { 
+      color: #dc3545; 
+      font-size: 0.85rem; 
+      margin-top: 0.25rem; 
+      display: none; 
+      padding: 0.5rem;
+      background: #ffe6e6;
+      border: 1px solid #ffcccc;
+      border-radius: 8px;
+      text-align: center;
+    }
 
     /* Dark Theme */
     .dark-theme { background: #1a1a1a; color: white; }
@@ -62,6 +75,7 @@
     .dark-theme .auth-form input:focus { background: #4d4d4d; border-color: #ffffcc; }
     .dark-theme .auth-form button { background: #ffffcc; color: #1a1a1a; }
     .dark-theme .auth-form button:hover { background: #ffff99; }
+    .dark-theme .password-error { background: #3d2d2d; border-color: #554444; }
 
     /* Responsive */
     @media (max-width: 768px) {
@@ -90,7 +104,6 @@
       <a href="/" class="logo">dessert</a>
     </div>
     <nav class="header-nav">
-      <!-- כפתור בית לפני חנות -->
       <a href="index.html" class="header-btn" id="link-home">בית</a>
       <a href="store.html" class="header-btn" id="link-store">חנות</a>
       <a href="login.html" class="header-btn" id="link-login">התחברות</a>
@@ -99,12 +112,11 @@
 
   <nav class="nav-menu" id="navMenu">
     <button class="nav-close" id="navClose">×</button>
-    <!-- כפתור בית לפני חנות -->
     <a href="index.html" id="nav-home">בית</a>
     <a href="store.html" id="nav-store">חנות</a>
     <a href="login.html" id="nav-login">התחברות</a>
     <button id="theme-toggle-menu">🌙 מצב כהה</button>
-    <button id="language-toggle-menu">🌐 English</button>
+    <button id="language-toggle-menu">🌍 English</button>
   </nav>
 
   <main class="main-content">
@@ -116,8 +128,9 @@
           <input type="text" name="username" autocomplete="username" required />
         </label>
         <label class="field-password">
-          <span id="label-password">סיסמה</span>:
-          <input type="password" name="password" autocomplete="new-password" required />
+          <span id="label-password">סיסמא</span>:
+          <input type="password" name="password" autocomplete="new-password" required minlength="6" />
+          <div class="password-error" id="password-error">הסיסמא חייבת להכיל לפחות 6 תווים</div>
         </label>
         <div class="actions">
           <button type="submit" id="btn-submit">הרשמה</button>
@@ -148,11 +161,14 @@
         login: 'התחברות',
         title: 'הרשמה',
         username: 'שם משתמש',
-        password: 'סיסמה',
+        password: 'סיסמא',
         submit: 'הרשמה',
-        langBtn: '🌐 English',
+        langBtn: '🌍 English',
         themeDark: '🌙 מצב כהה',
-        themeLight: '☀️ מצב בהיר'
+        themeLight: '☀️ מצב בהיר',
+        passwordError: 'הסיסמא חייבת להכיל לפחות 6 תווים',
+        registerSuccess: 'נרשמת בהצלחה! עכשיו אפשר להתחבר.',
+        registerFailed: 'הרשמה נכשלה'
       },
       en: {
         menu: 'Menu',
@@ -163,9 +179,12 @@
         username: 'Username',
         password: 'Password',
         submit: 'REGISTER',
-        langBtn: '🌐 עברית',
+        langBtn: '🌍 עברית',
         themeDark: '🌙 Dark Mode',
-        themeLight: '☀️ Light Mode'
+        themeLight: '☀️ Light Mode',
+        passwordError: 'Password must be at least 6 characters long',
+        registerSuccess: 'Registered successfully! You can now log in.',
+        registerFailed: 'Registration failed'
       }
     };
 
@@ -187,6 +206,7 @@
       document.getElementById('label-username').textContent = TXT[L].username;
       document.getElementById('label-password').textContent = TXT[L].password;
       document.getElementById('btn-submit').textContent = TXT[L].submit;
+      document.getElementById('password-error').textContent = TXT[L].passwordError;
 
       // Language button text
       document.getElementById('language-toggle-menu').textContent = TXT[L].langBtn;
@@ -219,18 +239,53 @@
       applyLanguage();
     });
 
-    // ===== Register form =====
+    // ===== Register form with password validation =====
     document.getElementById('register-form').addEventListener('submit', async e => {
       e.preventDefault();
       const form = e.target;
-      const payload = { username: form.username.value.trim(), password: form.password.value };
-      const res = await fetch('/api/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-      let j = {}; try { j = await res.json(); } catch {}
+      const username = form.username.value.trim();
+      const password = form.password.value;
+      const errorDiv = document.getElementById('password-error');
+      const L = curLang();
+      
+      // Reset error display
+      errorDiv.style.display = 'none';
+      
+      // Validate password length
+      if (password.length < 6) {
+        errorDiv.style.display = 'block';
+        errorDiv.textContent = TXT[L].passwordError;
+        return;
+      }
+      
+      const payload = { username, password };
+      const res = await fetch('/api/register', { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify(payload) 
+      });
+      
+      let j = {}; 
+      try { j = await res.json(); } catch {}
+      
       if (res.ok) {
-        alert(curLang()==='he' ? 'נרשמת בהצלחה! עכשיו אפשר להתחבר.' : 'Registered successfully! You can now log in.');
+        alert(TXT[L].registerSuccess);
         location.href = 'login.html';
       } else {
-        alert(j.error || (curLang()==='he' ? 'Registration failed' : 'Registration failed'));
+        alert(j.error || TXT[L].registerFailed);
+      }
+    });
+
+    // ===== Password input validation on typing =====
+    document.querySelector('input[name="password"]').addEventListener('input', e => {
+      const errorDiv = document.getElementById('password-error');
+      const L = curLang();
+      
+      if (e.target.value.length < 6 && e.target.value.length > 0) {
+        errorDiv.style.display = 'block';
+        errorDiv.textContent = TXT[L].passwordError;
+      } else {
+        errorDiv.style.display = 'none';
       }
     });
 

@@ -611,7 +611,7 @@
     <a href="recipes.html" id="nav-recipes">מתכונים</a>
     <button id="logout" style="display:none">התנתקות</button>
     <button id="theme-toggle">🌙 מצב כהה</button>
-    <button id="language-toggle">🌍 English</button>
+    <button id="language-toggle">🌐 English</button>
   </nav>
 
   <main class="main-content">
@@ -668,7 +668,7 @@
       
       // עדכון כפתור שפה
       const currentLanguage = localStorage.getItem('language') || 'he';
-      languageToggle.textContent = currentLanguage === 'en' ? '🌍 עברית' : '🌍 English';
+      languageToggle.textContent = currentLanguage === 'en' ? '🌐 עברית' : '🌐 English';
       
       // עדכון תרגומים
       if (window.Translations && window.Translations.updateDomTexts) {
@@ -756,18 +756,24 @@
     const nis = n => `₪${n}`;
     const slug = s => String(s||'').trim().toLowerCase().replace(/[^\p{L}\p{N} ]/gu,'').replace(/\s+/g,'-');
 
-    // מחירון ושמות - עם התיקונים החדשים
-    const PRICE_MAP = {
-      'chocolate-cake':150, '8-cookies-box':125, 'cookies-box':120, 'cupcakes':160, 'minnie-mous-cake':300,
-      'nutella-box':70, 'chocolate-pizza-xl':120, 'bento-design-cake':140,
-      'chocolate-design-cake':180, 'orange-cake':70, 'white-design-cake':140,
-      'pizza-cookie':120, 'pizza cookie':120
-    };
-
+    // פונקציה לקבלת מחיר מוצר - תמיכה במחירים מהשרת
     const priceOf = (p) => {
+      // אם יש מחיר מהשרת - השתמש בו
+      if (p.price !== undefined && p.price !== null && !isNaN(Number(p.price))) {
+        return Number(p.price);
+      }
+      
+      // אחרת - fallback למיפוי ישן
+      const PRICE_MAP = {
+        'chocolate-cake':150, '8-cookies-box':125, 'cookies-box':120, 'cupcakes':160, 'minnie-mous-cake':300,
+        'nutella-box':70, 'chocolate-pizza-xl':120, 'bento-design-cake':140,
+        'chocolate-design-cake':180, 'orange-cake':70, 'white-design-cake':140,
+        'pizza-cookie':120, 'pizza cookie':120
+      };
+      
       const keys = [p.id, slug(p.id), p.title, slug(p.title)];
       const hit = keys.find(k => k && PRICE_MAP[k] != null);
-      return hit ? PRICE_MAP[hit] : (/(cookie)/i.test(String(p.id)+p.title) ? 17 : 0);
+      return hit ? PRICE_MAP[hit] : (/(cookie)/i.test(String(p.id)+p.title) ? 17 : 50);
     };
 
     const nameOf = (p, lang = null) => {
@@ -787,7 +793,7 @@
       if (t && t !== key) return t;
     }
   }
-  // fallback: אם לא נמצא תרגום, נציג את הכותרת ואם אין – את ה־id
+  // fallback: אם לא נמצא תרגום, נציג את הכותרת ואם אין — את ה-id
   return p.title || p.id;
 };
 

@@ -31,7 +31,7 @@
     .header-btn.primary { background: #1a1a1a; color: white; }
     .header-btn.primary:hover { background: #333; }
 
-    /* היה אייקון רק להתחברות – משאירים. בית/סל טקסט בלבד */
+    /* הסר איקון רק להתחברות — משאירים. בית/סל טקסט בלבד */
     .login-btn::before { content: "👤"; }
     .home-btn::before, .cart-btn::before { content: none !important; display: none !important; }
 
@@ -153,7 +153,7 @@
     
     <nav class="header-nav">
       <a href="index.html" class="header-btn home-btn">בית</a>
-      <!-- כפתור חנות – טקסט בלבד, בלי לוגו -->
+      <!-- כפתור חנות — טקסט בלבד, בלי לוגו -->
       <a href="store.html" class="header-btn">חנות</a>
       <a href="cart.html" class="header-btn cart-btn">סל קניות</a>
       <a href="login.html" class="header-btn login-btn" id="header-login">התחברות</a>
@@ -174,7 +174,7 @@
     <a href="recipes.html" id="nav-recipes">מתכונים</a>
     <button id="logout" style="display:none">התנתקות</button>
     <button id="theme-toggle">🌙 מצב כהה</button>
-    <button id="language-toggle">🌍 English</button>
+    <button id="language-toggle">🌐 English</button>
   </nav>
 
 
@@ -274,22 +274,29 @@
     const nis = n => `₪${n}`;
     const slug = s => String(s||'').trim().toLowerCase().replace(/[^\p{L}\p{N} ]/gu,'').replace(/\s+/g,'-');
 
-    const PRICE_MAP = {
-      'chocolate-cake':150, 'cookies box':120, 'cupcakes':160, 'minnie-mous-cake':300,
-      'nutella-box':70, 'chocolate-pizza-xl':120, 'bento-design-cake':140,
-      'chocolate-design-cake':180, 'orange-cake':70, 'white-design-cake':140,
-      'pizza-cookie':120, 'pizza cookie':120
+    // פונקציה לקבלת מחיר מוצר - תמיכה במחירים מהשרת
+    const priceOf = (p) => {
+      // אם יש מחיר מהשרת - השתמש בו
+      if (p.price !== undefined && p.price !== null && !isNaN(Number(p.price))) {
+        return Number(p.price);
+      }
+      
+      // אחרת - fallback למיפוי ישן
+      const PRICE_MAP = {
+        'chocolate-cake':150, 'cookies box':120, 'cupcakes':160, 'minnie-mous-cake':300,
+        'nutella-box':70, 'chocolate-pizza-xl':120, 'bento-design-cake':140,
+        'chocolate-design-cake':180, 'orange-cake':70, 'white-design-cake':140,
+        'pizza-cookie':120, 'pizza cookie':120
+      };
+      
+      const keys = [p.id, slug(p.id), p.title, slug(p.title)];
+      const hit = keys.find(k => k && PRICE_MAP[k] != null);
+      return hit ? PRICE_MAP[hit] : (/(cookie)/i.test(String(p.id)+p.title) ? 17 : 50);
     };
 
     const NAMES = {
-      he:{'chocolate-cake':'עוגת שוקולד מעוצבת','8-cookies-box':'מארז 8 עוגיות','cupcakes':'קאפקייקס','minnie-mous-cake':'עוגת מיני מאוס','nutella-box':'מארז מגולגלות נוטלה','chocolate-pizza-xl':'פיצת שוקולד גדולה','bento-design-cake':'עוגת בנטו מעוצבת','chocolate-design-cake':'עוגת שוקולד מעוצבת','orange-cake':'עוגת תפוזים','bagle-cookie':'עוגיית בייגל','caramel-cookie':'עוגיית קרמל','kinder-cookie':'עוגיית קינדר','lotus-cookie':'עוגיית לוטוס','nutella-cookie':'עוגיית נוטלה','white-chocolate-cookie':'עוגיית שוקולד לבן','white-design-cake':'עוגת בנטו מעוצבת','pizza-cookie':'פיצת שוקולד גדולה','pizza cookie':'פיצת שוקולד גדולה'},
+      he:{'chocolate-cake':'עוגת שוקולד מעוצבת','8-cookies-box':'מארז 8 עוגיות','cupcakes':'קאפקייקס','minnie-mous-cake':'עוגת מיני מאוס','nutella-box':'מארז מבולבלות נוטלה','chocolate-pizza-xl':'פיצת שוקולד גדולה','bento-design-cake':'עוגת בנטו מעוצבת','chocolate-design-cake':'עוגת שוקולד מעוצבת','orange-cake':'עוגת תפוזים','bagle-cookie':'עוגיית ביגל','caramel-cookie':'עוגיית קרמל','kinder-cookie':'עוגיית קינדר','lotus-cookie':'עוגיית לוטוס','nutella-cookie':'עוגיית נוטלה','white-chocolate-cookie':'עוגיית שוקולד לבן','white-design-cake':'עוגת בנטו מעוצבת','pizza-cookie':'פיצת שוקולד גדולה','pizza cookie':'פיצת שוקולד גדולה'},
       en:{'chocolate-cake':'Chocolate Design Cake','8-cookies-box':'8 Cookies Box','cupcakes':'Cupcakes','minnie-mous-cake':'Minnie Mouse Cake','nutella-box':'Nutella Box','chocolate-pizza-xl':'Chocolate Pizza XL','bento-design-cake':'Bento Design Cake','chocolate-design-cake':'Chocolate Design Cake','orange-cake':'Orange Cake','bagle-cookie':'Bagel Cookie','caramel-cookie':'Caramel Cookie','kinder-cookie':'Kinder Cookie','lotus-cookie':'Lotus Cookie','nutella-cookie':'Nutella Cookie','white-chocolate-cookie':'White Chocolate Cookie','white-design-cake':'Bento Design Cake','pizza-cookie':'Chocolate Pizza XL','pizza cookie':'Chocolate Pizza XL'}
-    };
-
-    const priceOf = (p) => {
-      const keys = [p.id, slug(p.id), p.title, slug(p.title)];
-      const hit = keys.find(k => k && PRICE_MAP[k] != null);
-      return hit ? PRICE_MAP[hit] : (/(cookie)/i.test(String(p.id)+p.title) ? 17 : 0);
     };
 
     const nameOf = (p,lang) => {

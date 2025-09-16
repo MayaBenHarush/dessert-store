@@ -6,11 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script src="/assets/translations"></script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -31,556 +27,120 @@
       z-index: 1000;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
-
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .menu-btn {
-      background: none;
-      border: none;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #1a1a1a;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .menu-btn::before {
-      content: "☰";
-      font-size: 1.2rem;
-    }
-
-    .logo {
-      font-size: 2.2rem;
-      font-weight: 900;
-      color: #1a1a1a;
-      text-decoration: none;
-      letter-spacing: -0.02em;
-    }
-
-    .header-nav {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .header-btn {
-      background: none;
-      border: 2px solid #1a1a1a;
-      color: #1a1a1a;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-    }
-
-    .header-btn:hover {
-      background: #1a1a1a;
-      color: white;
-    }
-
-    .header-btn.primary {
-      background: #1a1a1a;
-      color: white;
-    }
-
-    .header-btn.primary:hover {
-      background: #333;
-    }
+    .header-left { display: flex; align-items: center; gap: 1rem; }
+    .menu-btn { background: none; border: none; font-size: 1.1rem; font-weight: 600; color: #1a1a1a; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; }
+    .menu-btn::before { content: "☰"; font-size: 1.2rem; }
+    .logo { font-size: 2.2rem; font-weight: 900; color: #1a1a1a; text-decoration: none; letter-spacing: -0.02em; }
+    .header-nav { display: flex; align-items: center; gap: 1rem; }
+    .header-btn { background: none; border: 2px solid #1a1a1a; color: #1a1a1a; padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s ease; text-decoration: none; display: flex; align-items: center; gap: 0.3rem; }
+    .header-btn:hover { background: #1a1a1a; color: white; }
+    .header-btn.primary { background: #1a1a1a; color: white; }
+    .header-btn.primary:hover { background: #333; }
 
     /* Navigation Menu */
-    .nav-menu {
-      position: fixed;
-      top: 0;
-      right: -300px;
-      width: 300px;
-      height: 100vh;
-      background: white;
-      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
-      transition: right 0.3s ease;
-      padding: 2rem;
-      z-index: 2000;
-    }
-
-    .nav-menu.active {
-      right: 0;
-    }
-
-    .nav-close {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      float: left;
-      margin-bottom: 2rem;
-    }
-
-    .nav-item,
-    .nav-menu a,
-    .nav-menu button {
-      display: block;
-      padding: 0.75rem 0;
-      color: #1a1a1a;
-      text-decoration: none;
-      font-weight: 500;
-      border-bottom: 1px solid #f0f0f0;
-      transition: color 0.2s ease;
-      background: none;
-      border: none;
-      text-align: right;
-      width: 100%;
-      cursor: pointer;
-    }
-
-    .nav-item:hover,
-    .nav-menu a:hover,
-    .nav-menu button:hover {
-      color: #ffffcc;
-    }
+    .nav-menu { position: fixed; top: 0; right: -300px; width: 300px; height: 100vh; background: white; box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1); transition: right 0.3s ease; padding: 2rem; z-index: 2000; }
+    .nav-menu.active { right: 0; }
+    .nav-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; float: left; margin-bottom: 2rem; }
+    .nav-item, .nav-menu a, .nav-menu button { display: block; padding: 0.75rem 0; color: #1a1a1a; text-decoration: none; font-weight: 500; border-bottom: 1px solid #f0f0f0; transition: color 0.2s ease; background: none; border: none; text-align: right; width: 100%; cursor: pointer; }
+    .nav-item:hover, .nav-menu a:hover, .nav-menu button:hover { color: #ffffcc; }
 
     /* Overlay */
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 1500;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-    }
-
-    .overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
+    .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1500; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+    .overlay.active { opacity: 1; visibility: visible; }
 
     /* Main Content */
-    .main-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
-
-    .page-header {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
-
-    .page-title {
-      font-size: 3rem;
-      font-weight: 900;
-      color: #1a1a1a;
-      margin-bottom: 1rem;
-      letter-spacing: -0.02em;
-      text-transform: uppercase;
-    }
-
-    .page-subtitle {
-      color: #666;
-      font-size: 1.1rem;
-      font-weight: 500;
-    }
+    .main-content { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+    .page-header { text-align: center; margin-bottom: 3rem; }
+    .page-title { font-size: 3rem; font-weight: 900; color: #1a1a1a; margin-bottom: 1rem; letter-spacing: -0.02em; text-transform: uppercase; }
+    .page-subtitle { color: #666; font-size: 1.1rem; font-weight: 500; }
 
     /* Admin Grid */
-    .admin-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-      gap: 2rem;
-      margin-top: 2rem;
-    }
+    .admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem; margin-top: 2rem; }
 
     /* Panel Styling */
-    .panel {
-      background: white;
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-      transition: all 0.3s ease;
-    }
-
-    .panel:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
-    }
-
-    .panel-header {
-      background: #1a1a1a;
-      color: white;
-      padding: 1.5rem;
-      font-size: 1.3rem;
-      font-weight: 700;
-    }
-
-    .panel-content {
-      padding: 1.5rem;
-    }
+    .panel { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08); transition: all 0.3s ease; }
+    .panel:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12); }
+    .panel-header { background: #1a1a1a; color: white; padding: 1.5rem; font-size: 1.3rem; font-weight: 700; }
+    .panel-content { padding: 1.5rem; }
 
     /* Form Styling */
-    .admin-form {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .form-label {
-      font-weight: 600;
-      color: #1a1a1a;
-      font-size: 0.9rem;
-    }
-
-    .form-input,
-    .form-textarea {
-      width: 100%;
-      padding: 0.75rem;
-      border: 2px solid #f0f0f0;
-      border-radius: 10px;
-      font-size: 1rem;
-      transition: all 0.2s ease;
-      background: white;
-    }
-
-    .form-input:focus,
-    .form-textarea:focus {
-      outline: none;
-      border-color: #ffffcc;
-      box-shadow: 0 0 0 3px rgba(255, 255, 204, 0.1);
-    }
-
-    .form-button {
-      background: #1a1a1a;
-      color: white;
-      border: none;
-      padding: 1rem;
-      border-radius: 10px;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      margin-top: 0.5rem;
-    }
-
-    .form-button:hover {
-      background: #333;
-      transform: translateY(-2px);
-    }
-
-    .form-hint {
-      color: #666;
-      font-size: 0.8rem;
-      margin-top: 0.5rem;
-      padding: 0.5rem;
-      background: #f8f8f8;
-      border-radius: 6px;
-    }
+    .admin-form { display: flex; flex-direction: column; gap: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .form-label { font-weight: 600; color: #1a1a1a; font-size: 0.9rem; }
+    .form-input, .form-textarea { width: 100%; padding: 0.75rem; border: 2px solid #f0f0f0; border-radius: 10px; font-size: 1rem; transition: all 0.2s ease; background: white; }
+    .form-input:focus, .form-textarea:focus { outline: none; border-color: #ffffcc; box-shadow: 0 0 0 3px rgba(255, 255, 204, 0.1); }
+    .form-button { background: #1a1a1a; color: white; border: none; padding: 1rem; border-radius: 10px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.2s ease; margin-top: 0.5rem; }
+    .form-button:hover { background: #333; transform: translateY(-2px); }
+    .form-hint { color: #666; font-size: 0.8rem; margin-top: 0.5rem; padding: 0.5rem; background: #f8f8f8; border-radius: 6px; }
 
     /* List Styling */
-    .admin-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      max-height: 400px;
-      overflow-y: auto;
-    }
+    .admin-list { display: flex; flex-direction: column; gap: 1rem; max-height: 400px; overflow-y: auto; }
+    .admin-row { display: grid; grid-template-columns: 64px 1fr auto; align-items: center; gap: 1rem; padding: 1rem; background: #f8f8f8; border-radius: 10px; transition: all 0.2s ease; }
+    .admin-row:hover { background: #f0f0f0; transform: translateX(5px); }
+    .admin-row img { width: 64px; height: 64px; object-fit: cover; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); }
+    .product-info { display: flex; flex-direction: column; gap: 0.2rem; }
+    .product-name { font-weight: 600; color: #1a1a1a; font-size: 1rem; }
+    .product-id { color: #666; font-size: 0.8rem; }
+    .product-price { color: #2e7d32; font-weight: 700; font-size: 1rem; margin-top: 0.2rem; }
+    .admin-button { background: #dc3545; color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease; }
+    .admin-button:hover { background: #c82333; transform: scale(1.05); }
 
-    .admin-row {
-      display: grid;
-      grid-template-columns: 64px 1fr auto;
-      align-items: center;
-      gap: 1rem;
-      padding: 1rem;
-      background: #f8f8f8;
-      border-radius: 10px;
-      transition: all 0.2s ease;
-    }
-
-    .admin-row:hover {
-      background: #f0f0f0;
-      transform: translateX(5px);
-    }
-
-    .admin-row img {
-      width: 64px;
-      height: 64px;
-      object-fit: cover;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .product-info {
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
-    }
-
-    .product-name {
-      font-weight: 600;
-      color: #1a1a1a;
-    }
-
-    .product-id {
-      color: #666;
-      font-size: 0.8rem;
-    }
-
-    .admin-button {
-      background: #dc3545;
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .admin-button:hover {
-      background: #c82333;
-      transform: scale(1.05);
-    }
+    /* Edit button styling */
+    .edit-button { background: #2196F3; color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease; margin-left: 0.5rem; }
+    .edit-button:hover { background: #1976D2; transform: scale(1.05); }
 
     /* Activity Styling */
-    .activity-row {
-      padding: 1rem;
-      background: #f8f8f8;
-      border-radius: 10px;
-      margin-bottom: 0.5rem;
-      border-left: 4px solid #ffffcc;
-    }
-
-    .activity-type {
-      font-weight: 600;
-      color: #1a1a1a;
-    }
-
-    .activity-details {
-      color: #666;
-      font-size: 0.9rem;
-      margin-top: 0.2rem;
-    }
+    .activity-row { padding: 1rem; background: #f8f8f8; border-radius: 10px; margin-bottom: 0.5rem; border-left: 4px solid #ffffcc; }
+    .activity-type { font-weight: 600; color: #1a1a1a; }
+    .activity-details { color: #666; font-size: 0.9rem; margin-top: 0.2rem; }
 
     /* Loading and Empty States */
-    .loading,
-    .empty,
-    .error-box {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 2rem;
-      text-align: center;
-      color: #666;
-      font-size: 1rem;
-      background: #f8f8f8;
-      border-radius: 10px;
-      min-height: 120px;
-    }
-
-    .error-box {
-      background: #fee;
-      color: #c62828;
-      border: 2px solid #ffcdd2;
-    }
+    .loading, .empty, .error-box { display: flex; justify-content: center; align-items: center; padding: 2rem; text-align: center; color: #666; font-size: 1rem; background: #f8f8f8; border-radius: 10px; min-height: 120px; }
+    .error-box { background: #fee; color: #c62828; border: 2px solid #ffcdd2; }
 
     /* Toast */
-    #toast {
-      position: fixed;
-      top: 12px;
-      right: 12px;
-      z-index: 9999;
-      display: none;
-      padding: 10px 14px;
-      background: #333;
-      color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, .2);
-      font-size: 14px;
-      opacity: 0;
-      transform: translateY(-6px);
-      transition: opacity .2s, transform .2s;
-    }
-
-    #toast.show {
-      display: block;
-      opacity: 1;
-      transform: translateY(0);
-    }
+    #toast { position: fixed; top: 12px; right: 12px; z-index: 9999; display: none; padding: 10px 14px; background: #333; color: #fff; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, .2); font-size: 14px; opacity: 0; transform: translateY(-6px); transition: opacity .2s, transform .2s; }
+    #toast.show { display: block; opacity: 1; transform: translateY(0); }
 
     /* Dark Theme */
-    .dark-theme {
-      background: #1a1a1a;
-      color: white;
-    }
+    .dark-theme { background: #1a1a1a; color: white; }
+    .dark-theme .header { background: #2d2d2d; }
+    .dark-theme .nav-menu { background: #2d2d2d; }
+    .dark-theme .nav-menu a, .dark-theme .nav-menu button { color: white; border-bottom-color: #444; }
+    .dark-theme .panel { background: #2d2d2d; }
+    .dark-theme .panel-header { background: #ffffcc; color: #1a1a1a; }
+    .dark-theme .form-input, .dark-theme .form-textarea { background: #1a1a1a; border-color: #444; color: white; }
+    .dark-theme .admin-row { background: #1a1a1a; }
+    .dark-theme .admin-row:hover { background: #333; }
+    .dark-theme .activity-row { background: #1a1a1a; border-left-color: #ffffcc; }
+    .dark-theme .form-hint { background: #333; color: #ccc; }
+    .dark-theme .loading, .dark-theme .empty { background: #2d2d2d; color: #ccc; }
+    .dark-theme .product-name { color: white; }
+    .dark-theme .activity-type { color: white; }
 
-    .dark-theme .header {
-      background: #2d2d2d;
-    }
-
-    .dark-theme .nav-menu {
-      background: #2d2d2d;
-    }
-
-    .dark-theme .nav-menu a,
-    .dark-theme .nav-menu button {
-      color: white;
-      border-bottom-color: #444;
-    }
-
-    .dark-theme .panel {
-      background: #2d2d2d;
-    }
-
-    .dark-theme .panel-header {
-      background: #ffffcc;
-      color: #1a1a1a;
-    }
-
-    .dark-theme .form-input,
-    .dark-theme .form-textarea {
-      background: #1a1a1a;
-      border-color: #444;
-      color: white;
-    }
-
-    .dark-theme .admin-row {
-      background: #1a1a1a;
-    }
-
-    .dark-theme .admin-row:hover {
-      background: #333;
-    }
-
-    .dark-theme .activity-row {
-      background: #1a1a1a;
-      border-left-color: #ffffcc;
-    }
-
-    .dark-theme .form-hint {
-      background: #333;
-      color: #ccc;
-    }
-
-    .dark-theme .loading,
-    .dark-theme .empty {
-      background: #2d2d2d;
-      color: #ccc;
-    }
-
-    .dark-theme .product-name {
-      color: white;
-    }
-
-    .dark-theme .activity-type {
-      color: white;
-    }
-
-    /* Responsive Design */
+    /* Responsive */
     @media (max-width: 968px) {
-      .admin-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .header-nav {
-        gap: 0.5rem;
-      }
-
-      .header-btn {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.8rem;
-      }
-
-      .page-title {
-        font-size: 2.5rem;
-      }
+      .admin-grid { grid-template-columns: 1fr; }
+      .header-nav { gap: 0.5rem; }
+      .header-btn { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
+      .page-title { font-size: 2.5rem; }
     }
-
     @media (max-width: 768px) {
-      .header {
-        padding: 1rem;
-        flex-wrap: wrap;
-        gap: 1rem;
-      }
-
-      .header-left {
-        order: 1;
-      }
-
-      .logo {
-        font-size: 1.8rem;
-        order: 2;
-      }
-
-      .header-nav {
-        order: 3;
-        width: 100%;
-        justify-content: center;
-        gap: 0.5rem;
-      }
-
-      .main-content {
-        padding: 1rem;
-      }
-
-      .page-title {
-        font-size: 2rem;
-      }
-
-      .admin-grid {
-        gap: 1.5rem;
-        grid-template-columns: 1fr;
-      }
-
-      .admin-row {
-        grid-template-columns: 48px 1fr auto;
-        gap: 0.75rem;
-        padding: 0.75rem;
-      }
-
-      .admin-row img {
-        width: 48px;
-        height: 48px;
-      }
+      .header { padding: 1rem; flex-wrap: wrap; gap: 1rem; }
+      .header-left { order: 1; }
+      .logo { font-size: 1.8rem; order: 2; }
+      .header-nav { order: 3; width: 100%; justify-content: center; gap: 0.5rem; }
+      .main-content { padding: 1rem; }
+      .page-title { font-size: 2rem; }
+      .admin-grid { gap: 1.5rem; grid-template-columns: 1fr; }
+      .admin-row { grid-template-columns: 48px 1fr auto; gap: 0.75rem; padding: 0.75rem; }
+      .admin-row img { width: 48px; height: 48px; }
     }
-
     @media (max-width: 480px) {
-      .header-btn {
-        padding: 0.3rem 0.5rem;
-        font-size: 0.7rem;
-      }
-
-      .panel-content {
-        padding: 1rem;
-      }
-
-      .admin-row {
-        grid-template-columns: 1fr;
-        text-align: center;
-      }
-
-      .admin-row img {
-        width: 80px;
-        height: 80px;
-        margin: 0 auto;
-      }
+      .header-btn { padding: 0.3rem 0.5rem; font-size: 0.7rem; }
+      .panel-content { padding: 1rem; }
+      .admin-row { grid-template-columns: 1fr; text-align: center; }
+      .admin-row img { width: 80px; height: 80px; margin: 0 auto; }
     }
   </style>
 </head>
@@ -592,7 +152,6 @@
       <button class="menu-btn" id="menuBtn">Menu</button>
       <a href="/screens/store.html" class="logo">dessert</a>
     </div>
-    
     <nav class="header-nav">
       <a href="/screens/store.html" class="header-btn">חנות</a>
       <a href="/screens/cart.html" class="header-btn">סל קניות</a>
@@ -614,7 +173,7 @@
     <a href="/screens/wheel.html">🎡 גלגל מזל</a>
     <a href="/screens/diy.html">🍪 <span data-key="nav.diy">עשה זאת בעצמך</span></a>
     <button id="theme-toggle">🌙 מצב כהה</button>
-    <button id="language-toggle">🌐 English</button>
+    <button id="language-toggle">🌍 English</button>
   </nav>
 
   <div id="toast"></div>
@@ -637,18 +196,30 @@
               <label class="form-label"><span data-key="productTitle">כותרת המוצר</span></label>
               <input type="text" name="title" class="form-input" required>
             </div>
-            
             <div class="form-group">
               <label class="form-label"><span data-key="description">תיאור (אופציונלי)</span></label>
               <textarea name="description" rows="3" class="form-textarea"></textarea>
             </div>
-            
             <div class="form-group">
               <label class="form-label"><span data-key="image">תמונה</span></label>
-              <input type="text" name="image" class="form-input" placeholder="cookie.jpg או https://…" required>
+              <input type="text" name="image" class="form-input" placeholder="cookie.jpg או https://…" >
               <div class="form-hint">
                 <strong>טיפ:</strong> אם מעלים קובץ ל־<code>public/images</code>, מספיק לכתוב את שמו (למשל <code>cookie.jpg</code>).
               </div>
+            </div>
+
+            <!-- תוספת: קובץ תמונה מהמחשב -->
+            <div class="form-group">
+              <label class="form-label">או העלאת תמונה מהמחשב</label>
+              <input type="file" id="imageFile" class="form-input" accept="image/*">
+              <div class="form-hint">אם בוחרים קובץ כאן, הוא יועלה אוטומטית לשרת</div>
+            </div>
+
+            <!-- תוספת: מחיר -->
+            <div class="form-group">
+              <label class="form-label">מחיר (₪)</label>
+              <input type="number" name="price" class="form-input" min="0" step="1" placeholder="לדוגמה: 120" required>
+              <div class="form-hint">הזן מחיר בשקלים (מספר שלם או עשרוני)</div>
             </div>
             
             <button type="submit" class="form-button" data-key="addProduct">הוסף מוצר</button>
@@ -677,7 +248,7 @@
             <input type="text" id="activity-filter" class="form-input" placeholder="הקלד קידומת של שם משתמש...">
             <div class="form-hint">הצג רק פעילות של משתמשים שהשם שלהם מתחיל בקידומת הזו</div>
           </div>
-          <div class="form-hint" style="margin-bottom: 1rem;">מוצג חדש→ישן.</div>
+          <div class="form-hint" style="margin-bottom: 1rem;">מוצג חדש←ישן.</div>
           <div id="activity" class="admin-list"></div>
         </div>
       </section>
@@ -691,65 +262,35 @@
     const navClose = document.getElementById('navClose');
     const overlay = document.getElementById('overlay');
 
-    function openMenu() {
-      navMenu.classList.add('active');
-      overlay.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeMenu() {
-      navMenu.classList.remove('active');
-      overlay.classList.remove('active');
-      document.body.style.overflow = 'auto';
-    }
+    function openMenu() { navMenu.classList.add('active'); overlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
+    function closeMenu() { navMenu.classList.remove('active'); overlay.classList.remove('active'); document.body.style.overflow = 'auto'; }
 
     menuBtn.addEventListener('click', openMenu);
     navClose.addEventListener('click', closeMenu);
     overlay.addEventListener('click', closeMenu);
 
-    // טעינת התאמות אישיות מ-localStorage
+    // UI prefs
     function loadUICustomization() {
       const theme = localStorage.getItem('theme') || 'light';
       const themeToggle = document.getElementById('theme-toggle');
       const languageToggle = document.getElementById('language-toggle');
-      
-      // עדכון נושא
-      if (theme === 'dark') {
-        document.body.classList.add('dark-theme');
-        themeToggle.textContent = '☀️ מצב בהיר';
-      } else {
-        document.body.classList.remove('dark-theme');
-        themeToggle.textContent = '🌙 מצב כהה';
-      }
-      
-      // עדכון כפתור שפה
+      if (theme === 'dark') { document.body.classList.add('dark-theme'); themeToggle.textContent = '☀️ מצב בהיר'; }
+      else { document.body.classList.remove('dark-theme'); themeToggle.textContent = '🌙 מצב כהה'; }
       const currentLanguage = localStorage.getItem('language') || 'he';
-      if (currentLanguage === 'en') {
-        languageToggle.textContent = '🌐 עברית';
-      } else {
-        languageToggle.textContent = '🌐 English';
-      }
-      
-      // עדכון תרגומים אם הפונקציה קיימת
-      if (typeof window.updateLanguage === 'function') {
-        window.updateLanguage();
-      }
+      languageToggle.textContent = currentLanguage === 'en' ? '🌍 עברית' : '🌍 English';
+      if (typeof window.updateLanguage === 'function') window.updateLanguage();
     }
 
-    // החלפת נושא
     document.getElementById('theme-toggle').addEventListener('click', () => {
       const isDark = document.body.classList.contains('dark-theme');
-      const newTheme = isDark ? 'light' : 'dark';
-      localStorage.setItem('theme', newTheme);
+      localStorage.setItem('theme', isDark ? 'light' : 'dark');
       loadUICustomization();
     });
-
-    // החלפת שפה
     document.getElementById('language-toggle').addEventListener('click', () => {
       if (typeof window.toggleLanguage === 'function') {
         window.toggleLanguage();
-        loadProducts(); // טעינה מחדש עם השפה החדשה
-        loadActivity(); // טעינה מחדש של הפעילות
+        loadProducts();
+        loadActivity();
       }
     });
 
@@ -759,28 +300,19 @@
       const headerLogin = document.getElementById('header-login');
       let loggedIn = false;
       try { const r = await fetch('/api/session'); loggedIn = r.ok; } catch {}
-      
       if (loginLink) loginLink.style.display = loggedIn ? 'none' : '';
       if (logoutBtn) logoutBtn.style.display = loggedIn ? '' : 'none';
       if (headerLogin) headerLogin.style.display = loggedIn ? 'none' : '';
     }
-    
     setupAuthButtons();
-    document.getElementById('logout').onclick = async () => {
-      try { await fetch('/api/logout', { method: 'POST' }); }
-      finally { location.href = '/screens/login.html'; }
-    };
+    document.getElementById('logout').onclick = async () => { try { await fetch('/api/logout', { method: 'POST' }); } finally { location.href = '/screens/login.html'; } };
 
-    // Toast functionality
+    // Toast
     const toastEl = document.getElementById('toast');
     let toastTimer;
-    function showToast(msg) {
-      toastEl.textContent = msg;
-      toastEl.classList.add('show');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1500);
-    }
+    function showToast(msg) { toastEl.textContent = msg; toastEl.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1500); }
 
+    // Load products
     const productsBox = document.getElementById('products');
     async function loadProducts(){
       productsBox.innerHTML = '<div class="loading">טוען...</div>';
@@ -795,61 +327,144 @@
         const row = document.createElement('div');
         row.className = 'admin-row';
         
-        // תרגום שם המוצר אם קיים
-        const productName = (window.Translations && window.Translations.getProduct) 
-          ? window.Translations.getProduct(p.id, currentLanguage) || p.title 
+        const productName = (window.Translations && window.Translations.getProduct)
+          ? window.Translations.getProduct(p.id, currentLanguage) || p.title
           : p.title;
+
+        // מחיר — תומך גם במספר וגם במחרוזת מהשרת
+        let priceNum = Number(p.price);
+        if (!Number.isFinite(priceNum) || priceNum < 0) {
+          priceNum = 0; // ברירת מחדל אם אין מחיר או שהוא לא תקין
+        }
+        const priceText = `₪${priceNum}`;
         
         row.innerHTML = `
-          <img src="${p.image.startsWith('http') ? p.image : '/images/' + p.image}" alt="${productName}">
+          <img src="${(p.image||'').startsWith('http') ? p.image : '/images/' + (p.image||'')}" alt="${productName}" onerror="this.src='/images/placeholder.jpg'">
           <div class="product-info">
             <div class="product-name">${productName}</div>
-            <div class="product-id">${p.id}</div>
+            <div class="product-id">ID: ${p.id}</div>
+            <div class="product-price">${priceText}</div>
           </div>
-          <button class="admin-button" data-id="${p.id}" data-key="removeProduct">מחק</button>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <button class="edit-button" data-id="${p.id}">ערוך</button>
+            <button class="admin-button" data-id="${p.id}" data-key="removeProduct">מחק</button>
+          </div>
         `;
-        row.querySelector('button').onclick = async () => {
+        
+        // Edit functionality
+        row.querySelector('.edit-button').onclick = () => {
+          const newTitle = prompt('שם חדש למוצר:', productName);
+          const newPrice = prompt('מחיר חדש (₪):', priceNum);
+          if (newTitle && newPrice !== null) {
+            updateProduct(p.id, newTitle, newPrice);
+          }
+        };
+        
+        row.querySelector('.admin-button').onclick = async () => {
           if (!confirm('למחוק את "'+productName+'"?')) return;
           const del = await fetch('/api/admin/products/' + encodeURIComponent(p.id), { method:'DELETE' });
           if (!del.ok){
             const j = await del.json().catch(() => ({}));
             alert(j.error || 'מחיקה נכשלה');
+          } else {
+            showToast('המוצר נמחק בהצלחה');
           }
           await loadProducts(); await loadActivity();
         };
         productsBox.appendChild(row);
       }
-      
-      // עדכון תרגומים לכפתורים
-      if (typeof window.updateLanguage === 'function') {
-        window.updateLanguage();
+      if (typeof window.updateLanguage === 'function') window.updateLanguage();
+    }
+
+    // Update product function
+    async function updateProduct(id, title, price) {
+      try {
+        const response = await fetch(`/api/admin/products/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, price: parseFloat(price) })
+        });
+        
+        if (response.ok) {
+          showToast('המוצר עודכן בהצלחה');
+          await loadProducts();
+          await loadActivity();
+        } else {
+          alert('עדכון נכשל');
+        }
+      } catch (error) {
+        alert('שגיאה בעדכון המוצר');
       }
     }
 
+    // Add product (with price + optional file upload)
     const addForm = document.getElementById('add-form');
+    async function tryUploadFile(file) {
+      const endpoints = ['/api/upload-image', '/api/upload', '/api/admin/upload'];
+      for (const url of endpoints) {
+        try {
+          const fd = new FormData();
+          fd.append('file', file, file.name);
+          const r = await fetch(url, { method: 'POST', body: fd });
+          if (!r.ok) continue;
+          const j = await r.json().catch(() => ({}));
+          if (j && (j.url || j.filename || (j.data && j.data.url))) {
+            return j.url || (j.data && j.data.url) || (`/images/${j.filename}`);
+          }
+        } catch {}
+      }
+      return null;
+    }
+
     addForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const fd = new FormData(addForm);
-      const payload = {
-        title: (fd.get('title') || '').trim(),
-        description: (fd.get('description') || '').trim(),
-        image: (fd.get('image') || '').trim()
-      };
-      if (!payload.title || !payload.image) return alert('יש למלא כותרת ותמונה');
+
+      const title = (fd.get('title') || '').trim();
+      const description = (fd.get('description') || '').trim();
+      const price = parseFloat(fd.get('price') || '0');
+      let image = (fd.get('image') || '').trim();
+
+      if (!title) return alert('יש למלא כותרת');
+      if (isNaN(price) || price < 0) return alert('יש להזין מחיר תקין');
+      
+      // אם הועלה קובץ תמונה, העלה אותו קודם
+      const file = document.getElementById('imageFile').files[0];
+      if (file) {
+        showToast('מעלה תמונה...');
+        const uploadedUrl = await tryUploadFile(file);
+        if (uploadedUrl) {
+          image = uploadedUrl.replace('/images/', ''); // שמור רק את שם הקובץ
+          showToast('תמונה הועלתה בהצלחה');
+        } else {
+          return alert('העלאת התמונה נכשלה');
+        }
+      }
+
+      if (!image) return alert('יש לבחור תמונה או להעלות קובץ');
+
+      const payload = { title, description, image, price };
+
       const res = await fetch('/api/admin/products', {
-        method:'POST', headers: { 'Content-Type':'application/json' }, body: JSON.stringify(payload)
+        method:'POST',
+        headers: { 'Content-Type':'application/json' },
+        body: JSON.stringify(payload)
       });
+
       if (res.status === 401) return location.href = '/screens/login.html';
       if (res.status === 403) return alert('Admin only');
       const j = await res.json().catch(() => ({}));
       if (!res.ok || !j.ok) return alert(j.error || 'הוספה נכשלה');
-      addForm.reset(); await loadProducts(); await loadActivity(); 
+
+      addForm.reset();
+      await loadProducts();
+      await loadActivity();
       showToast('המוצר נוסף בהצלחה!');
     });
 
+    // Activity
     const actBox = document.getElementById('activity');
-    let allActivity = []; // שמירת כל הפעילות
-    
+    let allActivity = [];
     async function loadActivity(){
       actBox.innerHTML = '<div class="loading">טוען...</div>';
       const res = await fetch('/api/admin/activity');
@@ -858,46 +473,26 @@
       allActivity = await res.json();
       filterAndDisplayActivity();
     }
-
     function filterAndDisplayActivity() {
       const filterValue = (document.getElementById('activity-filter').value || '').trim().toLowerCase();
       const currentLanguage = localStorage.getItem('language') || 'he';
-      
       let filteredActivity = allActivity;
-      if (filterValue) {
-        filteredActivity = allActivity.filter(r => 
-          (r.username || '').toLowerCase().startsWith(filterValue)
-        );
-      }
-      
+      if (filterValue) filteredActivity = allActivity.filter(r => (r.username || '').toLowerCase().startsWith(filterValue));
       actBox.innerHTML = '';
-      if (filteredActivity.length === 0) {
-        actBox.innerHTML = '<div class="empty">אין פעילות להצגה</div>';
-        return;
-      }
-      
+      if (!filteredActivity.length) { actBox.innerHTML = '<div class="empty">אין פעילות להצגה</div>'; return; }
       for (const r of filteredActivity){
         const div = document.createElement('div'); 
         div.className = 'activity-row';
         const when = r.datetime ? new Date(r.datetime).toLocaleString(currentLanguage === 'he' ? 'he-IL' : 'en-US') : '';
-        div.innerHTML = `
-          <div class="activity-type">${r.type}</div>
-          <div class="activity-details">${when} — ${r.username || ''}</div>
-        `;
+        div.innerHTML = `<div class="activity-type">${r.type}</div><div class="activity-details">${when} — ${r.username || ''}</div>`;
         actBox.appendChild(div);
       }
     }
-
-    // הוספת event listener לפילטר
     document.getElementById('activity-filter').addEventListener('input', filterAndDisplayActivity);
 
-    setupAuthButtons();
-    // טעינה ראשונית - עם השהיה קטנה כדי לוודא שtranslations.js נטען
-    setTimeout(() => {
-      loadUICustomization();
-      loadProducts(); 
-      loadActivity();
-    }, 100);
+    // Init
+    loadUICustomization();
+    setTimeout(() => { loadProducts(); loadActivity(); }, 100);
   </script>
 </body>
 </html>

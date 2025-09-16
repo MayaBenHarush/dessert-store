@@ -178,5 +178,179 @@
       "purchaseDate": "2025-09-15T23:35:35.761Z",
       "purchaseId": "1757979335761lynk3vgcr"
     }
+  ],
+  "מאיה": [
+    {
+      "id": "bagle-cookie",
+      "title": "bagle cookie",
+      "image": "bagle-cookie.jpeg",
+      "price": 17,
+      "date": "2025-09-16T06:12:31.822Z",
+      "type": "regular",
+      "purchaseDate": "2025-09-16T06:12:31.879Z",
+      "purchaseId": "17580031518797qqyxe8il"
+    },
+    {
+      "id": "bagle-cookie",
+      "title": "bagle cookie",
+      "image": "bagle-cookie.jpeg",
+      "price": 17,
+      "date": "2025-09-16T06:12:31.823Z",
+      "type": "regular",
+      "purchaseDate": "2025-09-16T06:12:31.879Z",
+      "purchaseId": "1758003151879hs6iy7em1"
+    },
+    {
+      "id": "bagle-cookie",
+      "title": "bagle cookie",
+      "image": "bagle-cookie.jpeg",
+      "price": 17,
+      "date": "2025-09-16T06:12:31.823Z",
+      "type": "regular",
+      "purchaseDate": "2025-09-16T06:12:31.879Z",
+      "purchaseId": "1758003151879frd56fdwx"
+    },
+    {
+      "id": "bagle-cookie",
+      "title": "bagle cookie",
+      "image": "bagle-cookie.jpeg",
+      "price": 17,
+      "date": "2025-09-16T06:12:31.823Z",
+      "type": "regular",
+      "purchaseDate": "2025-09-16T06:12:31.879Z",
+      "purchaseId": "17580031518798yokb9i8m"
+    },
+    {
+      "id": "caramel-cookie",
+      "title": "caramel cookie",
+      "image": "caramel-cookie.jpeg",
+      "price": 17,
+      "date": "2025-09-16T06:12:31.823Z",
+      "type": "regular",
+      "purchaseDate": "2025-09-16T06:12:31.879Z",
+      "purchaseId": "1758003151879s2h55c0ot"
+    },
+    {
+      "id": "caramel-cookie",
+      "title": "caramel cookie",
+      "image": "caramel-cookie.jpeg",
+      "price": 17,
+      "date": "2025-09-16T06:12:31.823Z",
+      "type": "regular",
+      "purchaseDate": "2025-09-16T06:12:31.879Z",
+      "purchaseId": "1758003151879ug3s8elim"
+    },
+    {
+      "id": "cookies-box",
+      "title": "cookies box",
+      "image": "cookies-box.jpeg",
+      "price": 120,
+      "date": "2025-09-16T06:12:31.823Z",
+      "type": "regular",
+      "purchaseDate": "2025-09-16T06:12:31.879Z",
+      "purchaseId": "17580031518791oj6p60d6"
+    },
+    {
+      "id": "custom-cake-1755789531164-58m0ygnuw",
+      "title": "עוגה מותאמת בנטו (10 ס\"מ)",
+      "image": "cake-green.png",
+      "price": 140,
+      "date": "2025-09-16T06:12:31.823Z",
+      "type": "custom",
+      "customDesign": {
+        "size": "bento",
+        "color": "green",
+        "colorName": "ירוק",
+        "text": "",
+        "textColor": "#ffc107"
+      },
+      "purchaseDate": "2025-09-16T06:12:31.879Z",
+      "purchaseId": "1758003151879kbmt3p14x"
+    },
+    {
+      "id": "custom-cake-1755789536188-qhmbjjyw9",
+      "title": "עוגה מותאמת בנטו (10 ס\"מ)",
+      "image": "cake-green.png",
+      "price": 140,
+      "date": "2025-09-16T06:12:31.823Z",
+      "type": "custom",
+      "customDesign": {
+        "size": "bento",
+        "color": "green",
+        "colorName": "ירוק",
+        "text": "",
+        "textColor": "#ffc107"
+      },
+      "purchaseDate": "2025-09-16T06:12:31.879Z",
+      "purchaseId": "17580031518799trdobqiz"
+    },
+    {
+      "id": "custom-cake-1755789542596-ch7sy10p8",
+      "title": "עוגה מותאמת גדולה (22 ס\"מ)",
+      "image": "cake-light-blue.png",
+      "price": 300,
+      "date": "2025-09-16T06:12:31.823Z",
+      "type": "custom",
+      "customDesign": {
+        "size": "large",
+        "color": "light-blue",
+        "colorName": "כחול בהיר",
+        "text": "",
+        "textColor": "#333333"
+      },
+      "purchaseDate": "2025-09-16T06:12:31.879Z",
+      "purchaseId": "17580031518790i4xh91wg"
+    },
+    {
+      "id": "custom-cake-1755790467633-orkubhn1e",
+      "title": "עוגה מותאמת בנטו (10 ס\"מ)",
+      "image": "cake-green.png",
+      "price": 140,
+      "date": "2025-09-16T06:12:31.824Z",
+      "type": "custom",
+      "customDesign": {
+        "size": "bento",
+        "color": "green",
+        "colorName": "ירוק",
+        "text": "",
+        "textColor": "#ffc107"
+      },
+      "purchaseDate": "2025-09-16T06:12:31.879Z",
+      "purchaseId": "1758003151879jzdavnq08"
+    },
+    {
+      "id": "custom-cake-1755791175782-cof4x5964",
+      "title": "עוגה מותאמת גדולה (22 ס\"מ)",
+      "image": "cake-green.png",
+      "price": 300,
+      "date": "2025-09-16T06:12:31.824Z",
+      "type": "custom",
+      "customDesign": {
+        "size": "large",
+        "color": "green",
+        "colorName": "ירוק",
+        "text": "מזל טוב",
+        "textColor": "#ff9800"
+      },
+      "purchaseDate": "2025-09-16T06:12:31.879Z",
+      "purchaseId": "1758003151879ojb3zh33p"
+    },
+    {
+      "id": "custom-cake-1755976596749-g72pwdj4x",
+      "title": "עוגה מותאמת בנטו (10 ס\"מ)",
+      "image": "cake-purple.png",
+      "price": 140,
+      "date": "2025-09-16T06:12:31.824Z",
+      "type": "custom",
+      "customDesign": {
+        "size": "bento",
+        "color": "purple",
+        "colorName": "סגול",
+        "text": "מזל טוב",
+        "textColor": "#ffffff"
+      },
+      "purchaseDate": "2025-09-16T06:12:31.879Z",
+      "purchaseId": "1758003151879e966z00w5"
+    }
   ]
 }

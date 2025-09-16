@@ -2,6 +2,8 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const path = require('path');
+const fs = require('fs');
+const multer = require('multer');
 
 const persist = require('./persist_module');
 const registerWheelRoutes = require('./modules/wheel-server');
@@ -16,11 +18,77 @@ const app = express();
 
 /* ===== Middleware ===== */
 app.use(cookieParser());
-app.use(express.json({ limit: '100kb' }));
-app.use(express.urlencoded({ extended: true, limit: '100kb' }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 /* ===== Static files (everything under /public) ===== */
 app.use(express.static(path.join(__dirname, 'public'), { extensions: ['html'] }));
+
+/* ===== Image upload with multer ===== */
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const uploadsDir = './public/images/';
+    if (!fs.existsSync(uploadsDir)) {
+      fs.mkdirSync(uploadsDir, { recursive: true });
+    }
+    cb(null, uploadsDir);
+  },
+  filename: function (req, file, cb) {
+    const timestamp = Date.now();
+    const randomNum = Math.round(Math.random() * 1E9);
+    const ext = path.extname(file.originalname) || '.jpg';
+    const filename = `${timestamp}-${randomNum}${ext}`;
+    cb(null, filename);
+  }
+});
+
+const upload = multer({ 
+  storage: storage,
+  fileFilter: function (req, file, cb) {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('רק קבצי תמונה מותרים'), false);
+    }
+  },
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB max
+});
+
+app.post('/api/upload-image', upload.single('file'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'לא הועלה קובץ' });
+  }
+  
+  res.json({
+    success: true,
+    filename: req.file.filename,
+    url: `/images/${req.file.filename}`
+  });
+});
+
+app.post('/api/upload', upload.single('file'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'לא הועלה קובץ' });
+  }
+  
+  res.json({
+    success: true,
+    filename: req.file.filename,
+    url: `/images/${req.file.filename}`
+  });
+});
+
+app.post('/api/admin/upload', upload.single('file'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'לא הועלה קובץ' });
+  }
+  
+  res.json({
+    success: true,
+    filename: req.file.filename,
+    url: `/images/${req.file.filename}`
+  });
+});
 
 /* ===== Top-level pages that באמת יושבים בשורש הפרויקט ===== */
 app.get('/readme.html', (req, res) => {
